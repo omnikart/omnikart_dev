@@ -1,0 +1,244 @@
+/**
+ * Web Application Prefix Apply For Making Owner Styles
+ */
+/**
+ *   Blocks Layout Selectors
+ */
+/**
+ * Product Item Selectors
+ */
+/***********************************************************************/
+/*
+ * LAYOUT VARIABLES
+ */
+/**
+* Transition-timing-function property@mixin 
+*/
+/*background RGBA
+============================================*/
+/*inline-block
+============================================*/
+/****/
+/* RIGHT TO LEFT */
+/* line 7, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs {
+  background: white;
+	-webkit-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+	-o-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+	box-shadow: 0 1px 4px rgba(0,0,0,.2);
+}
+/* line 9, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .nav-tabs > li > a {
+  text-transform: capitalize;
+  font-size: 12px;
+  font-family: "Shruti", sans-serif;
+}
+/* line 14, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-left > * {
+  float: left;
+}
+/* line 324, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-left > * {
+  float: right;
+}
+/* line 17, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-right > * {
+  float: right;
+}
+/* line 324, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-right > * {
+  float: left;
+}
+/* line 20, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tab-content {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+/* line 25, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-left > .nav-tabs {
+  position: relative;
+}
+/* line 27, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-left > .nav-tabs:after {
+  content: "";
+  height: 500px;
+  width: 1px;
+  background: #e5e5e5;
+  top: 0;
+  right: 0;
+  position: absolute;
+}
+/* line 430, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-left > .nav-tabs:after {
+  left: 0;
+  right: auto;
+}
+/* line 37, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-right > .nav-tabs {
+  position: relative;
+}
+/* line 39, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-right > .nav-tabs:after {
+  content: "";
+  height: 500px;
+  width: 1px;
+  background: #e5e5e5;
+  top: 0;
+  left: 0;
+  position: absolute;
+}
+/* line 423, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-right > .nav-tabs:after {
+  right: 0;
+  left: auto;
+}
+/* line 49, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .products-row {
+  border: none;
+}
+
+/* line 56, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .box-heading {
+  float: none;
+  width: 200px;
+  padding: 20px 20px 20px 0px;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-family: "Shruti", sans-serif;
+}
+/* line 348, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .box-heading {
+  padding: 20px 0px 20px 20px;
+}
+/* line 65, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs li {
+  float: none;
+  border: 1px solid transparent;
+}
+/* line 69, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs li.active a {
+  background: none;
+  color: #268bb9;
+}
+/* line 74, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs li a {
+  text-transform: capitalize;
+}
+/* line 77, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs li.active {
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+}
+/* line 80, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs li.active:after {
+  border: 1px solid white;
+  content: "";
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 0;
+  z-index: 9999;
+}
+/* line 91, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-left li {
+  margin-left: 10px;
+}
+/* line 335, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-left li {
+  margin-right: 10px;
+  margin-left: inherit;
+}
+/* line 93, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-left li a {
+  padding: 8px 25px 8px 10px;
+}
+/* line 348, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-left li a {
+  padding: 8px 10px 8px 25px;
+}
+/* line 96, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-left li.active {
+  border-left: 1px solid #e5e5e5;
+}
+/* line 335, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-left li.active {
+  border-right: 1px solid #e5e5e5;
+  border-left: inherit;
+}
+/* line 98, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-left li.active:after {
+  right: -1px;
+}
+/* line 430, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-left li.active:after {
+  left: -1px;
+  right: auto;
+}
+/* line 103, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-right li {
+  margin-right: 10px;
+}
+/* line 335, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-right li {
+  margin-left: 10px;
+  margin-right: inherit;
+}
+/* line 105, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-right li a {
+  padding: 8px 10px 8px 25px;
+}
+/* line 348, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-right li a {
+  padding: 8px 25px 8px 10px;
+}
+/* line 108, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-right li.active {
+  border-right: 1px solid #e5e5e5;
+}
+/* line 335, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-right li.active {
+  border-left: 1px solid #e5e5e5;
+  border-right: inherit;
+}
+/* line 110, ../development/scss/pavverticalcategorytabs.scss */
+.pav-verticalcategorytabs .tabs-right li.active:after {
+  right: 5px;
+}
+/* line 430, ../development/scss/mixins/_app.scss */
+.rtl .pav-verticalcategorytabs .tabs-right li.active:after {
+  left: 5px;
+  right: auto;
+}
+
+@media (max-width: 767px) {
+  /* line 119, ../development/scss/pavverticalcategorytabs.scss */
+  div.pav-verticalcategorytabs .tabs-left > * {
+    float: none;
+  }
+  /* line 122, ../development/scss/pavverticalcategorytabs.scss */
+  div.pav-verticalcategorytabs .box-heading {
+    width: 100%;
+  }
+  /* line 125, ../development/scss/pavverticalcategorytabs.scss */
+  div.pav-verticalcategorytabs .tabs-x li {
+    float: left;
+    display: inline-block;
+    border: none;
+  }
+  /* line 324, ../development/scss/mixins/_app.scss */
+  .rtl div.pav-verticalcategorytabs .tabs-x li {
+    float: right;
+  }
+  /* line 129, ../development/scss/pavverticalcategorytabs.scss */
+  div.pav-verticalcategorytabs .tabs-x li.active {
+    border: none;
+  }
+  /* line 133, ../development/scss/pavverticalcategorytabs.scss */
+  div.pav-verticalcategorytabs .tab-content {
+    overflow: visible;
+    clear: both;
+  }
+}

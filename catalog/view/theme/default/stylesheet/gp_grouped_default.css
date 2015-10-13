@@ -1,0 +1,29 @@
+/* .gp-table { border-top: 1px solid #dddddd; } .gp-table thead tr td, .gp-table tbody tr td { border: 1px solid #dddddd; } */
+.gp-table > tbody > tr > td { vertical-align:middle; }
+
+.gp-table .gp-col-image { /*width:1px;*/ }
+.gp-table .gp-col-name { }
+.gp-table .gp-col-price { text-align:right; }
+.gp-table .gp-col-option { max-width:150px; }
+.gp-table .gp-col-qty { width:80px; text-align:center; }
+.gp-table .gp-col-qty input:disabled { border:1px solid #ccc; color:#ccc; cursor:not-allowed; }
+.gp-table .gp-col-btn { }
+
+.gp-child-image {  }
+.gp-child-image img { }
+.gp-child-name { font-weight:bold; font-size:16px; }
+.gp-child-field, .gp-child-attribute { padding:0 0 0 10px; }
+.gp-child-attribute > div { padding:0 0 0 20px; }
+.gp-child-price { font-size:16px; font-weight:bold; }
+.gp-child-price-old { font-size:12px; font-weight:normal; color:#F00; text-decoration:line-through; }
+.gp-child-tax { font-size:12px; font-weight:normal; color:#999; }
+.gp-child-discount {  }
+
+.fs-dropdown { width:100%; }
+.fs-dropdown button { padding:28px 9px; }
+.fs-dropdown label { cursor:pointer; width:100%; padding-left:7px; }
+
+/* Append child description */
+ul.gp-add-child-description { list-style:none; }
+ul.gp-add-child-description li:first-child { font-weight:bold; font-size:16px; }
+ul.gp-add-child-description li:last-child { padding:0 0 0 10px; }

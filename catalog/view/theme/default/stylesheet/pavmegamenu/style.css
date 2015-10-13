@@ -1,0 +1,19 @@
+#header-main .navbar{
+       background: none;
+}
+#header-main > li > a{
+        color:#333333 ;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: bold;
+}
+#header-main  li a{
+        color: #828282;
+}
+#header-main .megamenu >li >a{
+        text-transform: uppercase;
+        color:#333333 ;
+        font-size: 12px;
+        font-weight: bold;
+}
+
