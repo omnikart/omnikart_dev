@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <name>Checkout One</name>
+    <version>3.4</version>
+    <code>MMOSOC108</code>
+    <author>Www.MMOSolution.com</author>
+    <link>http://MMOSolution.com</link>
+    
+    <file path="catalog/controller/checkout/checkout.php">
+        <operation info="redirect to checkout One">
+            <search><![CDATA[public function index() {]]></search>
+            <add  position="after"><![CDATA[
+                $this->load->model('setting/setting');
+                $mmos_checkout_extra = $this->model_setting_setting->getSetting('mmos_checkout', $this->config->get('config_store_id'));
+
+                $mmos_checkout = $mmos_checkout_extra['mmos_checkout'];
+								
+								$cg_id = $this->customer->getGroupId();
+								
+                if ($mmos_checkout && $mmos_checkout['status'] && in_array($cg_id,$mmos_checkout['customer_group_access'])) {
+				
+				if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+					$urls = $this->url->link('checkout/checkout_onepage', '', true);
+				} else {
+					$urls = $this->url->link('checkout/checkout_onepage');
+				}
+					/*Fixed Mijoshop*/
+					if(defined('JPATH_MIJOSHOP_OC')) {
+							$urls = $this->url->link('checkout/checkout').'_onepage';
+							}
+							
+					/* redirect to checkout One */		
+					$this->response->redirect($urls);
+                }                      
+            ]]></add>
+        </operation>		
+    </file>
+</modification>

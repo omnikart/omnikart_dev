@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <code><![CDATA[isense_nitro_image_200]]></code>
+    <name><![CDATA[NitroPack Image Quality Override]]></name>
+    <version><![CDATA[2.1.1]]></version>
+    <author><![CDATA[iSenseLabs]]></author>
+    <link><![CDATA[http://isenselabs.com]]></link>
+
+    <file path="catalog/controller/product/smp_image.php">
+        <operation>
+            <search limit="1"><![CDATA[header('Cache-Control: max-age=86400');]]></search>
+            <add position="before"><![CDATA[
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                if (getNitroPersistence('BrowserCache.Images.Period') != 'no-cache') {
+                    $maxage = getNitroPersistence('BrowserCache.Images.Period');
+                } else {
+                    $maxage = false;
+                }
+            ]]></add>
+        </operation>
+        <operation>
+            <search limit="1"><![CDATA[header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));]]></search>
+            <add position="after"><![CDATA[header('Last-Modified: Wed, 05 Jun 2009 06:40:46 GMT');]]></add>
+        </operation>
+        <operation>
+            <search limit="1"><![CDATA[header('Cache-Control: max-age=86400');]]></search>
+            <add position="replace"><![CDATA[header('Cache-Control: max-age=' . (string)($maxage ? strtotime($maxage)-time() : 86400));]]></add>
+        </operation>
+        <operation>
+            <search limit="1"><![CDATA[header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));]]></search>
+            <add position="replace"><![CDATA[header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', $maxage ? strtotime($maxage) : time() + 86400));]]></add>
+        </operation>
+    </file>
+
+    <file path="system/library/image.php">
+        <operation>
+            <search limit="1"><![CDATA[public function save($file, $quality = 90) {]]></search>
+            <add position="after"><![CDATA[
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                require_once NITRO_INCLUDE_FOLDER . 'image_quality_override.php';
+            ]]></add>
+        </operation>
+    </file>
+    
+    <file path="catalog/model/tool/image.php">
+        <operation>
+            <search limit="1"><![CDATA[copy(DIR_IMAGE . $old_image, DIR_IMAGE . $new_image);]]></search>
+            <add position="after"><![CDATA[
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                include NITRO_INCLUDE_FOLDER . 'smush_on_demand.php';
+            ]]></add>
+        </operation>
+    </file>
+
+</modification>

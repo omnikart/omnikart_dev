@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+
+  <name>Newsletter Enhancements</name>
+  <code>newsletter-enhancements</code>
+  <version>3.7.2</version>
+  <author>codersroom.com</author>
+  <link>http://www.codersroom.com</link>
+
+  <file path="admin/view/template/common/menu.tpl">
+    <operation>
+      <search><![CDATA[<li id="system"><a class="parent"><i class="fa fa-cog fa-fw"></i> <span><?php echo $text_system; ?></span></a>]]></search>
+      <add position="before"><![CDATA[
+        <?php if(isset($text_ne)) { ?>
+            <li id="ne"><a class="parent"><i class="fa fa-envelope fa-fw"></i> <span><?php echo $text_ne; ?></span></a>
+                <ul>
+                    <li><a href="<?php echo $ne_email; ?>"><?php echo $text_ne_email; ?></a></li>
+                    <li><a href="<?php echo $ne_draft; ?>"><?php echo $text_ne_draft; ?></a></li>
+                    <li><a href="<?php echo $ne_marketing; ?>"><?php echo $text_ne_marketing; ?></a></li>
+                    <li><a href="<?php echo $ne_subscribers; ?>"><?php echo $text_ne_subscribers; ?></a></li>
+                    <li><a href="<?php echo $ne_stats; ?>"><?php echo $text_ne_stats; ?></a></li>
+                    <li><a href="<?php echo $ne_robot; ?>"><?php echo $text_ne_robot; ?></a></li>
+                    <li><a href="<?php echo $ne_template; ?>"><?php echo $text_ne_template; ?></a></li>
+                    <li><a href="<?php echo $ne_subscribe_box; ?>"><?php echo $text_ne_subscribe_box; ?></a></li>
+                    <li><a href="<?php echo $ne_blacklist; ?>"><?php echo $text_ne_blacklist; ?></a></li>
+                    <li><a href="<?php echo $ne_update_check; ?>"><?php echo $text_ne_update_check; ?></a></li>
+                    <li><a class="parent"><?php echo $text_ne_support; ?></a>
+                        <ul>
+                            <li><a href="https://www.codersroom.com/support/register.php" target="_blank"><?php echo $text_ne_support_register; ?></a></li>
+                            <li><a href="https://www.codersroom.com/support/clientarea.php" target="_blank"><?php echo $text_ne_support_login; ?></a></li>
+                            <li><a href="https://www.codersroom.com/support/" target="_blank"><?php echo $text_ne_support_dashboard; ?></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        <?php } ?>
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="admin/controller/common/menu.php">
+    <operation>
+      <search><![CDATA[public function index() {]]></search>
+      <add position="after"><![CDATA[
+        if ($this->config->get('ne_key')) {
+            $this->load->language('module/ne');
+            $data['text_ne_email'] = $this->language->get('text_ne_email');
+            $data['text_ne_draft'] = $this->language->get('text_ne_draft');
+            $data['text_ne_marketing'] = $this->language->get('text_ne_marketing');
+            $data['text_ne_subscribers'] = $this->language->get('text_ne_subscribers');
+            $data['text_ne_stats'] = $this->language->get('text_ne_stats');
+            $data['text_ne_robot'] = $this->language->get('text_ne_robot');
+            $data['text_ne_template'] = $this->language->get('text_ne_template');
+            $data['text_ne_subscribe_box'] = $this->language->get('text_ne_subscribe_box');
+            $data['text_ne_blacklist'] = $this->language->get('text_ne_blacklist');
+            $data['text_ne_support'] = $this->language->get('text_ne_support');
+            $data['text_ne_support_register'] = $this->language->get('text_ne_support_register');
+            $data['text_ne_support_login'] = $this->language->get('text_ne_support_login');
+            $data['text_ne_support_dashboard'] = $this->language->get('text_ne_support_dashboard');
+            $data['text_ne'] = $this->language->get('text_ne');
+            $data['text_ne_update_check'] = $this->language->get('text_ne_update_check');
+            
+            $data['ne_email'] = $this->url->link('ne/newsletter', 'token=' . $this->session->data['token'], 'SSL');
+            $data['ne_draft'] = $this->url->link('ne/draft', 'token=' . $this->session->data['token'], 'SSL');
+            $data['ne_marketing'] = $this->url->link('ne/marketing', 'token=' . $this->session->data['token'], 'SSL');
+            $data['ne_subscribers'] = $this->url->link('ne/subscribers', 'token=' . $this->session->data['token'], 'SSL');
+            $data['ne_stats'] = $this->url->link('ne/stats', 'token=' . $this->session->data['token'], 'SSL');
+            $data['ne_robot'] = $this->url->link('ne/schedule', 'token=' . $this->session->data['token'], 'SSL');
+            $data['ne_template'] = $this->url->link('ne/template', 'token=' . $this->session->data['token'], 'SSL');
+            $data['ne_subscribe_box'] = $this->url->link('ne/subscribe_box', 'token=' . $this->session->data['token'], 'SSL');
+            $data['ne_blacklist'] = $this->url->link('ne/blacklist', 'token=' . $this->session->data['token'], 'SSL');
+            $data['ne_update_check'] = $this->url->link('ne/check_update', 'token=' . $this->session->data['token'], 'SSL');
+        }
+      ]]></add>
+    </operation>
+  </file>
+
+</modification>

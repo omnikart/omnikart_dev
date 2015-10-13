@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <code><![CDATA[isense_nitro_system_cache_200]]></code>
+    <name><![CDATA[NitroPack System Cache Override]]></name>
+    <version><![CDATA[2.1.1]]></version>
+    <author><![CDATA[iSenseLabs]]></author>
+    <link><![CDATA[http://isenselabs.com]]></link>
+    
+    <file path="system/library/cache.php">
+        <operation>
+            <search limit="1"><![CDATA[public function __construct($driver, $expire = 3600) {]]></search>
+            <add position="after"><![CDATA[
+                require_once DIR_SYSTEM.'nitro/core/core.php';
+                
+                if (getNitroPersistence('Enabled') && getNitroPersistence('OpenCartCache.Enabled')) {
+                  $nitro_expire = getNitroPersistence('OpenCartCache.ExpireTime');
+                  $expire = !empty($nitro_expire) ? $nitro_expire : $expire;
+                }
+            ]]></add>
+        </operation>
+    </file>
+</modification>

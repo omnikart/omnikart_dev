@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+
+  <name>Newsletter Enhancements</name>
+  <code>newsletter-enhancements</code>
+  <version>3.7.2</version>
+  <author>codersroom.com</author>
+  <link>http://www.codersroom.com</link>
+
+  <file path="system/library/customer.php">
+    <operation>
+      <search><![CDATA[$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");]]></search>
+      <add position="before"><![CDATA[
+			$customerRights = $this->db->query("SELECT cpc.rights,cpc.isParent,cpcn.name,cpcn.description FROM ".DB_PREFIX."customerpartner_customer_group cpc LEFT JOIN ".DB_PREFIX."customerpartner_customer_group_name cpcn ON (cpc.id=cpcn.customer_group_id) WHERE cpc.id = '".$this->customer_group_id."' AND cpcn.language_id = '".$this->config->get('config_language_id')."' ")->row;
+			if ($customerRights) {
+				$customerRightsExploded = explode(':', rtrim($customerRights['rights'],":"));
+				foreach ($customerRightsExploded as $key => $value) {
+					$rightsArray[$value] = str_replace('-', ' ', $value);
+				}
+				$returnArray['rights'] = $rightsArray;
+				$returnArray['isParent'] = $customerRights['isParent'];
+				$returnArray['name'] = $customerRights['name'];
+				$returnArray['description'] = $customerRights['description'];
+				$this->rights = $returnArray;
+			} else {
+				$this->rights = false;
+			}
+			]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[private $address_id;]]></search>
+      <add position="after"><![CDATA[private $rights;]]></add>
+    </operation>
+		<operation>
+      <search><![CDATA[public function getAddressId() {]]></search>
+      <add position="before"><![CDATA[
+				public function getRights() {
+				return $this->rights;
+				}
+				]]></add>
+    </operation>
+  </file>
+</modification>

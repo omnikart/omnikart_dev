@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Mandar Mod 2</name>
+  <code>0121</code>
+  <version>1.0</version>
+  <author>Mandar</author>
+  <link>http://www.opencart.com</link>
+  <file path="catalog/view/theme/default/template/product/manufacturer_list.tpl,catalog/view/theme/default/template/product/manufacturer_info.tpl,catalog/view/theme/default/template/product/compare.tpl,catalog/view/theme/default/template/product/special.tpl,catalog/view/theme/default/template/product/category.tpl,catalog/view/theme/default/template/product/search.tpl,catalog/view/theme/default/template/product/product.tpl,catalog/view/theme/default/template/affiliate/account.tpl,catalog/view/theme/default/template/affiliate/forgotten.tpl,catalog/view/theme/default/template/affiliate/tracking.tpl,catalog/view/theme/default/template/affiliate/edit.tpl,catalog/view/theme/default/template/affiliate/transaction.tpl,catalog/view/theme/default/template/affiliate/register.tpl,catalog/view/theme/default/template/affiliate/payment.tpl,catalog/view/theme/default/template/affiliate/login.tpl,catalog/view/theme/default/template/affiliate/password.tpl,catalog/view/theme/default/template/account/address_form.tpl,catalog/view/theme/default/template/account/return_form.tpl,catalog/view/theme/default/template/account/account.tpl,catalog/view/theme/default/template/account/forgotten.tpl,catalog/view/theme/default/template/account/return_list.tpl,catalog/view/theme/default/template/account/reward.tpl,catalog/view/theme/default/template/account/voucher.tpl,catalog/view/theme/default/template/account/return_info.tpl,catalog/view/theme/default/template/account/newsletter.tpl,catalog/view/theme/default/template/account/wishlist.tpl,catalog/view/theme/default/template/account/order_info.tpl,catalog/view/theme/default/template/account/address_list.tpl,catalog/view/theme/default/template/account/order_list.tpl,catalog/view/theme/default/template/account/recurring_list.tpl,catalog/view/theme/default/template/account/edit.tpl,catalog/view/theme/default/template/account/transaction.tpl,catalog/view/theme/default/template/account/register.tpl,catalog/view/theme/default/template/account/download.tpl,catalog/view/theme/default/template/account/login.tpl,catalog/view/theme/default/template/account/password.tpl,catalog/view/theme/default/template/account/recurring_info.tpl,catalog/view/theme/default/template/error/not_found.tpl,catalog/view/theme/default/template/common/success.tpl,catalog/view/theme/default/template/common/maintenance.tpl,catalog/view/theme/default/template/payment/amazon_checkout_confirm.tpl,catalog/view/theme/default/template/payment/amazon_checkout_success.tpl,catalog/view/theme/default/template/payment/amazon_login_pay_payment.tpl,catalog/view/theme/default/template/payment/amazon_checkout_address.tpl,catalog/view/theme/default/template/payment/pp_express_confirm.tpl,catalog/view/theme/default/template/payment/amazon_login_pay_confirm.tpl,catalog/view/theme/default/template/payment/amazon_checkout_failure.tpl,catalog/view/theme/default/template/payment/amazon_checkout_payment.tpl,catalog/view/theme/default/template/payment/amazon_login_pay_failure.tpl,catalog/view/theme/default/template/payment/amazon_login_pay_address.tpl,catalog/view/theme/default/template/information/information.tpl,catalog/view/theme/default/template/information/contact.tpl,catalog/view/theme/default/template/information/sitemap.tpl,catalog/view/theme/default/template/checkout/cart.tpl,catalog/view/theme/default/template/checkout/checkout.tpl"
+>
+	<operation>
+      <search>
+        <![CDATA[<?php echo $header; ?>]]>
+      </search>
+      <add position="after">
+        <![CDATA[<div id="column">]]>
+      </add>
+    </operation>
+    	<operation>
+      <search>
+        <![CDATA[<?php echo $footer; ?>]]>
+      </search>
+      <add position="before">
+        <![CDATA[</div>]]>
+      </add>
+    </operation>
+  </file>
+</modification>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <code><![CDATA[isense_nitro_minifier_200]]></code>
+    <name><![CDATA[NitroPack CSS and JavaScript Minify]]></name>
+    <version><![CDATA[2.1.1]]></version>
+    <author><![CDATA[iSenseLabs]]></author>
+    <link><![CDATA[http://isenselabs.com]]></link>
+
+    <file path="system/library/document.php">
+        <operation>
+            <search limit="1"><![CDATA[return $this->styles;]]></search>
+            <add position="before"><![CDATA[
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                require_once NITRO_INCLUDE_FOLDER . 'minify_css.php';
+
+                return nitro_minify_css($this->styles);
+            ]]></add>
+        </operation>
+        
+        <operation>
+            <search limit="1"><![CDATA[return $this->scripts;]]></search>
+            <add position="before"><![CDATA[
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                require_once NITRO_INCLUDE_FOLDER . 'minify_js.php';
+
+                return nitro_minify_js($this->scripts);
+            ]]></add>
+        </operation>
+    </file>
+</modification>

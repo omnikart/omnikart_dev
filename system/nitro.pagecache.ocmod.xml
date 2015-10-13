@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <code><![CDATA[isense_nitro_pagecache_200]]></code>
+    <name><![CDATA[NitroPack Page Cache]]></name>
+    <version><![CDATA[2.1.1]]></version>
+    <author><![CDATA[iSenseLabs]]></author>
+    <link><![CDATA[http://isenselabs.com]]></link>
+
+    <file path="system/engine/action.php">
+        <operation>
+            <search limit="1"><![CDATA[final class Action {]]></search>
+            <add position="before"><![CDATA[
+                if (!function_exists('generateNameOfCacheFile')) {
+                    require_once DIR_SYSTEM . 'nitro/core/core.php';
+                    require_once NITRO_INCLUDE_FOLDER . 'pagecache_top.php';
+                }
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="system/library/response.php">
+        <operation>
+            <search limit="1"><![CDATA[$this->level = $level;]]></search>
+            <add position="after"><![CDATA[
+                if (isNitroEnabled() && getNitroPersistence('PageCache.Enabled')) { $this->level = 0; }
+            ]]></add>
+        </operation>
+        
+        <operation>
+            <search limit="1"><![CDATA[echo $output;]]></search>
+            <add position="after"><![CDATA[
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                require_once NITRO_INCLUDE_FOLDER . 'pagecache_bottom.php';
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/controller/common/language.php">
+        <operation>
+            <search limit="1"><![CDATA[$this->session->data['language'] = $this->request->post['code'];]]></search>
+            <add position="after"><![CDATA[
+                $this->session->data['NitroSwitchLanguage'] = true;
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/model/catalog/product.php">
+        <operation>
+            <search limit="1"><![CDATA[public function getProduct($product_id) {]]></search>
+            <add position="after"><![CDATA[
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                require_once DIR_SYSTEM . 'nitro/core/top.php';
+
+                if (getNitroPersistence('PageCache.ClearCacheOnProductEdit')) {
+                    setNitroProductCache($product_id, NITRO_PAGECACHE_FOLDER . generateNameOfCacheFile());
+                }
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/model/catalog/product.php">
+        <operation>
+            <search limit="1"><![CDATA[public function editProduct($product_id, $data) {]]></search>
+            <add position="after"><![CDATA[
+                $this->load->model('tool/nitro');
+                $this->model_tool_nitro->clearProductCache($product_id);
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/model/checkout/order.php">
+        <operation>
+            <search limit="1"><![CDATA[$this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");]]></search>
+            <add position="before"><![CDATA[
+                if (!empty($order_product['product_id'])) {
+                    $this->load->model('tool/nitro');
+                    $this->model_tool_nitro->clearProductCache((int)$order_product['product_id']);
+                }
+            ]]></add>
+        </operation>
+
+        <operation>
+            <search limit="1"><![CDATA[$this->db->query("UPDATE `" . DB_PREFIX . "product` SET quantity = (quantity + " . (int)$product['quantity'] . ") WHERE product_id = '" . (int)$product['product_id'] . "' AND subtract = '1'");]]></search>
+            <add position="before"><![CDATA[
+                if (!empty($product['product_id'])) {
+                    $this->load->model('tool/nitro');
+                    $this->model_tool_nitro->clearProductCache((int)$product['product_id']);
+                }
+            ]]></add>
+        </operation>
+    </file>
+
+</modification>
