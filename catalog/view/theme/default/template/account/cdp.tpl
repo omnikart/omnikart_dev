@@ -30,11 +30,12 @@
             <button type="button" id="grid-view" class="btn btn-default" data-toggle="tooltip" title="<?php echo $button_grid; ?>"><i class="fa fa-th"></i></button>
           </div>
         </div>
-        <div class="col-md-4 pull-right">
+        <div class="col-md-6 pull-right">
           <div class="btn-group hidden-xs pull-right">
           	  <button type="button" id="delete" class="btn btn-default" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>
 	          <button type="button" id="quickaddcart" class="btn btn-default" data-toggle="tooltip" title="Quick Add Products"><i class="fa fa-shopping-cart"></i>&nbsp;Quick Cart</button>
 	          <button type="button" id="category-view" class="btn btn-default" data-toggle="tooltip" title="Open Following Form"><i class="fa fa-caret-square-o-down"></i></button>
+	          
           </div>
         </div>
       </div>
@@ -54,9 +55,9 @@
         <?php foreach ($products as $product) { ?>
         <div class="product-layout product-list col-xs-12">
           <div class="product-thumb">
-          	<div class="hover-content"><input type="checkbox" id="pcd-<?php echo $product['product_id']; ?>" name="products[]" value="<?php echo $product['product_id']; ?>" />
+          	<div class="hover-content">
 	      		<?php if ($dbe) { ?>
-		      		<input class="removeproduct" type="checkbox" id="pcd-<?php echo $product['product_id']; ?>" name="products[]" value="<?php echo $product['product_id']; ?>" />
+		      		<input class="removeproduct" type="checkbox" id="pcd-<?php echo $product['product_id']; ?>" name="product[<?php echo $product['product_id']; ?>][product_id]" value="<?php echo $product['product_id']; ?>" />
 					<div>
 					    <label for="pcd-<?php echo $product['product_id']; ?>"></label>
 					</div>
@@ -66,7 +67,6 @@
             <div>
               <div class="caption">
                 <h4><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4>
-                <p><?php echo $product['description']; ?></p>
                 <?php if ($product['rating']) { ?>
                 <div class="rating">
                   <?php for ($i = 1; $i <= 5; $i++) { ?>
@@ -92,13 +92,10 @@
                 <?php } ?>
               </div>
               <div class="button-group">
-              	<div class="class="input-group">
-	                <input type="text" name="product[0][quantity]" value="" placeholder="Quantity Required" id="quantity" class="form-control quantity">
-	                <span class="input-group-btn">
-	                	<button type="button" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
-	                </span>
-                </div>
-                <br />
+	            <input type="number" min="1" name="product[<?php echo $product['product_id']; ?>][quantity]" value="<?php echo $product['quantity']; ?>" placeholder="" id="quantity" class="form-control quantity" />
+	          	<button type="button" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
+			  </div>
+			  <div class="button-group button-group-2">
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_wishlist; ?>" onclick="wishlist.add('<?php echo $product['product_id']; ?>');"><i class="fa fa-heart"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_compare; ?>" onclick="compare.add('<?php echo $product['product_id']; ?>');"><i class="fa fa-exchange"></i></button>
               </div>
@@ -138,7 +135,7 @@
 	buttont = $(this);
     $.ajax({
         url : 'index.php?route=account/cdp/updatecategory',
-        data: $('#category-form input,#category-form select,#category-form checkbox:checked'),
+        data: $('#category-form input, .product-thumb input[type=\'checkbox\'], .product-thumb .button-group input[type=\'number\']'),
         type: 'post',
 		beforeSend: function() {
 			$(buttont).button('loading');

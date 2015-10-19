@@ -640,9 +640,11 @@ padding:0;
 	overflow: auto;
 	background:#fff;
 	position: relative;
+	border: 1px solid #ddd;
+	border-bottom-width:3px;
 }
 .product-thumb:hover {
-border: 1px solid #ddd;
+border-color:#F2B50F;
 }
 .product-thumb .image {
 	text-align: center;
@@ -662,7 +664,6 @@ border: 1px solid #ddd;
 }
 .product-grid .product-thumb .hover-content {
 	position:absolute;
-	background:#fff;
 	width:100%;
 	display:block;
 	z-index:1000;
@@ -678,23 +679,25 @@ border: 1px solid #ddd;
     }
 
 .product-thumb .hover-content input[type=checkbox]:checked ~ div label, .gp-col-checkbox input[type=checkbox]:checked ~ label{
-    background: url('../image/check52.png');
+    background: #F2B50F url('../image/check52.png');
     background-size: 100%;
+    border-color:#F2B50F;
 }    
 
 .product-thumb .hover-content label, .gp-col-checkbox label{
-	background: #ddd;
+		background: #FAE19F;
     height: 30px;
     width:30px;
     display: block;
-    border: 1px solid #888;
-    background-image: -ms-linear-gradient(bottom right, #FFFFFF 0%, #C7C7C7 100%);
+    border: 1px solid #FAE19F;
+    border-radius:3px;
+    /*background-image: -ms-linear-gradient(bottom right, #FFFFFF 0%, #C7C7C7 100%);
     background-image: -moz-linear-gradient(bottom right, #FFFFFF 0%, #C7C7C7 100%);
     background-image: -o-linear-gradient(bottom right, #FFFFFF 0%, #C7C7C7 100%);
     background-image: -webkit-gradient(linear, right bottom, left top, color-stop(0, #FFFFFF), color-stop(1, #C7C7C7));
     background-image: -webkit-linear-gradient(bottom right, #FFFFFF 0%, #C7C7C7 100%);
     background-image: linear-gradient(to top left, #FFFFFF 0%, #C7C7C7 100%);
-    margin:0;
+    */margin:0;
 }
  
     
@@ -708,8 +711,8 @@ border: 1px solid #ddd;
 	/*font-weight: bold;*/
 }
 .product-thumb .caption {
-	padding: 0 20px;
-	min-height: 180px;
+	padding: 0 15px;
+	min-height: 100px;
 }
 .product-list .product-thumb .caption {
 	margin-left: 230px;
@@ -790,9 +793,10 @@ h2.price {
 	font-weight: bold;
 	text-align: center;
 	text-transform: uppercase;
+	border-left: 1px solid #ddd;
 }
 .product-thumb .button-group button + button {
-	width: 20%;
+	width: 50%;
 	border-left: 1px solid #ddd;
 }
 .product-thumb .button-group button:hover {
@@ -801,11 +805,21 @@ h2.price {
 	text-decoration: none;
 	cursor: pointer;
 }
-
 .product-thumb .button-group input{
 width:40%;
-border: none;
+float: left;
 display: inline-block;
+border-radius:0;
+border:none;
+box-shadow: none;
+background:#fff;
+height:40px;
+}
+.product-thumb .button-group.button-group-2{
+	display:none;
+}
+.product-thumb .button-group.button-group-2 button{
+	width:50%;
 }
 
 @media (max-width: 1200px) {
@@ -859,7 +873,7 @@ display: inline-block;
     #column-left + #content + #column-right .product-layout .col-md-3{
        width: 100%;
     }
-    #content + #column-right .product-layout .col-md-3{
+    #content + F2B50F#column-right .product-layout .col-md-3{
        width: 100%;
     }
 }
@@ -1013,7 +1027,6 @@ overflow: hidden;
 
 /* line 107, ../development/scss/app/_product.scss */
 .price {
-  line-height: 30px;
   padding: 0px 0;
   color: #e94b42;
   font-weight: 700;

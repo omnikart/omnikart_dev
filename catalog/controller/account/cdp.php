@@ -103,6 +103,7 @@ class ControllerAccountCdp extends Controller {
 						'description' => utf8_substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
 						'price'       => $price,
 						'special'     => $special,
+						'quantity'    => $result['quantity'],
 						'tax'         => $tax,
 						'remove'	  => $this->url->link('account/cdp/removeproduct','&product_id=' . $product_info['product_id']),
 						'minimum'     => $product_info['minimum'] > 0 ? $product_info['minimum'] : 1,
@@ -132,8 +133,14 @@ class ControllerAccountCdp extends Controller {
 		$this->checkuser();
 		$this->load->model('account/cd');
 		if ($this->request->post && isset($this->request->post['category_id'])){
-			if (!isset($this->request->post['payment_address'])) $json['payment_address'] = "Please select Payment Address"; 
-			if (!isset($this->request->post['shipping_address'])) $json['shipping_address'] = "Please select Payment Address";
+			
+			foreach ($this->request->post['product'] as $product){
+				if (!isset($product['product_id']) && !isset($product['quantity'])) {
+					$json['error'] = 'Error Receiving Data'; 
+					continue; 
+				}	
+			}
+
 			if (!$json){
 				$this->model_account_cd->updateCategory($this->request->post);
 				$json['success'] = "Updates Successfully";

@@ -20,7 +20,14 @@ class ModelAccountCd extends Model {
 		return $query->row;
 	}
 	public function updateCategory($data) {
-		$this->db->query("UPDATE ".DB_PREFIX."customer_to_category SET  WHERE category_id = '".(int)$data['category_id']."'");
+		$customer_id = $this->customer->getId();
+		$this->load->model("account/customerpartner");
+		$seller_id = $this->model_account_customerpartner->getuserseller();
+		echo $seller_id;
+		//$this->db->query("UPDATE ".DB_PREFIX."customer_to_category SET  WHERE category_id = '".(int)$data['category_id']."'");
+		foreach ($data['product'] as $product){
+			$this->db->query("UPDATE ".DB_PREFIX."customer_to_product SET `quantity` = '".(int)$product['quantity']."' WHERE `customer_id` = '".(int)$seller_id."' AND `category_id` = '".(int)$data['category_id']."' AND `product_id` = '".(int)$product['product_id']."'");
+		}
 		return true;
 	}
 	public function addProducts($data = array()) {

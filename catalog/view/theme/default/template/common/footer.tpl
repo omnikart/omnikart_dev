@@ -58,8 +58,8 @@
 	<div class="container"><div class="col-sm-2 col-sm-offset-5">
     <ul class="follow-us clearfix" >
       <li class=" left col-sm-4"><a target="_blank" href="https://www.facebook.com/omnikart"><div id="fb"></div></a></li>
-      <li class="left col-sm-4"><a target="_blank" href="https://twitter.com/OMNIKART_COM/"><div id="tw">a</div></a></li>
-      <li class="left col-sm-4"><a target="_blank" href="https://plus.google.com/+Omnikartengineering/"><div id="gp">a</div></a></li>
+      <li class="left col-sm-4"><a target="_blank" href="https://twitter.com/OMNIKART_COM/"><div id="tw"></div></a></li>
+      <li class="left col-sm-4"><a target="_blank" href="https://plus.google.com/+Omnikartengineering/"><div id="gp"></div></a></li>
      </ul>
 	</div>  
 	</div>
