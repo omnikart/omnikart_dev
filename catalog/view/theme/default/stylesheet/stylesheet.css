@@ -801,6 +801,13 @@ h2.price {
 	text-decoration: none;
 	cursor: pointer;
 }
+
+.product-thumb .button-group input{
+width:40%;
+border: none;
+display: inline-block;
+}
+
 @media (max-width: 1200px) {
 	.product-thumb .button-group button, .product-thumb .button-group button + button {
 		width: 33.33%;

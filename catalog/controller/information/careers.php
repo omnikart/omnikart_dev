@@ -1,7 +1,12 @@
 <?php
 class ControllerInformationCareers extends Controller {
 	public function index(){
-		
+		$this->load->model('catalog/information');
+		if (isset($this->request->get['information_id'])) {
+			$information_id = (int)$this->request->get['information_id'];
+		} else {
+			$information_id = 0;
+		}
 		/*
 		$ch = curl_init();
 		curl_setopt_array($ch, array(

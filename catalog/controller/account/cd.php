@@ -106,6 +106,21 @@ class ControllerAccountCd extends Controller {
 		} else $error['error_text'] = "Please close this window and select atleast one product.";
 		echo json_encode($error);
 	}
+	public function removeproducts(){
+		$json = array();
+		$this->load->model("account/customerpartner");
+		$this->checkuser();
+		$products = array();
+	
+		$this->load->model('account/cd');
+		$data = $this->request->post;
+		if(isset($data['products'])){
+			$this->model_account_cd->removeproducts($data);
+			$json['success'] = "Products Deleted Successfully";
+		}
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
 	public function getCategories() {
 		$this->load->model("account/customerpartner");
 		$this->checkuser();

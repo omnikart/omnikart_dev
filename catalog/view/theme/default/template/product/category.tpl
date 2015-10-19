@@ -193,7 +193,7 @@
 		});
 		$('input[name="grouped"]').on('change',function(){
 			var product_id = this.value;
-			$('#modal-db').remove();
+			$('#modal-db1').remove();
 			 
 			$.ajax({
 				url: 'index.php?route=product/category/getGPProducts',

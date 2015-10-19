@@ -32,8 +32,9 @@
         </div>
         <div class="col-md-4 pull-right">
           <div class="btn-group hidden-xs pull-right">
-          <button type="button" id="quickaddcart" class="btn btn-default" data-toggle="tooltip" title="Quick Add Products"><i class="fa fa-shopping-cart"></i>&nbsp;Quick Cart</button>
-            <button type="button" id="category-view" class="btn btn-default" data-toggle="tooltip" title="Open Following Form"><i class="fa fa-caret-square-o-down"></i></button>
+          	  <button type="button" id="delete" class="btn btn-default" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>
+	          <button type="button" id="quickaddcart" class="btn btn-default" data-toggle="tooltip" title="Quick Add Products"><i class="fa fa-shopping-cart"></i>&nbsp;Quick Cart</button>
+	          <button type="button" id="category-view" class="btn btn-default" data-toggle="tooltip" title="Open Following Form"><i class="fa fa-caret-square-o-down"></i></button>
           </div>
         </div>
       </div>
@@ -54,9 +55,12 @@
         <div class="product-layout product-list col-xs-12">
           <div class="product-thumb">
           	<div class="hover-content"><input type="checkbox" id="pcd-<?php echo $product['product_id']; ?>" name="products[]" value="<?php echo $product['product_id']; ?>" />
-				<div>
-				    <?php if ($dbe) { ?><label for="pcd-<?php echo $product['product_id']; ?>"></label><?php } ?>
-				</div>
+	      		<?php if ($dbe) { ?>
+		      		<input class="removeproduct" type="checkbox" id="pcd-<?php echo $product['product_id']; ?>" name="products[]" value="<?php echo $product['product_id']; ?>" />
+					<div>
+					    <label for="pcd-<?php echo $product['product_id']; ?>"></label>
+					</div>
+				<?php } ?>
           	</div>
             <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a></div>
             <div>
@@ -88,7 +92,13 @@
                 <?php } ?>
               </div>
               <div class="button-group">
-                <button type="button" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
+              	<div class="class="input-group">
+	                <input type="text" name="product[0][quantity]" value="" placeholder="Quantity Required" id="quantity" class="form-control quantity">
+	                <span class="input-group-btn">
+	                	<button type="button" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
+	                </span>
+                </div>
+                <br />
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_wishlist; ?>" onclick="wishlist.add('<?php echo $product['product_id']; ?>');"><i class="fa fa-heart"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_compare; ?>" onclick="compare.add('<?php echo $product['product_id']; ?>');"><i class="fa fa-exchange"></i></button>
               </div>
@@ -97,10 +107,8 @@
         </div>
         <?php } ?>
       </div>
-    	  
     <?php } ?>
-      
-     <?php echo $content_bottom; ?></div>
+    <?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>
 </div>
 <script type="text/javascript">
@@ -147,8 +155,29 @@
   $('#category-view').click(function(){
   	$('#category-d').slideToggle("fast");
   });
-  
-  </script>
-
-
+</script>
+<script type="text/javascript">
+  $('#delete').on('click', function(){
+	buttont = $(this);
+    $.ajax({
+        url : 'index.php?route=account/cd/removeproducts',
+        data: $('.product-thumb .hover-content input[type=\'checkbox\']:checked'),
+        type: 'post',
+		beforeSend: function() {
+			$(buttont).button('loading');
+		},
+		complete: function() {
+			$(buttont).button('reset');
+		},
+		success: function(json) {
+			alert(json);
+			if (json['success']) {
+				alert("hello");
+				$('.breadcrumb').after('<div class="alert alert-success">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		}
+		
+      });
+  });
+</script>
 <?php echo $footer; ?>

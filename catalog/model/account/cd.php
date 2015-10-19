@@ -44,4 +44,14 @@ class ModelAccountCd extends Model {
 		}
 		return $product_count;
 	}
+	public function removeproducts($data = array()) {
+		$products = array();
+		$product_count = 0;
+		$customer_id = $this->customer->getId();
+		$this->load->model("account/customerpartner");
+		$seller_id = $this->model_account_customerpartner->getuserseller();
+		foreach($data['products'] as $product) {
+			$query = $this->db->query("DELETE FROM ".DB_PREFIX."customer_to_product WHERE customer_id = '". (int)$seller_id ."' AND product_id='".$product."'");
+		}
+	}
 }

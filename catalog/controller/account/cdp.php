@@ -58,7 +58,8 @@ class ControllerAccountCdp extends Controller {
 		$data['button_list'] = $this->language->get('button_list');
 		$data['button_grid'] = $this->language->get('button_grid');		
 		
-		$data['dbe'] = false;
+		$data['dbe'] = true;
+		$data['products'] = array();
 		$data['category'] = $this->model_account_cd->getCategory($this->request->get['category_id']);
 		$results = $this->model_account_cd->getProducts($filter);
 		foreach ($results as $result) {
@@ -103,6 +104,7 @@ class ControllerAccountCdp extends Controller {
 						'price'       => $price,
 						'special'     => $special,
 						'tax'         => $tax,
+						'remove'	  => $this->url->link('account/cdp/removeproduct','&product_id=' . $product_info['product_id']),
 						'minimum'     => $product_info['minimum'] > 0 ? $product_info['minimum'] : 1,
 						'rating'      => $product_info['rating'],
 						'href'        => $this->url->link('product/product','&product_id=' . $product_info['product_id'])
@@ -141,6 +143,7 @@ class ControllerAccountCdp extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
+
 	private function checkuser(){
 		if (!$this->customer->isLogged()) {
 			$this->session->data['redirect'] = $this->url->link('account/account', '', 'SSL');
@@ -158,4 +161,6 @@ class ControllerAccountCdp extends Controller {
 		
 		return true;
 	}
+	
+
 }
