@@ -15,6 +15,9 @@
     <?php } ?>
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
       <h1><?php echo $heading_title; ?></h1>
+      <?php echo $description; ?><?php echo $content_bottom; ?>
+      <br />
+      
     <script type="text/javascript" id="rbox-loader-script">
 		if(!window._rbox){
 		_rbox = { host_protocol:document.location.protocol, ready:function(cb){this.onready=cb;} };

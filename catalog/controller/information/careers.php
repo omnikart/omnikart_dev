@@ -1,12 +1,22 @@
 <?php
 class ControllerInformationCareers extends Controller {
 	public function index(){
+		
 		$this->load->model('catalog/information');
 		if (isset($this->request->get['information_id'])) {
 			$information_id = (int)$this->request->get['information_id'];
 		} else {
 			$information_id = 0;
 		}
+		
+		$data['description']='';
+		
+		$information_info = $this->model_catalog_information->getInformation(10);
+		
+		if ($information_info) {
+			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
+		}
+		
 		/*
 		$ch = curl_init();
 		curl_setopt_array($ch, array(
