@@ -2,7 +2,6 @@
 class ControllerModuleEnquiry extends Controller {
 	private $error = array();
 	public function index($setting){
-		
 		$data = array();
 		$data['modal_id'] = $setting['modal_id'];
 		$data['logged'] = false;
