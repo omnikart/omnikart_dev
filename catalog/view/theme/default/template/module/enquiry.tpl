@@ -231,9 +231,8 @@ $('#enquiry_modal').on('click','#productquery button.btn-decrease',function(){
 					}
 								
 					if (json['success']) {
-						
-						html = '<a target="_Blank" href="'+json['link']+'">'+json['mask']+'</a>'
-						$('#uploaded-file').append(html);
+						html = '<a target="_Blank" href="'+json['link']+'">'+json['mask']+'</a><input type="hidden" name="filename" value="'+json['filename']+'" />'
+						$('#uploaded-file').html(html);
 						
 						
 						$('input[name=\'mask\']').attr('value', json['mask']);
