@@ -56,9 +56,12 @@ class ControllerModuleEnquiry extends Controller {
 						"lastname" => $this->request->post['lastname'],
 						"phone" => $this->request->post['phone'],
 						"email" => $this->request->post['email']);
+				
+				$file = isset($this->request->post['filename'])?$this->request->post['filename']:'';
+				
 				$data = array("user_info" => serialize($userdata),
 						"query" => serialize($this->request->post['product']),
-						"file" => $this->request->post['filename']
+						"file" => $file
 					);
 				
 				$this->load->model('module/enquiry');
