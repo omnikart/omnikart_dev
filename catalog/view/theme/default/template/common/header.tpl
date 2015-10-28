@@ -110,26 +110,21 @@ _atrk_opts = { atrk_acct:"GTT9m1a47E805T", domain:"omnikart.com",dynamic: true};
 				<div class="container">
 					<div class="row">
 					<div class="clearfix"></div>
-					<?php foreach (array_chunk($categories,ceil(count($categories)/3)) as $categoryl) { ?>
+					<?php foreach (array_chunk($categories,ceil(count($categories)/4)) as $categoryl) { ?>
 					<ul class="nav navbar-nav">
 					<?php foreach ($categoryl as $category) { ?>
-					<?php /*if ($category['children']) { ?>
-					<li class="dropdown"><a href="<?php echo $category['href']; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $category['name']; ?></a>
-						<div class="dropdown-menu">
-							<div class="dropdown-inner">
-								<?php foreach (array_chunk($category['children'], ceil(count($category['children']) / $category['column'])) as $children) { ?>
-								<ul class="list-unstyled">
-									<?php foreach ($children as $child) { ?>
+					<?php if ($category['childern']) { ?>
+					<li><b><a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></b></a>
+							<ul class="list-unstyled sub-menu col-sm-12">
+									<?php foreach ($category['childern'] as $child) { ?>
 									<li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>
 									<?php } ?>
-								</ul>
-								<?php } ?>
-							</div>
-							<a href="<?php echo $category['href']; ?>" class="see-all"><?php echo $text_all; ?> <?php echo $category['name']; ?></a> </div>
+									<li><a href="<?php echo $category['href']; ?>" class="see-all"><?php echo $text_all; ?> <?php echo $category['name']; ?></a></li>
+							</ul>
 					</li>
-					<?php// } else { */?>
+					<?php } else { ?>
 					<li><a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></li>
-					<?php //} ?>
+					<?php } ?>
 					<?php } ?>
 					</ul>
 					<?php } ?>

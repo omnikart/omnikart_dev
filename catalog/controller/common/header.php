@@ -103,12 +103,22 @@ class ControllerCommonHeader extends Controller {
 		foreach ($categories as $category) {
 			if ($category['top']) {
 				// Level 2
+				$result = $this->model_catalog_category->getCategories($category['category_id']);
+				$result = array_slice($result,0,4);
 				$children_data = array();
-
+				
+					foreach ($result as $cat){
+						$children_data[] = array(
+						'name'     => $cat['name'],
+						'href'     => $this->url->link('product/category', 'path=' . $cat['category_id'])
+					);
+				}
+					
 				// Level 1
 				$data['categories'][] = array(
 					'name'     => $category['name'],
 					'column'   => $category['column'] ? $category['column'] : 1,
+					'childern' => $children_data,
 					'href'     => $this->url->link('product/category', 'path=' . $category['category_id'])
 				);
 			}
