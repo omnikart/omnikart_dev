@@ -15,3 +15,4 @@ $_['text_order']        = 'Order History';
 $_['text_wishlist']     = 'Wish List';
 $_['text_newsletter']   = 'Newsletter';
 $_['text_powered']      = 'Omnikart Engineering Pvt Ltd<br /> %s &copy; %s';
+$_['text_careers']   	= 'Careers';

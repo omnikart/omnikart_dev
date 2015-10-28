@@ -14,3 +14,5 @@ $_['text_logout']        = 'Logout';
 $_['text_checkout']      = 'Checkout';
 $_['text_search']        = 'Search';
 $_['text_all']           = 'Show All';
+$_['text_gift']          = 'Gift Card';
+$_['text_contact']       = 'Contact';

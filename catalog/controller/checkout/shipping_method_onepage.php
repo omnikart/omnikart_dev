@@ -12,7 +12,6 @@ class ControllerCheckoutShippingMethodOnepage extends Controller {
         if (empty($css['checkout_theme']) || !in_array($css['checkout_theme'], $themes)) {
             $css['checkout_theme'] = 'standar';
         }
-
         $this->load->language('checkout/checkout');
 
         $this->load->model('account/address');

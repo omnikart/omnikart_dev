@@ -489,7 +489,7 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		$this->index();
 	}
 
-  	private function validate() {
+	private function validate() {
 
   		$this->load->language('account/customerpartner/addproduct');
 

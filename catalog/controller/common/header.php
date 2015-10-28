@@ -55,7 +55,9 @@ class ControllerCommonHeader extends Controller {
 		$data['text_checkout'] = $this->language->get('text_checkout');
 		$data['text_category'] = $this->language->get('text_category');
 		$data['text_all'] = $this->language->get('text_all');
-
+		$data['text_gift'] = $this->language->get('text_gift');
+		$data['text_contact'] = $this->language->get('text_contact');
+		
 		$data['home'] = $this->url->link('common/home');
 		$data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
 		$data['logged'] = $this->customer->isLogged();
@@ -66,10 +68,11 @@ class ControllerCommonHeader extends Controller {
 		$data['transaction'] = $this->url->link('account/transaction', '', 'SSL');
 		$data['download'] = $this->url->link('account/download', '', 'SSL');
 		$data['logout'] = $this->url->link('account/logout', '', 'SSL');
-		$data['shopping_cart'] = $this->url->link('checkout/cart');
+		$data['shopping_cart'] = $this->url->link('checkout/cart', '', 'SSL');
 		$data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
-		$data['contact'] = $this->url->link('information/contact');
-		$data['careers'] = $this->url->link('information/careers');
+		$data['contact'] = $this->url->link('information/contact', '', 'SSL');
+		$data['careers'] = $this->url->link('information/careers', '', 'SSL');
+		$data['gift'] = $this->url->link('account/voucher', '', 'SSL');
 		
 		$data['telephone'] = $this->config->get('config_telephone');
 		$data['email'] = $this->config->get('config_email');

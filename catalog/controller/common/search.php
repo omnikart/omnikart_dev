@@ -15,23 +15,6 @@ class ControllerCommonSearch extends Controller {
 
 		$this->load->model('catalog/product');
 
-		$data['categories'] = array();
-
-		$categories = $this->model_catalog_category->getCategories(0);
-
-		foreach ($categories as $category) {
-			if ($category['top']) {
-				// Level 2
-				$children_data = array();
-
-				// Level 1
-				$data['categories'][] = array(
-					'name'     => $category['name'],
-					'category_id' => $category['category_id']
-				);
-			}
-		}		
-		
 		/* Search autocomplete */
 		$data['search_action'] = $this->url->link('product/json', '', 'SSL');
 		$data['button_cart'] = $this->language->get('button_cart');

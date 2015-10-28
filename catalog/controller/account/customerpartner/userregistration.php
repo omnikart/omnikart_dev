@@ -26,7 +26,7 @@ class ControllerAccountCustomerpartnerUserregistration extends Controller {
 			$registeredCustomerId = $this->model_account_customer->addCustomer($this->request->post);
 			
 			$this->load->model("account/customerpartner");
-			$this->model_account_customerpartner->addSellerCustomerMapping($this->customer->getId(),$registeredCustomerId);
+			$this->model_account_customerpartner->addSellerCustomerMapping($registeredCustomerId);
 
 			// Clear any previous login attempts for unregistered accounts.
 			$this->model_account_customer->deleteLoginAttempts($this->request->post['email']);

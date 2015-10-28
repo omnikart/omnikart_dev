@@ -11,6 +11,7 @@ class ControllerCommonFooter extends Controller {
 		$data['text_sitemap'] = $this->language->get('text_sitemap');
 		$data['text_manufacturer'] = $this->language->get('text_manufacturer');
 		$data['text_voucher'] = $this->language->get('text_voucher');
+		$data['text_careers'] = $this->language->get('text_careers');
 		$data['text_affiliate'] = $this->language->get('text_affiliate');
 		$data['text_special'] = $this->language->get('text_special');
 		$data['text_account'] = $this->language->get('text_account');
@@ -43,7 +44,8 @@ class ControllerCommonFooter extends Controller {
 		$data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
 		$data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
 		$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));
-
+		$data['careers'] = $this->url->link('information/careers', '', 'SSL');
+		
 		// Whos Online
 		if ($this->config->get('config_customer_online')) {
 			$this->load->model('tool/online');

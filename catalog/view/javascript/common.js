@@ -137,14 +137,35 @@ $(document).ready(function() {
 
     console.log($(window).scrollTop());
 
-    if ($(window).scrollTop() > 100) {
-      $('#menu-holder').addClass('navbar-fixed-top');
+    if ($(window).scrollTop() > 31) {
+      $('header').addClass('navbar-fixed-top');
     }
 
-    if ($(window).scrollTop() < 101) {
-      $('#menu-holder').removeClass('navbar-fixed-top');
+    if ($(window).scrollTop() < 32) {
+      $('header').removeClass('navbar-fixed-top');
     }
-  });	
+  });
+  
+  $('#main-menu').parent().hover(function(){
+			$(".navbar-ex1-collapse").show();
+			$(".navbar-ex1-collapse").collapse('show');
+		},function(){
+			$(".navbar-ex1-collapse").hover(function(){
+					$(".navbar-ex1-collapse").show();
+					$(".navbar-ex1-collapse").collapse('show');
+				},function(){
+					$(".navbar-ex1-collapse").hide();
+					$(".navbar-ex1-collapse").collapse('hide');
+			});
+		}
+	);	
+	
+	if(window.location.hash) {
+		var hash = window.location.hash;
+     $(hash).modal('toggle');
+	} else {
+	}
+	
 });
 
 // Cart add remove functions

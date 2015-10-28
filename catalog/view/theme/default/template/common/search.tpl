@@ -1,9 +1,4 @@
 <div id="search" class="input-group">
-  <select name="category_id">
-  <?php foreach($categories as $category) { ?>
-     <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
-  <?php } ?>
-  <select>
   <input type="text" name="search" value="<?php echo $search; ?>" placeholder="<?php echo $text_search; ?>" class="form-control input-lg search-autocomplete" />
   <span class="input-group-btn">
     <button type="button" class="btn btn-default btn-lg"><i class="fa fa-search"></i></button>

@@ -24,7 +24,7 @@ $_['text_subject']			= 'Subject ';
 $_['text_ask']				= 'Ask '; 
 $_['text_close']			= 'Close'; 
 $_['text_send']				= 'Send '; 
-$_['text_sell_header']		= 'Sell'; 
+$_['text_sell_header']		= 'Sell<br>Online'; 
 $_['text_becomePartner']	= 'Yes, I want to become a Partner.'; 
 
 $_['text_error_mail']		= 'Fill all the fields.'; 

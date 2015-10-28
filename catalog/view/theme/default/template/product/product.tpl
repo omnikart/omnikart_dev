@@ -321,6 +321,12 @@
             <div class="alert alert-info"><i class="fa fa-info-circle"></i> <?php echo $text_minimum; ?></div>
             <?php } ?>
           </div>
+          <?php if ($curr_vendor) {  ?>
+    		<div class = "vendor">
+    			Sold by:<br />
+				<a href="http://localhost/unbeatable/opencart/index.php?route=customerpartner/profile&id=<?php echo $curr_vendor['vendor_id']; ?>"><?php echo $curr_vendor['companyname']; ?></a>
+    		</div>      	
+          <?php } ?>
           <?php if ($review_status) { ?>
           <div class="rating">
             <p>

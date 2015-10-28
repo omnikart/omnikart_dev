@@ -3,15 +3,9 @@ class ModelAccountAddress extends Model {
 	public function addAddress($data) {
 		$this->event->trigger('pre.customer.add.address', $data);
 
-
 		$customer_id = $this->customer->getId();
-		$this->load->model("account/customerpartner");
-		$seller_id = $this->model_account_customerpartner->getuserseller();
+		$seller_id = $customer_id;
 		
-		if (!$seller_id){
-			$seller_id = $customer_id;
-		}
-
 		$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int)$seller_id . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company = '" . $this->db->escape($data['company']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', city = '" . $this->db->escape($data['city']) . "', zone_id = '" . (int)$data['zone_id'] . "', country_id = '" . (int)$data['country_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "'");
 
 		$address_id = $this->db->getLastId();
@@ -102,12 +96,10 @@ class ModelAccountAddress extends Model {
 	public function getAddresses() {
 		$address_data = array();
 		$customer_id = $this->customer->getId();
-		$this->load->model("account/customerpartner");
-		$seller_id = $this->model_account_customerpartner->getuserseller();
+		/*$this->load->model("account/customerpartner");
+		$seller_id = $this->model_account_customerpartner->getuserseller();*/
 		
-		if (!$seller_id){
-			$seller_id = $customer_id;
-		}
+		$seller_id = $customer_id;
 		
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "address WHERE customer_id = '" . (int)$seller_id . "'");
 

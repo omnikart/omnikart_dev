@@ -9,9 +9,9 @@ class ModelAccountCd extends Model {
 		return $query2->rows;
 	}
 	public function getCategories($data = array()) {
+		$this->load->model('account/customerpartner');
+		$customer_id = $this->model_account_customerpartner->getuserseller();
 		$products = array();
-		$this->load->model('catalog/product');
-		$customer_id = $this->customer->getId();
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."customer_to_category cc LEFT JOIN ".DB_PREFIX."customer_to_categoryd ccd ON (cc.category_id=ccd.category_id) WHERE cc.customer_id = '". (int)$customer_id ."'");
 		return $query->rows;
 	}	

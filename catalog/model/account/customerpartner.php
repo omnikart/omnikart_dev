@@ -8,10 +8,10 @@ class ModelAccountCustomerpartner extends Model {
 		$this->db->query("UPDATE ".DB_PREFIX."customer SET customer_group_id = '".$customer_group_id."' WHERE customer_id = '".$customer_id."' ");
 	}
 
-	public function closePreviousReview($customer_id) {
+	public function closePreviousReview($customer_id,$order_id) {
 		$result = $this->db->query("SELECT order_review_id FROM ".DB_PREFIX."customerpartner_order_review WHERE customer_id = '".$customer_id."' AND status = 'open' ")->row;
 		if(isset($result['order_review_id'])) {
-			$this->db->query("UPDATE ".DB_PREFIX."customerpartner_order_review SET status = 'close' WHERE customer_id = '".$customer_id."' ");
+			$this->db->query("UPDATE ".DB_PREFIX."customerpartner_order_review SET status = 'close' SET order_id = ".(int)$order_id." WHERE customer_id = '".$customer_id."' ");
 			return true;
 		} else {
 			return false;
@@ -70,11 +70,10 @@ class ModelAccountCustomerpartner extends Model {
 		}
 		$resultData = array_merge($approved,$data['select']);
 		$this->db->query("UPDATE ".DB_PREFIX."customerpartner_order_review SET approve_cart = '".serialize($resultData)."' WHERE order_review_id = '".$data['order_review_id']."' ");
-
 	}
 
 	public function getReviewRequest($admin_id) {
-		$requests = $this->db->query("SELECT * FROM ".DB_PREFIX."customerpartner_seller_customer_mapping cpscm LEFT JOIN ".DB_PREFIX."customerpartner_order_review cpor ON (cpscm.customer_id=cpor.customer_id) LEFT JOIN ".DB_PREFIX."customer c ON (c.customer_id=cpor.customer_id) WHERE cpor.admin_id = '".$admin_id."' AND cpor.status='open' ")->rows;
+		$requests = $this->db->query("SELECT * FROM ".DB_PREFIX."customerpartner_employee_mapping cpem LEFT JOIN ".DB_PREFIX."customerpartner_order_review cpor ON (cpem.employee_id=cpor.customer_id) LEFT JOIN ".DB_PREFIX."customer c ON (c.customer_id=cpor.customer_id) WHERE cpor.admin_id = '".$admin_id."' AND cpor.status='open' ")->rows;
 		
 		if($requests) {
 			return $requests;
@@ -104,8 +103,7 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	public function deleteSubUser($customer_id) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "customerpartner_seller_customer_mapping WHERE customer_id = '" . (int)$customer_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "customerpartner_seller_employee_mapping WHERE employee_id = '" . (int)$customer_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "customerpartner_employee_mapping WHERE employee_id = '" . (int)$customer_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$customer_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer_reward WHERE customer_id = '" . (int)$customer_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer_transaction WHERE customer_id = '" . (int)$customer_id . "'");
@@ -114,9 +112,9 @@ class ModelAccountCustomerpartner extends Model {
 	}	
 
 	public function disableSubUser($customer_id) {
-		$checkStatus = $this->db->query("SELECT status FROM ".DB_PREFIX."customerpartner_seller_customer_mapping WHERE customer_id = '".$customer_id."' ")->row;
+		$checkStatus = $this->db->query("SELECT status FROM ".DB_PREFIX."customerpartner_employee_mapping WHERE employee_id = '".$customer_id."' ")->row;
 		if($checkStatus && $checkStatus['status'] == '1') {
-			$this->db->query("UPDATE ".DB_PREFIX."customerpartner_seller_customer_mapping SET status = '0' WHERE customer_id = '".$customer_id."' ");
+			$this->db->query("UPDATE ".DB_PREFIX."customerpartner_employee_mapping SET status = '0' WHERE employee_id = '".$customer_id."' ");
 			$this->db->query("UPDATE ".DB_PREFIX."customer SET status = '0' WHERE customer_id = '".$customer_id."' ");
 			return true;
 		} else {
@@ -125,9 +123,9 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	public function enableSubUser($customer_id) {
-		$checkStatus = $this->db->query("SELECT status FROM ".DB_PREFIX."customerpartner_seller_customer_mapping WHERE customer_id = '".$customer_id."' ")->row;
+		$checkStatus = $this->db->query("SELECT status FROM ".DB_PREFIX."customerpartner_employee_mapping WHERE employee_id = '".$customer_id."' ")->row;
 		if($checkStatus && $checkStatus['status'] == '0') {
-			$this->db->query("UPDATE ".DB_PREFIX."customerpartner_seller_customer_mapping SET status = '1' WHERE customer_id = '".$customer_id."' ");
+			$this->db->query("UPDATE ".DB_PREFIX."customerpartner_employee_mapping SET status = '1' WHERE employee_id = '".$customer_id."' ");
 			$this->db->query("UPDATE ".DB_PREFIX."customer SET status = '1' WHERE customer_id = '".$customer_id."' ");
 			return true;
 		} else {
@@ -136,45 +134,36 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	public function isSubUser($customer_id) {
-		$user = $this->db->query("SELECT seller_id FROM ".DB_PREFIX."customerpartner_seller_customer_mapping WHERE customer_id = '".$customer_id."' AND status = '1' ")->row;
+		$user = $this->db->query("SELECT seller_id FROM ".DB_PREFIX."customerpartner_employee_mapping WHERE employee_id = '".$customer_id."' AND status = '1' ")->row;
 		if($user) {
 			return $user['seller_id'];
 		} else {
 			return false;
 		}
 	}
-
-	public function isSubEmployee($customer_id) {
-		$user = $this->db->query("SELECT seller_id FROM ".DB_PREFIX."customerpartner_seller_employee_mapping WHERE employee_id = '".$customer_id."'")->row;
-		if($user) {
-			return $user['seller_id'];
-		} else {
-			return false;
-		}
-	}
-
+	/*check*/
 	public function getUserList($customer_id) {
-		$userList = $this->db->query("SELECT c.*,cpscm.*,c2m.manager_id,c2m.p_limit FROM ".DB_PREFIX."customer c LEFT JOIN ".DB_PREFIX."customerpartner_seller_customer_mapping cpscm ON (c.customer_id=cpscm.customer_id) LEFT JOIN ".DB_PREFIX."customer_to_manager c2m ON (c.customer_id=c2m.employee_id) WHERE cpscm.employee_id='".$customer_id."' ")->rows;
+		$userList = $this->db->query("SELECT c.*,cpem.*,c2m.manager_id,c2m.p_limit FROM ".DB_PREFIX."customer c LEFT JOIN ".DB_PREFIX."customerpartner_employee_mapping cpem ON (c.customer_id=cpem.employee_id) LEFT JOIN ".DB_PREFIX."customer_to_manager c2m ON (c.customer_id=c2m.employee_id) WHERE cpem.seller_id='".$customer_id."' ")->rows;
 		if($userList) {
 			return $userList;
 		} else {
 			return false;
 		}
 	}
-
+	/*check*/
 	public function getAllUserList($customer_id) {
 		$seller_id = $this->getuserseller();
-		$userList = $this->db->query("SELECT * FROM ".DB_PREFIX."customer c LEFT JOIN ".DB_PREFIX."customerpartner_seller_customer_mapping cpscm ON (c.customer_id=cpscm.customer_id) LEFT JOIN ".DB_PREFIX."customer_to_manager c2m ON (c.customer_id=c2m.employee_id) WHERE cpscm.seller_id='".$seller_id."' ")->rows;
+		$userList = $this->db->query("SELECT * FROM ".DB_PREFIX."customer c LEFT JOIN ".DB_PREFIX."customerpartner_employee_mapping cpem ON (c.customer_id=cpem.employee_id) LEFT JOIN ".DB_PREFIX."customer_to_manager c2m ON (c.customer_id=c2m.employee_id) WHERE cpem.seller_id='".$seller_id."' ")->rows;
 		if($userList) {
 			return $userList;
 		} else {
 			return false;
 		}
-	}	
+	}/*check*/	
 	
-	public function addSellerCustomerMapping($employee_id,$customer_id) {
+	public function addSellerCustomerMapping($customer_id) {
 		$seller_id = $this->getuserseller();
-		$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_seller_customer_mapping VALUES ('','".$seller_id."','".$employee_id."','".$customer_id."','1')  ");
+		$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_employee_mapping VALUES ('','".$seller_id."','".$customer_id."','1')	 ");
 		return $this->db->getLastId();
 	}
 
@@ -2033,12 +2022,36 @@ class ModelAccountCustomerpartner extends Model {
 		else $this->db->query("INSERT INTO ".DB_PREFIX."customer_to_manager (employee_id,manager_id,p_limit,customer_id) VALUES ('".$customer_id."','".$manager_id."','".$p_limit."','".$seller_id."')");
 	}
 	public function getuserseller(){
-		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."customerpartner_seller_employee_mapping WHERE employee_id = ".(int)$this->customer->getId());
+		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."customerpartner_employee_mapping WHERE employee_id = ".(int)$this->customer->getId());
 		if ($query->num_rows>0){
 			return $query->row['seller_id'];
 		} elseif ($this->chkIsPartner()) {
 			return $this->customer->getId();
 		} else return false;
+	}
+	public function getUser(){
+		$customer_id = $this->customer->getId();
+		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."customer_to_manager WHERE employee_id='".$customer_id."'");
+		return $query->row; 
+	}
+	public function savecart($data){
+		$customer_id = $this->customer->getId();
+		$query = $this->db->query("INSERT INTO ".DB_PREFIX."saved_cart VALUES ('','".$customer_id."','".serialize($this->session->data['cart'])."','". $data['date'] ."','1')");
+		return true;
+	}
+	public function getsavedcart(){
+		$customer_id = $this->customer->getId();
+		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."saved_cart WHERE customer_id = '".$customer_id."'");
+		return $query->rows;
+	}
+	public function updatecart($data){
+		$customer_id = $this->customer->getId();
+		$sql = array();
+		if (isset($data['date'])) $sql[] = " date = '".$data['date']."'";
+		if (isset($data['name'])) $sql[] = " name = '".$data['name']."'";
+		if (isset($data['cart'])) $sql[] = " cart = '".$data['cart']."'";
+			
+		$query = $this->db->query("UPDATE ".DB_PREFIX."saved_cart SET ". implode(',',$sql) . "WHERE id = '". $data['id'] ."' AND customer_id = '".$customer_id."'");
 	}
 }
 ?>

@@ -30,6 +30,9 @@
         <?php if($allowedAddEdit && $mp_ap) { ?>
 					<a href="<?php echo $insert; ?>"  data-toggle="tooltip" title="<?php echo $button_insert; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
         <?php } ?>
+		
+		<a onclick="$('#form-product').submit();" data-toggle="tooltip" class="btn btn-danger"  title="<?php echo $button_delete; ?>"><i class="fa fa-trash-o"></i></a>
+        
         <a onclick="$('#form-product').submit();" data-toggle="tooltip" class="btn btn-danger"  title="<?php echo $button_delete; ?>"><i class="fa fa-trash-o"></i></a>
       </div>
     </h1>
@@ -145,25 +148,21 @@
                   <?php }else{ ?>
                     <?php echo $product['name']; ?>
                   <?php } ?>
-
                 </td>
-
                 <td class="text-left"><?php echo $product['model']; ?></td>
-                <td class="text-left"><?php if ($product['special']) { ?>
-                  <span style="text-decoration: line-through;"><?php echo $product['price']; ?></span><br/>
-                  <span class="text-danger"><?php echo $product['special']; ?></span>
-                  <?php } else { ?>
-                  <?php echo $product['price']; ?>
-                  <?php } ?></td>
-                <td class="text-right"><?php if ($product['quantity'] <= 0) { ?>
-                  <span class="label label-warning"><?php echo $product['quantity']; ?></span>
-                  <?php } elseif ($product['quantity'] <= 5) { ?>
-                  <span class="label label-danger"><?php echo $product['quantity']; ?></span>
-                  <?php } else { ?>
-                  <span class="label label-success"><?php echo $product['quantity']; ?></span>
-                  <?php } ?></td>
-
-                <td class="text-left"><?php echo $product['status'] ? $text_enabled : $text_disabled ; ?></td>       
+                <td class="text-left">
+                	<input type="text" size="8" class="form-control" name="products[<?php echo $product['product_id']; ?>][price]" value="<?php echo $product['price']; ?>"/>
+                </td>
+                <td class="text-right">
+				  <input size="4" type="text" class="form-control <?php if ($product['quantity'] <= 0) { echo "alert-danger"; } elseif ($product['quantity'] <= 5) { echo "alert-warning"; } else { echo "alert-success"; } ?>" name="products[<?php echo $product['product_id']; ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>                  
+                  
+              	</td>
+                <td class="text-left">
+                	<select class="form-control">
+                		<option value="1" <?php echo $product['status'] ? 'selected' : '' ; ?>>Enabled</option>
+                		<option value="0" <?php echo $product['status'] ? '' : 'selected' ; ?>>Disabled</option>
+                	</select>
+                </td>       
 
                 <td class="text-right">
                   <a <?php if($product['sold']){ ?> href="<?php echo $product['soldlink']; ?>" <?php } ?> style="text-decoration:none;" />                                            

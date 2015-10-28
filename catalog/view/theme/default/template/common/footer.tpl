@@ -15,6 +15,7 @@
         <h5><?php echo $text_service; ?></h5>
         <ul class="list-group">
           <li class="list-group-item"><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
+          <li class="list-group-item"><a href="<?php echo $careers; ?>"><?php echo $text_careers; ?></a></li>
           <li class="list-group-item"><a href="<?php echo $return; ?>"><?php echo $text_return; ?></a></li>
           <li class="list-group-item"><a href="<?php echo $sitemap; ?>"><?php echo $text_sitemap; ?></a></li>
         </ul>
