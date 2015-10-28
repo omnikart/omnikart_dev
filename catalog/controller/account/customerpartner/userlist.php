@@ -71,6 +71,7 @@ class ControllerAccountCustomerpartnerUserlist extends Controller
 		if ($allusers){
 			$data['allusers'] = $allusers;
 		}
+		$data['userlist'] = array();
 		if($userList) {
 			foreach ($userList as $key => $user) {
 				$customerRights = $this->model_account_customerpartner->getCustomerGroupRights($user['customer_group_id']);
