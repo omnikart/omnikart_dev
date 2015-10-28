@@ -334,8 +334,9 @@ width:100%;
 	#menu .nav > li a {color:#333;}
 	
 	#menu .nav-bgd {
-		background: #f8f8f8;
+		background: #fff;
 		padding-top:10px;
+		border-top:1px solid #ddd;
 	}
 	
 	.navbar-fixed-top:hover .ns {display:block;}
