@@ -38,30 +38,13 @@ class ControllerModuleCategoryWall extends Controller {
 		foreach ($categories as $category) {
 			if ($category['top']) {
 
-			$childs =  $this->db->query("SELECT * FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) LEFT JOIN " . DB_PREFIX . "category_to_store c2s ON (c.category_id = c2s.category_id) WHERE c.parent_id = '" . (int)$category['category_id'] . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "'  AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.name) LIMIT 4");
-
-				$child_data = array();
-				foreach ($childs->rows as $child){
-				$filter_data = array('filter_category_id' => $child['category_id'], 'filter_sub_category' => true);
-
-					$child_data[] = array(
-						'name'     => $child['name'],
-						'href'     => $this->url->link('product/category', 'path=' . $category['category_id'].'_'.$child['category_id'])
-					);
-				}
-				$child_data[] = array(
-					'name'     => 'Click to see more',
-					'href'     => $this->url->link('product/category', 'path=' . $category['category_id'])
-				);
-
 				$filter_data = array('filter_category_id' => $category['category_id'], 'filter_sub_category' => true);
 
 				$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
 				if ($product_total!=0)	{
 				$data['categories'][] = array(
 					'name'     => $category['name'],
-					'image'    => $this->model_tool_image->resize($category['image'],110,150),
-					'child'    => $child_data,
+					'image'    => $this->model_tool_image->resize($category['image'],180,180),
 					'href'     => $this->url->link('product/category', 'path=' . $category['category_id'])
 				);}
 			}

@@ -114,8 +114,8 @@ _atrk_opts = { atrk_acct:"GTT9m1a47E805T", domain:"omnikart.com",dynamic: true};
 					<ul class="nav navbar-nav">
 					<?php foreach ($categoryl as $category) { ?>
 					<?php if ($category['childern']) { ?>
-					<li><b><a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></b></a>
-							<ul class="list-unstyled sub-menu col-sm-12">
+					<li class="col-sm-12"><h4><a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></h4></a>
+							<ul class="list-unstyled sub-menu">
 									<?php foreach ($category['childern'] as $child) { ?>
 									<li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>
 									<?php } ?>
