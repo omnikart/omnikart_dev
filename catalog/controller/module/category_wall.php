@@ -44,7 +44,7 @@ class ControllerModuleCategoryWall extends Controller {
 				if ($product_total!=0)	{
 				$data['categories'][] = array(
 					'name'     => $category['name'],
-					'image'    => $this->model_tool_image->resize($category['image'],180,180),
+					'image'    => $this->model_tool_image->resize($category['image'],150,150),
 					'href'     => $this->url->link('product/category', 'path=' . $category['category_id'])
 				);}
 			}
