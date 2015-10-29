@@ -58,6 +58,49 @@
 		        </div>
 	        </div>
       		<div id="general" class="tab-pane active">
+      			<div class="table-responsive">
+		      		<table class="table table-bordered table-hover">
+		      			<thead>
+		      				<tr>
+		      					<td class="col-sm-3"></td>
+		      					<td class="col-sm-9"></td>
+		      				</tr>
+		      			</thead>
+		      			<tbody>
+		      				<tr>
+		      					<td>Customer Order Sms</td>
+		      					<td><div class="well well-sm">
+			      					<?php foreach ($output['content'] as $template) { ?>
+			      						<div class="checkbox">
+			      							<label><input name="sms[customerorder]" value="<?php echo $template['template_name']; ?>" type="radio"><?php echo $template['template_name']; ?> (<?php echo $template['language']; ?>)</label>
+			      						</div>
+			      					<?php } ?>
+		      					</div></td>
+		      				<tr>
+		      				<tr>
+		      					<td>Supplier Order Sms</td>
+		      					<td><div class="well well-sm">
+			      					<?php foreach ($output['content'] as $template) { ?>
+			      						<div class="checkbox">
+			      							<label><input name="sms[sellertemplate]" value="<?php echo $template['template_name']; ?>" type="radio"><?php echo $template['template_name']; ?> (<?php echo $template['language']; ?>)</label>
+			      						</div>
+			      					<?php } ?>
+		      					</div></td>
+		      				<tr>
+		      				<tr>
+		      					<td>Admin Order Sms</td>
+		      					<td><div class="well well-sm">
+			      					<?php foreach ($output['content'] as $template) { ?>
+			      						<div class="checkbox">
+			      							<label><input name="sms[admintemplate]" value="<?php echo $template['template_name']; ?>" type="radio"><?php echo $template['template_name']; ?> (<?php echo $template['language']; ?>)</label>
+			      						</div>
+			      					<?php } ?>
+		      					</div></td>
+		      				<tr>
+		      				
+		      			</tbody>
+					</table>
+		        </div>
 			</div>	        
        </div>
       </div>

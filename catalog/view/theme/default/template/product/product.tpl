@@ -148,7 +148,11 @@
           <ul class="list-unstyled">
             <?php if (!$special) { ?>
             <li>
+              <?php if ($discount) { ?>
+              	<span style="text-decoration: line-through;"><?php echo $original_price; ?></span><span style="padding:1px;background:#ddd;border-radius:2px;"><?php echo $discount; ?>% Off</span>
+              <?php } ?>
               <h2><?php echo $price; ?></h2>
+            
             </li>
             <?php } else { ?>
             <li><span style="text-decoration: line-through;"><?php echo $price; ?></span></li>

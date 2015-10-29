@@ -947,6 +947,34 @@
     ]]></add>
     </operation>
     </file>
+    
+    
+ 		<file path="catalog/controller/product/category.php,catalog/controller/product/manufacturer.php,catalog/controller/product/search.php">
+			<operation>
+				<search><![CDATA[
+					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+				]]></search>
+				<add position="after"><![CDATA[
+					$original_price  = 0;
+					$discount = 0;				
+					if ($result['price'] < $result['original_price']) {
+						$original_price = $this->currency->format($this->tax->calculate($result['original_price'], $result['tax_class_id'], $this->config->get('config_tax')));
+						$discount = (int)(($result['original_price'] - $result['price'])*100/$result['original_price']);
+					}
+				]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[
+					'price'       => $price,
+				]]></search>
+				<add position="after"><![CDATA[
+					'original_price' => $original_price,
+					'discount' => $discount,				
+				]]></add>
+			</operation>
+    </file>
+    
+       
 		<file path="catalog/controller/product/product.php">
     <operation>
 			<search><![CDATA[
@@ -957,6 +985,20 @@
 				$data['vendors'] = $product_info['vendors'];
 			]]></add>
     </operation>
+      <operation>
+				<search><![CDATA[
+					$data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+				]]></search>
+				<add position="after"><![CDATA[
+					$data['original_price']  = 0;
+					$data['discount'] = 0;
+					if ($product_info['price'] < $product_info['original_price']) {
+						$data['original_price'] = $this->currency->format($this->tax->calculate($product_info['original_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+						
+						$data['discount'] = (int)(($product_info['original_price'] - $product_info['price'])*100/$product_info['original_price']);
+					}
+				]]></add>
+			</operation>
     </file>
 			
     <file path="catalog/model/catalog/product.php">
@@ -997,9 +1039,10 @@
 				'price'            => ($query->row['discount'] ? $query->row['discount'] : $query->row['price']),
 				]]></search>
 			<add position="replace"><![CDATA[
+				'original_price'	=> $query->row['price'],
 				'price'            => ($query->row['vendor_p'])?($query->row['vendor_p']):($query->row['discount'] ? $query->row['discount'] : $query->row['price']),
 				'vendors' => $vendor_data,
-				'curr_vendor' => array(	'companyname' => $curr_vend['companyname'],'vendor_id' => $curr_vend['customer_id']),
+				'curr_vendor' => array('companyname' => $curr_vend['companyname'],'vendor_id' => $curr_vend['customer_id']),
 				]]></add>
 		</operation>
     </file>

@@ -116,12 +116,12 @@
                 <?php if ($product['price']) { ?>
                 <p class="price">
                   <?php if (!$product['special']) { ?>
-                  <?php echo $product['price']; ?>
+                  	<?php if ($product['discount']) { ?>
+              			<span style="text-decoration: line-through;color:#aaa;"><?php echo $product['original_price']; ?></span>&nbsp;<span style="padding:1px;background:#ddd;border-radius:2px;background:#8FBB6C;color:#fff;">&nbsp;<?php echo $product['discount']; ?>% Off&nbsp;</span>
+              		<?php } ?>
+                  <h4><?php echo $product['price']; ?></h4>
                   <?php } else { ?>
                   <span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
-                  <?php } ?>
-                  <?php if ($product['tax']) { ?>
-                  <span class="price-tax"><?php echo $text_tax; ?> <?php echo $product['tax']; ?></span>
                   <?php } ?>
                 </p>
                 <?php } ?>
