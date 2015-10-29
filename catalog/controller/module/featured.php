@@ -38,9 +38,9 @@ class ControllerModuleFeatured extends Controller {
 						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 						$original_price  = 0;
 						$discount = 0;				
-						if ($result['price'] < $result['original_price']) {
-							$original_price = $this->currency->format($this->tax->calculate($result['original_price'], $result['tax_class_id'], $this->config->get('config_tax')));
-							$discount = (int)(($result['original_price'] - $result['price'])*100/$result['original_price']);
+						if ($product_info['price'] < $product_info['original_price']) {
+							$original_price = $this->currency->format($this->tax->calculate($product_info['original_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+							$discount = (int)(($product_info['original_price'] - $product_info['price'])*100/$product_info['original_price']);
 						}				
 					} else {
 						$price = false;
