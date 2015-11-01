@@ -107,7 +107,7 @@
                 <tr>
                   <td class="text-center"></td>
                   <td class="text-right"><?php echo $enquiry['user_info']['firstname'].' '.$enquiry['user_info']['firstname']; ?></td>
-                  <td class="text-right"><?php echo $enquiry['user_info']['phone']; ?><?php echo $enquiry['user_info']['email']; ?></td>
+                  <td class="text-right"><?php echo $enquiry['user_info']['phone']; ?> | <?php echo $enquiry['user_info']['email']; ?></td>
                   <td><table class="table">
 									<tr><td>Product name</td><td>Quantity</td><td>Specifications</td></tr>
                   <?php foreach ($enquiry['query'] as $query) { ?>

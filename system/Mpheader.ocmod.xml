@@ -986,6 +986,7 @@
 			<add position="after"><![CDATA[
 				$data['curr_vendor'] = $product_info['curr_vendor'];
 				$data['vendors'] = $product_info['vendors'];
+				$data['vlink'] = $this->url->link('customerpartner/profile&id='.$product_info['curr_vendor']['vendor_id'],'SSL')
 			]]></add>
     </operation>
       <operation>

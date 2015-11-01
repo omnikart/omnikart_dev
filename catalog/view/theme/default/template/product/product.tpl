@@ -328,7 +328,7 @@
           <?php if ($curr_vendor) {  ?>
     		<div class = "vendor">
     			Sold by:<br />
-				<a href="http://localhost/unbeatable/opencart/index.php?route=customerpartner/profile&id=<?php echo $curr_vendor['vendor_id']; ?>"><?php echo $curr_vendor['companyname']; ?></a>
+				<a href="<?php echo $vlink; ?>"><?php echo $curr_vendor['companyname']; ?></a>
     		</div>      	
           <?php } ?>
           <?php if ($review_status) { ?>
