@@ -24,6 +24,17 @@
  			<form method="post" action="<?php echo $savecart; ?>" id="form1">
  			<div class="row">
  				<div class="col-sm-4">
+ 					<div class="form-group">
+	 					<label class="control-label" for="cart-name">Enter a Short Name for Quick Order</label>
+				  		<select name="name" id="cart-select" class="form-control">
+				  				<option value="">-- Add New Cart --</option>
+							<?php foreach ($carts as $key => $cart) { ?>
+								<option value="<?php echo $cart['id']; ?>"><?php echo $cart['name']; ?></option>
+							<?php }?>  		
+				  		</select>
+	            	</div>
+ 				</div>
+ 				<div class="col-sm-4" id="new-cart">
 		 			<div class="form-group">
 	 					<label class="control-label" for="cart-name">Enter a Short Name for Quick Order</label>
 				  		<input type="text" name="name" value="" id="cart-name" class="form-control" />
@@ -49,7 +60,7 @@
         
         <?php if ($carts) { ?>
         <div class="table-responsive">
-			<table class="table table-bordered table-hover">
+			<table class="table table-bordered table-hover form-horizontal">
 				<?php foreach ($carts as $key => $cart) { ?>
 					<tr id="tr-<?php echo $key; ?>">
 						<td class="col-sm-3"><?php echo $cart['name']; ?> <input type="hidden" name="id" value="<?php echo $cart['id']; ?>" /></td>
@@ -63,7 +74,12 @@
 						</td>
 						<td class="col-sm-5"><ul>
 							<?php foreach ($cart['products'] as $product) { ?>
-								<li><?php echo $product['name']; ?> - <?php echo $product['quantity']; ?></li>
+								<li class="form-group">
+						            <label class="col-sm-8 control-label" min="0" for="input-firstname"><?php echo $product['name']; ?></label>
+						            <div class="col-sm-4">
+						            	<input type="number" name="firstname" value="<?php echo $product['quantity']; ?>" placeholder="First Name" id="input-firstname" class="form-control">
+	                          		</div>
+								</li>
 							<?php } ?>
 						</ul></td>
 						<td class="col-sm-1">
@@ -90,6 +106,12 @@ $('.datetime').datetimepicker({
 
 $('.time').datetimepicker({
 	pickDate: false
+});
+
+$('#cart-select').on('change',function(){
+	if ($(this).val()){
+		$('#new-cart').hide();
+	} else $('#new-cart').show();
 });
 
 function updatecart(id) {

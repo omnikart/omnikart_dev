@@ -11,7 +11,7 @@ class ModelAccountCustomerpartner extends Model {
 	public function closePreviousReview($customer_id,$order_id) {
 		$result = $this->db->query("SELECT order_review_id FROM ".DB_PREFIX."customerpartner_order_review WHERE customer_id = '".$customer_id."' AND status = 'open' ")->row;
 		if(isset($result['order_review_id'])) {
-			$this->db->query("UPDATE ".DB_PREFIX."customerpartner_order_review SET status = 'close' SET order_id = ".(int)$order_id." WHERE customer_id = '".$customer_id."' ");
+			$this->db->query("UPDATE ".DB_PREFIX."customerpartner_order_review SET status = 'close', order_id = ".(int)$order_id." WHERE customer_id = '".$customer_id."' ");
 			return true;
 		} else {
 			return false;
