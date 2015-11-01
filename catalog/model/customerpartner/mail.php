@@ -250,5 +250,19 @@ class ModelCustomerpartnerMail extends Model {
 		}
 	}
 
+	public function sms($data, $values){
+		$sms = new Sms();
+		$sms->username = $this->config->get('way2mint_username');
+		$sms->password = $this->config->get('way2mint_password');
+		$sms->setfrom($this->config->get('way2mint_mp_from'));
+		$sms->response_format = 'json';
+		$sms->setto(trim($data['sms_to']));
+		$sms->template($this->config->get('way2mint_mp_tpl'));
+		$param = explode(',',$this->config->get('way2mint_mp_param'));
+		$params['templateParameters['.$param[0].']'] = "Seller";
+		$params['templateParameters['.$param[1].']'] = $data['text'] ;
+		$sms->parameters($params);
+		$sms->send();
+	}
 }
 ?>

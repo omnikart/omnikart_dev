@@ -42,7 +42,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 
 			$prsql = '';
 
-			$mpSellers = $this->db->query("SELECT c.email,c.customer_id,p.product_id,p.subtract FROM ".DB_PREFIX."product p LEFT JOIN ".DB_PREFIX."customerpartner_to_product c2p ON (p.product_id = c2p.product_id) LEFT JOIN ".DB_PREFIX."customer c ON (c2p.customer_id = c.customer_id) WHERE p.product_id = '".$product['product_id']."' $prsql ORDER BY c2p.id ASC ")->row;
+			$mpSellers = $this->db->query("SELECT c.email,c.telephone,c.customer_id,p.product_id,p.subtract FROM ".DB_PREFIX."product p LEFT JOIN ".DB_PREFIX."customerpartner_to_product c2p ON (p.product_id = c2p.product_id) LEFT JOIN ".DB_PREFIX."customer c ON (c2p.customer_id = c.customer_id) WHERE p.product_id = '".$product['product_id']."' $prsql ORDER BY c2p.id ASC ")->row;
 			if(isset($mpSellers['email']) AND !empty($mpSellers['email'])){
 
 				$option_data = array();
@@ -125,6 +125,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 					$mailToSellers[] = array('email' => $mpSellers['email'],
 							'customer_id' => $mpSellers['customer_id'],
 							'seller_email' => $mpSellers['email'],
+							'seller_phone' => $mpSellers['telephone'],
 							'products' => array(0 => $products),
 							'total' => $product_total
 							);
@@ -134,6 +135,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 					$mailToSellers[] = array('email' => $mpSellers['email'],
 						'customer_id' => $mpSellers['customer_id'],
 						'seller_email' => $mpSellers['email'],
+						'seller_phone' => $mpSellers['telephone'],
 						'products' => array(0 => $products),
 						'total' => $product_total
 						);
@@ -313,9 +315,10 @@ class ModelAccountCustomerpartnerOrder extends Model {
 					//for text for seller
 					$products = $value['products'];
 					$text = $textBasic;
+					$textsms = '';
 					foreach ($products as $product) {
 						$text .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ') ' . html_entity_decode($product['total']) . "\n";                
-
+						$textsms .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ')'."\n";
 						foreach ($product['option'] as $option) {
 							$text .= chr(9) . '-' . $option['name'] . ' ' . (utf8_strlen($option['value'])) . "\n";
 						}
@@ -331,8 +334,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 						'seller_id' => $value['customer_id'],
 						'text' => $text,
 						'html' => $html,
-						'seller_id' => $this->customer->getId(),
-			        	'customer_id' => false,
+			        	'customer_id' => $this->customer->getId(),
 			        	'mail_id' => $this->config->get('marketplace_mail_order'),
 			        	'mail_from' => $this->config->get('marketplace_adminmail'),
 			        	'mail_to' => $value['seller_email'],
@@ -346,7 +348,10 @@ class ModelAccountCustomerpartnerOrder extends Model {
 			        );
 			        
 					$this->model_customerpartner_mail->mail($data,$values);
-
+					$this->model_customerpartner_mail->sms(array('seller_id' => $value['customer_id'],
+						'text' => $textsms,'sms_to'=>$value['seller_phone']),$values);
+					
+						
 				}
 			}
 		}

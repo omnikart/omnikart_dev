@@ -92,7 +92,7 @@
                 <?php } ?>
               </div>
               <div class="button-group">
-	            <input type="number" min="1" name="product[<?php echo $product['product_id']; ?>][quantity]" value="<?php echo $product['quantity']; ?>" placeholder="" id="quantity" class="form-control quantity" />
+	            <input type="number" min="1" name="productq[<?php echo $product['product_id']; ?>][quantity]" value="<?php echo $product['quantity']; ?>" placeholder="" id="quantity" class="form-control quantity" />
 	          	<button type="button" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
 			  </div>
 			  <div class="button-group button-group-2">
@@ -109,13 +109,13 @@
     <?php echo $column_right; ?></div>
 </div>
 <script type="text/javascript">
-  $('button[class="quickaddcart"]').on('click', function(){
+  $('#quickaddcart').on('click', function(){
     buttont = $(this);
-    category_id = $(this).val();
     $.ajax({
         url : 'index.php?route=account/cd/buycategory',
-        data: '&category_id='+category_id,
+        data: $('.product-thumb .hover-content input[type=\'checkbox\']:checked, .product-thumb input[type=\'number\'], #category-form input[name=\'category_id\']'),
         type: 'post',
+        dataType: 'json',
 		beforeSend: function() {
 			$(buttont).button('loading');
 		},

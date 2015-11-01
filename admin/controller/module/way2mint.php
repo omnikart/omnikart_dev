@@ -31,6 +31,20 @@ class ControllerModuleWay2mint extends Controller {
 		} else {
 			$data['error_warning'] = '';
 		}
+
+		$fields = array('way2mint_cus_tpl','way2mint_cus_param','way2mint_cus_from',
+				'way2mint_mp_tpl','way2mint_mp_param','way2mint_mp_from',
+				'way2mint_admin_tpl','way2mint_admin_param','way2mint_admin_from',
+				'way2mint_username','way2mint_password'		
+		);
+		
+		foreach ($fields as $field) {
+			if (isset($this->request->post[$field])) {
+				$data[$field] = $this->request->post[$field];
+			} else {
+				$data[$field] = $this->config->get($field);
+			}
+		}
 		
 		$data['breadcrumbs'] = array();
 		
@@ -71,5 +85,9 @@ class ControllerModuleWay2mint extends Controller {
 		
 		$this->response->setOutput($this->load->view('module/way2mint.tpl', $data));
 		
+	}
+	
+	private function validate(){
+		return true;
 	}
 }

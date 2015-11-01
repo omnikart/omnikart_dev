@@ -145,15 +145,30 @@ class ControllerAccountCd extends Controller {
 		if (isset($this->request->post['category_id'])){
 			$filter['category_id'] = $this->request->post['category_id'];
 		}
-		$data['category'] = $this->model_account_cd->getCategory($this->request->post['category_id']);
-		
-		$this->load->model('account/cd');
-		$results = $this->model_account_cd->getProducts($filter);
-		foreach ($results as $result) {
-			$this->add($result['product_id'],$result['quantity'],array());
-				
+		if (isset($this->request->post['product'])){
+			$products = $this->request->post['product'];
+		} else {
+			$products = array();
+		}
+		if (isset($this->request->post['productq'])){
+			$productq = $this->request->post['productq'];
+		} else {
+			$productq = array();
 		}
 		
+		$data['category'] = $this->model_account_cd->getCategory($this->request->post['category_id']);
+		if (!$products) {
+			$this->load->model('account/cd');
+			$results = $this->model_account_cd->getProducts($filter);
+			foreach ($results as $result) {
+				$this->add($result['product_id'],$result['quantity'],array());
+					
+			}
+		} else {
+			foreach ($products as $product){
+				$this->add($product['product_id'],$productq[$product['product_id']]['quantity'],array());
+			}
+		}
 		unset($this->session->data['shipping_method']);
 		unset($this->session->data['shipping_methods']);
 		unset($this->session->data['payment_method']);
