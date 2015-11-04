@@ -5,7 +5,7 @@ class ControllerSaleEnquiry extends Controller {
 	public function index() {
 		$this->load->language('sale/order');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setTitle("Customer Enquiries");
 
 		$this->load->model('module/enquiry');
 
@@ -21,9 +21,20 @@ class ControllerSaleEnquiry extends Controller {
 	}
 
 	public function delete() {
-
+		if ($this->request->post) {
+			$this->load->model('module/enquiry');
+			$this->model_module_enquiry->delete($this->request->post);
+			$this->response->redirect($this->url->link('sale/enquiry', 'token=' . $this->session->data['token'],'SSL'));
+		}
 	}
-
+	public function updateQuery() {
+		$json = array();
+		if ($this->request->post) {
+			$this->load->model('module/enquiry');
+			$this->model_module_enquiry->updateQuery($this->request->post);
+			$this->response->redirect($this->url->link('sale/enquiry', 'token=' . $this->session->data['token'],'SSL'));
+		}
+	}
 	protected function getList() {
 		
 		if (isset($this->request->get['filter_order_id'])) {
@@ -141,17 +152,23 @@ class ControllerSaleEnquiry extends Controller {
 			'filter_date_modified' => $filter_date_modified,
 			'sort'                 => $sort,
 			'order'                => $order,
-			'start'                => ($page - 1) * $this->config->get('config_limit_admin'),
-			'limit'                => $this->config->get('config_limit_admin')
+			'start'                => ($page - 1) * 30,
+			'limit'                => 30
 		);
 
-		$results = $this->model_module_enquiry->getEnquiry();
-		
+		$results = $this->model_module_enquiry->getEnquiry($filter_data);
+		$total = $this->model_module_enquiry->getTotalEnquiries($filter_data);
 		$data['enquiries'] = array();
 		
 		foreach ($results as $result) {
 				$link = DIR_UPLOAD.'queries/'.$result['file'];
-				$data['enquiries'][] = array("user_info"=>unserialize($result['user_info']),"query"=>unserialize($result['query']));
+				$data['enquiries'][] = array(
+						"id" => $result['id'],
+						"user_info"=>unserialize($result['user_info']),
+						"query"=>unserialize($result['query']),
+						"date" => $result['date'],
+						"status" => $result['status']
+				);
 		}
 
 		$data['heading_title'] = $this->language->get('heading_title');
@@ -243,6 +260,8 @@ class ControllerSaleEnquiry extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
+		$data['update'] = $this->url->link('sale/enquiry/updateQuery', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
+		$data['action'] = $this->url->link('sale/enquiry/delete', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
 		$data['sort_order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
 		$data['sort_customer'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
 		$data['sort_status'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
@@ -283,14 +302,14 @@ class ControllerSaleEnquiry extends Controller {
 		if (isset($this->request->get['order'])) {
 			$url .= '&order=' . $this->request->get['order'];
 		}
-		/*
+		
 		$pagination = new Pagination();
-		$pagination->total = $order_total;
+		$pagination->total = $total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_limit_admin');
+		$pagination->limit = 30;
 		$pagination->url = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
-		$data['pagination'] = $pagination->render();*/
+		$data['pagination'] = $pagination->render();
 
 		$data['sort'] = $sort;
 		$data['order'] = $order;

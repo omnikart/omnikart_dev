@@ -3,8 +3,8 @@
   <div class="page-header">
     <div class="container-fluid">
       <div class="pull-right">
-        <button type="submit" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-info"><i class="fa fa-truck"></i></button>
-        <button type="submit" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-info"><i class="fa fa-print"></i></button>
+        <button type="submit" id="button-delete" form="form-enquiry" formaction="<?php echo $action; ?>" data-toggle="tooltip" title="Delete Seleted Queries" class="btn btn-danger"><i class="fa fa-times"></i></button>
+        <button type="submit" id="button-update" form="form-enquiry" formaction="<?php echo $update; ?>" data-toggle="tooltip" title="Update Seleted Queries" class="btn btn-info"><i class="fa fa-save"></i></button>
         <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a></div>
       <h1><?php echo $heading_title; ?></h1>
       <ul class="breadcrumb">
@@ -90,24 +90,29 @@
         </div>
 				*/
 				?>
-        <form method="post" enctype="multipart/form-data" target="_blank" id="form-order">
+        <form method="post" enctype="multipart/form-data" id="form-enquiry">
           <div class="table-responsive">
             <table class="table table-bordered table-hover">
               <thead>
                 <tr>
                   <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-                  <td class="text-right">Name</td>
-                  <td class="text-left">Contact Number</td>
+                  <td class="text-right col-sm-2">Name</td>
+                  <td class="text-left col-sm-2">Contact Number</td>
                   <td class="text-left">Query Details</td>
+                  <td style="width: 1px;" class="text-left"></td>
                 </tr>
               </thead>
               <tbody>
                 <?php if ($enquiries) { ?>
                 <?php foreach ($enquiries as $enquiry) { ?>
                 <tr>
-                  <td class="text-center"></td>
-                  <td class="text-right"><?php echo $enquiry['user_info']['firstname'].' '.$enquiry['user_info']['firstname']; ?></td>
-                  <td class="text-right"><?php echo $enquiry['user_info']['phone']; ?> | <?php echo $enquiry['user_info']['email']; ?></td>
+                  <td class="text-center"><input type="checkbox" name="selected[]" value="<?php echo $enquiry['id']; ?>"></td>
+                  <td class="text-right"><?php echo $enquiry['user_info']['firstname'].' '.$enquiry['user_info']['lastname']; ?></td>
+                  <td class="text-right">
+                  	<?php echo $enquiry['user_info']['phone']; ?> <br />
+                   	<?php echo $enquiry['user_info']['email']; ?> <br />
+                   	<?php echo $enquiry['date']; ?>
+                  </td>
                   <td><table class="table">
 									<tr><td>Product name</td><td>Quantity</td><td>Specifications</td></tr>
                   <?php foreach ($enquiry['query'] as $query) { ?>
@@ -118,6 +123,15 @@
 									</tr>
 									<?php } ?>
 									</table></td>
+				<td class="text-left">
+					<select name="query[<?php echo $enquiry['id']; ?>][status]">
+						<option value="1" <?php echo (1==$enquiry['status'])?'selected':''; ?> >Pending</option>
+						<option value="2" <?php echo (2==$enquiry['status'])?'selected':''; ?>>Query Confirmed</option>
+						<option value="3" <?php echo (3==$enquiry['status'])?'selected':''; ?>>Product Suggested</option>
+						<option value="4" <?php echo (4==$enquiry['status'])?'selected':''; ?>>Product Confirmed</option>
+						<option value="5" <?php echo (5==$enquiry['status'])?'selected':''; ?>>Voided</option>						
+					</select>
+				</td>									
                 </tr>
                 <?php } ?>
                 <?php } else { ?>
@@ -130,7 +144,7 @@
           </div>
         </form>
         <div class="row">
-          <div class="col-sm-6 text-left"><?php //echo $pagination; ?></div>
+          <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
           <div class="col-sm-6 text-right"><?php //echo $results; ?></div>
         </div>
       </div>

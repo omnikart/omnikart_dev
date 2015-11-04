@@ -17,6 +17,11 @@ class ControllerApiCart extends Controller {
 					} else {
 						$option = array();
 					}
+					if (isset($product['vendor_id'])) {
+						$vendor_id = $product['vendor_id'];
+					} else {
+						$vendor_id = 0;
+					}
 
 					$this->cart->add($product['product_id'], $product['quantity'], $option,$vendor_id);
 				}

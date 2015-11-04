@@ -162,7 +162,8 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 			'sort'            => $sort,
 			'order'           => $order,
 			'start'           => ($page - 1) * $this->config->get('config_product_limit'),
-			'limit'           => $this->config->get('config_product_limit')
+			'limit'           => $this->config->get('config_product_limit'),
+			'customer_id'			=> $sellerId
 		);
 
 		if($sellerId) {
