@@ -156,7 +156,7 @@ class ControllerProductProduct extends Controller {
 
 		$this->load->model('catalog/product');
 
-		$product_info = $this->model_catalog_product->getProduct($product_id);
+		$product_info = $this->model_catalog_product->getProduct($product_id,$vendor_id);
 
 		if ($product_info) {
 			$url = '';
@@ -673,7 +673,7 @@ class ControllerProductProduct extends Controller {
 			$quantity = 1;
 		}
 
-		$product_info = $this->model_catalog_product->getProduct($product_id);
+		$product_info = $this->model_catalog_product->getProduct($product_id,$vendor_id);
 		$recurring_info = $this->model_catalog_product->getProfile($product_id, $recurring_id);
 
 		$json = array();

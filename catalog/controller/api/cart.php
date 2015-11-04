@@ -18,7 +18,7 @@ class ControllerApiCart extends Controller {
 						$option = array();
 					}
 
-					$this->cart->add($product['product_id'], $product['quantity'], $option);
+					$this->cart->add($product['product_id'], $product['quantity'], $option,$vendor_id);
 				}
 			}
 
@@ -49,7 +49,7 @@ class ControllerApiCart extends Controller {
 					}
 
 					if (!isset($json['error']['option'])) {
-						$this->cart->add($this->request->post['product_id'], $quantity, $option);
+						$this->cart->add($this->request->post['product_id'], $quantity, $option,$vendor_id);
 
 						$json['success'] = $this->language->get('text_success');
 
@@ -173,7 +173,8 @@ class ControllerApiCart extends Controller {
 					'shipping'   => $product['shipping'],
 					'price'      => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))),
 					'total'      => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']),
-					'reward'     => $product['reward']
+					'reward'     => $product['reward'],
+					'vendor_id'  => $product['vendor_id']
 				);
 			}
 

@@ -105,6 +105,7 @@ class ControllerCommonCart extends Controller {
 				'recurring' => ($product['recurring'] ? $product['recurring']['name'] : ''),
 				'quantity'  => $product['quantity'],
 				'price'     => $price,
+				'vendor_id' => $product['vendor_id'],
 				'total'     => $total,
 				'href'      => $this->url->link('product/product', 'product_id=' . $product['product_id'])
 			);

@@ -213,7 +213,8 @@ class ControllerCheckoutConfirmOnepage extends Controller {
                     'price' => $product['price'],
                     'total' => $product['total'],
                     'tax' => $this->tax->getTax($product['price'], $product['tax_class_id']),
-                    'reward' => $product['reward']
+                    'reward' => $product['reward'],
+                    'vendor_id' => $product['vendor_id']
                 );
             }
 

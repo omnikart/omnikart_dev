@@ -3,7 +3,7 @@ class ModelCustomerpartnerDashboard extends Model {
 	
 	// Sales
 	public function getTotalSales($data = array()) {
-		$sql = "SELECT SUM(c2o.customer) AS total FROM `" . DB_PREFIX . "order_product` op LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (op.product_id = c2o.product_id AND op.order_id = c2o.order_id) LEFT JOIN `".DB_PREFIX ."order` o ON (op.order_id = o.order_id) where c2o.customer_id='".$this->customer->getId()."' AND o.order_status_id > 0 ";
+		$sql = "SELECT SUM(c2o.customer) AS total FROM `" . DB_PREFIX . "order_product` op LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (op.product_id = c2o.product_id AND op.order_id = c2o.order_id) LEFT JOIN `".DB_PREFIX ."order` o ON (op.order_id = o.order_id) where c2o.customer_id='".$this->customer->getId()."' AND op.vendor_id = '".$this->customer->getId()."' AND o.order_status_id > 0 ";
 
 		if (isset($data['filter_date_added']) AND !empty($data['filter_date_added'])) {
 			$sql .= " AND DATE(c2o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";

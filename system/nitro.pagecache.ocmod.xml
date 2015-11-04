@@ -46,7 +46,7 @@
 
     <file path="catalog/model/catalog/product.php">
         <operation>
-            <search limit="1"><![CDATA[public function getProduct($product_id) {]]></search>
+            <search limit="1"><![CDATA[public function getProduct($product_id,$vendor_id=0) {]]></search>
             <add position="after"><![CDATA[
                 require_once DIR_SYSTEM . 'nitro/core/core.php';
                 require_once DIR_SYSTEM . 'nitro/core/top.php';

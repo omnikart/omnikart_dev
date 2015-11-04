@@ -159,6 +159,7 @@ class ControllerCheckoutCart extends Controller {
 					'option'    => $option_data,
 					'recurring' => $recurring,
 					'quantity'  => $product['quantity'],
+					'vendor_id' => $product['vendor_id'],
 					'stock'     => $product['stock'] ? true : !(!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning')),
 					'reward'    => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
 					'price'     => $price,
@@ -287,9 +288,15 @@ class ControllerCheckoutCart extends Controller {
 			$product_id = 0;
 		}
 
+		if (isset($this->request->post['vendor_id'])) {
+			$vendor_id = (int)$this->request->post['vendor_id'];
+		} else {
+			$vendor_id = 0;
+		}
+
 		$this->load->model('catalog/product');
 
-		$product_info = $this->model_catalog_product->getProduct($product_id);
+		$product_info = $this->model_catalog_product->getProduct($product_id,$vendor_id);
 
 		if ($product_info) {
 			if (isset($this->request->post['quantity']) && ((int)$this->request->post['quantity'] >= $product_info['minimum'])) {
@@ -333,7 +340,7 @@ class ControllerCheckoutCart extends Controller {
 			}
 
 			if (!$json) {
-				$this->cart->add($this->request->post['product_id'], $quantity, $option, $recurring_id);
+				$this->cart->add($this->request->post['product_id'], $quantity, $option, $recurring_id, $vendor_id);
 
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));
 

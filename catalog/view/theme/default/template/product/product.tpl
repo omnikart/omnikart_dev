@@ -329,7 +329,13 @@
     		<div class = "vendor">
     			Sold by:<br />
 				<a href="<?php echo $vlink; ?>"><?php echo $curr_vendor['companyname']; ?></a>
+				<input type="hidden" name="vendor_id" value="<?php echo $curr_vendor['vendor_id']; ?>">
     		</div>      	
+          <?php } ?>
+          <?php if ($vendors) {  ?>
+          	<?php foreach($vendors as $vendor) {  ?>
+          		<?php echo $vendor['companyname']; ?><?php echo $vendor['vendor_id']; ?>
+          	<?php } ?>
           <?php } ?>
           <?php if ($review_status) { ?>
           <div class="rating">
@@ -450,7 +456,7 @@ $('#button-cart').on('click', function() {
 	$.ajax({
 		url: 'index.php?route=checkout/cart/add',
 		type: 'post',
-		data: $('#product input[type=\'text\'], #product input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea'),
+		data: $('#product input[type=\'text\'], #product input[type=\'hidden\'], .vendor input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea'),
 		dataType: 'json',
 		beforeSend: function() {
 			$('#button-cart').button('loading');

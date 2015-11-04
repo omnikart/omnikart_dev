@@ -51,6 +51,7 @@ class ControllerPaymentPPStandard extends Controller {
 					'model'    => htmlspecialchars($product['model']),
 					'price'    => $this->currency->format($product['price'], $order_info['currency_code'], false, false),
 					'quantity' => $product['quantity'],
+					'vendor_id'=> $product['vendor_id'],
 					'option'   => $option_data,
 					'weight'   => $product['weight']
 				);

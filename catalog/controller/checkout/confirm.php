@@ -222,7 +222,8 @@ class ControllerCheckoutConfirm extends Controller {
 					'price'      => $product['price'],
 					'total'      => $product['total'],
 					'tax'        => $this->tax->getTax($product['price'], $product['tax_class_id']),
-					'reward'     => $product['reward']
+					'reward'     => $product['reward'],
+					'vendor_id'		=> $product['vendor_id'],
 				);
 			}
 
@@ -382,6 +383,7 @@ class ControllerCheckoutConfirm extends Controller {
 					'price'      => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))),
 					'total'      => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']),
 					'href'       => $this->url->link('product/product', 'product_id=' . $product['product_id']),
+					'vendor_id'  => $product['vendor_id'],
 				);
 			}
 

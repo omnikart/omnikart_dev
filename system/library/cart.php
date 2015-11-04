@@ -19,12 +19,22 @@ class Cart {
 
 	public function getProducts() {
 		if (!$this->data) {
+			
+			$discount_quantity = array();
+			
 			foreach ($this->session->data['cart'] as $key => $quantity) {
 				$product = unserialize(base64_decode($key));
 
 				$product_id = $product['product_id'];
 
 				$stock = true;
+
+				// Supplier
+				if (!empty($product['vendor_id'])) {
+					$vendor_id = $product['vendor_id'];
+				} else {
+					$vendor_id = 0;
+				}
 
 				// Options
 				if (!empty($product['option'])) {
@@ -166,19 +176,34 @@ class Cart {
 					}
 
 					$price = $product_query->row['price'];
+					
+					if ($vendor_id) {
+							$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND c2p.quantity > ".(int)$quantity." AND c2p.customer_id = '".(int)$vendor_id."') ");
+					} else {
+							$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND c2p.quantity > ".(int)$quantity.") ORDER BY c2p.sort_order ASC LIMIT 1");
+					}
+		
+					if($vendor->row){
+						$price = $vendor->row['price'];
+					}
 
 					// Product Discounts
-					$discount_quantity = 0;
 
+					$discount_quantity[$product_id.'-'.$vendor_id] = 0;
+					
 					foreach ($this->session->data['cart'] as $key_2 => $quantity_2) {
 						$product_2 = (array)unserialize(base64_decode($key_2));
-
+						if ($vendor_id) {
+								if ($product_2['product_id'].'-'.$product_2['vendor_id'] == $product_id.'-'.$vendor_id) {
+										$discount_quantity[$product_id.'-'.$vendor_id] += $quantity_2;
+								}
+						}
 						if ($product_2['product_id'] == $product_id) {
-							$discount_quantity += $quantity_2;
+							$discount_quantity[$product_id.'-'.$vendor_id] += $quantity_2;
 						}
 					}
 
-					$product_discount_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND quantity <= '" . (int)$discount_quantity . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
+					$product_discount_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND quantity <= '" . (int)$discount_quantity[$product_id.'-'.$vendor_id] . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
 
 					if ($product_discount_query->num_rows) {
 						$price = $product_discount_query->row['price'];
@@ -217,6 +242,12 @@ class Cart {
 					// Stock
 					if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $quantity)) {
 						$stock = false;
+					}
+
+					if($vendor->row){
+						if (!$vendor->row['quantity'] || ($vendor->row['quantity'] < $quantity)) {
+							$stock = false;
+						}
 					}
 
 					$recurring_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "recurring` `p` JOIN `" . DB_PREFIX . "product_recurring` `pp` ON `pp`.`recurring_id` = `p`.`recurring_id` AND `pp`.`product_id` = " . (int)$product_query->row['product_id'] . " JOIN `" . DB_PREFIX . "recurring_description` `pd` ON `pd`.`recurring_id` = `p`.`recurring_id` AND `pd`.`language_id` = " . (int)$this->config->get('config_language_id') . " WHERE `pp`.`recurring_id` = " . (int)$recurring_id . " AND `status` = 1 AND `pp`.`customer_group_id` = " . (int)$this->config->get('config_customer_group_id'));
@@ -263,7 +294,8 @@ class Cart {
 						'width'           => $product_query->row['width'],
 						'height'          => $product_query->row['height'],
 						'length_class_id' => $product_query->row['length_class_id'],
-						'recurring'       => $recurring
+						'recurring'       => $recurring,
+						'vendor_id'				=> $vendor_id
 					);
 				} else {
 					$this->remove($key);
@@ -286,7 +318,7 @@ class Cart {
 		return $recurring_products;
 	}
 
-	public function add($product_id, $qty = 1, $option = array(), $recurring_id = 0) {
+	public function add($product_id, $qty = 1,$option = array(), $recurring_id = 0, $vendor_id = 0) {
 		$this->data = array();
 
 		$product['product_id'] = (int)$product_id;
@@ -297,6 +329,10 @@ class Cart {
 
 		if ($recurring_id) {
 			$product['recurring_id'] = (int)$recurring_id;
+		}
+		
+		if ($vendor_id) {
+			$product['vendor_id'] = (int)$vendor_id;
 		}
 
 		$key = base64_encode(serialize($product));

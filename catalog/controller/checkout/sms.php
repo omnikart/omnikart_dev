@@ -6,11 +6,11 @@ class ControllerCheckoutSms extends Controller {
 		$sms->password = $this->config->get('way2mint_password');
 		$sms->setfrom($this->config->get('way2mint_mp_from'));
 		$sms->response_format = 'json';
-		$sms->setto('9967296963,9987520964');
+		$sms->setto('9869434826');
 		$sms->template($this->config->get('way2mint_mp_tpl'));
 		$param = explode(',',$this->config->get('way2mint_mp_param'));
-		$params['templateParameters['.$param[0].']'] = "Ashwin";//$seller_info['firstname'];
-		$params['templateParameters['.$param[1].']'] = "Narkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZopeNarkhede\nZope";//$data['text'];
+		$params['templateParameters['.$param[0].']'] = "Synthoex";
+		$params['templateParameters['.$param[1].']'] = "2 Pcs - Kleenguard G40 Latex Coated Gloves (M) 97271";
 		$sms->parameters($params);
 		$sms->send();
 	}

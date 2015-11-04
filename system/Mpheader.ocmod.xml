@@ -573,22 +573,6 @@
 						</file>
 
     <!--   for delete complete profile after delete seller or customer   -->
-        <file path="system/library/cart.php">
-                <operation>
-                        <search><![CDATA[
-    $price = $product_query->row['price'];
-                        ]]></search>
-                        <add position="after"><![CDATA[
-		$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND c2p.quantity>".(int)$quantity.") ORDER BY c2p.sort_order ASC LIMIT 1"); 
-		
-					if($vendor->row){
-						$price = $vendor->row['price'];
-					}
-                         ]]></add>
-                </operation>
-               
-        </file>
-
 
         <file path="catalog/view/theme/*/template/account/register.tpl">
                 <operation>
@@ -701,20 +685,7 @@
 
 
         <!-- send mail to seller after product sold -->
-        <file path="catalog/model/checkout/order.php">
 
-          <operation>
-            <search><![CDATA[
-        // Admin Alert Mail
-            ]]></search>
-            <add position="before"><![CDATA[
-                //for Marketplace management
-                $this->load->model('account/customerpartnerorder');
-                $this->model_account_customerpartnerorder->customerpartner($order_info,$order_status, $comment);
-            ]]></add>
-           </operation>            
-
-        </file>
 
     <file path="catalog/controller/checkout/checkout.php">
     <operation>
@@ -951,7 +922,6 @@
     </operation>
     </file>
     
-    
  		<file path="catalog/controller/product/category.php,catalog/controller/product/manufacturer.php,catalog/controller/product/search.php">
 			<operation>
 				<search><![CDATA[
@@ -979,6 +949,18 @@
     
        
 		<file path="catalog/controller/product/product.php">
+			<operation>
+			<search><![CDATA[
+				if (isset($this->request->get['product_id']))
+			]]></search>
+			<add position="before"><![CDATA[
+				if (isset($this->request->get['vendor_id'])) {
+					$vendor_id = $this->request->get['vendor_id'];
+				} else {
+					$vendor_id = 0;
+				}
+			]]></add>
+    </operation>
     <operation>
 			<search><![CDATA[
 				$data['column_left'] = $this->load->controller('common/column_left');
@@ -986,7 +968,7 @@
 			<add position="after"><![CDATA[
 				$data['curr_vendor'] = $product_info['curr_vendor'];
 				$data['vendors'] = $product_info['vendors'];
-				$data['vlink'] = $this->url->link('customerpartner/profile&id='.$product_info['curr_vendor']['vendor_id'],'SSL')
+				$data['vlink'] = $this->url->link('customerpartner/profile','id='.$product_info['curr_vendor']['vendor_id'],'SSL');
 			]]></add>
     </operation>
       <operation>
@@ -1001,6 +983,7 @@
 						
 						$data['discount'] = (int)(($product_info['original_price'] - $product_info['price'])*100/$product_info['original_price']);
 					}
+					$data['vendors'] = $product_info['vendors'];
 				]]></add>
 			</operation>
     </file>
@@ -1011,35 +994,41 @@
     $query = $this->db->query("SELECT DISTINCT *, pd.name AS name, p.image, m.name AS manufacturer, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
     ]]></search>
     <add position="replace" ><![CDATA[
-			
-			$query = $this->db->query("SELECT DISTINCT *, pd.name AS name, p.image, m.name AS manufacturer, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.product_id = p.product_id ORDER BY c2p.sort_order ASC LIMIT 1) AS vendor_p, (SELECT customer_id FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.product_id = p.product_id ORDER BY c2p.sort_order ASC LIMIT 1) AS vendor_id, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
+			$query = $this->db->query("SELECT DISTINCT *, pd.name AS name, p.image, m.name AS manufacturer, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT customer_id FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.product_id = p.product_id ORDER BY c2p.sort_order ASC LIMIT 1) AS vendor_id, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
 			
 			$this->load->model('account/customerpartner');
 			$vendor_data = array();
-
-			if (isset($query->row['vendor_id'])) {
-				$curr_vend = $this->model_account_customerpartner->getProfile($query->row['vendor_id']);
+			
+			$vendor = $this->model_account_customerpartner->getProfile($vendor_id);
+			
+			if (!$vendor_id || !$vendor) $vendor_id = $query->row['vendor_id'];
+			
+			if ($vendor_id) {
+				$vendor = $this->model_account_customerpartner->getProfile($vendor_id);
 				
-				if (!$curr_vend) {
-					$curr_vend = array('companyname'=>'','customer_id'=>'');
+				$prices = $this->model_account_customerpartner->getProductPQ($product_id,$vendor_id);
+				
+				if (!$vendor) {
+					$curr_vend = array('companyname'=>'','customer_id'=>'','quantity'=>'','price'=>'');
+				} else {
+					$curr_vend = array('companyname'=>$vendor['companyname'],'customer_id'=>$vendor['customer_id'],'price'=>$prices['price'],'quantity'=>$prices['quantity']);
 				}
-				
-				$vendor_q = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.product_id = ".(int)$product_id . " AND c2p.customer_id <> ".(int)$query->row['vendor_id']. "  ORDER BY c2p.sort_order");
+				$vendor_q = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.product_id = ".(int)$product_id . " AND c2p.customer_id <> ".(int)$vendor_id. "  ORDER BY c2p.sort_order");
 				if ($vendor_q->num_rows > 0) {
-					foreach ($vendor_q->rows as $vendor_id) {
-						$temp = $this->model_account_customerpartner->getProfile($vendor_id['customer_id']);
+					foreach ($vendor_q->rows as $vendors_id) {
+						$temp = $this->model_account_customerpartner->getProfile($vendors_id['customer_id']);
+						$prices = $this->model_account_customerpartner->getProductPQ($product_id,$vendors_id['customer_id']);
 						$vendor_data[] = array(
 							'companyname' => $temp['companyname'],
-							'vendor_id' => $temp['customer_id']
+							'vendor_id' => $temp['customer_id'],
+							'quantity'=>$prices['quantity'],
+							'price'=>$prices['price']
 						);
 					}
 				}
-				
-				
 			} else {
-				$curr_vend = array('companyname'=>'','customer_id'=>'');
+				$curr_vend = array('companyname'=>'','customer_id'=>'','quantity'=>'','price'=>'');
 			}
-		
     ]]></add>
     </operation>
 		<operation>
@@ -1048,13 +1037,18 @@
 				]]></search>
 			<add position="replace"><![CDATA[
 				'original_price'	=> $query->row['price'],
-				'price'            => ($query->row['vendor_p'])?($query->row['vendor_p']):($query->row['discount'] ? $query->row['discount'] : $query->row['price']),
+				'price'            => ($curr_vend['price'])?($curr_vend['price']):($query->row['discount'] ? $query->row['discount'] : $query->row['price']),
 				'vendors' => $vendor_data,
 				'curr_vendor' => array('companyname' => $curr_vend['companyname'],'vendor_id' => $curr_vend['customer_id']),
 				]]></add>
 		</operation>
+		<operation>
+			<search><![CDATA[
+				'quantity'         => $query->row['quantity'],
+				]]></search>
+			<add position="replace"><![CDATA[
+				'quantity'         => ($curr_vend['quantity'])?$curr_vend['quantity']:$query->row['quantity'],
+				]]></add>
+		</operation>		
     </file>
-
-
-
 </modification>

@@ -78,6 +78,7 @@ class ControllerAccountCustomerpartnerOrderreview extends Controller
 		          'name' => $product['name'],
 		          'model' => $product['model'],
 		          'quantity' => $product['quantity'],
+		          'vendor_id' => $product['vendor_id']
 		        );
 		        $data['abortEnable'] = true;
 		        $data['reviewEnable'] = true;

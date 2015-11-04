@@ -18,7 +18,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 		$shipping = 0;
 		$paid_shipping = false;
 		$admin_shipping_method = false;
-		$resultData = $this->sellerAdminData( $this->cart->getProducts() );
+		$resultData = $this->sellerAdminData($this->cart->getProducts());
 
 		if($this->config->get('marketplace_allowed_shipping_method')) {
 			if(in_array($order_info['shipping_code'],$this->config->get('marketplace_allowed_shipping_method'))) {
@@ -42,7 +42,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 
 			$prsql = '';
 
-			$mpSellers = $this->db->query("SELECT c.email,c.telephone,c.customer_id,p.product_id,p.subtract FROM ".DB_PREFIX."product p LEFT JOIN ".DB_PREFIX."customerpartner_to_product c2p ON (p.product_id = c2p.product_id) LEFT JOIN ".DB_PREFIX."customer c ON (c2p.customer_id = c.customer_id) WHERE p.product_id = '".$product['product_id']."' $prsql ORDER BY c2p.id ASC ")->row;
+			$mpSellers = $this->db->query("SELECT c.email,c.telephone,c.customer_id,p.product_id,p.subtract FROM ".DB_PREFIX."product p LEFT JOIN ".DB_PREFIX."customerpartner_to_product c2p ON (p.product_id = c2p.product_id) LEFT JOIN ".DB_PREFIX."customer c ON (c2p.customer_id = c.customer_id) WHERE p.product_id = '".$product['product_id']."' AND c2p.customer_id = '".$product['vendor_id']."' $prsql ORDER BY c2p.id ASC ")->row;
 			if(isset($mpSellers['email']) AND !empty($mpSellers['email'])){
 
 				$option_data = array();
@@ -350,8 +350,6 @@ class ModelAccountCustomerpartnerOrder extends Model {
 					$this->model_customerpartner_mail->mail($data,$values);
 					$this->model_customerpartner_mail->sms(array('seller_id' => $value['customer_id'],
 						'text' => $textsms,'sms_to'=>$value['seller_phone']),$values);
-					
-						
 				}
 			}
 		}
@@ -463,7 +461,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 				
 				$weight = ($weight < 0.1 ? 0.1 : $weight);
 				
-				$seller_zip = $this->db->query("SELECT a.postcode,a.customer_id,a.city,c.iso_code_2 as country,z.code as state,c2c.paypalid FROM ".DB_PREFIX."product p LEFT JOIN ".DB_PREFIX."customerpartner_to_product c2p ON (p.product_id = c2p.product_id) LEFT JOIN ".DB_PREFIX."address a ON(c2p.customer_id = a.customer_id) LEFT JOIN ".DB_PREFIX."zone z ON (a.zone_id = z.code) LEFT JOIN ".DB_PREFIX."country c ON (a.country_id = c.country_id) RIGHT JOIN " . DB_PREFIX . "customerpartner_to_customer c2c ON (c2c.customer_id = a.customer_id) WHERE p.product_id='".$product['product_id']."'")->row;
+				$seller_zip = $this->db->query("SELECT a.postcode,a.customer_id,a.city,c.iso_code_2 as country,z.code as state,c2c.paypalid FROM ".DB_PREFIX."product p LEFT JOIN ".DB_PREFIX."customerpartner_to_product c2p ON (p.product_id = c2p.product_id) LEFT JOIN ".DB_PREFIX."address a ON(c2p.customer_id = a.customer_id) LEFT JOIN ".DB_PREFIX."zone z ON (a.zone_id = z.code) LEFT JOIN ".DB_PREFIX."country c ON (a.country_id = c.country_id) RIGHT JOIN " . DB_PREFIX . "customerpartner_to_customer c2c ON (c2c.customer_id = a.customer_id) WHERE p.product_id='".$product['product_id']."',c2p.customer_id='".$product['vendor_id']."'")->row;
 
 				if($seller_zip){
 
@@ -481,7 +479,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 					        if($sellers['seller'] == $seller_zip['customer_id']) {
 					        	$seller[$index]['weight'] = (float)$sellers['weight']+(float)$weight;
 					        	$seller[$index]['name'] = $sellers['name'].', '.$product['name'];
-							    $seller[$index]['total'] = $sellers['total'] + $product['total'];
+										$seller[$index]['total'] = $sellers['total'] + $product['total'];
 				        		$seller[$index]['price'] = (float)$commission_array['customer']+(float)$sellers['price'];
 					        	$entry = 1;
 					         }
@@ -506,7 +504,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 					 	$zipCode = substr($seller_zip['postcode'], 0, 5);
 						$seller[$seller_zip['customer_id']] = array(
 										  'seller' => $seller_zip['customer_id'],							
-										  'zip' => $zipCode,
+												'zip' => $zipCode,
 										  'weight' => $weight,
 										  'name' => $product['name'],
 										  'city' => $seller_zip['city'],
@@ -556,7 +554,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 					if($seller){
 						foreach($seller as $index => $sellers) {
 					        if($sellers['seller'] == 'Admin') {
-							    $seller[$index]['total'] = $sellers['total'] + $product['total'];
+										$seller[$index]['total'] = $sellers['total'] + $product['total'];
 					        	$seller[$index]['weight'] = (float)$sellers['weight']+(float)$weight;
 					        	$seller[$index]['name'] = $sellers['name'].', '.$product['name'];
 				        		$seller[$index]['price'] = (float)$sellers['price']+(float)$product['total'];	        	
@@ -569,11 +567,11 @@ class ModelAccountCustomerpartnerOrder extends Model {
 										  'seller' => 'Admin',								
 										  'zip' => $zipCode,
 										  'weight' => $weight,
-									  	  'name' => $product['name'],
+											'name' => $product['name'],
 										  'city' => $this->config->get('wkmpups_city'),
 										  'country' => $this->config->get('wkmpups_country'),
 										  'state' => $this->config->get('wkmpups_state'),
-									  	  'price' => $product['total'],											  
+											'price' => $product['total'],											  
 										  'total' => $product['total'],										  
 										  'paypalid' => $this->config->get('wk_adaptive_pay_email'),									  
 										  'primary' => true,
@@ -595,13 +593,8 @@ class ModelAccountCustomerpartnerOrder extends Model {
 										  'primary' => true,
 										);
 					}
-					 			
 				}
-
-				
 			}
-
-
 		return $seller;
 	}
 
