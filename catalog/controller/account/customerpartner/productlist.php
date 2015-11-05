@@ -15,7 +15,7 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 
 		//$customerRights = $this->model_account_customerpartner->getCustomerGroupRights($this->customer->getGroupId());
     
-    $customerRights = $this->customer->getRights();
+    	$customerRights = $this->customer->getRights();
     
 		if($customerRights && !array_key_exists('productlist', $customerRights['rights'])) {
 			$this->response->redirect($this->url->link('account/account', '','SSL'));
@@ -490,6 +490,22 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		$this->index();
 	}
 
+	public function updateProduct(){
+		$this->load->model('account/customerpartner');
+		if (isset($this->request->post['selected']) && $this->validate()) {
+			$data = $this->request->post;
+			$this->model_account_customerpartner->updateProducts($data);
+			$this->response->setOutput(json_encode($this->request->post));
+		}	
+	}
+	public function disableProduct(){
+		$this->load->model('account/customerpartner');
+		if (isset($this->request->post['selected']) && $this->validate()) {
+			$data = $this->request->post;
+			$this->model_account_customerpartner->disableProducts($data);
+			$this->response->setOutput(json_encode($this->request->post));
+		}
+	}	
 	private function validate() {
 
   		$this->load->language('account/customerpartner/addproduct');

@@ -178,9 +178,9 @@ class Cart {
 					$price = $product_query->row['price'];
 					
 					if ($vendor_id) {
-							$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND c2p.quantity > ".(int)$quantity." AND c2p.customer_id = '".(int)$vendor_id."') ");
+							$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND c2p.customer_id = '".(int)$vendor_id."' AND status='1')");
 					} else {
-							$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND c2p.quantity > ".(int)$quantity.") ORDER BY c2p.sort_order ASC LIMIT 1");
+							$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND status='1') ORDER BY c2p.sort_order ASC LIMIT 1");
 					}
 		
 					if($vendor->row){
@@ -240,12 +240,12 @@ class Cart {
 					}
 
 					// Stock
-					if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $quantity)) {
-						$stock = false;
-					}
-
 					if($vendor->row){
 						if (!$vendor->row['quantity'] || ($vendor->row['quantity'] < $quantity)) {
+							$stock = false;
+						}
+					} else {
+						if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $quantity)) {
 							$stock = false;
 						}
 					}
@@ -442,13 +442,11 @@ class Cart {
 
 	public function hasStock() {
 		$stock = true;
-
 		foreach ($this->getProducts() as $product) {
 			if (!$product['stock']) {
 				$stock = false;
 			}
 		}
-
 		return $stock;
 	}
 

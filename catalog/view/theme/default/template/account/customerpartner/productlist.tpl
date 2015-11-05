@@ -30,9 +30,8 @@
         <?php if($allowedAddEdit && $mp_ap) { ?>
 					<a href="<?php echo $insert; ?>"  data-toggle="tooltip" title="<?php echo $button_insert; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
         <?php } ?>
-		
-		<a onclick="$('#form-product').submit();" data-toggle="tooltip" class="btn btn-danger"  title="<?php echo $button_delete; ?>"><i class="fa fa-trash-o"></i></a>
-        
+		<button data-toggle="tooltip" class="btn btn-danger" id="updateProducts"  title="Update Current Changes"><i class="fa fa-save"></i></button>
+		<button data-toggle="tooltip" class="btn btn-danger" id="disableProducts"  title="Disable Current Changes"><i class="fa fa-times"></i></button>
         <a onclick="$('#form-product').submit();" data-toggle="tooltip" class="btn btn-danger"  title="<?php echo $button_delete; ?>"><i class="fa fa-trash-o"></i></a>
       </div>
     </h1>
@@ -148,17 +147,19 @@
                   <?php }else{ ?>
                     <?php echo $product['name']; ?>
                   <?php } ?>
+                  <input type="hidden" name="products[<?php echo $product['product_id']; ?>][id]" value="<?php echo $product['product_id']; ?>" />
+                  
                 </td>
                 <td class="text-left"><?php echo $product['model']; ?></td>
                 <td class="text-left">
-                	<input type="text" size="8" class="form-control" name="products[<?php echo $product['product_id']; ?>][price]" value="<?php echo $product['price']; ?>"/>
+                	<input type="text" style="width:70px;" class="form-control" name="products[<?php echo $product['product_id']; ?>][price]" value="<?php echo $product['price']; ?>"/>
                 </td>
                 <td class="text-right">
-				  <input size="4" type="text" class="form-control <?php if ($product['quantity'] <= 0) { echo "alert-danger"; } elseif ($product['quantity'] <= 5) { echo "alert-warning"; } else { echo "alert-success"; } ?>" name="products[<?php echo $product['product_id']; ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>                  
+				  <input type="text" style="width:50px;" class="form-control" name="products[<?php echo $product['product_id']; ?>][quantity]" <?php if ($product['quantity'] <= 0) { echo "alert-danger"; } elseif ($product['quantity'] <= 5) { echo "alert-warning"; } else { echo "alert-success"; } ?>" value="<?php echo $product['quantity']; ?>"/>                  
                   
               	</td>
                 <td class="text-left">
-                	<select class="form-control">
+                	<select class="form-control" style="width:70px;" name="products[<?php echo $product['product_id']; ?>][status]">
                 		<option value="1" <?php echo $product['status'] ? 'selected' : '' ; ?>>Enabled</option>
                 		<option value="0" <?php echo $product['status'] ? '' : 'selected' ; ?>>Disabled</option>
                 	</select>
@@ -260,7 +261,23 @@ function filter() {
 }
 //--></script> 
 <script type="text/javascript"><!--
-$('.row input').keydown(function(e) {
+$('.row input').keydown($('#updateProducts').on('click',function(){
+	$.ajax({
+		url: 'index.php?route=account/customerpartner/productlist/updateProduct',
+		type: 'post',
+		data: $('#form-product').serialize(),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button-cart').button('loading');
+		},
+		complete: function() {
+			$('#button-cart').button('reset');
+		},
+		success: function(json) {
+		
+		}	
+	});
+});function(e) {
   if (e.keyCode == 13) {
     filter();
   }
@@ -315,6 +332,41 @@ $('input[name=\'filter_model\']').autocomplete({
   focus: function(item) {
     return false;
   }
+});
+
+$('#updateProducts').on('click',function(){
+	$.ajax({
+		url: 'index.php?route=account/customerpartner/productlist/updateProduct',
+		type: 'post',
+		data: $('#form-product').serialize(),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button-cart').button('loading');
+		},
+		complete: function() {
+			$('#button-cart').button('reset');
+		},
+		success: function(json) {
+		
+		}	
+	});
+});
+$('#disableProducts').on('click',function(){
+	$.ajax({
+		url: 'index.php?route=account/customerpartner/productlist/disableProduct',
+		type: 'post',
+		data: $('#form-product').serialize(),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button-cart').button('loading');
+		},
+		complete: function() {
+			$('#button-cart').button('reset');
+		},
+		success: function(json) {
+		
+		}	
+	});
 });
 //--></script> 
 <?php echo $footer; ?>

@@ -233,7 +233,7 @@ class ModelAccountCustomerpartner extends Model {
 		if(!$seller_id) {
 			$seller_id = $this->customer->getId();
 		}
-		$sql = $this->db->query("SELECT c2p.customer_id FROM ".DB_PREFIX ."customerpartner_to_product c2p LEFT JOIN ".DB_PREFIX ."product p ON (c2p.product_id = p.product_id) WHERE p.product_id = '".(int)$product_id."' AND c2p.customer_id = '".(int)$seller_id."'ORDER BY c2p.id ASC");
+		$sql = $this->db->query("SELECT c2p.customer_id FROM ".DB_PREFIX ."customerpartner_to_product c2p LEFT JOIN ".DB_PREFIX ."product p ON (c2p.product_id = p.product_id) WHERE p.product_id = '".(int)$product_id."' AND c2p.customer_id = '".(int)$seller_id."'");
 
 		if($sql->row){
 				return true;
@@ -305,7 +305,7 @@ class ModelAccountCustomerpartner extends Model {
 				'reviews'          => $query->row['reviews'] ? $query->row['reviews'] : 0,
 				'minimum'          => $query->row['minimum'],
 				'sort_order'       => $query->row['sort_order'],
-				'status'           => $query->row['status'],
+				'status'           => $vendor_data->row['status'],
 				'date_added'       => $query->row['date_added'],
 				'date_modified'    => $query->row['date_modified'],
 				'viewed'           => $query->row['viewed'],
@@ -605,7 +605,7 @@ class ModelAccountCustomerpartner extends Model {
 		if($sellerId) {
 			$sellerId = $sellerId;
 		} else {
-			$sellerId = $this->customer->getId();
+			$sellerId = $this->getuserseller();
 		}
 
 		if(!isset($this->request->get['product_id']))
@@ -620,20 +620,16 @@ class ModelAccountCustomerpartner extends Model {
 		$renamedImage = '';
 
 		if (isset($files['image']['name']) AND $files['image']['name']) {
-
 			$renamedImage = rand(100000,999999) . basename(preg_replace('~[^\w\./\\\\]+~', '', $files['image']["name"]));
 			//upload product base image
 			move_uploaded_file($files["image"]["tmp_name"], DIR_IMAGE . MPIMAGEFOLDER .$renamedImage);
-
 			if(isset($data['image']) AND $data['image'] AND file_exists(DIR_IMAGE.$data['image']))
 					unlink(DIR_IMAGE.$data['image']);
-
 		}
 
 		//to remove previous image from folder	
 		if (isset($files['product_image']['name']) AND $files['product_image']['name']) {
 			foreach ($files['product_image']['name'] as $index => $product_image) {				
-
 				if($product_image['image']){
 					$newImage = rand(100000,999999) . basename(preg_replace('~[^\w\./\\\\]+~', '', $product_image['image']));
 					//upload product images
@@ -641,7 +637,6 @@ class ModelAccountCustomerpartner extends Model {
 
 					if(isset($data['product_image'][$index]['image']) AND $data['product_image'][$index]['image'] AND file_exists(DIR_IMAGE.$data['product_image'][$index]['image']))
 						unlink(DIR_IMAGE.$data['product_image'][$index]['image']);
-
 					$data['product_image'][$index]['image'] = MPIMAGEFOLDER.$newImage;
 
 				}
@@ -703,6 +698,22 @@ class ModelAccountCustomerpartner extends Model {
 
 	}
 
+	public function updateProducts($data,$sellerId = 0){
+		if (!$sellerId) $sellerId = $this->getuserseller();
+		foreach($data['products'] as $product) {
+			if (in_array($product['id'],$data['selected'])){
+				$this->db->query("UPDATE ".DB_PREFIX."customerpartner_to_product SET status = '".$product['status']."',price = '".$product['price']."',quantity = '".$product['quantity']."' WHERE product_id = '".(int)$product['id']."' AND customer_id = '".(int)$sellerId."'");
+			}			
+		}
+	}
+	public function disableProducts($data,$sellerId = 0){
+		if (!$sellerId) $sellerId = $this->getuserseller();
+		foreach($data['products'] as $product) {
+			if (in_array($product['id'],$data['selected'])){
+				$this->db->query("UPDATE ".DB_PREFIX."customerpartner_to_product SET status = '0' WHERE product_id = '".(int)$product['id']."' AND customer_id = '".(int)$sellerId."'");
+			}
+		}
+	}
 	public function productQuery($sql,$data){
 
 		$implode = array();
@@ -957,7 +968,7 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	public function getProductPQ($product_id,$vendor_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX ."customerpartner_to_product WHERE product_id = '" . (int)$product_id . "' AND customer_id = '".$vendor_id."'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX ."customerpartner_to_product WHERE product_id = '" . (int)$product_id . "' AND customer_id = '".$vendor_id."' AND status = '1'");
 
 		return $query->row;
 	}
