@@ -1007,7 +1007,7 @@
 			
 			$vendor = $this->model_account_customerpartner->getProfile($vendor_id);
 			
-			if (!($vendor_id && $vendor)) {$vendor_id = $query2->row['vendor_id'];}
+			if (!($vendor_id && $vendor)) { if ($query2->num_rows) $vendor_id = $query2->row['vendor_id']; }
 
 			
 			if ($vendor_id) {
