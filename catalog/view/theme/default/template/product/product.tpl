@@ -333,8 +333,9 @@
     		</div>      	
           <?php } ?>
           <?php if ($vendors) {  ?>
+          	Also available with: <br />
           	<?php foreach($vendors as $vendor) {  ?>
-          		<?php echo $vendor['companyname']; ?><?php echo $vendor['vendor_id']; ?>
+          		<a href="<?php echo $vendor['link']; ?>"><?php echo $vendor['companyname']; ?> at <?php echo $vendor['price']; ?></a>
           	<?php } ?>
           <?php } ?>
           <?php if ($review_status) { ?>

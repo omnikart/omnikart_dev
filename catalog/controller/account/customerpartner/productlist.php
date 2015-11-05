@@ -14,7 +14,7 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		$this->load->model('account/customerpartner');
 
 		//$customerRights = $this->model_account_customerpartner->getCustomerGroupRights($this->customer->getGroupId());
-    	/*hello*/
+
     	$customerRights = $this->customer->getRights();
     
 		if($customerRights && !array_key_exists('productlist', $customerRights['rights'])) {
