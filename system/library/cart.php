@@ -183,7 +183,7 @@ class Cart {
 							$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND status='1') ORDER BY c2p.sort_order ASC LIMIT 1");
 					}
 		
-					if($vendor->row){
+					if($vendor->row && $vendor->row['price']){
 						$price = $vendor->row['price'];
 					}
 
