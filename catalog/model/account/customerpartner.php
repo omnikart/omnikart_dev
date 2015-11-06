@@ -408,6 +408,59 @@ class ModelAccountCustomerpartner extends Model {
 		return $product_data;
 	}
 
+	public function getProductsAddSeller($data = array()) {
+		
+		$sql = "SELECT p.product_id,pd.name,p.model,p.price,p.image";
+	
+		if (!empty($data['filter_category_id'])) {
+			$sql .= " FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (cp.category_id = p2c.category_id)";
+			$sql .= " LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id)";
+		} else {
+			$sql .= " FROM " . DB_PREFIX . "product p";
+		}
+	
+		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
+		
+		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		
+		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {
+			$sql .= " AND cp.path_id = '" . (int)$data['filter_category_id'] . "'";
+		}
+		if (isset($data['filter_name']) AND !empty($data['filter_name'])) {
+			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+		}
+		if (isset($data['filter_model']) AND !empty($data['filter_model'])) {
+			$sql .= " AND p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
+		}
+		if (isset($data['filter_store']) && !is_null($data['filter_store'])) {
+			$sql .= " AND p2s.store_id = '" . (int)$data['filter_store'] . "'";
+		}
+		if(!isset($data['customer_id']) || !$data['customer_id'])
+			$sql .= " AND (p.product_id NOT IN (SELECT c2p.product_id FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.customer_id = '". $this->getuserseller()."'))" ;
+		else
+			$sql .= " AND (p.product_id NOT IN (SELECT c2p.product_id FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.customer_id = '". (int)$data['customer_id']."'))" ;
+		
+		$sql .= " GROUP BY p.product_id";		
+		$sql .= " ORDER BY pd.name";
+		$sql .= " ASC";
+		$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+		$query = $this->db->query($sql);
+		
+		$product_data = array();
+		foreach ($query->rows as $result) {
+			$product_data[$result['product_id']] = array(
+						'product_id' => $result['product_id'],
+						'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+						'model'      => $result['model'],
+						'price'      => $result['price'],
+						'image'      => $result['image'],
+						'category'	 => $this->getProductCategories($result['product_id'])
+				);
+		}
+		
+		return $product_data;
+	}
+	
 	public function getTotalProductsSeller($data = array()) {
 
 		$sql = "SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2p.product_id = p.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
@@ -456,6 +509,43 @@ class ModelAccountCustomerpartner extends Model {
 		return count($query->rows);
 	}
 
+	public function getTotalAddProductsSeller($data = array()) {
+	
+		$sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
+		
+		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {
+			$sql .= " LEFT JOIN " . DB_PREFIX ."product_to_category p2c ON (p.product_id = p2c.product_id)";
+		}
+		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {
+			$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
+		}
+		if (isset($data['filter_name']) AND !empty($data['filter_name'])) {
+			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+		}
+		if (isset($data['filter_model']) AND !empty($data['filter_model'])) {
+			$sql .= " AND p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
+		}
+		if (isset($data['filter_store']) && !is_null($data['filter_store'])) {
+			$sql .= " AND p2s.store_id = '" . (int)$data['filter_store'] . "'";
+		}
+		if(!isset($data['customer_id']) || !$data['customer_id'])
+			$sql .= " AND (p.product_id NOT IN (SELECT c2p.product_id FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.customer_id = '". $this->getuserseller()."'))" ;
+		else
+			$sql .= " AND (p.product_id NOT IN (SELECT c2p.product_id FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.customer_id = '". (int)$data['customer_id']."'))" ;
+		
+		$sql .= " GROUP BY p.product_id";		
+		$sql .= " ORDER BY pd.name";
+		$sql .= " ASC";
+		$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+	
+		$query = $this->db->query($sql);
+
+		return $query->row?$query->row['total']:0;
+	}
+	
+	
+	
 	public function deleteProduct($product_id) {
 
 		if($this->chkSellerPoductAccess($product_id)){
@@ -706,6 +796,14 @@ class ModelAccountCustomerpartner extends Model {
 			}			
 		}
 	}
+	public function addProducts($data,$sellerId = 0){
+		if (!$sellerId) $sellerId = $this->getuserseller();
+		foreach($data['products'] as $product) {
+			if (in_array($product['id'],$data['selected'])){
+				$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_to_product VALUES ('','".$sellerId."','".$product['id']."','".$product['price']."','".$product['quantity']."','0','1')");
+			}
+		}
+	}
 	public function disableProducts($data,$sellerId = 0){
 		if (!$sellerId) $sellerId = $this->getuserseller();
 		foreach($data['products'] as $product) {
@@ -880,15 +978,8 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	public function getProductCategories($product_id) {
-		$product_category_data = array();
-
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
-
-		foreach ($query->rows as $result) {
-			$product_category_data[] = $result['category_id'];
-		}
-
-		return $product_category_data;
+		$query = $this->db->query("SELECT pc.category_id, (SELECT cp.path_id FROM " . DB_PREFIX . "category_path cp WHERE (cp.category_id = pc.category_id) AND cp.level = 0) as parent_id FROM " . DB_PREFIX . "product_to_category pc WHERE pc.product_id = '" . (int)$product_id . "'");
+		return $query->rows;
 	}
 
 	public function getProductFilters($product_id) {
@@ -2059,22 +2150,52 @@ class ModelAccountCustomerpartner extends Model {
 	}
 	public function savecart($data){
 		$customer_id = $this->customer->getId();
-		$query = $this->db->query("INSERT INTO ".DB_PREFIX."saved_cart VALUES ('','".$customer_id."','".serialize($this->session->data['cart'])."','". $data['date'] ."','1')");
+		var_dump($data);
+		if (isset($data['new_name']) && $data['new_name']){
+			$query = $this->db->query("INSERT INTO ".DB_PREFIX."saved_cart VALUES ('','".$customer_id."','".$data['new_name']."','".serialize($this->session->data['cart'])."','". $data['date'] ."','1')");
+		} elseif (isset($data['id'])) {
+			$query = $this->db->query("SELECT * FROM ".DB_PREFIX."saved_cart WHERE customer_id = '".$customer_id."' AND id = '".$data['id']."'");
+			$cart = $query->row['cart'];
+			$products = array();
+			$cart = unserialize($query->row['cart']);
+			foreach ($this->session->data['cart'] as $key => $quantity){
+				if (isset($cart[$key])){
+					$cart[$key] += $quantity;
+				} else {
+					$cart[$key] = $quantity;
+				}
+			}
+			var_dump($cart);
+			$query = $this->db->query("UPDATE ".DB_PREFIX."saved_cart SET cart = '".serialize($cart)."' WHERE id = '".$data['id']."'");
+		}
 		return true;
 	}
-	public function getsavedcart(){
+	public function getsavedcarts(){
 		$customer_id = $this->customer->getId();
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."saved_cart WHERE customer_id = '".$customer_id."'");
 		return $query->rows;
 	}
+	public function getsavedcart($id){
+		$customer_id = $this->customer->getId();
+		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."saved_cart WHERE customer_id = '".$customer_id."' AND id = '".$id."'");
+		return $query->row;
+	}
 	public function updatecart($data){
 		$customer_id = $this->customer->getId();
+		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."saved_cart WHERE customer_id = '".$customer_id."' AND id = '".$data['id']."'");
+		$cart = $query->row['cart'];
+		$products = array();
+		foreach (unserialize($cart) as $key => $quantity){
+			if ($data['product'][$key]){
+				$products[$key] = $data['product'][$key];
+			} else unset($products[$key]);
+		}
 		$sql = array();
 		if (isset($data['date'])) $sql[] = " date = '".$data['date']."'";
 		if (isset($data['name'])) $sql[] = " name = '".$data['name']."'";
-		if (isset($data['cart'])) $sql[] = " cart = '".$data['cart']."'";
-			
+		if (isset($data['product'])) $sql[] = " cart = '".serialize($products)."'";
 		$query = $this->db->query("UPDATE ".DB_PREFIX."saved_cart SET ". implode(',',$sql) . "WHERE id = '". $data['id'] ."' AND customer_id = '".$customer_id."'");
+		
 	}
 }
 ?>

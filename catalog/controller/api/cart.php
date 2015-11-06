@@ -44,7 +44,13 @@ class ControllerApiCart extends Controller {
 					} else {
 						$option = array();
 					}
-
+					
+					if (isset($this->request->post['vendor_id'])) {
+						$vendor_id = $this->request->post['vendor_id'];
+					} else {
+						$vendor_id = 0;
+					}
+					
 					$product_options = $this->model_catalog_product->getProductOptions($this->request->post['product_id']);
 
 					foreach ($product_options as $product_option) {

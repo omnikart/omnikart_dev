@@ -11,7 +11,7 @@ class ControllerCheckoutOrderlater extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
 			$this->model_account_customerpartner->savecart($this->request->post);
 			unset($this->session->data['cart']);
-			$this->response->redirect($this->url->link('checkout/orderlater', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+			$this->response->redirect($this->url->link('checkout/orderlater','', 'SSL'));
 		}
 		
 		$this->getlist();
@@ -45,17 +45,22 @@ class ControllerCheckoutOrderlater extends Controller {
 		
 		$data['heading_title'] = "Scheduled Order";
 
-		$oldcarts = $this->model_account_customerpartner->getsavedcart();
+		$oldcarts = $this->model_account_customerpartner->getsavedcarts();
 		$this->load->model('catalog/product');
 		$data['carts'] = array();
+		
+		$today=date_create(date("Y-m-d"));
+		
 		foreach ($oldcarts as $oldcart){
 			$products = array();
 			foreach (unserialize($oldcart['cart']) as $key => $quantity){
 				$product = unserialize(base64_decode($key));
-				$result = $this->model_catalog_product->getProduct($product);
-				$products[] = array('name'=>$result['name'],'quantity'=>$quantity);
+				$result = $this->model_catalog_product->getProduct($product['product_id']);
+				$products[$key] = array('name'=>$result['name'],'quantity'=>$quantity,'quantity'=>$product['product_id']);
 			}
-			$data['carts'][] = array('id' => $oldcart['id'],'date' => $oldcart['date'],'products' => $products, 'name'=> $oldcart['name']);
+			$cartdate = date_create($oldcart['date']);
+			$diff=date_diff($today,$cartdate)->format("%R%a");
+			$data['carts'][] = array('id' => $oldcart['id'],'date' => $oldcart['date'],'days'=>$diff, 'products' => $products, 'name'=> $oldcart['name']);
 		}
 		
 		
@@ -87,8 +92,26 @@ class ControllerCheckoutOrderlater extends Controller {
 		
 		$data = $this->request->post;
 		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
-			$this->model_account_customerpartner->updatecart($data);
-			$json['success'] = "Card Updated Successfully";
+			if (isset($data['id']) && $data['id']) {
+				$this->model_account_customerpartner->updatecart($data);
+				$json['success'] = "Card Updated Successfully";
+			}
+		}
+		$this->response->setOutput(json_encode($json));
+	}
+	public function buycart(){
+		$this->load->model("account/customerpartner");
+		$this->checkuser();
+		$data = $this->request->post;
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+			if (isset($data['id']) && $data['id']) {
+				$result = $this->model_account_customerpartner->getsavedcart($data['id']);
+				$cart = unserialize($result['cart']);
+				$this->session->data['cart'] = $cart;
+				$json['success'] = "Card Updated Successfully";
+				$json['redirect'] = $this->url->link('checkout/checkout','', 'SSL');
+				
+			}
 		}
 		$this->response->setOutput(json_encode($json));
 	}

@@ -30,7 +30,7 @@
 	        <?php if($allowedAddEdit && $mp_ap) { ?>
 						<a href="<?php echo $insert; ?>"  data-toggle="tooltip" title="<?php echo $button_insert; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
 	        <?php } ?>
-			<button data-toggle="tooltip" class="btn btn-primary" id="updateProducts"  title="Update changes for selected products. Page will not refresh after this."><i class="fa fa-save"></i></button>
+			<button data-toggle="tooltip" class="btn btn-primary" id="updateProducts" form="form-product" formaction="<?php echo $addproducts; ?>" title="Update changes for selected products. Page will not refresh after this."><i class="fa fa-save"></i></button>
 			<button data-toggle="tooltip" class="btn btn-info" id="disableProducts"  title="Disable Current Changes"><i class="fa fa-times"></i></button>
 	        <a onclick="$('#form-product').submit();" data-toggle="tooltip" class="btn btn-danger"  title="<?php echo $button_delete; ?>"><i class="fa fa-trash-o"></i></a>
       	</div> 
@@ -49,10 +49,6 @@
                 <span class="input-group-addon"><span class="fa fa-angle-double-down"></span></span>
               </div>
             </div>            
-            <div class="form-group">
-              <label class="control-label" for="input-price"><?php echo $column_price; ?></label>
-              <input type="text" name="filter_price" value="<?php echo $filter_price; ?>" placeholder="<?php echo $column_price; ?>" id="input-price" class="form-control" />
-            </div>
           </div>
 
           <div class="col-sm-4">
@@ -63,40 +59,31 @@
                 <span class="input-group-addon"><span class="fa fa-angle-double-down"></span></span>
               </div>
             </div>
-            <div class="form-group">
-              <label class="control-label" for="input-model"><?php echo $column_quantity; ?></label>
-              <input type="text" name="filter_quantity" value="<?php echo $filter_quantity; ?>" placeholder="<?php echo $column_quantity; ?>" id="input-model" class="form-control" />
-            </div>
           </div>
-
           <div class="col-sm-4">
             <div class="form-group">
-              <label class="control-label" for="input-status"><?php echo $column_status; ?></label>                
-              <select name="filter_status" class="form-control" id="input-status">
-                <option value="*"></option>
-                <?php if ($filter_status) { ?>
-                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                <?php } else { ?>
-                <option value="1"><?php echo $text_enabled; ?></option>
-                <?php } ?>
-                <?php if (!is_null($filter_status) && !$filter_status) { ?>
-                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                <?php } else { ?>
-                <option value="0"><?php echo $text_disabled; ?></option>
-                <?php } ?>
-              </select>
+              <label class="control-label" for="input-category">Filter by Category</label>
+              <input type="text" name="filter_category" value="" placeholder="" id="input-category" class="form-control" />
             </div>
-            <a onclick="filter();" class="btn btn-primary pull-right"><?php echo $button_filter; ?></a> 
+            <a onclick="filter();" class="btn btn-primary pull-right">Find Products</a> 
           </div>
         </div>
       </div>
-      <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-product">
+      
+      <div class="col-sm-3">
+      	<div class="list-group">
+	      <?php if ($categories) { foreach ($categories as $category) { ?>
+	    	<a href="<?php echo $category['link']; ?>" class="list-group-item"><?php echo $category['name']; ?></a>   	
+          <?php } } ?>
+        </div> 
+      </div>
+      
+      <form action="<?php echo $delete; ?>" method="post" class="col-sm-9"enctype="multipart/form-data" id="form-product">
         <div class="table-responsive">
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
                 <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-
                 <td class="text-left"><?php if ($sort == 'pd.name') { ?>
                   <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo str_replace(' ', '', $column_name); ?></a>
                   <?php } else { ?>
@@ -107,25 +94,8 @@
                   <?php } else { ?>
                   <a href="<?php echo $sort_model; ?>"><?php echo $column_model; ?></a>
                   <?php } ?></td>
-                <td class="text-left"><?php if ($sort == 'p.price') { ?>
-                  <a href="<?php echo $sort_price; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_price; ?></a>
-                  <?php } else { ?>
-                  <a href="<?php echo $sort_price; ?>"><?php echo $column_price; ?></a>
-                  <?php } ?></td>
-                <td class="text-right"><?php if ($sort == 'p.quantity') { ?>
-                  <a href="<?php echo $sort_quantity; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_quantity; ?></a>
-                  <?php } else { ?>
-                  <a href="<?php echo $sort_quantity; ?>"><?php echo $column_quantity; ?></a>
-                  <?php } ?></td>
-                <td class="text-left"><?php if ($sort == 'p.status') { ?>
-                  <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
-                  <?php } else { ?>
-                  <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
-                  <?php } ?></td>
-
-                <td class="text-right"><?php echo $column_sold; ?></td>
-                <td class="text-right"><?php echo $column_earned; ?></td>
-                <td class="text-right"><?php echo $column_action; ?></td>
+                <td class="text-left"><?php echo $column_price; ?></a></td>
+                <td class="text-right"><?php echo $column_quantity; ?></td>
               </tr>
             </thead>
             <tbody>
@@ -140,51 +110,18 @@
                 <td class="text-left">
                   <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['thumb']; ?>" style="padding: 1px; border: 1px solid #DDDDDD;" class="img-thumbnail" />
                   &nbsp;
-                  <?php if($product['status']){ ?>
-                    <a href="index.php?route=product/product&product_id=<?php echo $product['product_id']; ?>"> <?php echo $product['name']; ?></a>
-                  <?php }else{ ?>
-                    <?php echo $product['name']; ?>
-                  <?php } ?>
+	              <a href="index.php?route=product/product&product_id=<?php echo $product['product_id']; ?>"> <?php echo $product['name']; ?></a>
                   <input type="hidden" name="products[<?php echo $product['product_id']; ?>][id]" value="<?php echo $product['product_id']; ?>" />
                   
                 </td>
                 <td class="text-left"><?php echo $product['model']; ?></td>
                 <td class="text-left">
-                	<input type="text" style="width:70px;" class="form-control" name="products[<?php echo $product['product_id']; ?>][price]" value="<?php echo $product['price']; ?>"/>
+                	<input type="text" style="width:70px;" class="form-control" name="products[<?php echo $product['product_id']; ?>][price]" value=""/>
                 </td>
                 <td class="text-right">
-				  <input type="text" style="width:50px;"  name="products[<?php echo $product['product_id']; ?>][quantity]" class="form-control <?php if ($product['quantity'] <= 0) { echo "alert-danger"; } elseif ($product['quantity'] <= 5) { echo "alert-warning"; } else { echo "alert-success"; } ?>" value="<?php echo $product['quantity']; ?>"/>                  
+				  <input type="text" style="width:50px;" class="form-control" name="products[<?php echo $product['product_id']; ?>][quantity]" value=""/>                  
                   
               	</td>
-                <td class="text-left">
-                	<select class="form-control" style="width:70px;" name="products[<?php echo $product['product_id']; ?>][status]">
-                		<option value="1" <?php echo $product['status'] ? 'selected' : '' ; ?>>Enabled</option>
-                		<option value="0" <?php echo $product['status'] ? '' : 'selected' ; ?>>Disabled</option>
-                	</select>
-                </td>       
-
-                <td class="text-right">
-                  <a <?php if($product['sold']){ ?> href="<?php echo $product['soldlink']; ?>" <?php } ?> style="text-decoration:none;" />                                            
-                    <?php if ($product['sold'] <= 0) { ?>
-                    <span class="label label-danger"><?php echo $product['sold']; ?></span>
-                    <?php } elseif ($product['sold'] <= 5) { ?>
-                    <span class="label label-warning" data-toggle="tooltip" title="<?php echo $text_soldlist_info; ?>"><?php echo $product['sold']; ?></span>
-                    <?php } else { ?>
-                    <span class="label label-success" data-toggle="tooltip" title="<?php echo $text_soldlist_info; ?>"><?php echo $product['sold']; ?></span>
-                    <?php } ?></td>
-                  </a>
-                </td>
-                <td class="text-right">
-                  <span class="text-success"><?php echo $product['totalearn']; ?></span>
-                </td>
-
-                <td class="text-right">
-                  <?php if($product['action']){ ?>
-                    <?php foreach ($product['action'] as $action) { ?>
-                      <a <?php if(!$allowedAddEdit) echo "disabled"; ?> href="<?php echo $action['href']; ?>" class="btn btn-info"><span data-toggle="tooltip" title="<?php echo $action['text']; ?>"><i class="fa fa-pencil"></i></span></a>
-                    <?php } ?>
-                  <?php } ?>
-                </td>
               </tr>
               <?php } ?>
               <?php } else { ?>
@@ -197,8 +134,8 @@
         </div>
       </form>
       <div class="row">
-        <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
-        <div class="col-sm-6 text-right"><?php echo $results; ?></div>
+        <div class="col-sm-6 text-left"><?php echo isset($pagination)?$pagination:''; ?></div>
+        <div class="col-sm-6 text-right"><?php echo isset($results)?$results:''; ?></div>
       </div>
       <?php } else { ?>
         <div class="text-danger">
@@ -223,7 +160,7 @@ $('#form-product').submit(function(){
 });
 
 function filter() {
-  url = 'index.php?route=account/customerpartner/productlist';
+  url = 'index.php?route=account/customerpartner/addproductlist';
   
   var filter_name = $('input[name=\'filter_name\']').val();
   
@@ -249,19 +186,13 @@ function filter() {
     url += '&filter_quantity=' + encodeURIComponent(filter_quantity);
   }
   
-  var filter_status = $('select[name=\'filter_status\']').val();
-  
-  if (filter_status != '*') {
-    url += '&filter_status=' + encodeURIComponent(filter_status);
-  } 
-
   location = url;
 }
 //--></script> 
 <script type="text/javascript"><!--
 $('.row input').keydown($('#updateProducts').on('click',function(){
 	$.ajax({
-		url: 'index.php?route=account/customerpartner/productlist/updateProduct',
+		url: 'index.php?route=account/customerpartner/addproductlist/addProduct',
 		type: 'post',
 		data: $('#form-product').serialize(),
 		dataType: 'json',
@@ -286,7 +217,7 @@ $('input[name=\'filter_name\']').autocomplete({
   delay: 500,
   source: function(request, response) {
     $.ajax({
-      url: 'index.php?route=customerpartner/autocomplete/product&filter_type=customerpartner_&filter_name=' +  encodeURIComponent(request),
+      url: 'index.php?route=customerpartner/autocomplete/addproduct&filter_type=customerpartner_&filter_name=' +  encodeURIComponent(request),
       dataType: 'json',
       success: function(json) {   
         response($.map(json, function(item) {
@@ -331,41 +262,56 @@ $('input[name=\'filter_model\']').autocomplete({
     return false;
   }
 });
-
-$('#updateProducts').on('click',function(){
-	ths = $(this);
-	$.ajax({
-		url: 'index.php?route=account/customerpartner/productlist/updateProduct',
-		type: 'post',
-		data: $('#form-product').serialize(),
-		dataType: 'json',
-		beforeSend: function() {
-			$(ths).button('loading');
-		},
-		complete: function() {
-			$(ths).button('reset');
-		},
-		success: function(json) {
-			$('input[type=\'checkbox\']').attr('checked', false);
-		}	
-	});
+//--></script> 
+<script type="text/javascript"><!--
+$('input[name=\'product_name\']').autocomplete({
+  delay: 500,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=customerpartner/autocomplete/addproduct&filter_type=customerpartner_&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',
+      success: function(json) {   
+        response($.map(json, function(item) {
+          return {
+            label: item.name,
+            value: item.product_id
+          }
+        }));
+      }
+    });
+  }, 
+  select: function(item) {
+    $('input[name=\'product_name\']').val(item.label);            
+    return false;
+  },
+  focus: function(item) {
+    return false;
+  }
 });
-$('#disableProducts').on('click',function(){
-	$.ajax({
-		url: 'index.php?route=account/customerpartner/productlist/disableProduct',
-		type: 'post',
-		data: $('#form-product').serialize(),
-		dataType: 'json',
-		beforeSend: function() {
-			$('#button-cart').button('loading');
-		},
-		complete: function() {
-			$('#button-cart').button('reset');
-		},
-		success: function(json) {
-			$('input[type=\'checkbox\']').attr('checked', false);
-		}	
-	});
+
+$('input[name=\'product_model\']').autocomplete({
+  delay: 500,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=customerpartner/autocomplete/addproduct&filter_type=customerpartner_&filter_model=' +  encodeURIComponent(request),
+      dataType: 'json',
+      success: function(json) {   
+        response($.map(json, function(item) {
+          return {
+            label: item.model,
+            value: item.product_id
+          }
+        }));
+      }
+    });
+  }, 
+  select: function(item) {
+    $('input[name=\'product_model\']').val(item.label);            
+    return false;
+  },
+  focus: function(item) {
+    return false;
+  }
 });
 //--></script> 
 <?php echo $footer; ?>
