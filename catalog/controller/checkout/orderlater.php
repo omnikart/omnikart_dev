@@ -56,7 +56,7 @@ class ControllerCheckoutOrderlater extends Controller {
 			foreach (unserialize($oldcart['cart']) as $key => $quantity){
 				$product = unserialize(base64_decode($key));
 				$result = $this->model_catalog_product->getProduct($product['product_id']);
-				$products[$key] = array('name'=>$result['name'],'quantity'=>$quantity,'quantity'=>$product['product_id']);
+				$products[$key] = array('name'=>$result['name'],'quantity'=>$quantity,'product_id'=>$product['product_id']);
 			}
 			$cartdate = date_create($oldcart['date']);
 			$diff=date_diff($today,$cartdate)->format("%R%a");

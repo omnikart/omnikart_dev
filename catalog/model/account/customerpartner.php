@@ -2194,7 +2194,7 @@ class ModelAccountCustomerpartner extends Model {
 		if (isset($data['date'])) $sql[] = " date = '".$data['date']."'";
 		if (isset($data['name'])) $sql[] = " name = '".$data['name']."'";
 		if (isset($data['product'])) $sql[] = " cart = '".serialize($products)."'";
-		$query = $this->db->query("UPDATE ".DB_PREFIX."saved_cart SET ". implode(',',$sql) . "WHERE id = '". $data['id'] ."' AND customer_id = '".$customer_id."'");
+		$query = $this->db->query("UPDATE ".DB_PREFIX."saved_cart SET ". implode(',',$sql) . " WHERE id = '". $data['id'] ."' AND customer_id = '".$customer_id."'");
 		
 	}
 }
