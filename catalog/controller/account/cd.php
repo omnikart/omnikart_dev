@@ -258,7 +258,7 @@ class ControllerAccountCd extends Controller {
 			}
 	
 			if (!$json) {
-				$this->cart->add($product_id, $quantity, $option, $recurring_id,$vendor_id);
+				$this->cart->add($product_id, $quantity, $option, $recurring_id);
 				
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $product_id), $product_info['name'], $this->url->link('checkout/cart'));
 	
