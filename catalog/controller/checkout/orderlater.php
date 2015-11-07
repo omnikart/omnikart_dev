@@ -29,6 +29,8 @@ class ControllerCheckoutOrderlater extends Controller {
 				'href' => $this->url->link('checkout/orderlater', '', 'SSL')
 		);
 		
+		$this->document->setTitle("Schedule Order");
+		
 		if (isset($this->session->data['success'])) {
 			$data['success'] = $this->session->data['success'];
 		

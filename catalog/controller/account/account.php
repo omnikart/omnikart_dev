@@ -19,8 +19,8 @@ class ControllerAccountAccount extends Controller {
 		);
 
 		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_cd'),
-			'href' => $this->url->link('account/cd', '', 'SSL')
+			'text' => $this->language->get('text_account'),
+			'href' => $this->url->link('account/account', '', 'SSL')
 		);
 
 		if (isset($this->session->data['success'])) {

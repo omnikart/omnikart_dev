@@ -29,7 +29,6 @@ class ControllerAccountCdp extends Controller {
 	
 		$this->load->model('tool/image');
 
-		
 		$data['text_refine'] = $this->language->get('text_refine');
 		$data['text_empty'] = $this->language->get('text_empty');
 		$data['text_quantity'] = $this->language->get('text_quantity');
@@ -113,6 +112,9 @@ class ControllerAccountCdp extends Controller {
 				'text' => $data['category']['name'],
 				'href' => $this->url->link('account/cd', '', 'SSL')
 		);
+		
+		$this->document->setTitle($data['category']['name']);
+		
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
 		$data['content_top'] = $this->load->controller('common/content_top');

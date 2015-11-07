@@ -3,6 +3,7 @@ class ControllerAccountCd extends Controller {
 	private $error = array();
 	public function index() {
 		$this->load->model("account/customerpartner");
+		$this->load->language('account/cd');
 		
 		$this->checkuser();
 		
@@ -12,7 +13,7 @@ class ControllerAccountCd extends Controller {
 		);
 		
 		$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_account'),
+				'text' => $this->language->get('text_cd'),
 				'href' => $this->url->link('account/cd', '', 'SSL')
 		);
 		if (isset($this->session->data['success'])) {
@@ -33,6 +34,7 @@ class ControllerAccountCd extends Controller {
 	
 		$this->load->model('tool/image');
 
+		$this->document->setTitle($this->language->get('heading_title'));
 		
 		$data['text_refine'] = $this->language->get('text_refine');
 		$data['text_empty'] = $this->language->get('text_empty');
