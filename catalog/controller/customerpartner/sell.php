@@ -146,6 +146,32 @@ class ControllerCustomerpartnerSell extends Controller {
 
 		}
 
+		$this->load->model('catalog/category');
+		$this->load->model('catalog/manufacturer');
+		$this->data['categories'] = array();
+		$this->data['manufacturers'] = array();
+		$categories = $this->model_catalog_category->getCategories(0);
+		foreach ($categories as $category) {
+			if ($category['top']) {
+				// Level 2
+				$children_data = array();
+		
+				// Level 1
+				$this->data['categories'][] = array(
+						'name'     => $category['name'],
+						'category_id' => $category['category_id']
+				);
+			}
+		}		
+
+		$results = $this->model_catalog_manufacturer->getManufacturers();
+		foreach ($results as $result) {
+			$this->data['manufacturers'][] = array(
+					'name' => $result['name'],
+					'id' => $result['manufacturer_id']
+			);
+		}		
+		
 		$this->data['footer'] = $this->load->controller('common/footer');
 		$this->data['header'] = $this->load->controller('common/header');
 
@@ -174,5 +200,64 @@ class ControllerCustomerpartnerSell extends Controller {
 
 		$this->response->setOutput(json_encode($json));		
 	}
+
+	public function supplierrequest(){
+	
+		$data = array();
+		$json = array();
+		
+		$data= $this->request->post;
+
+		$fields = array(
+			"name"=>"Please enter your full name",
+			"company"=>"Please enter your company name",
+			"number"=>"Please enter valid contact number",
+			"email"=>"Please specify a valid email address",
+			"trade"=>"Please select your business trade",
+			"categories"=>"Please select applicable category"
+		);
+		
+		if (isset($data)){
+			
+			if (isset($data['company']) && strlen($data['company']) < 5)
+				$json['company']= $fields['company'];
+	
+			if (isset($data['number'] ) && strlen($data['number'] ) <10)
+				$json['number']= $fields['number'];
+	
+			if (isset($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
+				$json['email']= $fields['email'];
+	
+			if (isset($data['company']) && strlen($data['company']) < 3)
+				$json['company']= $fields['company'];
+	
+			if (isset($data['categories']) && empty($data['categories']))
+				$json['categories'] = $fields['categories'];
+	
+			if (isset($data['trade']) && empty($data['categories']))
+				$json['trade'] = $fields['trade'];
+	
+			if (!$json) {
+
+				$user_info = array("company" => $data['company'],
+						"number" => $data['number'],
+						"email" => $data['email'],
+						"name" => $data['name'],
+						"number_2" => $data['number_2']);
+				$us = array("user_info"=> serialize($user_info),
+						"categories" => implode(',',$data['categories']),
+						"trade" => $data['trade'],
+						"manufacturers" => implode(',',$data['manufacturers'])
+				);
+				
+				$this->load->model('customerpartner/master');
+				$this->model_customerpartner_master->addsupplierquery($us);
+				$json['success'] = "Successfully send your query to Omnikart. We'll get back to you soon. :)";
+			}
+		}
+		echo json_encode($json);
+	}
+	
+	
 }
 ?>
