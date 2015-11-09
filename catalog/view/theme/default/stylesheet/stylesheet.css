@@ -6,6 +6,11 @@ body {
 	line-height: 20px;
 	width: 100%;
 	background:#fff;
+	background-image: url('../image/diwali.png'),url('../image/diwali.png'),url('../image/link.png');
+ 	background-repeat: no-repeat,no-repeat,repeat-x;
+ 	background-position: left 50px,right 50px,center 450px;
+ 	background-attachment: fixed;
+ 	 
 }
 @font-face {
   font-family: 'Kelsonb';
@@ -229,7 +234,7 @@ box-shadow: 0px 2px 2px 1px rgba(169,169,169,0.22);
 -moz-box-shadow: 0px 2px 2px 1px rgba(0,0,0,0.22);
 -o-box-shadow: 0px 2px 2px 1px rgba(0,0,0,0.22);
 }
-header{background-color: #f8f8f8;padding-top:15px;border-bottom:1px solid #ddd;}
+header{ background-color: #f8f8f8;padding-top:15px;border-bottom:1px solid #ddd;}
 #menu {
 min-height: 40px;
 margin-bottom:0;
@@ -1191,11 +1196,17 @@ padding: 0;
 .common-home #columns {
 background: transparent;
 position:relative;
+/*background-image: url('../image/link.png');
+ background-repeat: repeat-x;
+ background-position: center top;*/ 
 }
 #columns {
 background: #fff;/* url("../image/bg-columns.png") repeat-x whitesmoke;*/
 padding-top:20px;
 padding-bottom:30px;
+/*background-image: url('../image/link.png');
+background-repeat: repeat-x;
+background-position: center top;*/ 
 }/*
 .common-home  #home-bgd{position:fixed;width:100%;top:0px;height:700px;background: #fff url("../image/w.jpg") 50% 0% no-repeat;
 opacity: 0.1;z-index:-1;
@@ -1309,6 +1320,4 @@ input.btn {padding: 7.5px 12px;}
 
 #pavmenu .nav>li>a,#pavmenu .navbar-collapse{padding-left:0px;}
 
-.input-danger{}
-.input-warning{}
-.input-success{}
+.list-unstyled i {margin:0 5px 0 0;}

@@ -19,25 +19,25 @@
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
       <ul class="list-unstyled col-md-4 col-sm-6">
       <h2><?php echo $text_my_account; ?></h2>
-        <li><a href="<?php echo $edit; ?>"><i class="fa fa-pencil-square-o"></i>&nbsp;<?php echo $text_edit; ?></a></li>
-        <li><a href="<?php echo $password; ?>"><i class="fa fa-user-secret"></i>&nbsp;<?php echo $text_password; ?></a></li>
-        <li><a href="<?php echo $address; ?>"><i class="fa fa-map-o"></i>&nbsp;<?php echo $text_address; ?></a></li>
-        <li><a href="<?php echo $wishlist; ?>"><i class="fa fa-heart-o"></i>&nbsp;<?php echo $text_wishlist; ?></a></li>
+        <li><a href="<?php echo $edit; ?>"><i class="fa fa-pencil-square-o"></i><?php echo $text_edit; ?></a></li>
+        <li><a href="<?php echo $password; ?>"><i class="fa fa-user-secret"></i><?php echo $text_password; ?></a></li>
+        <li><a href="<?php echo $address; ?>"><i class="fa fa-map-o"></i><?php echo $text_address; ?></a></li>
+        <li><a href="<?php echo $wishlist; ?>"><i class="fa fa-heart-o"></i><?php echo $text_wishlist; ?></a></li>
       </ul>
       <ul class="list-unstyled col-md-4 col-sm-6">
       	<h2><?php echo $text_my_orders; ?></h2>
-        <li><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
-        <li><a href="<?php echo $download; ?>"><?php echo $text_download; ?></a></li>
+        <li><a href="<?php echo $order; ?>"><i class="fa fa-history"></i><?php echo $text_order; ?></a></li>
+        <li><a href="<?php echo $download; ?>"><i class="fa fa-download"></i><?php echo $text_download; ?></a></li>
         <?php if ($reward) { ?>
-        <li><a href="<?php echo $reward; ?>"><?php echo $text_reward; ?></a></li>
+        <li><a href="<?php echo $reward; ?>"><i class="fa fa-gift"></i><?php echo $text_reward; ?></a></li>
         <?php } ?>
-        <li><a href="<?php echo $return; ?>"><?php echo $text_return; ?></a></li>
-        <li><a href="<?php echo $transaction; ?>"><?php echo $text_transaction; ?></a></li>
-        <li><a href="<?php echo $recurring; ?>"><?php echo $text_recurring; ?></a></li>
+        <li><a href="<?php echo $return; ?>"><i class="fa fa-repeat"></i><?php echo $text_return; ?></a></li>
+        <li><a href="<?php echo $transaction; ?>"><i class="fa fa-credit-card"></i><?php echo $text_transaction; ?></a></li>
+        <li><a href="<?php echo $recurring; ?>"><i class="fa fa-refresh fa-spin "></i><?php echo $text_recurring; ?></a></li>
       </ul>
       <ul class="list-unstyled col-md-4 col-sm-6">
       	<h2><?php echo $text_my_newsletter; ?></h2>
-        <li><a href="<?php echo $newsletter; ?>"><?php echo $text_newsletter; ?></a></li>
+        <li><a href="<?php echo $newsletter; ?>"><i class="fa fa-newspaper-o"></i><?php echo $text_newsletter; ?></a></li>
       </ul>
       <?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>

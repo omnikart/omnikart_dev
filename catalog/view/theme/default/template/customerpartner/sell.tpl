@@ -280,16 +280,17 @@ $('.seller-thumb').bind({'mouseenter' : seller_display,'mouseleave':seller_hide 
         type: 'post',
         dataType: 'json',
         beforeSend: function() {
-            $(buttont).button('loading');
+            $(buttont).buttont('loading');
         },
         complete: function() {
-            $(buttont).button('reset');
+            $(buttont).buttont('reset');
         },
         success: function(json) {
             $('.text-danger').remove();
             if (json['success']){
 		        html ='<div class="alert alert-success"><i class="fa fa-check-circle"></i>Successfully send your query to Omnikart. We\'ll get back to you soon<button  type="button" class="close" data-dismiss="alert">&times;</button></div>';
 	        	$('#avc').prepend(html);
+	        	/*$('#supplier_form').reset();*/
             } else {
                 if (json['company_name']) {
                     $($('#company-name').parent()).append('<div class="text-danger">'+json['company_name']+'</div>');
