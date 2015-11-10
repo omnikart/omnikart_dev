@@ -45,12 +45,8 @@ class ControllerModuleEnquiry extends Controller {
 					if (empty($this->request->post['product'][0]['quantity'])) {
 						$json['quantity'] = "Please fill product quantity required";
 					}
-					if (empty($this->request->post['product'][0]['name'])) {
-						$json['specification'] = "Please fill product specification";
-					}
 				}
 			}
-			
 			if (!$json) {
 				$userdata = array("firstname" => $this->request->post['firstname'],
 						"lastname" => $this->request->post['lastname'],

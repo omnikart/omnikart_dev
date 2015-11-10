@@ -142,11 +142,8 @@
 				if (json['product']) {
 					$($('#<?php echo $modal_id; ?> #product-name').parent()).append('<div class="text-danger">'+json['product']+'</div>');
 				}
-				if (json['specification']) {
-					$($('#<?php echo $modal_id; ?> #quantity').parent()).append('<div class="text-danger">'+json['specification']+'</div>');
-				}
 				if (json['quantity']) {
-					$($('#<?php echo $modal_id; ?> #specification').parent()).append('<div class="text-danger">'+json['quantity']+'</div>');
+					$($('#<?php echo $modal_id; ?> #quantity').parent().parent()).append('<div class="text-danger">'+json['quantity']+'</div>');
 				}
 			}
 		}
