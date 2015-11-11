@@ -1321,3 +1321,26 @@ input.btn {padding: 7.5px 12px;}
 #pavmenu .nav>li>a,#pavmenu .navbar-collapse{padding-left:0px;}
 
 .list-unstyled i {margin:0 5px 0 0;}
+
+.corner-fold:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 2px;
+  border-style: solid;
+  border-width: 0 0px 0px 0;
+  border-color: #ddd #34495E;
+  transition: all ease .5s;
+}
+
+.corner-fold:hover:before {
+  border-width: 0 30px 30px 0;
+  border-color: #eee #34495E;
+  
+}
+
+.corner-fold{
+  transition: all ease .5s;
+  position: relative;
+ }
+

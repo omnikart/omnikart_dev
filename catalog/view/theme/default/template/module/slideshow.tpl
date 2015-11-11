@@ -4,7 +4,7 @@
 		  <?php foreach ($banners as $banner) { ?>
 		  <div class="item">
 		    <?php if ($banner['link']) { ?>
-		    <a href="<?php echo $banner['link']; ?>"><img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" /></a>
+		    <a href="<?php echo $banner['link']; ?>" ><img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" /></a>
 		    <?php } else { ?>
 		    <img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" />
 		    <?php } ?>
@@ -15,7 +15,7 @@
 	<?php if ($status_side) { ?>
 		<div class="col-sm-<?php echo $margin_left; ?>" style="padding-left:0">
 			<?php foreach ($side_banners as $banner) { ?>
-			  <div class="item">
+			  <div class="item corner-fold">
 			    <?php if ($banner['link']) { ?>
 			  		<?php if (substr($banner['link'], 0, 1) === '#') { ?>
 			  			<a href="#" data-toggle="modal" data-target="<?php echo $banner['link']; ?>"><img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" /></a>
