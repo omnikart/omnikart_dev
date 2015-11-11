@@ -23,7 +23,8 @@ class ControllerModulePavreassurance extends Controller {
 
 		$this->data['prefix_class'] = $prefix_class;
 		$this->data['language'] = $language;
-
+		$this->data['onlymodal'] = isset($setting['onlymodal']) ? $setting['onlymodal'] : 0;
+		
 		$reassurances = isset($setting['pavreassurances'])?$setting['pavreassurances']:array();
 
 		$result = array();

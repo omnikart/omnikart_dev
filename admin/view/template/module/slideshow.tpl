@@ -89,6 +89,53 @@
               </select>
             </div>
           </div>
+          <hr />
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-status-side"><?php echo $entry_status; ?></label>
+            <div class="col-sm-10">
+              <select name="status_side" id="input-status-side" class="form-control">
+                <?php if ($status_side) { ?>
+                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                <option value="0"><?php echo $text_disabled; ?></option>
+                <?php } else { ?>
+                <option value="1"><?php echo $text_enabled; ?></option>
+                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                <?php } ?>
+              </select>
+            </div>
+          </div>
+		  <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-banner-side"><?php echo $entry_banner; ?></label>
+            <div class="col-sm-10">
+              <select name="side_banner_id" id="input-banner-side" class="form-control">
+                <?php foreach ($banners as $banner) { ?>
+                <?php if ($banner['banner_id'] == $side_banner_id) { ?>
+                <option value="<?php echo $banner['banner_id']; ?>" selected="selected"><?php echo $banner['name']; ?></option>
+                <?php } else { ?>
+                <option value="<?php echo $banner['banner_id']; ?>"><?php echo $banner['name']; ?></option>
+                <?php } ?>
+                <?php } ?>
+              </select>
+            </div>
+          </div> 
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-width-side"><?php echo $entry_width; ?></label>
+            <div class="col-sm-10">
+              <input type="text" name="side_width" value="<?php echo $side_width; ?>" placeholder="<?php echo $entry_width; ?>" id="input-width-side" class="form-control" />
+              <?php if ($error_side_width) { ?>
+              <div class="text-danger"><?php echo $error_side_width; ?></div>
+              <?php } ?>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-height-side"><?php echo $entry_height; ?></label>
+            <div class="col-sm-10">
+              <input type="text" name="side_height" value="<?php echo $side_height; ?>" placeholder="<?php echo $entry_height; ?>" id="input-height-side" class="form-control" />
+              <?php if ($error_side_height) { ?>
+              <div class="text-danger"><?php echo $error_side_height; ?></div>
+              <?php } ?>
+            </div>
+          </div>                             
         </form>
       </div>
     </div>

@@ -75,9 +75,22 @@
 									<?php } ?>
 								</select><br>
 							</div>
-
 						</div>
-
+						<div class="form-group row">
+							<label class="col-sm-2 control-label" for="input-status">Only Modal</label>
+							<div class="col-sm-10">
+								<select class="form-control no-width" class="form-control" name="pavreassurance_module[<?php echo $module_row;?>][onlymodal]" id="input-status" class="form-control">
+									<?php if ( isset($module['onlymodal']) && $module['onlymodal'] ) { ?>
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+									<option value="1"><?php echo $text_enabled; ?></option>
+									<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select><br>
+							</div>
+						</div>
+						
 						<div class="module-class form-group row">
 							<label class="col-sm-2"><?php echo $olang->get('text_module_name');?></label>
 							<div class="col-sm-10"><input class="form-control" name="pavreassurance_module[<?php echo $module_row;?>][name]" value="<?php if(isset($module['name'])){ echo $module['name']; }?>"></div>

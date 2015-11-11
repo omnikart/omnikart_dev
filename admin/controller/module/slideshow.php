@@ -54,19 +54,28 @@ class ControllerModuleSlideshow extends Controller {
 		} else {
 			$data['error_width'] = '';
 		}
-
-		if (isset($this->error['margin_left'])) {
-			$data['error_margin_left'] = $this->error['margin_left'];
-		} else {
-			$data['error_margin_left'] = '';
-		}
-
 		if (isset($this->error['height'])) {
 			$data['error_height'] = $this->error['height'];
 		} else {
 			$data['error_height'] = '';
 		}
 		
+		if (isset($this->error['margin_left'])) {
+			$data['error_margin_left'] = $this->error['margin_left'];
+		} else {
+			$data['error_margin_left'] = '';
+		}
+		if (isset($this->error['side_width'])) {
+			$data['error_side_width'] = $this->error['side_width'];
+		} else {
+			$data['error_side_width'] = '';
+		}
+		if (isset($this->error['side_height'])) {
+			$data['error_side_height'] = $this->error['side_height'];
+		} else {
+			$data['error_side_height'] = '';
+		}
+
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -137,7 +146,23 @@ class ControllerModuleSlideshow extends Controller {
 			$data['height'] = $module_info['height'];
 		} else {
 			$data['height'] = '';
+		}	
+
+		if (isset($this->request->post['side_height'])) {
+			$data['side_height'] = $this->request->post['side_height'];
+		} elseif (!empty($module_info)) {
+			$data['side_height'] = $module_info['side_height'];
+		} else {
+			$data['side_height'] = '';
 		}
+		if (isset($this->request->post['side_width'])) {
+			$data['side_width'] = $this->request->post['side_width'];
+		} elseif (!empty($module_info)) {
+			$data['side_width'] = $module_info['side_width'];
+		} else {
+			$data['side_width'] = '';
+		}
+		
 		if (isset($this->request->post['margin_left'])) {
 			$data['margin_left'] = $this->request->post['margin_left'];
 		} elseif (!empty($module_info)) {
@@ -154,6 +179,22 @@ class ControllerModuleSlideshow extends Controller {
 			$data['status'] = '';
 		}
 
+		if (isset($this->request->post['status_side'])) {
+			$data['status_side'] = $this->request->post['status_side'];
+		} elseif (!empty($module_info)) {
+			$data['status_side'] = $module_info['status_side'];
+		} else {
+			$data['status_side'] = '';
+		}
+
+		if (isset($this->request->post['side_banner_id'])) {
+			$data['side_banner_id'] = $this->request->post['side_banner_id'];
+		} elseif (!empty($module_info)) {
+			$data['side_banner_id'] = $module_info['side_banner_id'];
+		} else {
+			$data['side_banner_id'] = '';
+		}		
+		
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');

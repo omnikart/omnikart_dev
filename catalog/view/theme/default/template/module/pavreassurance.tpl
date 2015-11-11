@@ -6,6 +6,7 @@ if (!empty($pavreassurances)) { ?>
                     <div class="row box-outer">
                             <?php $i=1?>
                             <?php foreach ($pavreassurances as $reassurance) { ?>
+                            	<?php if (!$onlymodal) { ?>
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 column">
                                     <div class="reassurances-left">
                                         <span class="icon-name pull-left fa <?php echo $reassurance['select_icon'] ?>"></span>
@@ -20,6 +21,7 @@ if (!empty($pavreassurances)) { ?>
                                         </div>
                                     </div>
                                 </div>
+                                <?php } ?>
                                 <!-- Modal -->
                                 <div class="modal fade" id="myModal<?php echo $i;?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                   <div class="modal-dialog">
