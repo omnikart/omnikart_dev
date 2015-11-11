@@ -6,10 +6,10 @@ body {
 	line-height: 20px;
 	width: 100%;
 	background:#fff;
-	background-image: url('../image/diwali.png'),url('../image/diwali.png'),url('../image/link.png');
+	/*background-image: url('../image/diwali.png'),url('../image/diwali.png'),url('../image/link.png');
  	background-repeat: no-repeat,no-repeat,repeat-x;
  	background-position: left 50px,right 50px,center 450px;
- 	background-attachment: fixed;
+ 	background-attachment: fixed;*/
  	 
 }
 @font-face {
