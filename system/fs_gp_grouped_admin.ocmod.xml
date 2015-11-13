@@ -437,5 +437,30 @@ $(document).ready(function() {
 		$this->deleteGroupedProductGrouped($product_id);
 		]]></add>
 	</operation>
+	<operation info=" urltoslug($keyword) ">
+		<search><![CDATA[
+		if (isset($data['keyword'])) {
+		]]></search>
+		<add position="before"><![CDATA[
+		if (!$data['keyword']) $data['keyword'] = $this->url_slug(array_values($data['product_description'])[0]['name'].'-'.$product_id).'.html';
+		]]></add>
+	</operation>
+	<operation info=" urltoslug($keyword) ">
+		<search><![CDATA[
+		if ($data['keyword']) {
+		]]></search>
+		<add position="before"><![CDATA[
+		if (!$data['keyword']) $data['keyword'] = $this->url_slug(array_values($data['product_description'])[0]['name'].'-'.$product_id).'.html';
+		]]></add>
+	</operation>
+	<operation info=" urltoslug($keyword) ">
+		<search><![CDATA[
+		if (isset($data['product_recurrings'])) {
+		]]></search>
+		<add position="before"><![CDATA[
+		$model = array_values($data['product_category'])[0].$product_id;
+		$this->db->query("UPDATE " . DB_PREFIX . "product SET model = '" . $this->db->escape($model) . "' WHERE product_id = '" . (int)$product_id . "'");
+		]]></add>
+	</operation>	
 </file>
 </modification>
