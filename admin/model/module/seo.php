@@ -118,7 +118,7 @@ class ModelModuleSeo extends Controller {
 		$total = $this->db->query($sql)->row['total'];
 	
 		$sql = "SELECT p.product_id FROM " . DB_PREFIX . "product p WHERE 1 ";
-		$limit = 4;
+		$limit = 255;
 		$pages = floor($total/$limit);
 		for ($i=0;$i<($pages+1);$i++) {
 			$start = ($i)*$limit;
@@ -135,7 +135,6 @@ class ModelModuleSeo extends Controller {
 					echo $keyword."<br>";
 				}
 			}
-			echo "<br><br>";
 		}
 	}
 
