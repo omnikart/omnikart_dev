@@ -143,7 +143,7 @@ class ModelModuleSeo extends Controller {
 		$total = $this->db->query($sql)->row['total'];
 	
 		$sql = "SELECT p.product_id FROM " . DB_PREFIX . "product p WHERE 1 ";
-		$limit = 4;
+		$limit = 255;
 		$pages = floor($total/$limit);
 		for ($i=0;$i<($pages+1);$i++) {
 			$start = ($i)*$limit;
@@ -169,7 +169,7 @@ class ModelModuleSeo extends Controller {
 		$total = $this->db->query($sql)->row['total'];
 	
 		$sql = "SELECT p.product_id FROM " . DB_PREFIX . "product p WHERE 1 ";
-		$limit = 4;
+		$limit = 255;
 		$pages = floor($total/$limit);
 		for ($i=0;$i<($pages+1);$i++) {
 			$start = ($i)*$limit;
@@ -253,7 +253,7 @@ class ModelModuleSeo extends Controller {
 				$query = $this->db->query("SELECT DISTINCT *, (SELECT GROUP_CONCAT(cd1.name ORDER BY level SEPARATOR '&nbsp;&nbsp;&gt;&nbsp;&nbsp;') FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "category_description cd1 ON (cp.path_id = cd1.category_id AND cp.category_id != cp.path_id) WHERE cp.category_id = c.category_id AND cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY cp.category_id) AS path, (SELECT DISTINCT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'category_id=" . (int)$category_id . "') AS keyword FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd2 ON (c.category_id = cd2.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 				$category_info = $query->row;
 				if (isset($category_info['name'])) {
-					$keyword = $this->url_slug($category_info['name'].'-'.$category_id).'.html';
+					$keyword = $this->url_slug($category_info['name'].'-'.$category_id);
 					echo $keyword."<br>";
 					$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'category_id=" . (int)$category_id . "'");
 					$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($keyword) . "'");

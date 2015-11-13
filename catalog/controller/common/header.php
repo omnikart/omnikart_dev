@@ -110,7 +110,7 @@ class ControllerCommonHeader extends Controller {
 					foreach ($result as $cat){
 						$children_data[] = array(
 						'name'     => $cat['name'],
-						'href'     => $this->url->link('product/category', 'path=' . $cat['category_id'])
+						'href'     => $this->url->link('product/category', 'path=' . $cat['category_id'],'SSL')
 					);
 				}
 					
@@ -119,7 +119,7 @@ class ControllerCommonHeader extends Controller {
 					'name'     => $category['name'],
 					'column'   => $category['column'] ? $category['column'] : 1,
 					'childern' => $children_data,
-					'href'     => $this->url->link('product/category', 'path=' . $category['category_id'])
+					'href'     => $this->url->link('product/category', 'path=' . $category['category_id'],'SSL')
 				);
 			}
 		}
