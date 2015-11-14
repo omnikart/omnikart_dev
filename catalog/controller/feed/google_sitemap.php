@@ -11,6 +11,7 @@ class ControllerFeedGoogleSitemap extends Controller {
 	public function index() {
 		if ($this->config->get('google_sitemap_status')) {
 			$this->directory = str_replace('catalog','sitemaps',DIR_APPLICATION);
+			ini_set('max_execution_time', 300); 
 			$date = new DateTime();
 			$this->timestamp = date_format($date, 'Y-m-d H:i:s');
 			
