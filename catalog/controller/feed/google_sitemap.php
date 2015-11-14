@@ -22,14 +22,15 @@ class ControllerFeedGoogleSitemap extends Controller {
 			
 			$this->load->model('catalog/product');
 			$this->load->model('tool/image');
-			
-			
-
+			$filter_data = array(
+				'filter_category_id'  => '',
+				'filter_sub_category' => true
+			);
 			$limit = $this->config->get('product_count');
-			$product_total = $this->model_catalog_product->getTotalProducts();
+			$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
 
 			echo "Total Prodcuts  ".($product_total)."<br>";
-
+			/*
 			$counter = floor($product_total/$limit)+1;
 			
 			echo "Total Prodcuts Pages ".($counter+1)."<br>";
@@ -39,7 +40,7 @@ class ControllerFeedGoogleSitemap extends Controller {
 				$output = '';
 				echo "Creating Prodcuts ".$page."<br>";
 
-				$filter_data=array('start'=>$page* $limit,'limit'=>$limit);
+				$filter_data=array('filter_category_id'  => '','start'=>$page* $limit,'limit'=>$limit);
 				$products = $this->model_catalog_product->getProducts($filter_data);
 
 				foreach ($products as $product) {
@@ -164,7 +165,7 @@ class ControllerFeedGoogleSitemap extends Controller {
 			}
 			$output .= '</sitemapindex>';
 			$xmlobj=new SimpleXMLElement($output);
-			$xmlobj->asXML($this->directory.'sitemap_index-'.$this->timestamp.'.xml');
+			$xmlobj->asXML($this->directory.'sitemap_index-'.$this->timestamp.'.xml'); */
 		}
 	}
 
