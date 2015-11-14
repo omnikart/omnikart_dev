@@ -6,7 +6,7 @@ class ControllerFeedGoogleSitemap extends Controller {
 	private $output;
 	private $indexing = array();
 	public $timestamp;
-	public $directory = DIR_APPLICATION."../";
+	public $directory = DIR_APPLICATION."../sitemaps/";
 
 	public function index() {
 		if ($this->config->get('google_sitemap_status')) {
