@@ -27,14 +27,18 @@ class ControllerFeedGoogleSitemap extends Controller {
 
 			$limit = $this->config->get('product_count');
 			$product_total = $this->model_catalog_product->getTotalProducts();
-			
+
+			echo "Total Prodcuts  ".($product_total)."<br>";
+			echo "Total Prodcuts Pages ".($counter+1)."<br>";
+
 			$counter = floor($product_total/$limit)+1;
 			
 			for ($page = 0; $page < $counter; $page++)	{
 				
 				$output = '';
-				
-				$filter_data=array('start'=>($page - 1) * $limit,'limit'=>$limit);
+				echo "Creating Prodcuts ".$page."<br>";
+
+				$filter_data=array('start'=>$page* $limit,'limit'=>$limit);
 				$products = $this->model_catalog_product->getProducts($filter_data);
 
 				foreach ($products as $product) {
