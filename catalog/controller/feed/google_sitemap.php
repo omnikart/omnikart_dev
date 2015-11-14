@@ -6,7 +6,7 @@ class ControllerFeedGoogleSitemap extends Controller {
 	private $output;
 	private $indexing = array();
 	public $timestamp;
-	public $directory = "/home/unbeatable/public_html/opencart/sitemaps/";
+	public $directory = DIR_APPLICATION."/../";
 
 	public function index() {
 		if ($this->config->get('google_sitemap_status')) {
