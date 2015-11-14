@@ -6,10 +6,11 @@ class ControllerFeedGoogleSitemap extends Controller {
 	private $output;
 	private $indexing = array();
 	public $timestamp;
-	public $directory = DIR_APPLICATION."../sitemaps/";
+	public $directory;
 
 	public function index() {
 		if ($this->config->get('google_sitemap_status')) {
+			$this->directory = str_replace('catalog','sitemaps',DIR_APPLICATION);
 			$date = new DateTime();
 			$this->timestamp = date_format($date, 'Y-m-d H:i:s');
 			
