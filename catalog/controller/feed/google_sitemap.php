@@ -29,10 +29,11 @@ class ControllerFeedGoogleSitemap extends Controller {
 			$product_total = $this->model_catalog_product->getTotalProducts();
 
 			echo "Total Prodcuts  ".($product_total)."<br>";
-			echo "Total Prodcuts Pages ".($counter+1)."<br>";
 
 			$counter = floor($product_total/$limit)+1;
 			
+			echo "Total Prodcuts Pages ".($counter+1)."<br>";
+
 			for ($page = 0; $page < $counter; $page++)	{
 				
 				$output = '';
