@@ -26,11 +26,12 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		if($customerRights && !array_key_exists('addproduct', $customerRights['rights'])) {
 			$this->data['allowedAddEdit'] = false;
 		}
-
+		
 		$sellerId = $this->model_account_customerpartner->isSubUser($this->customer->getId());
 		
 		if(!$customerRights['isParent'] && !$sellerId) {
 			$this->data['chkIsPartner'] = $this->model_account_customerpartner->chkIsPartner();
+			$sellerId = $this->model_account_customerpartner->getuserseller();
 		} else if($sellerId) {
 			$this->data['chkIsPartner'] = true;
 		}

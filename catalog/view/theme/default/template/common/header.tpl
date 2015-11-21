@@ -83,7 +83,7 @@ _atrk_opts = { atrk_acct:"GTT9m1a47E805T", domain:"omnikart.com",dynamic: true};
 					<div class="col-lg-4 ns">
 						<div class="nav pull-right headlink">
 							<ul class="clearfix">
-					        <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="hidden-lg"><i class="fa fa-user"></i></span><span class="hidden-xs hidden-sm hidden-md">Hello<br /><?php echo $text_account; ?></span> <span class="caret"></span></a>
+					        <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="hidden-lg"><i class="fa fa-user"></i></span><span class="hidden-xs hidden-sm hidden-md"><?php echo $text_account; ?></span> <span class="caret"></span></a>
 					          <ul class="dropdown-menu dropdown-menu-right">
 					            <?php if ($logged) { ?>
 					            <li><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
@@ -135,5 +135,3 @@ _atrk_opts = { atrk_acct:"GTT9m1a47E805T", domain:"omnikart.com",dynamic: true};
 		</div>
 	</nav>  
 </header>
-<?php if ($categories) { ?>
-<?php } ?>

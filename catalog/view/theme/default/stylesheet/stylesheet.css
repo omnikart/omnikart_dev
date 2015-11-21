@@ -241,14 +241,15 @@ margin-bottom:0;
 font-family: "Shruti";
 /*text-transform: uppercase;*/
 font-weight: 400;
-font-size: 13px;
+font-size: 15px;
 color: #828282;
 }
 #menu .navbar-header {
 /*background:#229ac8;*/
 width:100%;
 }
-#menu .headlink > ul > li {float:left;padding: 0px 10px 0px 10px;border:1px solid transparent;border-radius:3px;}
+#menu .headlink > ul {padding-left:0px;}
+#menu .headlink > ul > li {float:left;padding: 10px 10px 0px 10px;border:1px solid transparent;border-radius:3px;}
 #menu .headlink > ul > li:hover{border-color:#ddd;}
 #menu .headlink > ul > li >a{padding: 2px 0px 2px 2px;display: block;line-height: 16px;color:#111;}
 
@@ -1228,9 +1229,7 @@ min-height: 20px;
 margin-bottom: 0px;}
 .megamenu > li > a {color:#333;	
 font-family: "Shruti";
-text-transform: uppercase;
 font-weight: 400;
-font-size: 13px;
 }
 #cat-wall .product-thumb .caption {
 padding:0 15px;
@@ -1344,3 +1343,4 @@ input.btn {padding: 7.5px 12px;}
   position: relative;
  }
 
+.ans {position:absolute;top:100%;right:0;}

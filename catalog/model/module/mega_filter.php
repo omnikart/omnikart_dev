@@ -564,7 +564,11 @@ class MegaFilterCore {
 	 */
 	public function getSQL( $fn, $sql = NULL, $template = NULL, array $conditions = array() ) {
 		if( $sql === NULL )
-			$sql = $this->_sql;
+		$sql = $this->_sql;
+		
+		$cat_id = isset(explode(',',$fn)[1])?explode(',',$fn)[1]:0;
+
+		$fn = explode(',',$fn)[0];
 		
 		$sql 		= trim( $sql );
 		$limit		= '';
@@ -657,8 +661,13 @@ class MegaFilterCore {
 		}
 		
 		if( ! empty( $this->_data['filter_category_id'] ) ) {
-			$vals = implode( ',', $this->_parseArrayToInt( explode( ',', $this->_data['filter_category_id'] ) ) );
 			
+			if ($cat_id){
+				$vals = implode( ',', $this->_parseArrayToInt( explode( ',', $cat_id ) ) );
+				$this->_data['filter_category_id'] = $cat_id;
+			} else {
+				$vals = implode( ',', $this->_parseArrayToInt( explode( ',', $this->_data['filter_category_id'] ) ) );
+			}
 			$sql = preg_replace( '/AND\s+`?p2c`?\.`?category_id`?\s*=\s*(\'|")[0-9]+(\'|")/ims', 'AND `p2c`.`category_id` IN(' . $vals . ')', $sql );
 			$sql = preg_replace( '/AND\s+`?cp`?\.`?path_id`?\s*=\s*(\'|")[0-9]+(\'|")/ims', 'AND `cp`.`path_id` IN(' . $vals . ')', $sql );
 		}
@@ -711,7 +720,6 @@ class MegaFilterCore {
 		//if( $fn == 'getTotalProducts' ) {
 		//	die($sql);
 		//}
-		
 		return $sql;
 	}
 	
@@ -1010,6 +1018,25 @@ class MegaFilterCore {
 	 * 
 	 * @return string 
 	 */
+	private function _supplierpriceCol( $alias = 'discount' ) {
+		$sql = "SELECT `price` FROM `" . DB_PREFIX . "customerpartner_to_product` AS `c2p2` WHERE `c2p2`.`product_id`=`p`.`product_id` ORDER BY c2p.price ASC, c2p.sort_order ASC LIMIT 1";
+		
+		return $alias ? sprintf( "(%s) AS %s", $sql, $alias ) : $sql;
+	}	/**
+	 * Kolumna discount
+	 * 
+	 * @return string 
+	 */
+	private function _supplierdiscountCol( $alias = 'discount' ) {
+		$sql = "SELECT `price` FROM `" . DB_PREFIX . "cp_product_discount` AS `cppd` WHERE `cppd`.`id` = `c2p`.`id` AND `cppd`.`customer_group_id` = '" . (int) $this->_customerGroupId() . "' AND `cppd`.`quantity` = '1' AND ((`cppd`.`date_start` = '0000-00-00' OR `cppd`.`date_start` < NOW()) AND (`cppd`.`date_end` = '0000-00-00' OR `cppd`.`date_end` > NOW())) ORDER BY `cppd`.`priority` ASC, `cppd`.`price` ASC LIMIT 1";
+		
+		return $alias ? sprintf( "(%s) AS %s", $sql, $alias ) : $sql;
+	}
+	/**
+	 * Kolumna discount
+	 * 
+	 * @return string 
+	 */
 	private function _discountCol( $alias = 'discount' ) {
 		$sql = "SELECT `price` FROM `" . DB_PREFIX . "product_discount` AS `pd2` WHERE `pd2`.`product_id` = `p`.`product_id` AND `pd2`.`customer_group_id` = '" . (int) $this->_customerGroupId() . "' AND `pd2`.`quantity` = '1' AND ((`pd2`.`date_start` = '0000-00-00' OR `pd2`.`date_start` < NOW()) AND (`pd2`.`date_end` = '0000-00-00' OR `pd2`.`date_end` > NOW())) ORDER BY `pd2`.`priority` ASC, `pd2`.`price` ASC LIMIT 1";
 		
@@ -1097,7 +1124,7 @@ class MegaFilterCore {
 	
 	private function _priceCol( $alias = 'price' ) {
 		return "
-			IFNULL( (" . $this->_specialCol( NULL ) . "), IFNULL( (" . $this->_discountCol( NULL ) . "), `p`.`price` ) )" . ( $alias ? " AS `" . $alias . '`' : '' ) . "
+			IFNULL( (" . $this->_supplierdiscountCol( NULL ) . "),IFNULL( (" . $this->_supplierpriceCol( NULL ) . "),IFNULL( (" . $this->_specialCol( NULL ) . "), IFNULL( (" . $this->_discountCol( NULL ) . "), `p`.`price` ))))" . ( $alias ? " AS `" . $alias . '`' : '' ) . "
 		";
 	}
 	
@@ -1277,6 +1304,10 @@ class MegaFilterCore {
 				{COLUMNS}
 			FROM
 				`" . DB_PREFIX . "product` AS `p`
+			LEFT JOIN
+				`" . DB_PREFIX . "customerpartner_to_product` AS `c2p`
+			ON
+				`c2p`.`product_id` = `p`.`product_id`
 			INNER JOIN
 				`" . DB_PREFIX . "product_description` AS `pd`
 			ON
@@ -1445,6 +1476,11 @@ class MegaFilterCore {
 				`" . DB_PREFIX . "product` AS `p`
 			ON
 				`p`.`product_id` = `p2c`.`product_id`
+				
+			LEFT JOIN
+				`" . DB_PREFIX . "customerpartner_to_product` AS `c2p`
+			ON
+				`c2p`.`product_id` = `p`.`product_id`
 			INNER JOIN
 				`" . DB_PREFIX . "category_path` AS `cp`
 			ON
@@ -1795,6 +1831,10 @@ class MegaFilterCore {
 				%s
 			FROM
 				`" . DB_PREFIX . "product` AS `p`
+			LEFT JOIN
+				`" . DB_PREFIX . "customerpartner_to_product` AS `c2p`
+			ON
+				`c2p`.`product_id` = `p`.`product_id`				
 			INNER JOIN
 				`" . DB_PREFIX . "product_attribute` AS `pa`
 			ON
@@ -1953,6 +1993,10 @@ class MegaFilterCore {
 				%s
 			FROM
 				`" . DB_PREFIX . "product` AS `p`
+			LEFT JOIN
+				`" . DB_PREFIX . "customerpartner_to_product` AS `c2p`
+			ON
+				`c2p`.`product_id` = `p`.`product_id`
 			INNER JOIN
 				`" . DB_PREFIX . "product_option_value` AS `pov`
 			ON
@@ -2111,6 +2155,10 @@ class MegaFilterCore {
 				%s
 			FROM
 				`" . DB_PREFIX . "product` AS `p`
+			LEFT JOIN
+				`" . DB_PREFIX . "customerpartner_to_product` AS `c2p`
+			ON
+				`c2p`.`product_id` = `p`.`product_id`
 			INNER JOIN
 				`" . DB_PREFIX . "product_filter` AS `pf`
 			ON
@@ -2323,6 +2371,10 @@ class ModelModuleMegaFilter extends Model {
 				`" . $type . "` AS `field`
 			FROM
 				`" . DB_PREFIX . "product` AS `p`
+			LEFT JOIN
+				`" . DB_PREFIX . "customerpartner_to_product` AS `c2p`
+			ON
+				`c2p`.`product_id` = `p`.`product_id`	
 			{join}
 			{conditions}
 			GROUP BY
@@ -2444,6 +2496,10 @@ class ModelModuleMegaFilter extends Model {
 				`fd`.`name`
 			FROM
 				`" . DB_PREFIX . "product` AS `p`
+			LEFT JOIN
+				`" . DB_PREFIX . "customerpartner_to_product` AS `c2p`
+			ON
+				`c2p`.`product_id` = `p`.`product_id`
 			INNER JOIN
 				`" . DB_PREFIX . "product_to_store` AS `p2s`
 			ON
@@ -2567,6 +2623,10 @@ class ModelModuleMegaFilter extends Model {
 				`ovd`.`name`
 			FROM
 				`" . DB_PREFIX . "product` AS `p`
+			LEFT JOIN
+				`" . DB_PREFIX . "customerpartner_to_product` AS `c2p`
+			ON
+				`c2p`.`product_id` = `p`.`product_id`
 			INNER JOIN
 				`" . DB_PREFIX . "product_to_store` AS `p2s`
 			ON
@@ -2690,6 +2750,10 @@ class ModelModuleMegaFilter extends Model {
 				`agd`.`attribute_group_id`
 			FROM
 				`" . DB_PREFIX . "product` AS `p`
+			LEFT JOIN
+				`" . DB_PREFIX . "customerpartner_to_product` AS `c2p`
+			ON
+				`c2p`.`product_id` = `p`.`product_id`
 			INNER JOIN
 				`" . DB_PREFIX . "product_to_store` AS `pts`
 			ON

@@ -110,12 +110,26 @@ class ControllerCheckoutOrderlater extends Controller {
 				$result = $this->model_account_customerpartner->getsavedcart($data['id']);
 				$cart = unserialize($result['cart']);
 				$this->session->data['cart'] = $cart;
+				$this->session->data['saved_cart_id'] = $data['id'];
 				$json['success'] = "Card Updated Successfully";
 				$json['redirect'] = $this->url->link('checkout/checkout','', 'SSL');
-				
 			}
 		}
 		$this->response->setOutput(json_encode($json));
+	}
+	public function deletecart(){
+		$this->load->model("account/customerpartner");
+		$this->checkuser();
+		$data = $this->request->post;
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+			if (isset($data['id']) && $data['id']) {
+				$this->model_account_customerpartner->deletecart($data['id']);
+				$json['success'] = "Card Deleted Successfully";
+				$json['redirect'] = $this->url->link('checkout/checkout','', 'SSL');
+			}
+		}
+		$this->response->setOutput(json_encode($json));		
+		
 	}
 	private function checkuser(){
 		if (!$this->customer->isLogged()) {

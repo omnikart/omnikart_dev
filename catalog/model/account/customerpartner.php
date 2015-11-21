@@ -32,7 +32,7 @@ class ModelAccountCustomerpartner extends Model {
 		if($reviewResult) {
 			$customerCart = unserialize($reviewResult->row['customer_cart']);
 			$approveCart = unserialize($reviewResult->row['approve_cart']);
-			$disapproveCart = $reviewResult->row['disapprove_cart'];
+			$disapproveCart = unserialize($reviewResult->row['disapprove_cart']);
 			$returnArray = array();
 			$currentCart = $this->session->data['cart'];
 			$productsDetails = array();
@@ -45,6 +45,11 @@ class ModelAccountCustomerpartner extends Model {
 					} else {
 						$approved = false;
 					}
+					if($disapproveCart && array_key_exists($key, $disapproveCart)) {
+						$disapproved = true;
+					} else {
+						$disapproved = false;
+					}
 					$productsDetails[] = array(
 						'key' => $key,
 						'order_review_id' => $reviewResult->row['order_review_id'],
@@ -53,6 +58,7 @@ class ModelAccountCustomerpartner extends Model {
 						'model' => $result['model'],
 						'quantity' => $value,
 						'approved' => $approved,
+						'disapproved' => $disapproved,
 					);
 				}
 				return $productsDetails;
@@ -63,15 +69,38 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	public function approveProductToBuy($data) {
-		$alreadyApproved = $this->db->query("SELECT approve_cart FROM ".DB_PREFIX."customerpartner_order_review WHERE customer_id='".$data['customer_id']."' AND order_review_id = '".$data['order_review_id']."' ")->row;
+		$alreadyApproved = $this->db->query("SELECT approve_cart,disapprove_cart FROM ".DB_PREFIX."customerpartner_order_review WHERE customer_id='".$data['customer_id']."' AND order_review_id = '".$data['order_review_id']."' ")->row;
 		$approved = array();
+		$dcarts = unserialize($alreadyApproved['disapprove_cart']);
+		foreach ($dcarts as $product => $dcart) {
+			if (isset($data['select'][$product])) unset($dcarts[$product]);
+		}
 		if(isset($alreadyApproved['approve_cart']) && $alreadyApproved['approve_cart']) {
 			$approved = unserialize($alreadyApproved['approve_cart']);
+			if (!is_array($approved)) $approved = array();
 		}
 		$resultData = array_merge($approved,$data['select']);
-		$this->db->query("UPDATE ".DB_PREFIX."customerpartner_order_review SET approve_cart = '".serialize($resultData)."' WHERE order_review_id = '".$data['order_review_id']."' ");
+		$this->db->query("UPDATE ".DB_PREFIX."customerpartner_order_review SET approve_cart = '".serialize($resultData)."', disapprove_cart = '".serialize($dcarts)."' WHERE order_review_id = '".$data['order_review_id']."' ");
 	}
-
+	
+	public function disapproveProductToBuy($data) {
+		$alreadyDisapproved = $this->db->query("SELECT approve_cart,disapprove_cart FROM ".DB_PREFIX."customerpartner_order_review WHERE customer_id='".$data['customer_id']."' AND order_review_id = '".$data['order_review_id']."' ")->row;
+		$disapproved = array();
+		$acarts = unserialize($alreadyDisapproved['approve_cart']);
+		foreach ($acarts as $product => $acart) {
+			if (isset($data['select'][$product])) unset($acarts[$product]);
+		}
+		if (empty($acarts)) {
+			$acarts = array();
+		}
+		if (isset($alreadyDisapproved['disapprove_cart']) && $alreadyDisapproved['disapprove_cart']) {
+			$disapproved = unserialize($alreadyDisapproved['disapprove_cart']);
+			if (!is_array($disapproved)) $disapproved = array();
+		}
+		$resultData = array_merge($disapproved,$data['select']);
+		$this->db->query("UPDATE ".DB_PREFIX."customerpartner_order_review SET disapprove_cart = '".serialize($resultData)."', approve_cart = '".serialize($acarts)."' WHERE order_review_id = '".$data['order_review_id']."' ");
+	}
+	
 	public function getReviewRequest($admin_id) {
 		$requests = $this->db->query("SELECT * FROM ".DB_PREFIX."customerpartner_employee_mapping cpem LEFT JOIN ".DB_PREFIX."customerpartner_order_review cpor ON (cpem.employee_id=cpor.customer_id) LEFT JOIN ".DB_PREFIX."customer c ON (c.customer_id=cpor.customer_id) WHERE cpor.admin_id = '".$admin_id."' AND cpor.status='open' ")->rows;
 		
@@ -88,6 +117,9 @@ class ModelAccountCustomerpartner extends Model {
 		} else {
 			$customer_id = $this->customer->getId();
 		}
+		
+		$data['admin_id'] = $this->getusermanager();
+		
 		$alreadyApproved = $this->db->query("SELECT customer_cart FROM ".DB_PREFIX."customerpartner_order_review WHERE customer_id='".$customer_id."' AND status = 'open' ")->row;
 		
 		$approved = array();
@@ -98,8 +130,52 @@ class ModelAccountCustomerpartner extends Model {
 		if($alreadyApproved) {
 			$this->db->query("UPDATE ".DB_PREFIX."customerpartner_order_review SET customer_cart = '".serialize($data['selected'])."' WHERE customer_id = '".$customer_id."' ");
 		} else {
-			$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_order_review VALUES ('','".$customer_id."','".$data['admin_id']."','".serialize($data['selected'])."', '', '".serialize($data['selected'])."','open' ) ");
+			$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_order_review VALUES ('',0,'".$customer_id."','".$data['admin_id']."','".serialize($data['selected'])."', '', '','open' ) ");
 		}
+		
+
+		
+		$text = '';
+		
+		$order_review_id = $this->db->query("SELECT order_review_id FROM ".DB_PREFIX."customerpartner_order_review WHERE customer_id = '".$customer_id."'")->row['order_review_id'];
+		
+		$this->load->model('account/customer');
+		$requestor = $this->model_account_customer->getCustomer($customer_id);
+		echo $this->getusermanager();
+		$admin = $this->model_account_customer->getCustomer($this->getusermanager());
+		
+		$subject = "Product Approval Request - ".$order_review_id;
+		
+		$text = "Product Name\tModel\tQuantity\tApproved\tDisapproved\n";
+
+		foreach ($data['selected'] as $key => $value) {
+			$product = unserialize(base64_decode($key));
+			$result = $this->db->query("SELECT * FROM ".DB_PREFIX."product p LEFT JOIN ".DB_PREFIX."product_description pd ON (pd.product_id=p.product_id) WHERE pd.language_id = '".$this->config->get('config_language_id')."' AND p.product_id='".$product['product_id']."' ")->row;
+			$text .= $result['name']."\t".$result['model']."\t".$value."\tNo\tNo\n";
+		}		
+		
+		$message = "Dear ".$requestor['firstname']." ".$requestor['lastname'].",\n";
+		$message .= $text;
+		$message .= "Please wait for Mr/Ms ".$admin['firstname']." ".$admin['lastname']." to approve it";
+		
+		$mail = $this->mail_init();
+		$mail->setTo($requestor['email']);
+		$mail->setFrom($this->config->get('config_email'));
+		$mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
+		$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+		$mail->setText($message);
+		$mail->send();
+		
+		$message = "Dear ".$admin['firstname']." ".$admin['lastname'].",\n";
+		$message .= $text;
+		$message .= "Please approve the above request from Mr/Ms ".$admin['firstname']." ".$admin['lastname'].".";
+		
+		$mail->setTo($admin['email']);
+		$mail->setFrom($requestor['email']);
+		$mail->setSender(html_entity_decode($requestor['firstname']." ".$requestor['lastname'], ENT_QUOTES, 'UTF-8'));
+		$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+		$mail->setText($message);
+		$mail->send();
 	}
 
 	public function deleteSubUser($customer_id) {
@@ -153,7 +229,7 @@ class ModelAccountCustomerpartner extends Model {
 	/*check*/
 	public function getAllUserList($customer_id) {
 		$seller_id = $this->getuserseller();
-		$userList = $this->db->query("SELECT * FROM ".DB_PREFIX."customer c LEFT JOIN ".DB_PREFIX."customerpartner_employee_mapping cpem ON (c.customer_id=cpem.employee_id) LEFT JOIN ".DB_PREFIX."customer_to_manager c2m ON (c.customer_id=c2m.employee_id) WHERE cpem.seller_id='".$seller_id."' ")->rows;
+		$userList = $this->db->query("SELECT c.*,c2m.p_limit,c2m.manager_id FROM ".DB_PREFIX."customer c LEFT JOIN ".DB_PREFIX."customerpartner_employee_mapping cpem ON (c.customer_id=cpem.employee_id) LEFT JOIN ".DB_PREFIX."customer_to_manager c2m ON (c.customer_id=c2m.employee_id) WHERE cpem.seller_id='".$seller_id."' ")->rows;
 		if($userList) {
 			return $userList;
 		} else {
@@ -252,7 +328,6 @@ class ModelAccountCustomerpartner extends Model {
 	// Productlist
 	public function getProductSoldQuantity($product_id,$seller_id){
 		$sql = $this->db->query("SELECT SUM(c2o.quantity) quantity, SUM(c2o.price) total FROM ".DB_PREFIX ."customerpartner_to_order c2o LEFT JOIN ".DB_PREFIX ."customerpartner_to_product c2p ON (c2o.product_id = c2p.product_id AND c2o.customer_id = c2p.customer_id ) WHERE c2o.customer_id = '".$seller_id."' and c2p.product_id = '".(int)$product_id."'");
-		
 		return($sql->row);
 	}
 	
@@ -260,10 +335,9 @@ class ModelAccountCustomerpartner extends Model {
 
 		$query = $this->db->query("SELECT DISTINCT *, pd.name AS name, p.image, m.name AS manufacturer , (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 		
-		if ($vendor_id) 
-			$vendor_data = $this->db->query("SELECT * FROM ".DB_PREFIX."customerpartner_to_product WHERE product_id = ".(int)$product_id." AND customer_id = " . (int)$vendor_id);
-		else
-			$vendor_data = $this->db->query("SELECT * FROM ".DB_PREFIX."customerpartner_to_product WHERE product_id = ".(int)$product_id." AND customer_id = " . (int)$this->getuserseller());
+		if ($vendor_id) $vendor_id = $vendor_id;
+		else $vendor_id = $this->getuserseller();
+		$vendor_data = $this->db->query("SELECT cp2p.*, (SELECT price FROM " . DB_PREFIX . "cp_product_discount cppd WHERE cppd.id = cp2p.id AND cppd.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND cppd.quantity = '1' AND ((cppd.date_start = '0000-00-00' OR cppd.date_start < NOW()) AND (cppd.date_end = '0000-00-00' OR cppd.date_end > NOW())) ORDER BY cppd.priority ASC, cppd.price ASC LIMIT 1) AS discount FROM ".DB_PREFIX."customerpartner_to_product cp2p WHERE cp2p.product_id = ".(int)$product_id." AND cp2p.customer_id = " . (int)$vendor_id);
 		
 		if ($query->num_rows) {
 			return array(
@@ -287,7 +361,7 @@ class ModelAccountCustomerpartner extends Model {
 				'image'            => $query->row['image'],
 				'manufacturer_id'  => $query->row['manufacturer_id'],
 				'manufacturer'     => $query->row['manufacturer'],
-				'price'            => $vendor_data->row['price'],
+				'price'            => ($vendor_data->row['discount']?$vendor_data->row['discount']:$vendor_data->row['price']),
 				'original_price'   => $query->row['price'],
 				'special'          => $query->row['special'],
 				'reward'           => $query->row['reward'],
@@ -321,7 +395,7 @@ class ModelAccountCustomerpartner extends Model {
 
 	public function getProductsSeller($data = array()) {
 
-		$sql = "SELECT p.product_id, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2p.product_id = p.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
+		$sql = "SELECT p.product_id, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT price FROM " . DB_PREFIX . "cp_product_discount cppd2 WHERE cppd2.id = c2p.id AND cppd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND cppd2.quantity = '1' AND ((cppd2.date_start = '0000-00-00' OR cppd2.date_start < NOW()) AND (cppd2.date_end = '0000-00-00' OR cppd2.date_end > NOW())) ORDER BY cppd2.priority ASC, cppd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "cp_product_special cpps WHERE cpps.id = c2p.id AND cpps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((cpps.date_start = '0000-00-00' OR cpps.date_start < NOW()) AND (cpps.date_end = '0000-00-00' OR cpps.date_end > NOW())) ORDER BY cpps.priority ASC, cpps.price ASC LIMIT 1) AS special FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2p.product_id = p.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
 
 		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {
 			$sql .= " LEFT JOIN " . DB_PREFIX ."product_to_category p2c ON (p.product_id = p2c.product_id)";
@@ -551,7 +625,10 @@ class ModelAccountCustomerpartner extends Model {
 		if($this->chkSellerPoductAccess($product_id)){
 
 			$this->db->query("DELETE FROM " . DB_PREFIX . "customerpartner_to_product WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM " . DB_PREFIX . "cp_product_discount WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM " . DB_PREFIX . "cp_product_special WHERE product_id = '" . (int)$product_id . "'");
 
+/*
 			//if seller can delete product from store
 			if($this->config->get('marketplace_sellerdeleteproduct')){   
        	            
@@ -574,7 +651,7 @@ class ModelAccountCustomerpartner extends Model {
 				$this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE product_id = '" . (int)$product_id . "'");
 				$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
          	}
-
+*/
 		}
 		
 	}
@@ -832,7 +909,7 @@ class ModelAccountCustomerpartner extends Model {
 
 		return $sql;
 	}
-
+	/*needtocheck*/
 	public function productAddUpdate($product_id,$data){
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_description WHERE product_id = '" . (int)$product_id . "'");
@@ -1059,8 +1136,7 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	public function getProductPQ($product_id,$vendor_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX ."customerpartner_to_product WHERE product_id = '" . (int)$product_id . "' AND customer_id = '".$vendor_id."' AND status = '1'");
-
+		$query = $this->db->query("SELECT *,(SELECT price FROM " . DB_PREFIX . "cp_product_discount cppd2 WHERE cppd2.id = c2p.id AND cppd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND cppd2.quantity = '1' AND ((cppd2.date_start = '0000-00-00' OR cppd2.date_start < NOW()) AND (cppd2.date_end = '0000-00-00' OR cppd2.date_end > NOW())) ORDER BY cppd2.priority ASC, cppd2.price ASC LIMIT 1) AS discount FROM " . DB_PREFIX ."customerpartner_to_product c2p WHERE c2p.product_id = '" . (int)$product_id . "' AND c2p.customer_id = '".$vendor_id."' AND c2p.status = '1'");
 		return $query->row;
 	}
 
@@ -2143,6 +2219,15 @@ class ModelAccountCustomerpartner extends Model {
 			return $this->customer->getId();
 		} else return false;
 	}
+	public function getusermanager(){
+		$query = $this->db->query("SELECT manager_id FROM ".DB_PREFIX."customer_to_manager WHERE employee_id = ".(int)$this->customer->getId());
+		if ($query->num_rows>0 && $query->row['manager_id']){
+			return $query->row['manager_id'];
+		} else {
+			return $this->getuserseller();
+		}
+	}
+	
 	public function getUser(){
 		$customer_id = $this->customer->getId();
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."customer_to_manager WHERE employee_id='".$customer_id."'");
@@ -2196,6 +2281,21 @@ class ModelAccountCustomerpartner extends Model {
 		if (isset($data['product'])) $sql[] = " cart = '".serialize($products)."'";
 		$query = $this->db->query("UPDATE ".DB_PREFIX."saved_cart SET ". implode(',',$sql) . " WHERE id = '". $data['id'] ."' AND customer_id = '".$customer_id."'");
 		
+	}
+	public function deletecart($id) {
+		$customer_id = $this->customer->getId();
+		$this->db->query("DELETE FROM ".DB_PREFIX."saved_cart WHERE customer_id = '".$customer_id."' AND id = '".$id."'");
+	}
+	private function mail_init(){
+		$mail = new Mail();
+		$mail->protocol = $this->config->get('config_mail_protocol');
+		$mail->parameter = $this->config->get('config_mail_parameter');
+		$mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+		$mail->smtp_username = $this->config->get('config_mail_smtp_username');
+		$mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+		$mail->smtp_port = $this->config->get('config_mail_smtp_port');
+		$mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+		return $mail;
 	}
 }
 ?>

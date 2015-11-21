@@ -66,7 +66,7 @@
 	                      
                             <i class="fa fa-pencil"></i>
                           </button>
-                        <?php if($list['status'] == 'enable') { ?>
+                        <?php if($list['status'] == '1') { ?>
                           <a class="btn btn-danger changeStatusSubUser" data-toggle="tooltip" data-original-title="<?php echo $button_disable; ?>" data-value="disable-<?php echo $list['customer_id']; ?>">
                             <i class="fa fa-thumbs-o-down"></i>
                           </a>
@@ -118,7 +118,7 @@
                     <option value="0"></option>
                     <?php if($allusers) { ?>
                       <?php foreach ($allusers as $key => $user) { ?>
-                        <option value="<?php echo $user['id']; ?>"><?php echo $user['firstname'].' '.$user['lastname']; ?></option>
+                        <option value="<?php echo $user['customer_id']; ?>"><?php echo $user['firstname'].' '.$user['lastname']; ?></option>
                       <?php } ?>
                     <?php } ?>
                   </select>  

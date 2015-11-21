@@ -33,7 +33,7 @@
         <?php foreach ($categories as $category) { ?>
         <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
             <div class="product-thumb transition">
-                <div class="image"><a href="<?php echo $category['href']; ?>"><div></div><img src="<?php echo $category['image']; ?>" alt="<?php echo $category['name']; ?>" title="<?php echo $category['name']; ?>" class="img-responsive" /></a></div>
+                <div class="image"><a href="<?php echo $category['href']; ?>"><img src="<?php echo $category['image']; ?>" alt="<?php echo $category['name']; ?>" title="<?php echo $category['name']; ?>" class="img-responsive" /></a></div>
                 <div class="caption" style="min-height: 60px">
                     <h4><a style="text-decoration: none" href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></h4>
                 </div>
@@ -140,11 +140,7 @@
         </div>
         <?php } ?>
       </div>
-      <?php if ($dbe) { ?>
-      <div class="buttons">
-        <div class="pull-right"><button id="button-pcd" class="btn btn-primary btn-lg">Add Products to DashBoard</button></div>
-      </div>
-      <?php } ?>
+
       <div class="row">
         <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
         <div class="col-sm-6 text-right"><?php echo $results; ?></div>
@@ -163,37 +159,6 @@
 </div>
 <?php echo $footer; ?>
 	<script type="text/javascript">
-		$('#button-pcd').on('click', function() {
-			$('#modal-db').remove();
-			$.ajax({
-				url: 'index.php?route=account/cd/getCategories',
-				type: 'post',
-				dataType: 'json',
-				beforeSend: function() {
-					$('#button-pcd').button('loading');
-				},
-				complete: function() {
-					$('#button-pcd').button('reset');
-				},
-				success: function(json) {
-					
-					html  = '<div id="modal-db" class="modal">';
-					html += '  <div class="modal-dialog">';
-					html += '    <div class="modal-content">';
-					html += '      <div class="modal-header">Hello';
-					html += '      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div>';
-					html += '      <div class="modal-body">'+json+'<br /><br /><input class="form-control col-sm-12" name="category-name" type="text" placeholder="Input Name in case of new category" value=""></input><br /><br />';
-					html += '	   <button id="button-update" onclick="updatedb();" class="btn btn-primary btn-lg">Update to DashBoard</button></div>';
-					html += '    </div';
-					html += '  </div>';
-					html += '</div>';
-					
-					$('body').append(html);
-	
-					$('#modal-db').modal('show');		
-				}
-			});
-		});
 		$('input[name="grouped"]').on('change',function(){
 			var product_id = this.value;
 			$('#modal-db1').remove();
@@ -229,22 +194,4 @@
 			});
 		
 		});
-		function updatedb() {
-				$.ajax({
-					url: 'index.php?route=account/cd/addProductCd',
-					type: 'post',
-					data: $('.product-thumb .hover-content input[type=\'checkbox\']:checked, select[name="category_id"],input[name="category-name"]'),
-					dataType: 'json',
-					beforeSend: function() {
-						$('#button-pcd').button('loading');
-					},
-					complete: function() {
-						$('#button-pcd').button('reset');
-					},
-					success: function(json) {
-						$('.alert').remove();
-						if (json['error_text']) $('.modal-header').after('<div class="alert alert-danger"><div class="text-danger">'+ json['error_text'] +'</div></div>');		
-					}
-				});
-		}		
 	</script>

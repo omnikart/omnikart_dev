@@ -127,7 +127,9 @@
                 <div class="col-sm-9">
                   <select name="marketplace_productapprov" id="input-productapprove" class="form-control">
                     <option value="0" <?php if(!$marketplace_productapprov) echo 'selected';?>>  <?php echo $text_disabled; ?> </option>
-                    <option value="1" <?php if($marketplace_productapprov) echo 'selected';?>>  <?php echo $text_enabled; ?> </option>
+                    <option value="1" <?php if(1==$marketplace_productapprov) echo 'selected';?>>  <?php echo $text_enabled; ?> </option>
+                    <option value="2" <?php if(2==$marketplace_productapprov) echo 'selected';?>>  Pending Product Verification</option>
+                    <option value="3" <?php if(3==$marketplace_productapprov) echo 'selected';?>>  Pending Supplier Product </option>
                   </select>
                 </div>
               </div>

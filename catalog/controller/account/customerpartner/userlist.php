@@ -63,7 +63,6 @@ class ControllerAccountCustomerpartnerUserlist extends Controller
 			'limit' => 50,
 			'groupIsParent' => $this->customer->getGroupId(),
 		);
-
 		$userList = $this->model_account_customerpartner->getUserList($this->customer->getId());
 		$data['customer_groups'] = $this->model_account_customerpartner->getCustomerGroupList($filter);
 		$allusers = $this->model_account_customerpartner->getAllUserList($this->customer->getId());
@@ -71,6 +70,7 @@ class ControllerAccountCustomerpartnerUserlist extends Controller
 		if ($allusers){
 			$data['allusers'] = $allusers;
 		}
+		
 		$data['userlist'] = array();
 		if($userList) {
 			foreach ($userList as $key => $user) {

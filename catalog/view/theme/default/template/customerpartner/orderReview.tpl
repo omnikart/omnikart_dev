@@ -78,11 +78,7 @@
               <button class="btn btn-warning" type="button" name="sendToReview" ><?php echo $button_sendtoreview; ?></button>
             </div>
           <?php } ?>
-        <?php } else if($isSubUser) { ?>
-          <div class="row">
-            <h3 class="text-warning">You have already submitted products to get reviewed. Let them approve and then send request for review.</h3>
-          </div>
-        <?php } else if($isParent) { ?>
+        <?php } elseif(isset($reviewRequests) && $reviewRequests) { ?>
             <div class="responsive-table">
               <table class="table table-bordered table-hover">
                 <thead>
@@ -113,6 +109,10 @@
                   </tbody>
               </table>            
             </div>
+        <?php } else if($isSubUser) { ?>
+          <div class="row">
+            <h3 class="text-warning">You have already submitted products to get reviewed. Let them approve and then send request for review.</h3>
+          </div>
         <?php } ?>
       </fieldset>
       <div id="productModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
@@ -142,9 +142,12 @@
             </form>
           </div>
             <div class="modal-footer">
-              <button class="btn btn-primary" type="button" data-dismiss="modal" aria-hidden="true" onclick="$('#approve-form').submit();">
+              <button class="btn btn-primary" type="button" data-dismiss="modal" aria-hidden="true" onclick="$('#approve-form').attr('action','<?php echo $approveAction; ?>');$('#approve-form').submit();">
                 <?php echo $button_approve; ?>
               </button>
+              <button class="btn btn-primary" type="submit" data-dismiss="modal" aria-hidden="true" onclick="$('#approve-form').attr('action','<?php echo $disapproveAction; ?>');$('#approve-form').submit();">
+                Disapprove
+              </button>              
               <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true" id="closeButton">
                 <?php echo $button_close; ?>
               </button>
@@ -171,16 +174,17 @@
           html = '';
           html += '<input type="hidden" value="'+customer_id+'" name="customer_id" />';
           $.each(json['data'],function(key,value){
-            if(value.approved) {
-              status = 'disabled="true"';
-              name = '';
-            } else {
-              status = '';
-              name = 'select['+value.key+']';
-            }
-            html += '<tr>';
+			if (value.approved) {
+				alert = 'alert-success';
+			} else if (value.disapproved) {
+				alert = 'alert-danger';
+			} else {
+				alert  = '';
+			}
+			name = 'select['+value.key+']';
+			html += '<tr>';
             html += '<td><input type="checkbox" '+status+' name="'+name+'" value="'+value.quantity+'" ></td>';
-            html += '<td>'+value.name+'</td>';
+            html += '<td class="'+alert+'">'+value.name+'</td>';
             html += '<td>'+value.model+'</td>';
             html += '<td>'+value.quantity+'</td>';
             html += '</tr>';

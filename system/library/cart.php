@@ -193,8 +193,8 @@ class Cart {
 					
 					foreach ($this->session->data['cart'] as $key_2 => $quantity_2) {
 						$product_2 = (array)unserialize(base64_decode($key_2));
-						if ($vendor_id) {
-								if ($product_2['product_id'].'-'.$product_2['vendor_id'] == $product_id.'-'.$vendor_id) {
+						if ($vendor_id && isset($product_2['vendor_id'])) {
+								if (($product_2['product_id'].'-'.$product_2['vendor_id']) == ($product_id.'-'.$vendor_id)) {
 										$discount_quantity[$product_id.'-'.$vendor_id] += $quantity_2;
 								}
 						}

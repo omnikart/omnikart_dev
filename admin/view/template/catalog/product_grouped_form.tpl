@@ -88,6 +88,7 @@
                   </div>
                 </div>
                 <?php } ?>
+                <input type="hidden" name="is_gp" value="grouped" class="form-control" />
               </div>
             </div>
             <div class="tab-pane" id="tab-data">

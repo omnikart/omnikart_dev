@@ -306,6 +306,8 @@ class ControllerAccountCustomerpartnerAddproduct extends Controller {
 			$data['action'] = $this->url->link('account/customerpartner/addproduct&product_id='.$this->request->get['product_id'], '', 'SSL');
 		}
 
+		$data['existing'] =  $this->url->link('account/customerpartner/addproductlist', '', 'SSL');
+		
 		$data['cancel'] = $this->url->link('account/customerpartner/productlist', '', 'SSL');
 
       	$data['breadcrumbs'] = array();
@@ -1021,10 +1023,6 @@ class ControllerAccountCustomerpartnerAddproduct extends Controller {
 		foreach ($this->request->post['product_description'] as $language_id => $value) {
 			if ((utf8_strlen($value['name']) < 1) || (utf8_strlen($value['name']) > 255)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
-			}
-
-			if ((utf8_strlen($value['meta_title']) < 1) || (utf8_strlen($value['meta_title']) > 255)) {
-				$this->error['error_meta_title'][$language_id] = $this->language->get('error_meta_title');
 			}
 		}
 

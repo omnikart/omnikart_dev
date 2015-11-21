@@ -436,7 +436,7 @@
 						<li class="dropdown"><a href="<?php echo $account; ?>"
 												]]></search>
 												<add position="before"><![CDATA[
-						<?php if ($logged AND $chkIsPartner) { ?>
+						<?php if ($logged AND $rights) { ?>
 							<li class="dropdown"><a href="<?php echo $menusell; ?>" title="<?php echo $menusell; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="hidden-lg"><i class="fa fa-users"></i></span>
 							<span class="hidden-xs hidden-sm hidden-md"><?php echo $text_sell_header; ?></span> <span class="caret"></span></a>
 									<ul class="dropdown-menu dropdown-menu-right">
@@ -455,17 +455,19 @@
 						<?php } ?>
 						
 						<?php if ($logged && $rights) { ?>
-						<li class="dropdown"><a href="<?php echo $menu_buy; ?>" title="<?php echo $menu_buy; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="hidden-lg"><i class="fa fa-tachometer"></i></span></span><span class="hidden-xs hidden-sm hidden-md">Personalized<br />Dashboard</span> <span class="caret"></span></a>
-								<ul class="dropdown-menu dropdown-menu-right">
+						<li class="dropdown"><a href="<?php echo $menu_buy; ?>" title="<?php echo $menu_buy; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="hidden-lg"><i class="fa fa-tachometer"></i></span></span><span class="hidden-xs hidden-sm hidden-md">Dashboard</span> <span class="caret"></span></a>
+								<ul class="dropdown-menu dropdown-menu-right" id="dashboard">
 									<?php if (in_array('db',$rights)) {?>
 										<li><a href="<?php echo $b_db; ?>"><?php echo $t_db; ?></a></li>
 										<li><a href="<?php echo $b_so; ?>"><?php echo $t_so; ?></a></li>
+										<?php if (isset($modules['cd'])) {?>
+											<li><button id="button-pcd" class="btn">Add Products to DashBoard</button></li>
+										<?php } ?>
 									<?php } ?>
 								</ul>
 						</li>
 						<?php } ?>
-						
-														 ]]></add>
+						]]></add>
 								</operation>
 				</file>
 
@@ -750,10 +752,6 @@
 				
 				$limit =  $this->model_account_customerpartner->getUser();
 				
-				
-				
-
-				  
 			 if($customerRights && !array_key_exists('make-order', $customerRights['rights'])) {
             $this->session->data['forReview'] = true;
             $currentCart = $this->session->data['cart'];
@@ -989,6 +987,18 @@
 					}
 				]]></add>
 			</operation>
+			<operation>
+				<search><![CDATA[
+					$discounts = $this->model_catalog_product->getProductDiscounts($this->request->get['product_id']);
+				]]></search>
+				<add position="after"><![CDATA[
+					if (!empty($product_info['curr_vendor']['id'])) {
+						$discounts = $this->model_catalog_product->getSupplierProductDiscounts($product_info['curr_vendor']['id']);
+					}
+				]]></add>
+			</operation>
+			
+			
     </file>
 			
     <file path="catalog/model/catalog/product.php">
@@ -1015,9 +1025,9 @@
 				$prices = $this->model_account_customerpartner->getProductPQ($product_id,$vendor_id);
 				
 				if (!($vendor && $prices)) {
-					$curr_vend = array('companyname'=>'','customer_id'=>'','quantity'=>'','price'=>'');
+					$curr_vend = array('companyname'=>'','vendor_id'=>'','quantity'=>'','price'=>'');
 				} else {
-					$curr_vend = array('companyname'=>$vendor['companyname'],'customer_id'=>$vendor['customer_id'],'price'=>$prices['price'],'quantity'=>$prices['quantity']);
+					$curr_vend = array('companyname'=>$vendor['companyname'],'vendor_id'=>$vendor['customer_id'],'price'=>($prices['discount']?$prices['discount']:$prices['price']),'quantity'=>$prices['quantity'],'id'=>$prices['id']);
 				}
 				$vendor_q = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.product_id = ".(int)$product_id . " AND c2p.customer_id <> ".(int)$vendor_id. " AND status = '1'");
 				if ($vendor_q->num_rows > 0) {
@@ -1033,7 +1043,7 @@
 					}
 				}
 			} else {
-				$curr_vend = array('companyname'=>'','customer_id'=>'','quantity'=>'','price'=>'');
+				$curr_vend = array('companyname'=>'','vendor_id'=>'','quantity'=>'','price'=>'','id'=>'');
 			}
     ]]></add>
     </operation>
@@ -1045,7 +1055,7 @@
 				'original_price'	=> $query->row['price'],
 				'price'            => ($curr_vend['price'])?($curr_vend['price']):($query->row['discount'] ? $query->row['discount'] : $query->row['price']),
 				'vendors' => $vendor_data,
-				'curr_vendor' => array('companyname' => $curr_vend['companyname'],'vendor_id' => $curr_vend['customer_id']),
+				'curr_vendor' => $curr_vend ,
 				]]></add>
 		</operation>
 		<operation>
@@ -1055,6 +1065,14 @@
 			<add position="replace"><![CDATA[
 				'quantity'         => ($curr_vend['quantity'])?$curr_vend['quantity']:'0',
 				]]></add>
-		</operation>		
+		</operation>	
+		<operation>
+			<search><![CDATA[
+				$sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.type <> '0' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+				]]></search>
+			<add position="before"><![CDATA[
+				$sql .= " LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (p.product_id = c2p.product_id AND c2p.customer_id = (SELECT c2p4.customer_id FROM " . DB_PREFIX . "customerpartner_to_product c2p4 WHERE (c2p4.product_id=p.product_id AND c2p4.status = '1') ORDER BY c2p4.price ASC, c2p4.sort_order ASC LIMIT 1)) ";
+				]]></add>
+		</operation>	
     </file>
 </modification>

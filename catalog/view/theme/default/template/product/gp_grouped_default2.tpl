@@ -256,12 +256,6 @@
           </div>
           <?php } ?>
         </div>
-        
-      <?php if ($dbe) { ?>
-      <div class="col-sm-12">
-        <div class="pull-right"><button id="button-pcd" class="btn btn-primary btn-lg">Add Products to DashBoard</button></div>
-      </div>
-      <?php } ?>        
 <div class="table-responsive col-sm-12">
   <table id="gp-table" class="gp-table table table-hover table-stripped">
     <thead>
@@ -893,62 +887,6 @@ function addGpGrouped(child_id) {
 	});
 }
 //--></script>
-<script type="text/javascript">
-		$('#button-pcd').on('click', function() {
-			$('#modal-db').remove();
-			$.ajax({
-				url: 'index.php?route=account/cd/getCategories',
-				type: 'post',
-				dataType: 'json',
-				beforeSend: function() {
-					$('#button-pcd').button('loading');
-				},
-				complete: function() {
-					$('#button-pcd').button('reset');
-				},
-				success: function(json) {
-					
-					html  = '<div id="modal-db" class="modal">';
-					html += '  <div class="modal-dialog">';
-					html += '    <div class="modal-content">';
-					html += '      <div class="modal-header">Hello';
-					html += '      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div>';
-					html += '      <div class="modal-body">'+json+'<br /><br /><input class="form-control col-sm-12" name="category-name" type="text" placeholder="Input Name in case of new category" value=""></input><br /><br />';
-					html += '	   <button id="button-update" onclick="updatedb();" class="btn btn-primary btn-lg">Update to DashBoard</button></div>';
-					html += '    </div';
-					html += '  </div>';
-					html += '</div>';
-					
-					$('body').append(html);
-	
-					$('#modal-db').modal('show');		
-				}
-			});
-		});
-		function updatedb() {
-				$.ajax({
-					url: 'index.php?route=account/cd/addProductCd',
-					type: 'post',
-					data: $('.gp-col-checkbox input[type=\'checkbox\']:checked, select[name="category_id"],input[name="category-name"]'),
-					dataType: 'json',
-					beforeSend: function() {
-						$('#button-pcd').button('loading');
-					},
-					complete: function() {
-						$('#button-pcd').button('reset');
-					},
-					success: function(json) {
-						$('.alert').remove();
-						if (json['error_text']) $('.modal-header').after('<div class="alert alert-danger"><div class="text-danger">'+ json['error_text'] +'</div></div>');
-						if (json['success']){ $('.modal-header').after('<div class="alert alert-danger"><div class="text-danger">'+ json['success'] +'</div></div>');
-						setTimeout(function () { $('#modal-db').remove(); }, 2000);		
-						}		
-					}
-				});
-		}		
-</script>
-
-
 <script type="text/javascript"><!--
 $('label[for="input-quantity"], #input-quantity, #button-cart').remove();
 

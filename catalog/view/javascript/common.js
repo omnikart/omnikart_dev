@@ -22,6 +22,12 @@ function getURLVar(key) {
 	}
 }
 
+function toggle(className, obj) {
+    var $input = $(obj);
+    if ($input.prop('checked')) $(className).show();
+    else $(className).hide();
+}
+
 $(document).ready(function() {
 	// Adding the clear Fix
 	cols1 = $('#column-right, #column-left').length;
@@ -146,19 +152,7 @@ $(document).ready(function() {
     }
   });
   
-  $('#main-menu').parent().hover(function(){
-			$(".navbar-ex1-collapse").show();
-			$(".navbar-ex1-collapse").collapse('show');
-		},function(){
-			$(".navbar-ex1-collapse").hover(function(){
-					$(".navbar-ex1-collapse").show();
-					$(".navbar-ex1-collapse").collapse('show');
-				},function(){
-					$(".navbar-ex1-collapse").hide();
-					$(".navbar-ex1-collapse").collapse('hide');
-			});
-		}
-	);	
+	
 	
 	if(window.location.hash) {
 		var hash = window.location.hash;

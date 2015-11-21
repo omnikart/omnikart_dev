@@ -24,8 +24,8 @@ class ModelAccountCd extends Model {
 		$this->load->model("account/customerpartner");
 		$seller_id = $this->model_account_customerpartner->getuserseller();
 		echo $seller_id;
-		//$this->db->query("UPDATE ".DB_PREFIX."customer_to_category SET  WHERE category_id = '".(int)$data['category_id']."'");
-		foreach ($data['product'] as $product){
+		$this->db->query("UPDATE ".DB_PREFIX."customer_to_category SET image='".$data['category_image']."' WHERE category_id = '".(int)$data['category_id']."'");
+		foreach ($data['products'] as $product){
 			$this->db->query("UPDATE ".DB_PREFIX."customer_to_product SET `quantity` = '".(int)$product['quantity']."' WHERE `customer_id` = '".(int)$seller_id."' AND `category_id` = '".(int)$data['category_id']."' AND `product_id` = '".(int)$product['product_id']."'");
 		}
 		return true;
@@ -58,7 +58,7 @@ class ModelAccountCd extends Model {
 		$this->load->model("account/customerpartner");
 		$seller_id = $this->model_account_customerpartner->getuserseller();
 		foreach($data['products'] as $product) {
-			$query = $this->db->query("DELETE FROM ".DB_PREFIX."customer_to_product WHERE customer_id = '". (int)$seller_id ."' AND product_id='".$product."'");
+			$query = $this->db->query("DELETE FROM ".DB_PREFIX."customer_to_product WHERE customer_id = '". (int)$seller_id ."' AND product_id='".$product['product_id']."'");
 		}
 	}
 }

@@ -128,14 +128,18 @@ class ControllerAccountCd extends Controller {
 		$this->checkuser();
 		$this->load->model('account/cd');
 		$cats = $this->model_account_cd->getCategories();
-		$json = '<select class="form-control col-sm-12" name="category_id"><option value="N">-- Please Select --</option><option value="0">New Category</option>';
+
+		$json='';
+		
 		if ($cats) {
-			foreach ($cats as $cat){
-				$json .= '<option value='.$cat['category_id'].'>'.$cat['name'].'</option>';
+			foreach (array_chunk($cats,count($cats)/2) as $catl){
+				$json .= '<div class="col-sm-6">';
+				foreach ($catl as $cat){
+					$json .= '<div  class="radio"><label><input type="radio" name="category_id" value="'.$cat['category_id'].'" />'.$cat['name'].'</label></div>';
+				}
+				$json .= '</div>';
 			}
 		}
-		$json .= '</select>';
-		
 		$this->response->setOutput(json_encode($json));
 	}
 	public function buycategory() {
@@ -168,7 +172,7 @@ class ControllerAccountCd extends Controller {
 			}
 		} else {
 			foreach ($products as $product){
-				$this->add($product['product_id'],$productq[$product['product_id']]['quantity'],array());
+				$this->add($product['product_id'],$product['quantity'],array());
 			}
 		}
 		unset($this->session->data['shipping_method']);
@@ -216,6 +220,102 @@ class ControllerAccountCd extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 		
+	}
+	public function upload() {
+		$this->load->language('catalog/download');
+	
+		$json = array();
+	
+	
+		if (!$json) {
+			if (!empty($this->request->files['file']['name']) && is_file($this->request->files['file']['tmp_name'])) {
+				// Sanitize the filename
+				$filename = basename(html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8'));
+	
+				// Validate the filename length
+				if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 128)) {
+					$json['error'] = $this->language->get('error_filename');
+				}
+	
+				if ($this->request->files['file']['size'] > 10485760){
+					$json['error'] = "File size should not be more than 10MB";
+				}
+				
+				$this->load->model("account/customerpartner");
+				$seller_id = $this->model_account_customerpartner->getuserseller();
+				
+				$dir = DIR_IMAGE."catalog/dashboard_images/$seller_id";
+				if (!file_exists($dir) && !is_dir($dir)) {
+					mkdir($dir,0777,true);
+				}
+				$dir .='/';
+				// Allowed file extension types
+				$allowed = array();
+	
+				$extension_allowed = preg_replace('~\r?\n~', "\n", $this->config->get('config_file_ext_allowed'));
+	
+				$filetypes = explode("\n", $extension_allowed);
+	
+				foreach ($filetypes as $filetype) {
+					$allowed[] = trim($filetype);
+				}
+	
+				if (!in_array(strtolower(substr(strrchr($filename, '.'), 1)), $allowed)) {
+					$json['error'] = $this->language->get('error_filetype');
+				}
+	
+				// Allowed file mime types
+				$allowed = array();
+	
+				$mime_allowed = preg_replace('~\r?\n~', "\n", $this->config->get('config_file_mime_allowed'));
+	
+				$filetypes = explode("\n", $mime_allowed);
+	
+				foreach ($filetypes as $filetype) {
+					$allowed[] = trim($filetype);
+				}
+	
+				if (!in_array($this->request->files['file']['type'], $allowed)) {
+					$json['error'] = $this->language->get('error_filetype');
+				}
+	
+				// Check to see if any PHP files are trying to be uploaded
+				$content = file_get_contents($this->request->files['file']['tmp_name']);
+	
+				if (preg_match('/\<\?php/i', $content)) {
+					$json['error'] = $this->language->get('error_filetype');
+				}
+	
+				// Return any upload error
+				if ($this->request->files['file']['error'] != UPLOAD_ERR_OK) {
+					$json['error'] = $this->language->get('error_upload_' . $this->request->files['file']['error']);
+				}
+			} else {
+				$json['error'] = $this->language->get('error_upload');
+			}
+		}
+	
+		if (!$json) {
+			
+			$ext = pathinfo($filename, PATHINFO_EXTENSION);
+			$filename = $this->request->post['category_id'].'.'.$ext;
+			$file = "catalog/dashboard_images/$seller_id/$filename";
+			
+			move_uploaded_file($this->request->files['file']['tmp_name'], DIR_IMAGE.$file);
+			
+			$this->load->model('tool/image');
+			
+			$json['filename'] = $this->model_tool_image->resize($file,102,90);
+				
+			$json['mask'] = $file;
+				
+			$json['link'] = HTTPS_SERVER.'system/upload/queries/' . $file;
+	
+			$json['success'] = $this->language->get('text_upload');
+		}
+	
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
 	}
 	
 	private function add($product_id,$quantity,$option) {

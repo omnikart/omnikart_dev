@@ -47,7 +47,7 @@ class ControllerAccountCustomerpartnerOrderreview extends Controller
 		$data['warning_emptycart'] = $this->language->get('warning_emptycart');
 		$data['warning_notapproved'] = $this->language->get('warning_notapproved');
 		$data['warning_rusure'] = $this->language->get('warning_rusure');
-
+		
 		$data['forReview'] = false;
 		$data['abortEnable'] = false;
 		$data['reviewEnable'] = false;
@@ -123,7 +123,8 @@ class ControllerAccountCustomerpartnerOrderreview extends Controller
 
 	    $data['review'] = $this->url->link('account/customerpartner/orderReview/sendForReview', '', 'SSL');
 	    $data['approveAction'] = $this->url->link('account/customerpartner/orderReview/approveProduct', '', 'SSL');
-      	
+	    $data['disapproveAction'] = $this->url->link('account/customerpartner/orderReview/disapproveProduct', '', 'SSL');
+	     
       	if(isset($this->session->data['warning'])) {
       		$data['warning'] = $this->session->data['warning'];
       		unset($this->session->data['warning']);
@@ -203,6 +204,18 @@ class ControllerAccountCustomerpartnerOrderreview extends Controller
 	    }
     }
   }
-
+  public function disapproveProduct() {
+  	$this->load->language('customerpartner/orderReview');
+  	$this->load->model('account/customerpartner');
+  	if($this->request->server['REQUEST_METHOD'] == 'POST') {
+  		if(isset($this->request->post['select'])) {
+  			$this->model_account_customerpartner->disapproveProductToBuy($this->request->post);
+  			$this->response->redirect($this->url->link('account/customerpartner/orderReview','','SSL'));
+  		} else {
+  			$this->session->data['warning'] = $this->language->get('warning_reviewed');
+  			$this->response->redirect($this->url->link('account/customerpartner/orderReview','','SSL'));
+  		}
+  	}
+  }
 }
 ?>

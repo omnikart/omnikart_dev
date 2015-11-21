@@ -33,6 +33,9 @@
           <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_back; ?>" class="btn btn-default" data-original-title="Cancel"><i class="fa fa-reply"></i></a>
         </div>
       </h1>
+      <h4>The product might already be on our database. Please find it using this.
+	      <a href="<?php echo $existing; ?>" data-toggle="tooltip" class="btn btn-info" title="Check existing Products" id="submit">Find Existing Product</a>
+      </h4>
     <fieldset>  
       
       <legend><i class="fa fa-pencil"></i> <?php echo $heading_title; ?></legend>
@@ -90,7 +93,7 @@
               <div class="form-group required">
                 <label class="col-sm-3 control-label" for="input-name<?php echo $language['language_id']; ?>"><?php echo $entry_name; ?></label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" name="product_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name<?php echo $language['language_id']; ?>" disabled="disabled"/>
+                  <input type="text" class="form-control" name="product_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name<?php echo $language['language_id']; ?>" />
                   <?php if (isset($error_name[$language['language_id']])) { ?>
                   <div class="text-danger"><?php echo $error_name[$language['language_id']]; ?></div>
                   <?php } ?>
@@ -99,14 +102,14 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="input-description<?php echo $language['language_id']; ?>"><?php echo $entry_description; ?></label>
                 <div class="col-sm-9">
-                  <textarea name="product_description[<?php echo $language['language_id']; ?>][description]" placeholder="<?php echo $entry_description; ?>" id="input-description<?php echo $language['language_id']; ?>" class="form-control" disabled="disabled"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['description'] : ''; ?></textarea>
+                  <textarea name="product_description[<?php echo $language['language_id']; ?>][description]" placeholder="<?php echo $entry_description; ?>" id="input-description<?php echo $language['language_id']; ?>" class="form-control"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['description'] : ''; ?></textarea>
                 </div>
               </div>   
 
               <div class="form-group required">
                 <label class="col-sm-3 control-label" for="input-meta-description<?php echo $language['language_id']; ?>"><?php echo $entry_meta_title; ?></label>
                 <div class="col-sm-9">
-                  <input name="product_description[<?php echo $language['language_id']; ?>][meta_title]"  placeholder="<?php echo $entry_meta_title; ?>" id="input-meta-description<?php echo $language['language_id']; ?>" class="form-control" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['meta_title'] : ''; ?>" disabled="disabled" / >
+                  <input name="product_description[<?php echo $language['language_id']; ?>][meta_title]"  placeholder="<?php echo $entry_meta_title; ?>" id="input-meta-description<?php echo $language['language_id']; ?>" class="form-control" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['meta_title'] : ''; ?>" />
                   <?php if (isset($error_meta_title[$language['language_id']])) { ?>
                   <div class="text-danger"><?php echo $error_meta_title[$language['language_id']]; ?></div>
                   <?php } ?>
@@ -116,19 +119,19 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="input-meta-description<?php echo $language['language_id']; ?>"><?php echo $entry_meta_description; ?></label>
                 <div class="col-sm-9">
-                  <textarea name="product_description[<?php echo $language['language_id']; ?>][meta_description]" rows="5" placeholder="<?php echo $entry_meta_description; ?>" id="input-meta-description<?php echo $language['language_id']; ?>" class="form-control" disabled="disabled"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['meta_description'] : ''; ?></textarea>
+                  <textarea name="product_description[<?php echo $language['language_id']; ?>][meta_description]" rows="5" placeholder="<?php echo $entry_meta_description; ?>" id="input-meta-description<?php echo $language['language_id']; ?>" class="form-control"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['meta_description'] : ''; ?></textarea>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="input-meta-keyword<?php echo $language['language_id']; ?>"><?php echo $entry_meta_keyword; ?></label>
                 <div class="col-sm-9">
-                  <textarea name="product_description[<?php echo $language['language_id']; ?>][meta_keyword]" rows="5" placeholder="<?php echo $entry_meta_keyword; ?>" id="input-meta-keyword<?php echo $language['language_id']; ?>" class="form-control" disabled="disabled"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['meta_keyword'] : ''; ?></textarea>
+                  <textarea name="product_description[<?php echo $language['language_id']; ?>][meta_keyword]" rows="5" placeholder="<?php echo $entry_meta_keyword; ?>" id="input-meta-keyword<?php echo $language['language_id']; ?>" class="form-control"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['meta_keyword'] : ''; ?></textarea>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="input-tag<?php echo $language['language_id']; ?>"><span data-toggle="tooltip" title="<?php echo $help_tag; ?>"><?php echo $entry_tag; ?></span></label>
                 <div class="col-sm-9">
-                  <input class="form-control" type="text" name="product_description[<?php echo $language['language_id']; ?>][tag]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['tag'] : ''; ?>" placeholder="<?php echo $entry_tag; ?>" id="input-tag<?php echo $language['language_id']; ?>" disabled="disabled" />
+                  <input class="form-control" type="text" name="product_description[<?php echo $language['language_id']; ?>][tag]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['tag'] : ''; ?>" placeholder="<?php echo $entry_tag; ?>" id="input-tag<?php echo $language['language_id']; ?>" />
                 </div>
               </div>      
             </div>
@@ -137,15 +140,17 @@
         </div>
 
         <div class="tab-pane" id="tab-data">     
+          <?php if(isset($mp_allowproductcolumn['model'])) { ?>      
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-model"><?php echo $entry_model; ?></label>
             <div class="col-sm-9">
-              <input type="text" name="model" value="<?php echo $model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" <?php echo isset($mp_allowproductcolumn['model'])?'':'disabled="disabled"'; ?>/>
+              <input type="text" name="model" value="<?php echo $model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
               <?php if ($error_model) { ?>
               <div class="text-danger"><?php echo $error_model; ?></div>
               <?php } ?>
             </div>
           </div>
+          <?php } ?>
           <?php if(isset($mp_allowproductcolumn['sku'])) { ?> 
           <div class="form-group">
             <label class="col-sm-3 control-label" for="input-sku"><span data-toggle="tooltip" title="<?php echo $help_sku; ?>"><?php echo $entry_sku; ?></span></label>
@@ -186,12 +191,14 @@
             </div>
           </div>
            <?php } ?>
+          <?php if(isset($mp_allowproductcolumn['mpn'])) { ?> 
           <div class="form-group">
             <label class="col-sm-3 control-label" for="input-mpn"><span data-toggle="tooltip" title="<?php echo $help_mpn; ?>"><?php echo $entry_mpn; ?></span></label>
             <div class="col-sm-9">
-              <input type="text" name="mpn" value="<?php echo $mpn; ?>" placeholder="<?php echo $entry_mpn; ?>" id="input-mpn" class="form-control" <?php echo isset($mp_allowproductcolumn['mpn'])?'':'disabled="disabled"'; ?>/>
+              <input type="text" name="mpn" value="<?php echo $mpn; ?>" placeholder="<?php echo $entry_mpn; ?>" id="input-mpn" class="form-control" />
             </div>
           </div>
+           <?php } ?>
           <?php if(isset($mp_allowproductcolumn['location'])) { ?> 
           <div class="form-group">
             <label class="col-sm-3 control-label" for="input-location"><?php echo $entry_location; ?></label>

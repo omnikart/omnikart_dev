@@ -46,7 +46,7 @@
 				  		<div class="input-group date">
 		            		<input type="text" name="date" value="" data-toggle="tooltip" title="Click right button to pick date!" data-date-format="YYYY-MM-DD" id="pick-date" class="form-control " />
 		            		<span class="input-group-btn">
-			            		<button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+			            		<button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default datebutton"><i class="fa fa-calendar"></i></button>
 	        		     		<button type="button" onclick="$('#form1').submit();" data-toggle="tooltip" title="Click here submit" data-loading-text="Loading..." class="btn btn-default">Schedule Cart</button>
 		            		</span>
 		            	</div>
@@ -75,7 +75,7 @@
 					  		<div class="input-group date">
 								<input type="text" name="date" value="<?php echo $cart['date']; ?>" data-toggle="tooltip" title="Click right button to pick date!" data-date-format="YYYY-MM-DD" id="pick-date" class="form-control" />
 			            		<span class="input-group-btn">
-				            		<button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+				            		<button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default datebutton"><i class="fa fa-calendar"></i></button>
 			            		</span>
 		            		</div>
 						</td>
@@ -90,9 +90,11 @@
 							<?php } ?>
 						</ul></td>
 						<td class="col-sm-1">
-						<a data-original-title="Edit" data-toggle="tooltip" title="Save Current Cart" class="btn btn-primary" onclick="updatecart('tr-<?php echo $key; ?>')"><i class="fa fa-save"></i></a>
-						<br />
-						<a data-original-title="Buy" data-toggle="tooltip" title="Buy Current Cart" class="btn btn-primary" onclick="buycart('tr-<?php echo $key; ?>')"><i class="fa fa-shopping-cart"></i></a>
+						<div class="btn-group-vertical">
+							<a data-original-title="Edit" data-toggle="tooltip" title="Save Current Cart" class="btn btn-primary" onclick="updatecart('tr-<?php echo $key; ?>')"><i class="fa fa-save"></i></a>
+							<a data-original-title="Buy" data-toggle="tooltip" title="Buy Current Cart" class="btn btn-primary" onclick="buycart('tr-<?php echo $key; ?>')"><i class="fa fa-shopping-cart"></i></a>
+							<a data-original-title="Delete" data-toggle="tooltip" title="Delete Current Cart" class="btn btn-danger" onclick="deletecart('tr-<?php echo $key; ?>')"><i class="fa fa-trash-o"></i></a>
+						</div>
 						</td>
 					</tr>
 				<?php } ?>
@@ -127,7 +129,10 @@ $('#cart-select').on('change',function(){
 		$('.nnc').hide();
 	}
 });
-
+$('input[name=\'date\']').focus(function(){
+	$(this).parent().children('span').children('.datebutton').click();
+	
+});
 function updatecart(id) {
 	$.ajax({
 	url: 'index.php?route=checkout/orderlater/updatecart',
@@ -165,6 +170,26 @@ function buycart(id) {
 	    location.href = json['redirect'];
 	}
 	});
+}
+
+function deletecart(id){
+	$.ajax({
+		url: 'index.php?route=checkout/orderlater/deletecart',
+		type: 'post',
+		data: $('#'+id+ ' input[type=\'hidden\']'),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button-cart').button('loading');
+		},
+		complete: function() {
+			$('#button-cart').button('reset');
+		},
+		success: function(json) {
+			$('.breadcrumb').after('<div class="alert alert-success">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+		    $('#'+id).remove();
+		}
+		});
+	
 }
 //--></script>
 <?php echo $footer; ?>

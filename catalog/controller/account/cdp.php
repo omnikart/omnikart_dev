@@ -51,6 +51,13 @@ class ControllerAccountCdp extends Controller {
 		$data['dbe'] = true;
 		$data['products'] = array();
 		$data['category'] = $this->model_account_cd->getCategory($this->request->get['category_id']);
+		if ($data['category']['image']) {
+			$data['thumb'] = $this->model_tool_image->resize($data['category']['image'],102,90);
+		} else {
+			$data['thumb'] = $this->model_tool_image->resize('placeholder.png',102,90);
+		}
+ 
+		
 		$results = $this->model_account_cd->getProducts($filter);
 		foreach ($results as $result) {
 			$product_info = $this->model_catalog_product->getProduct($result['product_id']);
@@ -135,8 +142,7 @@ class ControllerAccountCdp extends Controller {
 		$this->checkuser();
 		$this->load->model('account/cd');
 		if ($this->request->post && isset($this->request->post['category_id'])){
-			
-			foreach ($this->request->post['product'] as $product){
+			foreach ($this->request->post['products'] as $product){
 				if (!isset($product['product_id']) && !isset($product['quantity'])) {
 					$json['error'] = 'Error Receiving Data'; 
 					continue; 

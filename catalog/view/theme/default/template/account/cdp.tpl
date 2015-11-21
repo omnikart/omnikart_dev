@@ -20,8 +20,16 @@
     <div class="row">
     	<div class="col-sm-6">
       		<h2><?php echo $category['name']; ?></h2>
+			<div style="width:110px;height:100px;overflow:hidden" class="img-thumbnail" data-toggle="tooltip" title="Click to change the image">
+				<img src="<?php echo $thumb; ?>" alt="" class="click-file" id="popover" data-toggle="popover" data-trigger="hover" />
+			</div>
       	</div>
     </div>
+    <style type="text/css">
+  .img-thumbnail{
+    cursor:pointer;
+  }
+	</style>
     <?php if ($products) { ?>
 	 <div class="row">
       	<div class="col-md-4">
@@ -32,22 +40,18 @@
         </div>
         <div class="col-md-6 pull-right">
           <div class="btn-group hidden-xs pull-right">
+			  <button class="updatecategory btn btn-default" type="button" value="<?php echo $category['category_id']; ?>"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm hidden-md">Update Category</span></button>
           	  <button type="button" id="delete" class="btn btn-default" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i>&nbsp;Delete</button>
 	          <button type="button" id="quickaddcart" class="btn btn-default" data-toggle="tooltip" title="Quick Add Products"><i class="fa fa-shopping-cart"></i>&nbsp;Quick Cart</button>
-	          <button type="button" id="category-view" class="btn btn-default" data-toggle="tooltip" title="Open Following Form"><i class="fa fa-caret-square-o-down"></i></button>
-	          
           </div>
         </div>
       </div>
       <br />
       <div class="row" id="category-d" style="display:none;">
-      <form id="category-form" class="form-horizontal" >
+      <form id="category-form">
+      	<input type="hidden" name="avatarremove" value="0" />
+		<input type="hidden" name="category_image" value="<?php echo $category['image']; ?>" />
       	<input type="hidden" name="category_id" value="<?php echo $category['category_id']; ?>" />
-		<div class="form-group required">
-			<div class="col-sm-12">
-    			<button class="updatecategory btn btn-default pull-right" type="button" value="<?php echo $category['category_id']; ?>"><i class="fa fa-check"></i> <span class="hidden-xs hidden-sm hidden-md">Update Category</span></button>
-    		</div>
-		</div>
 	  </form>
       </div>
       <h2>Products</h2>
@@ -57,7 +61,7 @@
           <div class="product-thumb">
           	<div class="hover-content">
 	      		<?php if ($dbe) { ?>
-		      		<input class="removeproduct" type="checkbox" id="pcd-<?php echo $product['product_id']; ?>" name="product[<?php echo $product['product_id']; ?>][product_id]" value="<?php echo $product['product_id']; ?>" />
+		      		<input class="removeproduct" type="checkbox" id="pcd-<?php echo $product['product_id']; ?>" name="products[<?php echo $product['product_id']; ?>][product_id]" value="<?php echo $product['product_id']; ?>" />
 					<div>
 					    <label for="pcd-<?php echo $product['product_id']; ?>"></label>
 					</div>
@@ -92,7 +96,7 @@
                 <?php } ?>
               </div>
               <div class="button-group">
-	            <input type="number" min="1" name="productq[<?php echo $product['product_id']; ?>][quantity]" value="<?php echo $product['quantity']; ?>" placeholder="" id="quantity" class="form-control quantity" />
+	            <input type="number" min="1" name="products[<?php echo $product['product_id']; ?>][quantity]" value="<?php echo $product['quantity']; ?>" placeholder="" id="quantity" class="form-control quantity" />
 	          	<button type="button" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
 			  </div>
 			  <div class="button-group button-group-2">
@@ -156,25 +160,75 @@
 <script type="text/javascript">
   $('#delete').on('click', function(){
 	buttont = $(this);
-    $.ajax({
-        url : 'index.php?route=account/cd/removeproducts',
-        data: $('.product-thumb .hover-content input[type=\'checkbox\']:checked'),
-        type: 'post',
-		beforeSend: function() {
-			$(buttont).button('loading');
-		},
-		complete: function() {
-			$(buttont).button('reset');
-		},
-		success: function(json) {
-			alert(json);
-			if (json['success']) {
-				alert("hello");
-				$('.breadcrumb').after('<div class="alert alert-success">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+	if (confirm("Are you sure you want to delete selected products")){
+	    $.ajax({
+	        url : 'index.php?route=account/cd/removeproducts',
+	        data: $('.product-thumb .hover-content input[type=\'checkbox\']:checked'),
+	        type: 'post',
+			beforeSend: function() {
+				$(buttont).button('loading');
+			},
+			complete: function() {
+				$(buttont).button('reset');
+			},
+			success: function(json) {
+				if (json['success']) {
+					location.reload();
+				}
 			}
-		}
-		
-      });
+	      });
+      } else {
+		$('input.removeproduct').prop('checked',false);
+      }
   });
+  
+  $('.img-thumbnail').on('click',function(){
+	$('#form-upload').remove();
+	
+	$('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
+
+	$('#form-upload input[name=\'file\']').trigger('click');
+	
+	if (typeof timer != 'undefined') {
+    	clearInterval(timer);
+	}
+
+	timer = setInterval(function() {
+		if ($('#form-upload input[name=\'file\']').val() != '') {
+			clearInterval(timer);		
+			var formdata = new FormData($('#form-upload')[0]);
+			formdata.append('category_id','<?php echo $category['category_id']; ?>');
+			$.ajax({
+				url: 'index.php?route=account/cd/upload',
+				type: 'post',		
+				dataType: 'json',
+				data: formdata,
+				cache: false,
+				contentType: false,
+				processData: false,		
+				beforeSend: function() {
+					$('#button-upload').button('loading');
+				},
+				complete: function() {
+					$('#button-upload').button('reset');
+				},	
+				success: function(json) {
+					if (json['error']) {
+						alert(json['error']);
+					}
+								
+					if (json['success']) {
+						$('input[name=\'category_image\']').val(json['mask']);
+						$('.img-thumbnail > img').prop('src',json['filename']);
+					}
+				},			
+				error: function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				}
+			});
+		}
+	}, 500);
+});
+ 
 </script>
 <?php echo $footer; ?>
