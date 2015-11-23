@@ -108,18 +108,18 @@ $(document).ready(function() {
 	});
 
 	// Product Grid
-	$('#grid-view').	click(function() {
+	$('#grid-view').click(function() {
 		$('#content .product-layout > .clearfix').remove();
 
 		// What a shame bootstrap does not take into account dynamically loaded columns
 		cols = $('#column-right, #column-left').length;
 
 		if (cols == 2) {
-			$('#content .product-layout').attr('class', 'product-layout product-grid col-lg-6 col-md-6 col-sm-12 col-xs-12');
+			$('#content .mfilter-content-container .product-layout').attr('class', 'product-layout product-grid col-lg-6 col-md-6 col-sm-12 col-xs-12');
 		} else if (cols == 1) {
-			$('#content .product-layout').attr('class', 'product-layout product-grid col-lg-3 col-md-4 col-sm-6 col-xs-12');
+			$('#content .mfilter-content-container .product-layout').attr('class', 'product-layout product-grid col-lg-3 col-md-4 col-sm-6 col-xs-12');
 		} else {
-			$('#content .product-layout').attr('class', 'product-layout product-grid col-lg-3 col-md-3 col-sm-6 col-xs-12');
+			$('#content .mfilter-content-container .product-layout').attr('class', 'product-layout product-grid col-lg-3 col-md-3 col-sm-6 col-xs-12');
 		}
 
 		 localStorage.setItem('display', 'grid');

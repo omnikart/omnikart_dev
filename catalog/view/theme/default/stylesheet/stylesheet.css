@@ -888,7 +888,10 @@ height:40px;
     #column-left + #content + #column-right .product-layout .col-md-3{
        width: 100%;
     }
-    #content + F2B50F#column-right .product-layout .col-md-3{
+    #content + #column-right .product-layout .col-md-3{
+       width: 100%;
+    }
+    #ct-right  .product-layout .col-md-3 {
        width: 100%;
     }
 }

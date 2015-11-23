@@ -158,9 +158,11 @@ class ControllerModuleMarketplace extends Controller {
 
 			if(!$this->data['logged'])
 				$this->data['text_ask_seller'] = $this->language->get('text_ask_seller_log');
+			if (isset($this->request->get['vendor_id']))
+				$id['id'] = $this->request->get['vendor_id'];
+			else 				
+				$id = $this->model_customerpartner_master->getPartnerIdBasedonProduct($this->request->get['product_id']);
 			
-			$id = $this->model_customerpartner_master->getPartnerIdBasedonProduct($this->request->get['product_id']);
-
 			$this->data['contact_mail'] = $this->config->get('marketplace_customercontactseller');
 
 			if($this->config->get('marketplace_product_show_seller_product')) {

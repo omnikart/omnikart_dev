@@ -62,9 +62,20 @@
 
         </div>
       </div>
+      <div style="overflow:hidden;" class="col-sm-12">
+		<div class="btn-group" role="group" aria-label="...">
+			<button type="button" class="btn btn-default">
+		  		<i class="fa fa-chevron-left fa-5x"></i>
+			</button>
+		  	<button type="button" class="btn btn-default">
+		  		<i class="fa fa-chevron-right fa-5x"></i>
+		  	</button>
+		</div>      
+      <div class="row">
+      <div style="width:400%;">
       <?php if(isset($show_seller_product) && $show_seller_product) { ?>
 	      <?php foreach ($latest as $product) { ?>
-	      <div class="product-layout product-grid product-seller col-xs-12">
+	      <div class="product-layout product-grid product-seller col-xs-3">
 	        <div class="product-thumb seller-thumb" id="<?php echo $product['product_id']; ?>">
 	          <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a></div>
 	          <div>
@@ -106,6 +117,9 @@
 	      </div>
 	      <?php } ?>
 	    <?php } ?>
+	    </div>
+	    </div>
+	    </div>	    
     </div>
 <?php } ?>
 </div>
