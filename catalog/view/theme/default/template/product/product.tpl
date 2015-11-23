@@ -41,7 +41,7 @@
         <?php } elseif ($column_left || $column_right) { ?>
         <?php $class = 'col-sm-6'; ?>
         <?php } else { ?>
-        <?php $class = 'col-sm-4'; ?>
+        <?php $class = 'col-sm-5'; ?>
         <?php } ?>
         <div class="<?php echo $class; ?>">
           <div class="btn-group">

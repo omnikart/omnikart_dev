@@ -62,16 +62,7 @@
 
         </div>
       </div>
-      <div style="overflow:hidden;" class="col-sm-12">
-		<div class="btn-group" role="group" aria-label="...">
-			<button type="button" class="btn btn-default">
-		  		<i class="fa fa-chevron-left fa-5x"></i>
-			</button>
-		  	<button type="button" class="btn btn-default">
-		  		<i class="fa fa-chevron-right fa-5x"></i>
-		  	</button>
-		</div>      
-      <div class="row">
+      <div class="row hidden">
       <div style="width:400%;">
       <?php if(isset($show_seller_product) && $show_seller_product) { ?>
 	      <?php foreach ($latest as $product) { ?>
