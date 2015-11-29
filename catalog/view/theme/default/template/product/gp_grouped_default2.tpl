@@ -268,7 +268,7 @@
         <?php } ?>
         <?php if ($agnames) { ?>
         	<?php foreach($agnames as $ag) { ?>
-				<td colspan="<?php echo count($ag); ?>" align="center"><?php echo $ag['name']; ?></td>
+				<td colspan="<?php echo count($ag['a']); ?>" align="center"><?php echo $ag['name']; ?></td>
         	<?php } ?>
         <?php } ?>
         <?php if ($column_gp_price) { ?>
