@@ -486,8 +486,9 @@ class ControllerProductProduct extends Controller {
 				$data['vendors'][$key]['link'] = $this->url->link('product/product', '&vendor_id='.$vendor['vendor_id'].'&product_id=' . $product_id ,'SSL');
 				$data['vendors'][$key]['price'] = $this->currency->format($this->tax->calculate($vendor['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 			}
-			
-			$data['vlink'] = $this->url->link('customerpartner/profile','id='.$data['curr_vendor']['customer_id'],'SSL');
+			if (!empty($data['curr_vendor'])){
+				$data['vlink'] = $this->url->link('customerpartner/profile','id='.$data['curr_vendor']['customer_id'],'SSL');
+			}
 
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['column_right'] = $this->load->controller('common/column_right');
