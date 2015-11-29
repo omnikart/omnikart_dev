@@ -105,7 +105,7 @@ _atrk_opts = { atrk_acct:"GTT9m1a47E805T", domain:"omnikart.com",dynamic: true};
 					</div>
 				</div>
 			</div>
-			<div class="collapse navbar-ex1-collapse">
+			<div class="collapse navbar-ex1-collapse" id="megamenu">
 				<div class="nav-bgd clearfix">
 				<div class="container">
 					<div class="row">
