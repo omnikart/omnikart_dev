@@ -490,7 +490,7 @@
                 <?php foreach ($attribute_groups as $attribute_group) { ?>
                 <thead>
                   <tr>
-                    <td colspan="2"><strong><?php echo $attribute_group['name']; ?></strong></td>
+                    <td colspan="<?php echo count($attribute_group); ?>"><strong><?php echo $attribute_group['name']; ?></strong></td>
                   </tr>
                 </thead>
                 <tbody>
