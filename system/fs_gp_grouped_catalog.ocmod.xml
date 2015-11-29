@@ -5,26 +5,6 @@
 	<version>6.1.0</version>
 	<author>Fabio Messina - fabiome77@hotmail.it</author>
 	<link>http://www.fabiom7.com</link>
-<file path="catalog/model/catalog/product.php">
-	<operation>
-		<search><![CDATA[
-		public function updateViewed($product_id) {
-		]]></search>
-		<add position="before"><![CDATA[
-		public function getGroupedProductGrouped($product_id) {
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "gp_grouped WHERE product_id = '" . (int)$product_id . "'");
-
-			return $query->row;
-		}
-
-		public function getGroupedProductGroupedChilds($product_id) {
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "gp_grouped_child WHERE product_id = '" . (int)$product_id . "' ORDER BY child_sort_order");
-
-			return $query->rows;
-		}
-		]]></add>
-	</operation>
-</file>
 <file path="catalog/controller/product/product.php">
 	<operation>
 		<search><![CDATA[
@@ -115,6 +95,7 @@
 			}*/
 			$gp_child_attributes = $this->config->get('gp_grouped_child_attribute');
 			$attributenames = array();
+			$agnames = array();
 			$data['childs'] = array();
 			$product_grouped = $this->model_catalog_product->getGroupedProductGroupedChilds($product_id);
 
@@ -244,14 +225,14 @@
 								$qty_now = $gp_cart['quantity'];
 							}
 						}
-						/* edit for filtering
-						foreach ($child_attributes[0]['attribute'] as $key => $attribute){
-							$attributenames[$key][] = $attribute['text'];
-							
-							if (isset($filter[$key])) $set = ($attribute['text']==$filter[$key])?($set & true):($set & false);
-							
+
+						foreach ($child_attributes as $key => $ag){
+							$attributenames = array();
+							if (!isset($agnames[$key]['a'])) $agnames[$key]['a'] = array();
+							$agnames[$key]['name'] = $ag['name'];
+							foreach ($ag['attribute'] as $key2 => $a) {$agnames[$key]['a'][$key2] = $a['name'];} 
 						}
-						if ($set){*/
+						
 						$data['childs'][$child_info['product_id']] = array(
 							'child_id'   => $child_info['product_id'],
 							'info'       => $child_info,
@@ -270,9 +251,8 @@
 					}
 				}
 			// Column
-			
 			// $data['attributenames'] = $attributenames; edit for filtering
-			
+			$data['agnames'] = $agnames;
 			$data['column_gp_image'] = $gp_child_image_col ? $this->language->get('column_gp_image') : false;
 			$data['column_gp_name'] = $this->language->get('column_gp_name');
 			$data['column_gp_price'] = $tcg_customer_price ? $this->language->get('column_gp_price') : false;

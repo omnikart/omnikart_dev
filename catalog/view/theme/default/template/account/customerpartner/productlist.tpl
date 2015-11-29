@@ -27,7 +27,7 @@
     <h1>
       <?php echo $heading_title; ?>
 	  	<div class="pull-right">
-	        <?php if($allowedAddEdit && $mp_ap) { ?>
+	        <?php if($list || (($allowedAddEdit) && $mp_ap)) { ?>
 						<a href="<?php echo $insert; ?>"  data-toggle="tooltip" title="<?php echo $button_insert; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
 	        <?php } ?>
 			<button data-toggle="tooltip" class="btn btn-primary" id="updateProducts"  title="Update changes for selected products. Page will not refresh after this."><i class="fa fa-save"></i></button>
@@ -107,7 +107,7 @@
                   <?php } else { ?>
                   <a href="<?php echo $sort_model; ?>"><?php echo $column_model; ?></a>
                   <?php } ?></td>
-                <td class="text-left"><?php if ($sort == 'p.price') { ?>
+                <td class="text-left" data-toggle="tooltip" data-original-title="Please mention price for one/minimum quantity of product. If you offer quantity based discount please edit the product using the button in an action and edit 'discounts' tab"><?php if ($sort == 'p.price') { ?>
                   <a href="<?php echo $sort_price; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_price; ?></a>
                   <?php } else { ?>
                   <a href="<?php echo $sort_price; ?>"><?php echo $column_price; ?></a>
@@ -117,6 +117,8 @@
                   <?php } else { ?>
                   <a href="<?php echo $sort_quantity; ?>"><?php echo $column_quantity; ?></a>
                   <?php } ?></td>
+				<td class="text-right" data-toggle="tooltip" data-original-title="Minimum Order Quantity">(MOQ)</td>                  
+                <td class="text-right">Stock Status</td> 
                 <td class="text-left"><?php if ($sort == 'p.status') { ?>
                   <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
                   <?php } else { ?>
@@ -154,15 +156,20 @@
                 </td>
                 <td class="text-right">
 				  <input type="text" style="width:50px;"  name="products[<?php echo $product['product_id']; ?>][quantity]" class="form-control <?php if ($product['quantity'] <= 0) { echo "alert-danger"; } elseif ($product['quantity'] <= 5) { echo "alert-warning"; } else { echo "alert-success"; } ?>" value="<?php echo $product['quantity']; ?>"/>                  
-                  
               	</td>
+				<td class="text-right">
+				  <input type="text" style="width:50px;"  name="products[<?php echo $product['product_id']; ?>][minimum]" class="form-control" value="<?php echo $product['minimum']; ?>"/>                  
+              	</td>              	
+				<td class="text-right">
+				  <?php echo $product['stock_status']; ?>                  
+              	</td>
+              	
                 <td class="text-left">
                 	<select class="form-control" style="width:70px;" name="products[<?php echo $product['product_id']; ?>][status]">
                 		<option value="1" <?php echo $product['status'] ? 'selected' : '' ; ?>>Enabled</option>
                 		<option value="0" <?php echo $product['status'] ? '' : 'selected' ; ?>>Disabled</option>
                 	</select>
                 </td>       
-
                 <td class="text-right">
                   <a <?php if($product['sold']){ ?> href="<?php echo $product['soldlink']; ?>" <?php } ?> style="text-decoration:none;" />                                            
                     <?php if ($product['sold'] <= 0) { ?>

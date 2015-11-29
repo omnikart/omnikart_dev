@@ -333,53 +333,54 @@ class ModelAccountCustomerpartner extends Model {
 	
 	public function getProduct($product_id,$vendor_id = 0) {
 
-		$query = $this->db->query("SELECT DISTINCT *, pd.name AS name, p.image, m.name AS manufacturer , (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
-		
 		if ($vendor_id) $vendor_id = $vendor_id;
 		else $vendor_id = $this->getuserseller();
-		$vendor_data = $this->db->query("SELECT cp2p.*, (SELECT price FROM " . DB_PREFIX . "cp_product_discount cppd WHERE cppd.id = cp2p.id AND cppd.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND cppd.quantity = '1' AND ((cppd.date_start = '0000-00-00' OR cppd.date_start < NOW()) AND (cppd.date_end = '0000-00-00' OR cppd.date_end > NOW())) ORDER BY cppd.priority ASC, cppd.price ASC LIMIT 1) AS discount FROM ".DB_PREFIX."customerpartner_to_product cp2p WHERE cp2p.product_id = ".(int)$product_id." AND cp2p.customer_id = " . (int)$vendor_id);
+
+
+		$query = $this->db->query("SELECT DISTINCT p.product_id, pd.name AS name, pd.description, pd.meta_title, pd.meta_description, pd.meta_keyword, pd.tag, p.model, cp2p.sku, p.upc, p.ean, p.jan, p.isbn, p.mpn, p.location, cp2p.quantity, IFNULL((SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = cp2p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "'), 'Not in Stock') AS stock_status,
+		p.image, p.manufacturer_id, m.name AS manufacturer, IFNULL((SELECT cppd.price FROM " . DB_PREFIX . "cp_product_discount cppd WHERE (cppd.id = cp2p.id) AND (cppd.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AND (cppd.quantity = '1') AND ((cppd.date_start = '0000-00-00' OR cppd.date_start < NOW()) AND (cppd.date_end = '0000-00-00' OR cppd.date_end > NOW())) ORDER BY cppd.priority ASC, cppd.price ASC LIMIT 1),cp2p.price) AS cprice, p.price, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, p.points, p.tax_class_id, cp2p.date_available, IFNULL((cp2p.weight),p.weight) AS weight, IFNULL((cp2p.weight_class_id),p.weight_class_id) AS weight_class_id, IFNULL((cp2p.length),p.length) AS length, IFNULL((cp2p.width),p.width) AS width, IFNULL((cp2p.height),p.height) AS height, IFNULL((cp2p.length_class_id),p.length_class_id) AS length_class_id, p.subtract, (SELECT ROUND(AVG(rating)) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, IFNULL((SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id),0) AS reviews, IFNULL(cp2p.minimum, p.minimum) AS minimum, p.sort_order, cp2p.status AS status, cp2p.date_added, cp2p.date_modified, cp2p.viewed, cp2p.shipping, cp2p.stock_status_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) LEFT JOIN ".DB_PREFIX."customerpartner_to_product cp2p ON (p.product_id = cp2p.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND cp2p.customer_id = " . (int)$vendor_id . " AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 		
 		if ($query->num_rows) {
 			return array(
-				'product_id'       => $query->row['product_id'],
-				'name'             => $query->row['name'],
-				'description'      => $query->row['description'],
-				'meta_title'       => $query->row['meta_title'],
-				'meta_description' => $query->row['meta_description'],
-				'meta_keyword'     => $query->row['meta_keyword'],
-				'tag'              => $query->row['tag'],
-				'model'            => $query->row['model'],
-				'sku'              => $query->row['sku'],
+				'product_id'       => $query->row['product_id'],//
+				'name'             => $query->row['name'],//
+				'description'      => $query->row['description'],//
+				'meta_title'       => $query->row['meta_title'],//
+				'meta_description' => $query->row['meta_description'],//
+				'meta_keyword'     => $query->row['meta_keyword'],//
+				'tag'              => $query->row['tag'],//
+				'model'            => $query->row['model'],//
+				'sku'              => $query->row['sku'],//
 				'upc'              => $query->row['upc'],
 				'ean'              => $query->row['ean'],
 				'jan'              => $query->row['jan'],
 				'isbn'             => $query->row['isbn'],
-				'mpn'              => $query->row['mpn'],
-				'location'         => $query->row['location'],
-				'quantity'         => $vendor_data->row['quantity'],
-				'stock_status'     => $query->row['stock_status'],
+				'mpn'              => $query->row['mpn'],//
+				'location'         => $query->row['location'],//
+				'quantity'         => $query->row['quantity'],//
+				'stock_status'     => $query->row['stock_status'],//
 				'image'            => $query->row['image'],
 				'manufacturer_id'  => $query->row['manufacturer_id'],
-				'manufacturer'     => $query->row['manufacturer'],
-				'price'            => ($vendor_data->row['discount']?$vendor_data->row['discount']:$vendor_data->row['price']),
-				'original_price'   => $query->row['price'],
-				'special'          => $query->row['special'],
-				'reward'           => $query->row['reward'],
-				'points'           => $query->row['points'],
-				'tax_class_id'     => $query->row['tax_class_id'],
-				'date_available'   => $query->row['date_available'],
-				'weight'           => $query->row['weight'],
-				'weight_class_id'  => $query->row['weight_class_id'],
-				'length'           => $query->row['length'],
-				'width'            => $query->row['width'],
-				'height'           => $query->row['height'],
-				'length_class_id'  => $query->row['length_class_id'],
-				'subtract'         => $query->row['subtract'],
-				'rating'           => round($query->row['rating']),
-				'reviews'          => $query->row['reviews'] ? $query->row['reviews'] : 0,
-				'minimum'          => $query->row['minimum'],
-				'sort_order'       => $query->row['sort_order'],
-				'status'           => $vendor_data->row['status'],
+				'manufacturer'     => $query->row['manufacturer'],//
+				'price'            => $query->row['cprice'],//
+				'original_price'   => $query->row['price'],//
+				'special'          => $query->row['special'], //
+				'reward'           => $query->row['reward'], //
+				'points'           => $query->row['points'], //
+				'tax_class_id'     => $query->row['tax_class_id'], //
+				'date_available'   => $query->row['date_available'], //
+				'weight'           => $query->row['weight'], //
+				'weight_class_id'  => $query->row['weight_class_id'], //
+				'length'           => $query->row['length'], //
+				'width'            => $query->row['width'], //
+				'height'           => $query->row['height'], //
+				'length_class_id'  => $query->row['length_class_id'], //
+				'subtract'         => $query->row['subtract'], //
+				'rating'           => round($query->row['rating']), //
+				'reviews'          => $query->row['reviews'] ? $query->row['reviews'] : 0, //
+				'minimum'          => $query->row['minimum'], //
+				'sort_order'       => $query->row['sort_order'],//
+				'status'           => $query->row['status'],
 				'date_added'       => $query->row['date_added'],
 				'date_modified'    => $query->row['date_modified'],
 				'viewed'           => $query->row['viewed'],
@@ -395,7 +396,7 @@ class ModelAccountCustomerpartner extends Model {
 
 	public function getProductsSeller($data = array()) {
 
-		$sql = "SELECT p.product_id, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT price FROM " . DB_PREFIX . "cp_product_discount cppd2 WHERE cppd2.id = c2p.id AND cppd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND cppd2.quantity = '1' AND ((cppd2.date_start = '0000-00-00' OR cppd2.date_start < NOW()) AND (cppd2.date_end = '0000-00-00' OR cppd2.date_end > NOW())) ORDER BY cppd2.priority ASC, cppd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "cp_product_special cpps WHERE cpps.id = c2p.id AND cpps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((cpps.date_start = '0000-00-00' OR cpps.date_start < NOW()) AND (cpps.date_end = '0000-00-00' OR cpps.date_end > NOW())) ORDER BY cpps.priority ASC, cpps.price ASC LIMIT 1) AS special FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2p.product_id = p.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
+		$sql = "SELECT p.product_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2p.product_id = p.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
 
 		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {
 			$sql .= " LEFT JOIN " . DB_PREFIX ."product_to_category p2c ON (p.product_id = p2c.product_id)";
@@ -478,7 +479,6 @@ class ModelAccountCustomerpartner extends Model {
 		foreach ($query->rows as $result) {
 			$product_data[$result['product_id']] = $this->getProduct($result['product_id'],$data['customer_id']);
 		}
-
 		return $product_data;
 	}
 
@@ -585,7 +585,7 @@ class ModelAccountCustomerpartner extends Model {
 
 	public function getTotalAddProductsSeller($data = array()) {
 	
-		$sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
+		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
 		
 		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {
 			$sql .= " LEFT JOIN " . DB_PREFIX ."product_to_category p2c ON (p.product_id = p2c.product_id)";
@@ -661,7 +661,7 @@ class ModelAccountCustomerpartner extends Model {
 		if($sellerId) {
 			$sellerId = $sellerId;
 		} else {
-			$sellerId = $this->customer->getId();
+			$sellerId = $this->getuserseller();
 		}
 
 		$data['status'] = $this->config->get('marketplace_productapprov');		
@@ -672,59 +672,54 @@ class ModelAccountCustomerpartner extends Model {
 
 		if (isset($files['image']['name']) AND $files['image']['name']) {
 			$renamedImage = rand(100000,999999) . basename(preg_replace('~[^\w\./\\\\]+~', '', $files['image']["name"]));
-			//upload product base image
 			move_uploaded_file($files["image"]["tmp_name"], DIR_IMAGE . MPIMAGEFOLDER .$renamedImage);
 		}
 
 		if (isset($files['product_image']['name']) AND $files['product_image']['name']) {
 			foreach ($files['product_image']['name'] as $index => $product_image) {				
-
 				$renamedImg = rand(100000,999999) . basename(preg_replace('~[^\w\./\\\\]+~', '', $product_image['image']));
-				//upload product images
 				move_uploaded_file($files['product_image']["tmp_name"][$index]['image'], DIR_IMAGE . MPIMAGEFOLDER .$renamedImg);
-
 				$renamedOImage[] = $renamedImg;
 			}
 		}
 		
+		/* product table */
 		$sql = "INSERT INTO `" . DB_PREFIX . "product` SET ";
-
 		$sql = $this->productQuery($sql,$data);
-
-		$sql .= " date_added = NOW() ";
-
+		$sql .= " date_added = NOW(), edit = '1' ";
 		$this->db->query($sql);
-
 		$product_id = $this->db->getLastId();
-
+		
+		/* customerpartner product table */
+		$sql = "INSERT INTO `" . DB_PREFIX . "customerpartner_to_product` SET product_id = '".(int)$product_id."', customer_id = '".(int)$sellerId."', ";
+		$sql = $this->cpproductQuery($sql,$data);
+		$sql .= " date_added = NOW(), date_modified = NOW()";
+		$this->db->query($sql);
+		$cp_product_id = $this->db->getLastId();
+		
+		/* Product Image table */
 		if($renamedImage){
 			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET image = '" . MPIMAGEFOLDER .$this->db->escape(html_entity_decode($renamedImage, ENT_QUOTES, 'UTF-8')) . "' WHERE product_id = '" . (int)$product_id . "'");
 		}
 
+		/* Product Additional Images table */
 		if ($renamedOImage) {
 			foreach ($renamedOImage as $index => $product_image) {				
 				$this->db->query("INSERT INTO " . DB_PREFIX ."product_image SET product_id = '" . (int)$product_id . "', image = '" . MPIMAGEFOLDER . $this->db->escape(html_entity_decode($product_image, ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$data['product_image'][$index]['sort_order'] . "'");
 			}
 		}
 		
-		$this->productAddUpdate($product_id,$data);
+		/* Product description, attributes, and options table */
+		$this->productAddUpdate($product_id,$data,$sellerId,$cp_product_id);
+
+		/* Supplier Discount */
+		$this->db->query("DELETE FROM " . DB_PREFIX . "cp_product_discount WHERE id = '" . (int)$cp_product_id . "'");
+		if (isset($data['product_discount'])) {
+			foreach ($data['product_discount'] as $product_discount) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "cp_product_discount SET id = '" . (int)$cp_product_id . "', customer_group_id = '" . (int)$product_discount['customer_group_id'] . "', quantity = '" . (int)$product_discount['quantity'] . "', priority = '" . (int)$product_discount['priority'] . "', price = '" . (float)$product_discount['price'] . "', date_start = '" . $this->db->escape($product_discount['date_start']) . "', date_end = '" . $this->db->escape($product_discount['date_end']) . "'");
+			}
+		}	
 		
-
-		//for customerpartner_to_product
-
-		$sql = "INSERT INTO `" . DB_PREFIX . "customerpartner_to_product` SET `product_id` = " . (int)$product_id . ",customer_id = '".$sellerId."'";
-
-		if (isset($data['quantity'])) {
-			$sql .= ", quantity = '" . $this->db->escape($data['quantity']) . "'";
-		}
-
-		if (isset($data['price'])) {
-			$sql .= ", price = '" . $this->db->escape($data['price']) . "'";
-		}
-
-		$this->db->query($sql);
-
-
 		$data = array(
 			'name' => isset($data['product_description'][$this->config->get('config_language_id')]['name']) ? $data['product_description'][$this->config->get('config_language_id')]['name'] : '',
 			'seller_id' => $sellerId,
@@ -774,102 +769,102 @@ class ModelAccountCustomerpartner extends Model {
 		} else {
 			$sellerId = $this->getuserseller();
 		}
-
+		$add = false;
+		
 		if(!isset($this->request->get['product_id']))
 			return;
 		
 		// $data['status'] = $this->config->get('marketplace_productapprov');		
 
 		$product_id = $this->request->get['product_id'];
-				
-		$files = $this->request->files;
-
-		$renamedImage = '';
-
-		if (isset($files['image']['name']) AND $files['image']['name']) {
-			$renamedImage = rand(100000,999999) . basename(preg_replace('~[^\w\./\\\\]+~', '', $files['image']["name"]));
-			//upload product base image
-			move_uploaded_file($files["image"]["tmp_name"], DIR_IMAGE . MPIMAGEFOLDER .$renamedImage);
-			if(isset($data['image']) AND $data['image'] AND file_exists(DIR_IMAGE.$data['image']))
-					unlink(DIR_IMAGE.$data['image']);
+		
+		if (array_key_exists('addproduct', $customerRights['rights']) && ($this->getProductEditAccess($product_id, $sellerId))){
+			$add = true; 
 		}
+		
+		if ($add) {
+			$files = $this->request->files;
 
-		//to remove previous image from folder	
-		if (isset($files['product_image']['name']) AND $files['product_image']['name']) {
-			foreach ($files['product_image']['name'] as $index => $product_image) {				
-				if($product_image['image']){
-					$newImage = rand(100000,999999) . basename(preg_replace('~[^\w\./\\\\]+~', '', $product_image['image']));
-					//upload product images
-					move_uploaded_file($files['product_image']["tmp_name"][$index]['image'], DIR_IMAGE . MPIMAGEFOLDER .$newImage);
+			$renamedImage = '';
 
-					if(isset($data['product_image'][$index]['image']) AND $data['product_image'][$index]['image'] AND file_exists(DIR_IMAGE.$data['product_image'][$index]['image']))
-						unlink(DIR_IMAGE.$data['product_image'][$index]['image']);
-					$data['product_image'][$index]['image'] = MPIMAGEFOLDER.$newImage;
+			if (isset($files['image']['name']) AND $files['image']['name']) {
+				$renamedImage = rand(100000,999999) . basename(preg_replace('~[^\w\./\\\\]+~', '', $files['image']["name"]));
+				//upload product base image
+				move_uploaded_file($files["image"]["tmp_name"], DIR_IMAGE . MPIMAGEFOLDER .$renamedImage);
+				if(isset($data['image']) AND $data['image'] AND file_exists(DIR_IMAGE.$data['image']))
+						unlink(DIR_IMAGE.$data['image']);
+			}
 
+			//to remove previous image from folder	
+			if (isset($files['product_image']['name']) AND $files['product_image']['name']) {
+				foreach ($files['product_image']['name'] as $index => $product_image) {				
+					if($product_image['image']){
+						$newImage = rand(100000,999999) . basename(preg_replace('~[^\w\./\\\\]+~', '', $product_image['image']));
+						//upload product images
+						move_uploaded_file($files['product_image']["tmp_name"][$index]['image'], DIR_IMAGE . MPIMAGEFOLDER .$newImage);
+
+						if(isset($data['product_image'][$index]['image']) AND $data['product_image'][$index]['image'] AND file_exists(DIR_IMAGE.$data['product_image'][$index]['image']))
+							unlink(DIR_IMAGE.$data['product_image'][$index]['image']);
+						$data['product_image'][$index]['image'] = MPIMAGEFOLDER.$newImage;
+
+					}
 				}
-			}
-		}
 
-		$sql = "UPDATE `" . DB_PREFIX . "product` SET ";
-
-		$sql = $this->productQuery($sql,$data);
-
-		$sql .= " date_modified = NOW() WHERE product_id = '".(int)$product_id."'";
-
-		$this->db->query($sql);
-
-		if($renamedImage)
-			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET image = '" . MPIMAGEFOLDER .$this->db->escape(html_entity_decode($renamedImage, ENT_QUOTES, 'UTF-8')) . "' WHERE product_id = '" . (int)$product_id . "'");
-
-		
-		$removeImages = $this->db->query("SELECT image FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'")->rows;
-
-		$this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
-		
-		if (isset($data['product_image']) AND $data['product_image']) {
-		 	foreach ($data['product_image'] as $product_image) {
-		 		if($product_image['image'])
-		 			$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '".$product_image['sort_order']."'");
-		 	}
-		}else{
-			//remove all images
-			if($removeImages){
-				foreach ($removeImages as $value) {
-					if(file_exists(DIR_IMAGE.$value['image']))
-						unlink(DIR_IMAGE.$value['image']);
-				}
-			}
-		}
-		
-		// $this->productAddUpdate($product_id,$data);		
-
-		// for customerpartner_to_product
-
-		if(isset($data['quantity']) || isset($data['price'])){
-
-			$sql = "UPDATE `" . DB_PREFIX . "customerpartner_to_product` SET ";
-
-			if (isset($data['quantity'])) {
-				$sql .= " quantity = '" . $this->db->escape($data['quantity']) . "'";
-			}
-
-			if (isset($data['price'])) {
-				$sql .= ", price = '" . $this->db->escape($data['price']) . "'";
-			}
-
-			$sql .= " WHERE `product_id` = " . (int)$this->request->get['product_id'] ." AND customer_id = '".$sellerId."'";
-
+			/* Product table */
+			$sql = "UPDATE `" . DB_PREFIX . "product` SET ";
+			$sql = $this->productQuery($sql,$data,true);
+			$sql .= " date_modified = NOW() WHERE product_id = '".(int)$product_id."'";
 			$this->db->query($sql);
+			
+			}
 
+			/* Product Image table */
+			if($renamedImage)
+				$this->db->query("UPDATE `" . DB_PREFIX . "product` SET image = '" . MPIMAGEFOLDER .$this->db->escape(html_entity_decode($renamedImage, ENT_QUOTES, 'UTF-8')) . "' WHERE product_id = '" . (int)$product_id . "'");
+
+			/* Product Additional Images table */
+			$removeImages = $this->db->query("SELECT image FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'")->rows;
+			$this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
+			if (isset($data['product_image']) AND $data['product_image']) {
+				foreach ($data['product_image'] as $product_image) {
+					if($product_image['image'])
+						$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '".$product_image['sort_order']."'");
+				}
+			}else{
+				//remove all images
+				if($removeImages){
+					foreach ($removeImages as $value) {
+						if(file_exists(DIR_IMAGE.$value['image']))
+							unlink(DIR_IMAGE.$value['image']);
+					}
+				}
+			}
+
+			/* Product description, attributes, and options table */		
+			$this->productAddUpdate($product_id,$data);
 		}
-
+		
+		/* customerpartner product table */
+		$sql = "UPDATE `" . DB_PREFIX . "customerpartner_to_product` SET ";
+		$sql = $this->cpproductQuery($sql,$data);
+		$sql .= " date_modified = NOW() WHERE product_id = '".(int)$product_id."', customer_id = '".(int)$sellerId."' AND edit = '1'";
+		$this->db->query($sql);
+		$cp_product_id = $this->getProductCPId($product_id,$sellerId);
+		
+		/* Supplier Discount */
+		$this->db->query("DELETE FROM " . DB_PREFIX . "cp_product_discount WHERE id = '" . (int)$cp_product_id . "'");
+		if (isset($data['product_discount'])) {
+			foreach ($data['product_discount'] as $product_discount) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "cp_product_discount SET id = '" . (int)$cp_product_id . "', customer_group_id = '" . (int)$product_discount['customer_group_id'] . "', quantity = '" . (int)$product_discount['quantity'] . "', priority = '" . (int)$product_discount['priority'] . "', price = '" . (float)$product_discount['price'] . "', date_start = '" . $this->db->escape($product_discount['date_start']) . "', date_end = '" . $this->db->escape($product_discount['date_end']) . "'");
+			}
+		}			
 	}
 
 	public function updateProducts($data,$sellerId = 0){
 		if (!$sellerId) $sellerId = $this->getuserseller();
 		foreach($data['products'] as $product) {
 			if (in_array($product['id'],$data['selected'])){
-				$this->db->query("UPDATE ".DB_PREFIX."customerpartner_to_product SET status = '".$product['status']."',price = '".$product['price']."',quantity = '".$product['quantity']."' WHERE product_id = '".(int)$product['id']."' AND customer_id = '".(int)$sellerId."'");
+				$this->db->query("UPDATE `".DB_PREFIX."customerpartner_to_product` SET status = '".(int)$product['status']."',price = '".(float)$product['price']."',quantity = '".(int)$product['quantity']."',minimum = '".(int)$product['minimum']."' WHERE product_id = '".(int)$product['id']."' AND customer_id = '".(int)$sellerId."'");
 			}			
 		}
 	}
@@ -877,7 +872,7 @@ class ModelAccountCustomerpartner extends Model {
 		if (!$sellerId) $sellerId = $this->getuserseller();
 		foreach($data['products'] as $product) {
 			if (in_array($product['id'],$data['selected'])){
-				$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_to_product VALUES ('','".$sellerId."','".$product['id']."','".$product['price']."','".$product['quantity']."','0','1')");
+				$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_to_product SET customer_id = '".$sellerId."', product_id = '".$product['id']."', price = '".(float)$product['price']."', quantity = '".(int)$product['quantity']."', status = '0', sort_order = '1'");
 			}
 		}
 	}
@@ -889,48 +884,79 @@ class ModelAccountCustomerpartner extends Model {
 			}
 		}
 	}
-	public function productQuery($sql,$data){
+	public function productQuery($sql,$data,$value){
 
 		$implode = array();
-
 		$mp_allowproductcolumn = $this->config->get('marketplace_allowedproductcolumn');
-
-		$fields = array('model','sku','upc','ean','jan','isbn','mpn','location','quantity','minimum','subtract','stock_status_id','date_available','manufacturer_id','shipping','points','weight','weight_class_id','length','width','height','length_class_id','status','tax_class_id','sort_order');
 		
+		$fields = array('model','upc','ean','jan','isbn','mpn','location','subtract','manufacturer_id','points','sort_order','tax_class_id','sku','price','quantity','minimum','stock_status_id','date_available','shipping','weight','weight_class_id','length','width','height','length_class_id','status');
+
 		foreach ($fields as $field){
 			if (isset($data[$field])) {
 				$implode[] = $field." = '" . $this->db->escape($data[$field]) . "'";
 			}
 		}
-		
+	
 		if ($implode) {
 			$sql .=  implode(" , ", $implode)." , " ;
 		}
 
 		return $sql;
 	}
+	
+	public function cpproductQuery($sql,$data){
+
+		$implode = array();
+
+		$mp_allowproductcolumn = $this->config->get('marketplace_allowedproductcolumn');
+
+		$fields = array('sku','date_available');
+		$fields_float = array('price','weight','length','width','height');
+		$fields_int = array('quantity','minimum','weight_class_id','length_class_id','stock_status_id','status','shipping');
+		
+		foreach ($fields as $field){
+			if (isset($data[$field])) {
+				$implode[] = $field." = '" . $this->db->escape($data[$field]) . "'";
+			}
+		}
+		foreach ($fields_float as $field){
+			if (isset($data[$field])) {
+				$implode[] = $field." = '" . (float)$data[$field] . "'";
+			}
+		}		
+		foreach ($fields_int as $field){
+			if (isset($data[$field])) {
+				$implode[] = $field." = '" . (int)$data[$field] . "'";
+			}
+		}		
+		if ($implode) {
+			$sql .=  implode(" , ", $implode)." , " ;
+		}
+		return $sql;
+	}	
 	/*needtocheck*/
-	public function productAddUpdate($product_id,$data){
+	public function productAddUpdate($product_id,$data,$seller_id=0,$cp_product_id){
+		
+		if (!$seller_id) $seller_id = $this->getuserseller();
 
+		/* Product Description Table*/
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_description WHERE product_id = '" . (int)$product_id . "'");
-
 		if(isset($data['product_description'])){
 			foreach ($data['product_description'] as $language_id => $value) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "product_description` SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "', tag = '" . $this->db->escape($value['tag']) . "'");
 			}
 		}
-
+		/* Product Store Table*/
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_store WHERE product_id = '" . (int)$product_id . "'");
 		if (isset($data['product_store'])) {
 			foreach ($data['product_store'] as $store_id) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$store_id . "'");
 			}
 		}
-		
-		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_store WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET product_id = '" . (int)$product_id . "', store_id = 0 ");
 
+		/* Product Attribute Table*/
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_attribute WHERE product_id = '" . (int)$product_id . "'");
-
 		if (isset($data['product_attribute'])) {
 			foreach ($data['product_attribute'] as $product_attribute) {
 				if ($product_attribute['attribute_id']) {
@@ -942,9 +968,9 @@ class ModelAccountCustomerpartner extends Model {
 			}
 		}
 
+		/* Product Option Table*/
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_option_value WHERE product_id = '" . (int)$product_id . "'");
-
 		if (isset($data['product_option'])) {
 			foreach ($data['product_option'] as $product_option) {
 				if ($product_option['type'] == 'select' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
@@ -965,49 +991,51 @@ class ModelAccountCustomerpartner extends Model {
 			}
 		}
 
+		/* Product Discounts Table*/
+		/*
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "'");
-
 		if (isset($data['product_discount'])) {
 			foreach ($data['product_discount'] as $product_discount) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_discount SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_discount['customer_group_id'] . "', quantity = '" . (int)$product_discount['quantity'] . "', priority = '" . (int)$product_discount['priority'] . "', price = '" . (float)$product_discount['price'] . "', date_start = '" . $this->db->escape($product_discount['date_start']) . "', date_end = '" . $this->db->escape($product_discount['date_end']) . "'");
 			}
 		}
-
+		*/
+		
+		/* Product Special Table*/
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "'");
-
 		if (isset($data['product_special'])) {
 			foreach ($data['product_special'] as $product_special) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_special['customer_group_id'] . "', priority = '" . (int)$product_special['priority'] . "', price = '" . (float)$product_special['price'] . "', date_start = '" . $this->db->escape($product_special['date_start']) . "', date_end = '" . $this->db->escape($product_special['date_end']) . "'");
 			}
 		}
-
+		
+		/* Product Download Table*/
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");
-
 		if (isset($data['product_download'])) {
 			foreach ($data['product_download'] as $download_id) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
 			}
 		}
 
+		/* Product Category Table*/
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
-
 		if (isset($data['product_category'])) {
 			foreach ($data['product_category'] as $category_id) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$category_id . "'");
 			}
 		}
 
+		/* Product Filter Table*/
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_filter WHERE product_id = '" . (int)$product_id . "'");
-
 		if (isset($data['product_filter'])) {
 			foreach ($data['product_filter'] as $filter_id) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_filter SET product_id = '" . (int)$product_id . "', filter_id = '" . (int)$filter_id . "'");
 			}
 		}
 
+		/* Product Related Table*/
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE related_id = '" . (int)$product_id . "'");
-
 		if (isset($data['product_related'])) {
 			foreach ($data['product_related'] as $related_id) {
 				$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "' AND related_id = '" . (int)$related_id . "'");
@@ -1016,22 +1044,21 @@ class ModelAccountCustomerpartner extends Model {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
 			}
 		}
-
+		
+		/* Product Reward Table*/
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_reward WHERE product_id = '" . (int)$product_id . "'");
-
 		if (isset($data['product_reward'])) {
 			foreach ($data['product_reward'] as $customer_group_id => $product_reward) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_reward SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$customer_group_id . "', points = '" . (int)$product_reward['points'] . "'");
 			}
 		}
 		
-		
+		/* Product SEO Table*/
 		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
-
-		if (isset($data['keyword']) AND $data['keyword']) {	
+		if (isset($data['keyword']) AND $data['keyword']) {
+			$data['keyword'] = $this->url_slug(array_values($data['product_description'])[0]['name'].'-'.$product_id).'.html';
 			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
 		}		
-
 	}
 
 
@@ -1055,7 +1082,7 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	public function getProductCategories($product_id) {
-		$query = $this->db->query("SELECT pc.category_id, (SELECT cp.path_id FROM " . DB_PREFIX . "category_path cp WHERE (cp.category_id = pc.category_id) AND cp.level = 0) as parent_id FROM " . DB_PREFIX . "product_to_category pc WHERE pc.product_id = '" . (int)$product_id . "'");
+		$query = $this->db->query("SELECT pc.category_id, (SELECT cp.path_id FROM " . DB_PREFIX . "category_path cp WHERE (cp.category_id = pc.category_id) AND cp.level = 0) AS parent_id FROM " . DB_PREFIX . "product_to_category pc WHERE pc.product_id = '" . (int)$product_id . "'");
 		return $query->rows;
 	}
 
@@ -1141,8 +1168,8 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	public function getProductDiscounts($product_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX ."product_discount WHERE product_id = '" . (int)$product_id . "' ORDER BY quantity, priority, price");
-
+		$id = $this->getProductCPId($product_id,$this->getuserseller());
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX ."cp_product_discount WHERE id = '" . (int)$id . "' ORDER BY quantity, priority, price");
 		return $query->rows;
 	}
 
@@ -1194,6 +1221,15 @@ class ModelAccountCustomerpartner extends Model {
 		return $query->row;
 	}
 
+	public function getProductEditAccess($product_id, $sellerId){
+		if($sellerId) $sellerId = $sellerId;
+		else $sellerId = $this->getuserseller();
+		
+		$edit = $this->db->query("SELECT edit FROM `" . DB_PREFIX . "customerpartner_to_product` WHERE product_id = '" . (int)$product_id . "' AND customer_id = '" .(int)$sellerId. "' AND edit = '1'");		
+		if ($edit->num_rows > 0) return true;
+		else return false;
+	}
+	
 	// Proifle and seller info
 	public function IsApplyForSellership() {
 		$query = $this->db->query("SELECT customer_id FROM ".DB_PREFIX ."customerpartner_to_customer WHERE customer_id = '".(int)$this->customer->getId()."'")->row;
@@ -1352,6 +1388,14 @@ class ModelAccountCustomerpartner extends Model {
 			$this->db->query("UPDATE ".DB_PREFIX ."customerpartner_to_customer set companybanner='' where customer_id='".$seller_id."'");
 		}
 		
+	}
+	
+	public function getProductVendors($product_id,$vendor_id) {
+		
+		$query = $this->db->query("SELECT DISTINCT c2p.customer_id AS vendor_id, c2p.price AS price, CONCAT(c.firstname,' ',c.lastname) AS name, c2c.companyname  FROM " . DB_PREFIX . "customerpartner_to_product c2p LEFT JOIN ".DB_PREFIX ."customerpartner_to_customer c2c ON (c2c.customer_id = c2p.customer_id) LEFT JOIN ".DB_PREFIX."customer c ON (c.customer_id = c2p.customer_id) WHERE (c2p.product_id = '" . (int)$product_id . "' AND c2p.status = '1' AND c2p.customer_id <> '".$vendor_id."') ORDER BY c2p.price ASC, c2p.sort_order ASC");
+
+		return $query->rows;
+	
 	}
 	
 	public function getProfile($sellerId = false){
@@ -2233,6 +2277,12 @@ class ModelAccountCustomerpartner extends Model {
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."customer_to_manager WHERE employee_id='".$customer_id."'");
 		return $query->row; 
 	}
+
+		
+	public function getProductCPId($product_id,$sellerId){
+		return $this->db->query("SELECT id FROM `" . DB_PREFIX . "customerpartner_to_product` WHERE product_id = '".(int)$product_id."' AND customer_id = '".(int)$sellerId."'")->row['id'];
+	}
+	
 	public function savecart($data){
 		$customer_id = $this->customer->getId();
 		var_dump($data);
@@ -2297,5 +2347,103 @@ class ModelAccountCustomerpartner extends Model {
 		$mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
 		return $mail;
 	}
+	private function url_slug($str, $options = array()) {
+		// Make sure string is in UTF-8 and strip invalid UTF-8 characters
+		$str = mb_convert_encoding((string)$str, 'UTF-8', mb_list_encodings());
+	
+		$defaults = array(
+				'delimiter' => '-',
+				'limit' => null,
+				'lowercase' => true,
+				'replacements' => array(),
+				'transliterate' => false,
+		);
+	
+		// Merge options
+		$options = array_merge($defaults, $options);
+	
+		$char_map = array(
+				// Latin
+				'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'AE', 'Ç' => 'C',
+				'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I',
+				'Ð' => 'D', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ő' => 'O',
+				'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ű' => 'U', 'Ý' => 'Y', 'Þ' => 'TH',
+				'ß' => 'ss',
+				'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'ae', 'ç' => 'c',
+				'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i',
+				'ð' => 'd', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ő' => 'o',
+				'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ű' => 'u', 'ý' => 'y', 'þ' => 'th',
+				'ÿ' => 'y',
+				// Latin symbols
+				'©' => '(c)',
+				// Greek
+				'Α' => 'A', 'Β' => 'B', 'Γ' => 'G', 'Δ' => 'D', 'Ε' => 'E', 'Ζ' => 'Z', 'Η' => 'H', 'Θ' => '8',
+				'Ι' => 'I', 'Κ' => 'K', 'Λ' => 'L', 'Μ' => 'M', 'Ν' => 'N', 'Ξ' => '3', 'Ο' => 'O', 'Π' => 'P',
+				'Ρ' => 'R', 'Σ' => 'S', 'Τ' => 'T', 'Υ' => 'Y', 'Φ' => 'F', 'Χ' => 'X', 'Ψ' => 'PS', 'Ω' => 'W',
+				'Ά' => 'A', 'Έ' => 'E', 'Ί' => 'I', 'Ό' => 'O', 'Ύ' => 'Y', 'Ή' => 'H', 'Ώ' => 'W', 'Ϊ' => 'I',
+				'Ϋ' => 'Y',
+				'α' => 'a', 'β' => 'b', 'γ' => 'g', 'δ' => 'd', 'ε' => 'e', 'ζ' => 'z', 'η' => 'h', 'θ' => '8',
+				'ι' => 'i', 'κ' => 'k', 'λ' => 'l', 'μ' => 'm', 'ν' => 'n', 'ξ' => '3', 'ο' => 'o', 'π' => 'p',
+				'ρ' => 'r', 'σ' => 's', 'τ' => 't', 'υ' => 'y', 'φ' => 'f', 'χ' => 'x', 'ψ' => 'ps', 'ω' => 'w',
+				'ά' => 'a', 'έ' => 'e', 'ί' => 'i', 'ό' => 'o', 'ύ' => 'y', 'ή' => 'h', 'ώ' => 'w', 'ς' => 's',
+				'ϊ' => 'i', 'ΰ' => 'y', 'ϋ' => 'y', 'ΐ' => 'i',
+				// Turkish
+				'Ş' => 'S', 'İ' => 'I', 'Ç' => 'C', 'Ü' => 'U', 'Ö' => 'O', 'Ğ' => 'G',
+				'ş' => 's', 'ı' => 'i', 'ç' => 'c', 'ü' => 'u', 'ö' => 'o', 'ğ' => 'g',
+				// Russian
+				'А' => 'A', 'Б' => 'B', 'В' => 'V', 'Г' => 'G', 'Д' => 'D', 'Е' => 'E', 'Ё' => 'Yo', 'Ж' => 'Zh',
+				'З' => 'Z', 'И' => 'I', 'Й' => 'J', 'К' => 'K', 'Л' => 'L', 'М' => 'M', 'Н' => 'N', 'О' => 'O',
+				'П' => 'P', 'Р' => 'R', 'С' => 'S', 'Т' => 'T', 'У' => 'U', 'Ф' => 'F', 'Х' => 'H', 'Ц' => 'C',
+				'Ч' => 'Ch', 'Ш' => 'Sh', 'Щ' => 'Sh', 'Ъ' => '', 'Ы' => 'Y', 'Ь' => '', 'Э' => 'E', 'Ю' => 'Yu',
+				'Я' => 'Ya',
+				'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ё' => 'yo', 'ж' => 'zh',
+				'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o',
+				'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c',
+				'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sh', 'ъ' => '', 'ы' => 'y', 'ь' => '', 'э' => 'e', 'ю' => 'yu',
+				'я' => 'ya',
+				// Ukrainian
+				'Є' => 'Ye', 'І' => 'I', 'Ї' => 'Yi', 'Ґ' => 'G',
+				'є' => 'ye', 'і' => 'i', 'ї' => 'yi', 'ґ' => 'g',
+				// Czech
+				'Č' => 'C', 'Ď' => 'D', 'Ě' => 'E', 'Ň' => 'N', 'Ř' => 'R', 'Š' => 'S', 'Ť' => 'T', 'Ů' => 'U',
+				'Ž' => 'Z',
+				'č' => 'c', 'ď' => 'd', 'ě' => 'e', 'ň' => 'n', 'ř' => 'r', 'š' => 's', 'ť' => 't', 'ů' => 'u',
+				'ž' => 'z',
+				// Polish
+				'Ą' => 'A', 'Ć' => 'C', 'Ę' => 'e', 'Ł' => 'L', 'Ń' => 'N', 'Ó' => 'o', 'Ś' => 'S', 'Ź' => 'Z',
+				'Ż' => 'Z',
+				'ą' => 'a', 'ć' => 'c', 'ę' => 'e', 'ł' => 'l', 'ń' => 'n', 'ó' => 'o', 'ś' => 's', 'ź' => 'z',
+				'ż' => 'z',
+				// Latvian
+				'Ā' => 'A', 'Č' => 'C', 'Ē' => 'E', 'Ģ' => 'G', 'Ī' => 'i', 'Ķ' => 'k', 'Ļ' => 'L', 'Ņ' => 'N',
+				'Š' => 'S', 'Ū' => 'u', 'Ž' => 'Z',
+				'ā' => 'a', 'č' => 'c', 'ē' => 'e', 'ģ' => 'g', 'ī' => 'i', 'ķ' => 'k', 'ļ' => 'l', 'ņ' => 'n',
+				'š' => 's', 'ū' => 'u', 'ž' => 'z'
+		);
+	
+		// Make custom replacements
+		$str = preg_replace(array_keys($options['replacements']), $options['replacements'], $str);
+	
+		// Transliterate characters to ASCII
+		if ($options['transliterate']) {
+			$str = str_replace(array_keys($char_map), $char_map, $str);
+		}
+	
+		// Replace non-alphanumeric characters with our delimiter
+		$str = preg_replace('/[^\p{L}\p{Nd}]+/u', $options['delimiter'], $str);
+	
+		// Remove duplicate delimiters
+		$str = preg_replace('/(' . preg_quote($options['delimiter'], '/') . '){2,}/', '$1', $str);
+	
+		// Truncate slug to max. characters
+		$str = mb_substr($str, 0, ($options['limit'] ? $options['limit'] : mb_strlen($str, 'UTF-8')), 'UTF-8');
+	
+		// Remove delimiter from ends
+		$str = trim($str, $options['delimiter']);
+	
+		return $options['lowercase'] ? mb_strtolower($str, 'UTF-8') : $str;
+	}
+	
+	
 }
 ?>

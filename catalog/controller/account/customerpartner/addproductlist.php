@@ -402,7 +402,9 @@ class ControllerAccountCustomerpartnerAddproductlist extends Controller {
 			$data = $this->request->post;
 			$this->model_account_customerpartner->addProducts($data);
 			$this->response->redirect($this->url->link('account/customerpartner/addproductlist','','SSL'));
-		}	
+		}
+		$this->response->redirect($this->url->link('account/customerpartner/addproductlist','','SSL'));
+		
 	}
 	private function validate() {
 

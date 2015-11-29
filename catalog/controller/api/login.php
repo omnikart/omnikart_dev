@@ -36,4 +36,34 @@ class ControllerApiLogin extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
+	
+	public function customerlogin() {
+		$this->load->language('api/login');
+
+		unset($this->session->data['api_id']);
+
+		$json = array();
+
+		$keys = array(
+			'username',
+			'password'
+		);
+
+		foreach ($keys as $key) {
+			if (!isset($this->request->post[$key])) {
+				$this->request->post[$key] = '';
+			}
+		}
+
+		if ($this->customer->login($this->request->post['username'], $this->request->post['password']) && !($this->customer->getId()=='0')) {
+			$this->session->data['api_id'] = $this->customer->getId();
+			$json['cookie'] = $this->session->getId();
+			$json['success'] = $this->language->get('text_success');
+		
+		} else {
+			$json['error'] = $this->language->get('error_login');
+		}
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
 }

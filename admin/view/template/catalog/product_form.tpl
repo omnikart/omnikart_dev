@@ -36,6 +36,7 @@
             <li><a href="#tab-special" data-toggle="tab"><?php echo $tab_special; ?></a></li>
             <li><a href="#tab-image" data-toggle="tab"><?php echo $tab_image; ?></a></li>
             <li><a href="#tab-reward" data-toggle="tab"><?php echo $tab_reward; ?></a></li>
+						<li><a href="#tab-vendor" data-toggle="tab">Supplier Links</a></li>            
             <li><a href="#tab-design" data-toggle="tab"><?php echo $tab_design; ?></a></li>
           </ul>
           <div class="tab-content">
@@ -867,6 +868,34 @@
                 </table>
               </div>
             </div>
+						<div class="tab-pane" id="tab-vendor">
+							<div class="table-responsive">
+                <table id="vendor" class="table table-striped table-bordered table-hover">
+                  <thead>
+										<tr>
+											<td class="text-left">Vendor Id</td><td class="text-left">Vendor Name</td><td class="text-left">E-Mail</td><td class="text-left">Price</td><td class="text-left">Quantity</td><td class="text-left">Sort Order</td>
+										</tr>
+                  </thead>
+                  <tbody>
+                  <?php if (isset($suppliers)) { ?>
+										<?php foreach ($suppliers as $supplier) { ?>
+											<tr>
+												<td><?php echo $supplier['customer_id']; ?><input type="hidden" value="<?php echo $supplier['customer_id']; ?>" name="vendor[<?php echo $supplier['customer_id']; ?>][id]"></td><td><?php echo $supplier['firstname'].' '.$supplier['lastname']; ?></td><td><?php echo $supplier['email']; ?></td>
+												<td><input type="text" name="vendor[<?php echo $supplier['customer_id']; ?>][price]" value="<?php echo $supplier['price']; ?>" class="form-control" size=3></td>
+												<td><input type="text" name="vendor[<?php echo $supplier['customer_id']; ?>][quantity]" value="<?php echo $supplier['quantity']; ?>" class="form-control" size=3></td>
+												<td><input type="text" name="vendor[<?php echo $supplier['customer_id']; ?>][sort_order]" value="<?php echo $supplier['sort_order']; ?>" class="form-control" size=3></td><td><a onclick="$(this).parent().parent().remove()" data-toggle="tooltip" title="Remove" class="btn btn-danger"><i class="fa fa-minus-circle"></i></a></td>
+											</tr>
+										<?php } ?>
+										<?php } ?>
+                  </tbody>
+                  <tfoot>
+										<tr id="inputcontent">
+											<td></td><td><input type="text" name="vendor_name" class="form-control"></td><td></td><td></td><td></td><td></td><td></td>
+										</tr>
+									</tfoot>
+                </table>
+              </div>
+						</div>            
             <div class="tab-pane" id="tab-design">
               <div class="table-responsive">
                 <table class="table table-bordered table-hover">
@@ -922,6 +951,32 @@ $('#input-description<?php echo $language['language_id']; ?>').summernote({heigh
 <?php } ?>
 //--></script> 
   <script type="text/javascript"><!--
+		$('input[name=\'vendor_name\']').autocomplete({
+			delay: 0,
+			source: function(request, response) {
+				$.ajax({
+					url: 'index.php?route=customerpartner/partner/autocomplete&token=<?php echo $token; ?>&product_id=<?php echo $product_id; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_view=' +  jQuery('#view_all').val(),
+					dataType: 'json',
+					success: function(json) {   
+						response($.map(json, function(item) {
+							return {
+								label: item.name,
+								value: item.id,
+								email: item.email
+							}
+						}));
+					}
+				});
+			}, 
+			select: function(item) {
+				html = '<tr><td>'+item.value+'<input type="hidden" name="new_vendor['+item.value+'][id]"  value="'+item.value+'"></td><td>'+item.label+'</td><td>'+item.email+'</td><td><input type="text" name="new_vendor['+item.value+'][price]" value="" class="form-control"></td><td><input type="text" name="new_vendor['+item.value+'][quantity]" value="" class="form-control"></td><td><input type="text" name="new_vendor['+item.value+'][sort_order]" value="" class="form-control"></td><td><a onclick="$(this).parent().parent().remove()" data-toggle="tooltip" title="Remove" class="btn btn-danger"><i class="fa fa-minus-circle"></i></a></td></tr>';
+				$('#vendor tbody').append(html);
+				return false;
+			},
+			focus: function(event, ui) {
+					return false;
+			}
+		});
 // Manufacturer
 $('input[name=\'manufacturer\']').autocomplete({
 	'source': function(request, response) {

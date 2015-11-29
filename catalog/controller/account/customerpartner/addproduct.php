@@ -14,10 +14,22 @@ class ControllerAccountCustomerpartnerAddproduct extends Controller {
 
 		//$customerRights = $this->model_account_customerpartner->getCustomerGroupRights($this->customer->getGroupId());
 		$customerRights = $this->customer->getRights();
-		if($customerRights && !array_key_exists('addproduct', $customerRights['rights'])) {
+		
+		$data['add'] = false;
+		$data['list'] = false;
+		
+		if ($customerRights && array_key_exists('addproduct', $customerRights['rights']) && ($this->model_account_customerpartner->getProductEditAccess($this->request->get['product_id'],0))){
+			$data['add'] = true; 
+		}
+		
+		if ($customerRights && array_key_exists('productlist', $customerRights['rights'])){
+			$data['list'] = true;
+		}
+		
+		if($customerRights && !$data['list'] && !$data['add']) {
 			$this->response->redirect($this->url->link('account/account', '','SSL'));
 		}
-
+		
 		$sellerId = $this->model_account_customerpartner->isSubUser($this->customer->getId());
 		if(!$customerRights['isParent'] && !$sellerId) {
 			$data['chkIsPartner'] = $this->model_account_customerpartner->chkIsPartner();
@@ -49,48 +61,9 @@ class ControllerAccountCustomerpartnerAddproduct extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') AND $this->validate() AND $this->validateForm()) {
 			
 			if(!isset($this->request->get['product_id'])){
-				//custom field module add function
-				if($this->config->get('wk_custome_field_wkcustomfields')) {
-                    $this->load->model("account/wkcustomfield");
-                    $customfielddata = array();
-                    if(isset($this->request->post['product_custom_field'])){
-                     	$customfielddata = $this->request->post['product_custom_field'];
-                    }
-                    foreach ($customfielddata as $key => $value) {
-                    	if(($value['custom_field_value'][0] == '' || !isset($value['custom_field_value'])) && $value['custom_field_is_required'] == 'yes'){
-                    		$data['error'] = $value['custom_field_id'];
-                    	}
-                    }
-                    if(!isset($data['error'])) {
-                    	$product_id = $this->model_account_customerpartner->addProduct($this->request->post,$sellerId);
-                        $this->model_account_wkcustomfield->addCustomFields($customfielddata,$product_id);
-                   	} else {
-                   		$this->error['warning'] = $this->language->get('error_warning');
-                   	}
-                } else {
-                	$this->model_account_customerpartner->addProduct($this->request->post,$sellerId);
-                }
-                //end here
+				$this->model_account_customerpartner->addProduct($this->request->post,$sellerId);
 			}else{
 				$this->model_account_customerpartner->editProduct($this->request->post,$sellerId);
-				
-				//custom field module edit function				
-				if($this->config->get('wk_custome_field_wkcustomfields')) { 
-                    $this->load->model("account/wkcustomfield");
-                    $customfielddata = array();
-                    if(isset($this->request->post['product_custom_field'])){
-                     	$customfielddata = $this->request->post['product_custom_field'];
-                    }
-                    foreach ($customfielddata as $key => $value) {
-                    	if(($value['custom_field_value'][0] == '' || !isset($value['custom_field_value'])) && $value['custom_field_is_required'] == 'yes'){
-                    		$data['error'] = $value['custom_field_id'];
-                    	}
-                    }
-                    if(!isset($data['error'])){
-                    	$this->model_account_wkcustomfield->editCustomFields($customfielddata,$this->request->get['product_id']);
-                    }
-                }
-                //end here
 			}
 				
 			if(!isset($data['error']))	
@@ -776,11 +749,11 @@ class ControllerAccountCustomerpartnerAddproduct extends Controller {
 		if (isset($this->request->post['product_discount'])) {
 			$data['product_discounts'] = $this->request->post['product_discount'];
 		} elseif (isset($this->request->get['product_id'])) {
-			$data['product_discounts'] = $this->model_account_customerpartner->getProductDiscounts($this->request->get['product_id'],$tabletype);
+			$data['product_discounts'] = $this->model_account_customerpartner->getProductDiscounts($this->request->get['product_id']);
 		} else {
 			$data['product_discounts'] = array();
 		}
-
+		
 		if (isset($this->request->post['product_special'])) {
 			$data['product_specials'] = $this->request->post['product_special'];
 		} elseif (isset($this->request->get['product_id'])) {

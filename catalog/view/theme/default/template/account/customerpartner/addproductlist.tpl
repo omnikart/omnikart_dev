@@ -31,8 +31,6 @@
 						<a href="<?php echo $insert; ?>"  data-toggle="tooltip" title="<?php echo $button_insert; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
 	        <?php } ?>
 			<button data-toggle="tooltip" class="btn btn-primary" id="updateProducts" form="form-product" formaction="<?php echo $addproducts; ?>" title="Update changes for selected products. Page will not refresh after this."><i class="fa fa-save"></i></button>
-			<button data-toggle="tooltip" class="btn btn-info" id="disableProducts"  title="Disable Current Changes"><i class="fa fa-times"></i></button>
-	        <a onclick="$('#form-product').submit();" data-toggle="tooltip" class="btn btn-danger"  title="<?php echo $button_delete; ?>"><i class="fa fa-trash-o"></i></a>
       	</div> 
     </h1>
 
@@ -153,7 +151,7 @@
 
 $('#form-product').submit(function(){
     if ($(this).attr('action').indexOf('delete',1) != -1) {
-        if (!confirm('<?php echo $text_confirm; ?>')) {
+        if (!confirm('Do you want to Add Seleced Products')) {
             return false;
         }
     }

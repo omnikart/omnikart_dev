@@ -148,6 +148,12 @@ class ControllerProductProduct extends Controller {
 			);
 		}
 
+		if (isset($this->request->get['vendor_id'])) {
+			$vendor_id = $this->request->get['vendor_id'];
+		} else {
+			$vendor_id = 0;
+		}
+
 		if (isset($this->request->get['product_id'])) {
 			$product_id = (int)$this->request->get['product_id'];
 		} else {
@@ -304,6 +310,12 @@ class ControllerProductProduct extends Controller {
 
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 				$data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+				$data['original_price']  = 0; // Comparing MRP and Supplier Price //
+				$data['discount'] = 0;
+				if ($product_info['price'] < $product_info['original_price']) {
+					$data['original_price'] = $this->currency->format($this->tax->calculate($product_info['original_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+					$data['discount'] = (int)(($product_info['original_price'] - $product_info['price'])*100/$product_info['original_price']);
+				}
 			} else {
 				$data['price'] = false;
 			}
@@ -320,8 +332,9 @@ class ControllerProductProduct extends Controller {
 				$data['tax'] = false;
 			}
 
-			$discounts = $this->model_catalog_product->getProductDiscounts($this->request->get['product_id']);
-
+			$discounts = $this->model_catalog_product->getSupplierProductDiscounts($product_info['id']);
+			if (!$discounts) $discounts = $this->model_catalog_product->getProductDiscounts($this->request->get['product_id']);
+			
 			$data['discounts'] = array();
 
 			foreach ($discounts as $discount) {
@@ -465,6 +478,16 @@ class ControllerProductProduct extends Controller {
 			} else {
 				$data['site_key'] = '';
 			}
+			$this->load->model('account/customerpartner');
+			$data['curr_vendor'] = $this->model_account_customerpartner->getProfile($product_info['vendor_id']);
+			$data['vendors'] = $this->model_account_customerpartner->getProductVendors($product_id,$product_info['vendor_id']);
+			
+			foreach ($data['vendors'] as $key => $vendor) {
+				$data['vendors'][$key]['link'] = $this->url->link('product/product', '&vendor_id='.$vendor['vendor_id'].'&product_id=' . $product_id ,'SSL');
+				$data['vendors'][$key]['price'] = $this->currency->format($this->tax->calculate($vendor['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+			}
+			
+			$data['vlink'] = $this->url->link('customerpartner/profile','id='.$data['curr_vendor']['customer_id'],'SSL');
 
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['column_right'] = $this->load->controller('common/column_right');
