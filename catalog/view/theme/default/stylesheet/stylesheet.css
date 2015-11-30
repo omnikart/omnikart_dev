@@ -326,6 +326,8 @@ width:100%;
 .navbar-fixed-top .ns {display:none;}
 .sub-menu {margin-bottom:20px;}
 .sub-menu li a{text-decoration:none;color:#333;}
+
+#megamenu {position:absolute; width:100%;margin:0 -15px;background:#fff;z-index:1000;border-bottom:3px solid #aaa;}
 @media (min-width: 768px) {
 	/*#main-menu:hover .navbar-collapse{display:block!important;}*/
 	/*.common-home #main-menu .navbar-collapse{display:block!important;}*/

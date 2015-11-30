@@ -1,5 +1,64 @@
 <?php
 class ModelCatalogProduct extends Model {
+	
+	public function insertGroupedProductGrouped($product_id, $data) {
+			
+			$implode = array();
+			
+			if (isset($data['gp_child'])) {
+				foreach ($data['gp_child'] as $child_id => $child) {
+					$implode[] = $child_id;
+				}
+			}
+			
+			$data['gp_price_min'] = $this->db->query("SELECT MIN(price) AS price FROM " . DB_PREFIX . "product WHERE product_id IN (".implode(',',$implode).")")->row['price'];
+			
+			$data['gp_price_max'] = $this->db->query("SELECT MAX(price) AS price FROM " . DB_PREFIX . "product WHERE product_id IN (".implode(',',$implode).")")->row['price'];
+			
+			$data_gp_price_min = $data['gp_price_min'] ? $data['gp_price_min'] : 0; //set zero just to prevent error in mask
+			$data_gp_price_max = $data['gp_price_max'] ? $data['gp_price_max'] : 0; //set zero just to prevent error in mask
+			
+			$this->db->query("INSERT INTO " . DB_PREFIX . "gp_grouped SET product_id = '" . (int)$product_id . "', gp_price_min = '" . $this->db->escape($data_gp_price_min) . "', gp_price_max = '" . $this->db->escape($data_gp_price_max) . "', gp_template = '" . $this->db->escape($data['gp_template']) . "'");
+			
+			$this->db->query("UPDATE " . DB_PREFIX . "product SET type = '2' WHERE product_id = '" . (int)$product_id . "'");
+			
+			if (isset($data['gp_child'])) {
+				foreach ($data['gp_child'] as $child_id => $child) {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "gp_grouped_child SET product_id = '" . (int)$product_id . "', child_id = '" . (int)$child_id . "', child_sort_order = '" . (int)$child['child_sort_order'] . "'");
+					$this->db->query("UPDATE " . DB_PREFIX . "product SET type = '0' WHERE product_id = '" . (int)$child_id . "'");
+					$this->db->query("UPDATE " . DB_PREFIX . "product SET status = '".$data['status']."' WHERE product_id = '" . (int)$child_id . "' AND status <> '0'");
+				}
+			}
+		}
+
+		// Deleting
+		public function deleteGroupedProductGrouped($product_id) {
+			$this->db->query("DELETE FROM " . DB_PREFIX . "gp_grouped WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM " . DB_PREFIX . "gp_grouped_child WHERE product_id = '" . (int)$product_id . "'");
+		}
+
+		// Getting
+		public function getGroupedProductGrouped($product_id) {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "gp_grouped WHERE product_id = '" . (int)$product_id . "'");
+
+			return $query->row;
+		}
+
+		public function getGroupedProductGroupedChilds($product_id) {
+			$child_data = array();
+
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "gp_grouped_child WHERE product_id = '" . (int)$product_id . "' ORDER BY child_sort_order");
+
+			foreach ($query->rows as $result) {
+				$child_data[$result['child_id']] = array(
+					'child_id'         => $result['child_id'],
+					'child_sort_order' => $result['child_sort_order']
+				);
+			}
+
+			return $child_data;
+		}
+			
 	public function addProduct($data) {
 		if ($this->user->getGroupId()=='14') $data['status']=2;
 		
@@ -8,7 +67,12 @@ class ModelCatalogProduct extends Model {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "product SET model = '" . $this->db->escape($data['model']) . "', sku = '" . $this->db->escape($data['sku']) . "', upc = '" . $this->db->escape($data['upc']) . "', ean = '" . $this->db->escape($data['ean']) . "', jan = '" . $this->db->escape($data['jan']) . "', isbn = '" . $this->db->escape($data['isbn']) . "', mpn = '" . $this->db->escape($data['mpn']) . "', location = '" . $this->db->escape($data['location']) . "', quantity = '" . (int)$data['quantity'] . "', minimum = '" . (int)$data['minimum'] . "', subtract = '" . (int)$data['subtract'] . "', stock_status_id = '" . (int)$data['stock_status_id'] . "', date_available = '" . $this->db->escape($data['date_available']) . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', shipping = '" . (int)$data['shipping'] . "', price = '" . (float)$data['price'] . "', points = '" . (int)$data['points'] . "', weight = '" . (float)$data['weight'] . "', weight_class_id = '" . (int)$data['weight_class_id'] . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "', length_class_id = '" . (int)$data['length_class_id'] . "', status = '" . (int)$data['status'] . "', type='1', tax_class_id = '" . (int)$data['tax_class_id'] . "', sort_order = '" . (int)$data['sort_order'] . "', date_added = NOW()");
 
 		$product_id = $this->db->getLastId();
-
+		if (isset($data['is_gp']) && $data['is_gp'] == 'grouped') {
+			$this->insertGroupedProductGrouped($product_id, $data);
+		}		
+		if (isset($data['gp_parent_id'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "product SET gp_parent_id = '" . (int)$data['gp_parent_id'] . "' WHERE product_id = '" . (int)$product_id . "'");
+		}
 		if (isset($data['image'])) {
 			$this->db->query("UPDATE " . DB_PREFIX . "product SET image = '" . $this->db->escape($data['image']) . "' WHERE product_id = '" . (int)$product_id . "'");
 		}
@@ -110,17 +174,26 @@ class ModelCatalogProduct extends Model {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_layout SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$store_id . "', layout_id = '" . (int)$layout_id . "'");
 			}
 		}
-
+		if (!$data['keyword']) $data['keyword'] = $this->url_slug(array_values($data['product_description'])[0]['name'].'-'.$product_id).'.html';
 		if (isset($data['keyword'])) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
 		}
-
+		$model = array_values($data['product_category'])[0].$product_id;
+		$this->db->query("UPDATE " . DB_PREFIX . "product SET model = '" . $this->db->escape($model) . "' WHERE product_id = '" . (int)$product_id . "'");
 		if (isset($data['product_recurrings'])) {
 			foreach ($data['product_recurrings'] as $recurring) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "product_recurring` SET `product_id` = " . (int)$product_id . ", customer_group_id = " . (int)$recurring['customer_group_id'] . ", `recurring_id` = " . (int)$recurring['recurring_id']);
 			}
 		}
-
+		
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "customerpartner_to_product` WHERE product_id = " . (int)$product_id);
+		var_dump($data['vendor']);
+		if (isset($data['vendor'])){
+			foreach ($data['vendor'] as $customer_id => $vendor){
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "customerpartner_to_product` SET `product_id` = " . (int)$product_id.", `customer_id`=".(int)$vendor['id'].", `price`=".(int)$vendor['price'].", `quantity`=".(int)$vendor['quantity'].", `sort_order`=".(int)$vendor['sort_order'].";");
+			}
+		}
+		
 		$this->cache->delete('product');
 
 		$this->event->trigger('post.admin.product.add', $product_id);
@@ -129,12 +202,22 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function editProduct($product_id, $data) {
-
+		
+		$this->load->model('tool/nitro');
+    $this->model_tool_nitro->clearProductCache($product_id);
+                
 		if ($this->user->getGroupId()=='14') $data['status']=2;
 		
 		$this->event->trigger('pre.admin.product.edit', $data);
 
 		$this->db->query("UPDATE " . DB_PREFIX . "product SET model = '" . $this->db->escape($data['model']) . "', sku = '" . $this->db->escape($data['sku']) . "', upc = '" . $this->db->escape($data['upc']) . "', ean = '" . $this->db->escape($data['ean']) . "', jan = '" . $this->db->escape($data['jan']) . "', isbn = '" . $this->db->escape($data['isbn']) . "', mpn = '" . $this->db->escape($data['mpn']) . "', location = '" . $this->db->escape($data['location']) . "', quantity = '" . (int)$data['quantity'] . "', minimum = '" . (int)$data['minimum'] . "', subtract = '" . (int)$data['subtract'] . "', stock_status_id = '" . (int)$data['stock_status_id'] . "', date_available = '" . $this->db->escape($data['date_available']) . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', shipping = '" . (int)$data['shipping'] . "', price = '" . (float)$data['price'] . "', points = '" . (int)$data['points'] . "', weight = '" . (float)$data['weight'] . "', weight_class_id = '" . (int)$data['weight_class_id'] . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "', length_class_id = '" . (int)$data['length_class_id'] . "', status = '" . (int)$data['status'] . "', type='1', tax_class_id = '" . (int)$data['tax_class_id'] . "', sort_order = '" . (int)$data['sort_order'] . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
+		if (isset($data['is_gp']) && $data['is_gp'] == 'grouped') {
+			$this->deleteGroupedProductGrouped($product_id);
+			$this->insertGroupedProductGrouped($product_id, $data);
+		}
+		if (isset($data['gp_parent_id'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "product SET gp_parent_id = '" . (int)$data['gp_parent_id'] . "' WHERE product_id = '" . (int)$product_id . "'");
+		}
 
 		if (isset($data['image'])) {
 			$this->db->query("UPDATE " . DB_PREFIX . "product SET image = '" . $this->db->escape($data['image']) . "' WHERE product_id = '" . (int)$product_id . "'");
@@ -266,7 +349,7 @@ class ModelCatalogProduct extends Model {
 		}
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id . "'");
-
+		if (!$data['keyword']) $data['keyword'] = $this->url_slug(array_values($data['product_description'])[0]['name'].'-'.$product_id).'.html';
 		if ($data['keyword']) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
 		}
@@ -278,9 +361,27 @@ class ModelCatalogProduct extends Model {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "product_recurring` SET `product_id` = " . (int)$product_id . ", customer_group_id = " . (int)$product_recurring['customer_group_id'] . ", `recurring_id` = " . (int)$product_recurring['recurring_id']);
 			}
 		}
-
 		
 		$this->cache->delete('product');
+		
+		$in = array();
+				
+		if (isset($data['vendor'])){
+			foreach ($data['vendor'] as $customer_id => $vendor){
+					$this->db->query("UPDATE `" . DB_PREFIX . "customerpartner_to_product` SET `price`=".(float)$vendor['price'].", `quantity`=".(int)$vendor['quantity'].", `sort_order`=".(int)$vendor['sort_order']." WHERE `product_id` = " .(int)$product_id." AND `customer_id`=".(int)$vendor['id']);
+					$in[]=$vendor['id'];
+			}
+		}
+		
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "customerpartner_to_product` WHERE `product_id` = " .(int)$product_id." AND `customer_id` NOT IN (".implode(',',$in).")");
+		
+		if (isset($data['new_vendor'])){
+			foreach ($data['new_vendor'] as $customer_id => $vendor){
+					$this->db->query("INSERT INTO `" . DB_PREFIX . "customerpartner_to_product` SET `product_id` = " . (int)$product_id.", `customer_id`=".(int)$vendor['id'].", `price`=".(float)$vendor['price'].", `quantity`=".(int)$vendor['quantity'].", `sort_order`=".(int)$vendor['sort_order']);
+			}
+		}		
+		
+		
 
 		$this->event->trigger('post.admin.product.edit', $product_id);
 	}
@@ -317,8 +418,8 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function deleteProduct($product_id) {
+		$this->deleteGroupedProductGrouped($product_id);
 		$this->event->trigger('pre.admin.product.delete', $product_id);
-
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_attribute WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_description WHERE product_id = '" . (int)$product_id . "'");
@@ -336,6 +437,9 @@ class ModelCatalogProduct extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_layout WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_store WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "customerpartner_to_product WHERE product_id = '" . (int)$product_id . "'");
+    //commented because it's also important for order 
+    //$this->db->query("DELETE FROM " . DB_PREFIX . "customerpartner_sold_tracking WHERE product_id = '" . (int)$product_id . "'");		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_recurring WHERE product_id = " . (int)$product_id);
 		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id . "'");
 
@@ -352,7 +456,9 @@ class ModelCatalogProduct extends Model {
 
 	public function getProducts($data = array()) {
 		$sql = "SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
-
+		if (!empty($data['filter_gpt'])) {
+			$sql = "SELECT * FROM " . DB_PREFIX . $data['filter_gpt'] . " gpt LEFT JOIN " . DB_PREFIX . "product p ON (gpt.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		}
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND (";
 			$implode = array();
@@ -630,7 +736,9 @@ class ModelCatalogProduct extends Model {
 
 	public function getTotalProducts($data = array()) {
 		$sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
-
+		if (!empty($data['filter_gpt'])) {
+			$sql = "SELECT COUNT(DISTINCT gpt.product_id) AS total FROM " . DB_PREFIX . $data['filter_gpt'] . " gpt LEFT JOIN " . DB_PREFIX . "product p ON (gpt.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
+		}
 		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {

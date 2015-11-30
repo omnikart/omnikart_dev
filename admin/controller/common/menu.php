@@ -207,7 +207,19 @@ class ControllerCommonMenu extends Controller {
 			'amazonus' => $this->config->get('openbay_amazonus_status'),
 			'etsy' => $this->config->get('etsy_status'),
 		);
-
+		$data['cp_partnerlist'] = $this->url->link('customerpartner/partner', 'token=' . $this->session->data['token'], 'SSL');
+		$data['cp_productlist'] = $this->url->link('customerpartner/product', 'token=' . $this->session->data['token'], 'SSL');
+		$data['cp_commission'] = $this->url->link('customerpartner/commission', 'token=' . $this->session->data['token'],'SSL');
+		$data['cp_income'] = $this->url->link('customerpartner/income', 'token=' . $this->session->data['token'],'SSL');
+		$data['cp_transaction'] = $this->url->link('customerpartner/transaction', 'token=' . $this->session->data['token'],'SSL');
+		$data['cp_shipping'] = $this->url->link('customerpartner/shipping', 'token=' . $this->session->data['token'],'SSL');               
+		$data['cp_mail'] = $this->url->link('customerpartner/mail', 'token=' . $this->session->data['token'],'SSL');
+		$data['wk_customfield'] = $this->url->link('wkcustomfield/wkcustomfield', 'token=' . $this->session->data['token'], 'SSL');
+		$data['wk_customer_group'] = $this->url->link('customerpartner/customer_group', 'token=' . $this->session->data['token'],'SSL');
+		$data['wkcustomfields'] = false;              
+		if($this->config->get('wk_custome_field_wkcustomfields')){
+				$data['wkcustomfields'] = true;
+		}
 		return $this->load->view('common/menu.tpl', $data);
 	}
 }

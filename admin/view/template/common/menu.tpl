@@ -1,5 +1,20 @@
 <ul id="menu">
   <li id="dashboard"><a href="<?php echo $home; ?>"><i class="fa fa-dashboard fa-fw"></i> <span><?php echo $text_dashboard; ?></span></a></li>
+	<li id="customerpartner"><a class="parent"><i class="fa fa-users"></i> <span><?php echo "B2B Market Place"; ?></span></a>
+		<ul>
+			<li><a href="<?php echo $cp_partnerlist; ?>"><?php echo "Partners"; ?></a></li> 
+			<li><a href="<?php echo $wk_customer_group; ?>"><?php echo "Customer Group"; ?></a></li>
+			<li><a href="<?php echo $cp_commission; ?>"><?php echo "Commission"; ?></a></li>                                      
+			<li><a href="<?php echo $cp_productlist ?>"><?php echo "Products"; ?></a></li>
+			<li><a href="<?php echo $cp_income ?>"><?php echo "Income"; ?></a></li>
+			<li><a href="<?php echo $cp_transaction ?>"><?php echo "Transaction"; ?></a></li>
+			<li><a href="<?php echo $cp_shipping ?>"><?php echo "Shipping"; ?></a></li>
+			<li><a href="<?php echo $cp_mail ?>"><?php echo "Mail"; ?></a></li>
+			<?php if(isset($wkcustomfields) && $wkcustomfields) { ?>
+					<li id="wkcustomefield"><a href="<?php echo $wk_customfield; ?>"><?php echo "Custom fields"; ?></a>
+			<?php } ?>
+		</ul>
+	</li>
   <li id="catalog"><a class="parent"><i class="fa fa-tags fa-fw"></i> <span><?php echo $text_catalog; ?></span></a>
     <ul>
       <li><a href="<?php echo $category; ?>"><?php echo $text_category; ?></a></li>

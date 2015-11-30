@@ -65,7 +65,7 @@ _atrk_opts = { atrk_acct:"GTT9m1a47E805T", domain:"omnikart.com",dynamic: true};
 					<div class="col-sm-3 hidden-xs ns1"><?php echo $cart; ?></div>				
 					<div class="col-sm-3 ns ns1">
 						<div id="main-menu" class="clearfix">
-						    <div class="navbar-header"><span id="category" class="visible-xs">All Products</span>
+						    <div class="navbar-header"  navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><span id="category" class="visible-xs visible-sm">All Products</span>
 						      <button type="button" class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fa fa-chevron-down"></i></button>
 						    </div>
 						    <div class="navbar-header">
@@ -75,8 +75,8 @@ _atrk_opts = { atrk_acct:"GTT9m1a47E805T", domain:"omnikart.com",dynamic: true};
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-5 ns">
-						<div id="pavmenu">
+					<div class="col-md-6 col-lg-5 ns">
+						<div id="pavmenu" class="visible-lg visible-md">
 							<?php echo $pavmegamenu; ?>
 						</div>
 					</div>
@@ -105,7 +105,7 @@ _atrk_opts = { atrk_acct:"GTT9m1a47E805T", domain:"omnikart.com",dynamic: true};
 					</div>
 				</div>
 			</div>
-			<div class="collapse navbar-ex1-collapse">
+			<div class="collapse navbar-ex1-collapse" id="megamenu">
 				<div class="nav-bgd clearfix">
 				<div class="container">
 					<div class="row">

@@ -65,6 +65,8 @@
 	</div>  
 	</div>
 	<div class="container">  
+	  <div id="handout-div">
+	  </div>
   	<div id="powered">
 		<div><?php echo $powered; ?></div>
 		<img src="image/payment methods.png" style="height:30px;">

@@ -30,7 +30,7 @@ class Cart {
 				$stock = true;
 
 				// Supplier
-				if (!empty($product['vendor_id'])) {
+				if (!empty($product['vendor_id'])) { // Check if Vendor is set for the product if not make $vendor_id = 0
 					$vendor_id = $product['vendor_id'];
 				} else {
 					$vendor_id = 0;
@@ -52,14 +52,14 @@ class Cart {
 
 				$product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.date_available <= NOW() AND p.status = '1'");
 
-				if ($product_query->num_rows) {
+				if ($product_query->num_rows) { // Check if Product Exist
 					$option_price = 0;
 					$option_points = 0;
 					$option_weight = 0;
 
 					$option_data = array();
 
-					foreach ($options as $product_option_id => $value) {
+					foreach ($options as $product_option_id => $value) { // Product Options Query //
 						$option_query = $this->db->query("SELECT po.product_option_id, po.option_id, od.name, o.type FROM " . DB_PREFIX . "product_option po LEFT JOIN `" . DB_PREFIX . "option` o ON (po.option_id = o.option_id) LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) WHERE po.product_option_id = '" . (int)$product_option_id . "' AND po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 						if ($option_query->num_rows) {
@@ -175,36 +175,38 @@ class Cart {
 						}
 					}
 
-					$price = $product_query->row['price'];
+					$price = $product_query->row['price']; // Getting Product Default Price set by omnikart. ( MRP )
 					
-					if ($vendor_id) {
+					if ($vendor_id) { // if $vendor_id != 0  get the vendor product details
 							$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND c2p.customer_id = '".(int)$vendor_id."' AND status='1')");
-					} else {
+					} else { // if $vendor_id = 0  get the default vendor product details
 							$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND status='1') ORDER BY c2p.sort_order ASC LIMIT 1");
 					}
 		
-					if($vendor->row && $vendor->row['price']){
+					if($vendor->row && $vendor->row['price']){ // Check if any vendor exist for the product if yes the update the produc price
 						$price = $vendor->row['price'];
-					}
+					} else $vendor_id = 0; // if vendor_id is not zero and no vendor exist for the product then set $vendor_id = 0;
 
 					// Product Discounts
 
 					$discount_quantity[$product_id.'-'.$vendor_id] = 0;
-					
 					foreach ($this->session->data['cart'] as $key_2 => $quantity_2) {
 						$product_2 = (array)unserialize(base64_decode($key_2));
-						if ($vendor_id && isset($product_2['vendor_id'])) {
+						if ($vendor_id && isset($product_2['vendor_id'])) { // if $vendor_id != 0 then update the quantity for the product
 								if (($product_2['product_id'].'-'.$product_2['vendor_id']) == ($product_id.'-'.$vendor_id)) {
 										$discount_quantity[$product_id.'-'.$vendor_id] += $quantity_2;
 								}
-						}
-						if ($product_2['product_id'] == $product_id) {
-							$discount_quantity[$product_id.'-'.$vendor_id] += $quantity_2;
+						}else{
+							if ($product_2['product_id'] == $product_id) { // if $vendor_id = 0 then update the quantity for the product
+								$discount_quantity[$product_id.'-'.$vendor_id] += $quantity_2;
+							}
 						}
 					}
-
-					$product_discount_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND quantity <= '" . (int)$discount_quantity[$product_id.'-'.$vendor_id] . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
-
+					if (isset($vendor) && ($vendor->num_rows > 0) && isset($product_2['vendor_id'])) { // Vendor discont 
+						$product_discount_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "cp_product_discount WHERE id = '" . (int)$vendor->row['id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND quantity <= '" . (int)$discount_quantity[$product_id.'-'.$vendor_id] . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
+					} else { // Product based discount till vendors offers something
+						$product_discount_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND quantity <= '" . (int)$discount_quantity[$product_id.'-'.$vendor_id] . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
+					}
 					if ($product_discount_query->num_rows) {
 						$price = $product_discount_query->row['price'];
 					}
@@ -270,17 +272,35 @@ class Cart {
 						$recurring = false;
 					}
 
+					if (isset($vendor) && ($vendor->num_rows > 0) && isset($product_2['vendor_id'])) {
+						$shipping        = $vendor->row['shipping'];
+						$weight          = ($vendor->row['weight'] + $option_weight) * $quantity;
+						$weight_class_id = $vendor->row['weight_class_id'];
+						$length          = $vendor->row['length'];
+						$width           = $vendor->row['width'];
+						$height          = $vendor->row['height'];
+						$length_class_id = $vendor->row['length_class_id'];
+						$minimum         = $vendor->row['minimum'];
+					} else {
+						$shipping        = $product_query->row['shipping'];
+						$weight          = ($product_query->row['weight'] + $option_weight) * $quantity;
+						$weight_class_id = $product_query->row['weight_class_id'];
+						$length          = $product_query->row['length'];
+						$width           = $product_query->row['width'];
+						$height          = $product_query->row['height'];
+						$length_class_id = $product_query->row['length_class_id'];
+						$minimum         = $product_query->row['minimum'];
+					}
+
 					$this->data[$key] = array(
 						'key'             => $key,
 						'product_id'      => $product_query->row['product_id'],
 						'name'            => $product_query->row['name'],
 						'model'           => $product_query->row['model'],
-						'shipping'        => $product_query->row['shipping'],
 						'image'           => $product_query->row['image'],
 						'option'          => $option_data,
 						'download'        => $download_data,
 						'quantity'        => $quantity,
-						'minimum'         => $product_query->row['minimum'],
 						'subtract'        => $product_query->row['subtract'],
 						'stock'           => $stock,
 						'price'           => ($price + $option_price),
@@ -288,13 +308,15 @@ class Cart {
 						'reward'          => $reward * $quantity,
 						'points'          => ($product_query->row['points'] ? ($product_query->row['points'] + $option_points) * $quantity : 0),
 						'tax_class_id'    => $product_query->row['tax_class_id'],
-						'weight'          => ($product_query->row['weight'] + $option_weight) * $quantity,
-						'weight_class_id' => $product_query->row['weight_class_id'],
-						'length'          => $product_query->row['length'],
-						'width'           => $product_query->row['width'],
-						'height'          => $product_query->row['height'],
-						'length_class_id' => $product_query->row['length_class_id'],
 						'recurring'       => $recurring,
+						'shipping'        => $shipping,
+						'weight'          => $weight,
+						'weight_class_id' => $weight_class_id,
+						'length'          => $length,         
+						'width'           => $width,         
+						'height'          => $height,        
+						'length_class_id' => $length_class_id,
+						'minimum'         => $minimum,
 						'vendor_id'				=> $vendor_id
 					);
 				} else {

@@ -1302,7 +1302,10 @@ class ControllerCatalogProduct extends Controller {
 		$this->load->model('design/layout');
 
 		$data['layouts'] = $this->model_design_layout->getLayouts();
-
+		$this->load->model('customerpartner/customerpartner');
+		if (isset($this->request->get['product_id'])){
+			$data['suppliers'] = $this->model_customerpartner_customerpartner->getSellerByProduct($this->request->get['product_id'],array());
+		}
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');

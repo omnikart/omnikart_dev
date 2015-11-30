@@ -17,11 +17,13 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 
     	$customerRights = $this->customer->getRights();
     
+    	$this->data['list'] = true;
+    	$this->data['allowedAddEdit'] = true;
+    	 
 		if($customerRights && !array_key_exists('productlist', $customerRights['rights'])) {
 			$this->response->redirect($this->url->link('account/account', '','SSL'));
+			$data['list'] = false;
 		}
-
-		$this->data['allowedAddEdit'] = true;
 		
 		if($customerRights && !array_key_exists('addproduct', $customerRights['rights'])) {
 			$this->data['allowedAddEdit'] = false;
@@ -362,7 +364,7 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 				$this->data['isMember'] = false;
 			}
       	}
-		
+	
 		$this->data['mp_ap'] = $this->config->get('marketplace_selleraddproduct');
 		
 		$this->data['column_left'] = $this->load->controller('common/column_left');
@@ -492,19 +494,23 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 	}
 
 	public function updateProduct(){
+		$json = array();
 		$this->load->model('account/customerpartner');
 		if (isset($this->request->post['selected']) && $this->validate()) {
 			$data = $this->request->post;
 			$this->model_account_customerpartner->updateProducts($data);
-			$this->response->setOutput(json_encode($this->request->post));
+			$json['success'] = "Successfully updated the selected products...!";
+			$this->response->setOutput(json_encode($json));
 		}	
 	}
 	public function disableProduct(){
+		$json = array();
 		$this->load->model('account/customerpartner');
 		if (isset($this->request->post['selected']) && $this->validate()) {
 			$data = $this->request->post;
 			$this->model_account_customerpartner->disableProducts($data);
-			$this->response->setOutput(json_encode($this->request->post));
+			$json['success'] = "Successfully disabled the selected products...!";
+			$this->response->setOutput(json_encode($json));
 		}
 	}	
 	private function validate() {

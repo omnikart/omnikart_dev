@@ -261,24 +261,33 @@
     <thead>
       <tr>
         <?php if ($column_gp_image) { ?>
-        <td><?php echo $column_gp_image; ?></td>
+        <td rowspan="2"><?php echo $column_gp_image; ?></td>
         <?php } ?>
         <?php if ($dbe) { ?>
-        	<td>Select</td>
+        	<td rowspan="2">Select</td>
         <?php } ?>
-        <?php if (isset(array_values($childs)[0]['attribute'][0]['attribute'])){ ?>
-        <?php foreach (array_values($childs)[0]['attributes'][0]['attribute'] as  $attribute) { ?>
-				<td class="sortt"><?php echo $attribute['name'];?><input type="hidden" value="<?php echo $attribute['attribute_id']; ?>" name="attribute"></td>
-		<?php } ?>
+        <?php if ($agnames) { ?>
+        	<?php foreach($agnames as $ag) { ?>
+				<td colspan="<?php echo count($ag['a']); ?>" align="center"><?php echo $ag['name']; ?></td>
+        	<?php } ?>
         <?php } ?>
         <?php if ($column_gp_price) { ?>
-        <td><?php echo $column_gp_price; ?></td>
+        <td rowspan="2"><?php echo $column_gp_price; ?></td>
         <?php } ?>
         <?php if ($column_gp_option) { ?>
-        <td><?php echo $column_gp_option; ?></td>
+        <td rowspan="2"><?php echo $column_gp_option; ?></td>
         <?php } ?>
-        <td><?php echo $column_gp_qty; ?></td>
-        <td></td>
+        <td rowspan="2"><?php echo $column_gp_qty; ?></td>
+        <td rowspan="2"></td>
+      </tr>
+        <tr>
+        <?php if ($agnames) { ?>
+        	<?php foreach($agnames as $ag) { ?>
+				<?php foreach($ag['a'] as $a) {  ?>
+        			<td class="sortt"><?php echo $a; ?></td>
+				<?php } ?>
+        	<?php } ?>
+        <?php } ?>
       </tr>
     </thead>
     <tbody>
@@ -290,13 +299,14 @@
         <?php if ($dbe) { ?>
         	<td class="gp-col-checkbox"><input type="checkbox" name="products[]" id="pcd-<?php echo $child['child_id']; ?>" value="<?php echo $child['child_id']; ?>"/><label for="pcd-<?php echo $child['child_id']; ?>"></label></td>
         <?php } ?>
-        <?php if (isset(array_values($childs)[0]['attribute'][0]['attribute'])){ ?>
-	    <?php foreach ($child['attributes'][0]['attribute'] as $attribute) { ?>
-			<td>
-				<?php echo $attribute['text']; ?>
-			</td>
-		<?php } ?>
-    	<?php } ?>
+        <?php  if ($agnames) {foreach($agnames as $key => $ag) { ?>
+        	<?php foreach($ag['a'] as $key2 => $a) {  ?>
+				<td>
+					<?php echo isset($child['attributes'][$key]['attribute'][$key2]['text'])?$child['attributes'][$key]['attribute'][$key2]['text']:''; ?>
+				</td>
+				
+			<?php } ?>
+    	<?php } } ?>
         
         <?php if ($column_gp_price) { ?>
         <td class="gp-col-price">
