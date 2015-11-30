@@ -38,6 +38,7 @@
       <ul class="list-unstyled col-md-4 col-sm-6">
       	<h2><?php echo $text_my_newsletter; ?></h2>
         <li><a href="<?php echo $newsletter; ?>"><i class="fa fa-newspaper-o"></i><?php echo $text_newsletter; ?></a></li>
+        <li><a href="<?php echo $product; ?>"><i class="fa fa-newspaper-o"></i>Product</a></li>
       </ul>
       <?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>

@@ -129,6 +129,25 @@ class ControllerCatalogCategory extends Controller {
 	}
 
 	protected function getList() {
+		if (isset($this->request->get['filter_name'])) {
+			$filter_name = $this->request->get['filter_name'];
+		} else {
+			$filter_name = null;
+		}
+		
+		if (isset($this->request->get['filter_status'])) {
+			$filter_status = $this->request->get['filter_status'];
+		} else {
+			$filter_status = null;
+		}
+		
+		if (isset($this->request->get['filter_parent'])) {
+			$filter_parent = $this->request->get['filter_parent'];
+		} else {
+			$filter_parent = null;
+		}
+		
+		
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
@@ -149,6 +168,18 @@ class ControllerCatalogCategory extends Controller {
 
 		$url = '';
 
+		if ($filter_name) {
+			$url .= '&filter_name=' . urlencode(html_entity_decode($filter_name, ENT_QUOTES, 'UTF-8'));
+		}
+				
+		if ($filter_parent) {
+			$url .= '&filter_parent=' . urlencode(html_entity_decode($filter_parent, ENT_QUOTES, 'UTF-8'));
+		}		
+		
+		if ($filter_status) {
+			$url .= '&filter_status=' . urlencode(html_entity_decode($filter_status, ENT_QUOTES, 'UTF-8'));
+		}
+		
 		if (isset($this->request->get['sort'])) {
 			$url .= '&sort=' . $this->request->get['sort'];
 		}
@@ -167,12 +198,14 @@ class ControllerCatalogCategory extends Controller {
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
 		);
-
+        $data['token']=$this->session->data['token'];
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
 			'href' => $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url, 'SSL')
 		);
 
+		$data['entry_name'] = $this->language->get('entry_name');
+		
 		$data['add'] = $this->url->link('catalog/category/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$data['delete'] = $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$data['repair'] = $this->url->link('catalog/category/repair', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -180,6 +213,9 @@ class ControllerCatalogCategory extends Controller {
 		$data['categories'] = array();
 
 		$filter_data = array(
+			'filter_name' => $filter_name,
+			'filter_parent' => $filter_parent,
+			'filter_status' => $filter_status,				
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -201,7 +237,6 @@ class ControllerCatalogCategory extends Controller {
 		}
 
 		$data['heading_title'] = $this->language->get('heading_title');
-
 		$data['text_list'] = $this->language->get('text_list');
 		$data['text_no_results'] = $this->language->get('text_no_results');
 		$data['text_confirm'] = $this->language->get('text_confirm');
@@ -214,7 +249,7 @@ class ControllerCatalogCategory extends Controller {
 		$data['button_edit'] = $this->language->get('button_edit');
 		$data['button_delete'] = $this->language->get('button_delete');
 		$data['button_rebuild'] = $this->language->get('button_rebuild');
-
+        
 		if (isset($this->error['warning'])) {
 			$data['error_warning'] = $this->error['warning'];
 		} else {
@@ -272,11 +307,13 @@ class ControllerCatalogCategory extends Controller {
 
 		$data['sort'] = $sort;
 		$data['order'] = $order;
-
+		$data['filter_name'] = $filter_name;
+		$data['filter_status'] = $filter_status;
+		$data['filter_parent'] = $filter_parent;
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
-
+         
 		$this->response->setOutput($this->load->view('catalog/category_list.tpl', $data));
 	}
 

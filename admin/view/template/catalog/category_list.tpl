@@ -29,6 +29,43 @@
         <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
       </div>
       <div class="panel-body">
+         <div class="well">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label" for="input-name">Category Name</label>
+                <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
+              </div>
+            </div>
+            <div class="col-sm-4">
+            	<div class="form-group">
+                	<label class="control-label" for="input-name">Parent</label>
+                	<input type="text" name="filter_parent" value="<?php echo $filter_parent; ?>" placeholder="parent name" id="input-name" class="form-control" />
+              	</div>
+            </div>
+            <div class="col-sm-4">
+             <div class="form-group">
+                <label class="control-label" for="input-status">Status</label>
+                <select name="filter_status" id="input-status" class="form-control">
+                  <option value="*"></option>
+                  <?php if ($filter_status) { ?>
+                  <option value="1" selected="selected">Enabled</option>
+                  <?php } else { ?>
+                  <option value="1">Enabled</option>
+                  <?php } ?>
+                  <?php if (!$filter_status && !is_null($filter_status)) { ?>
+                  <option value="0" selected="selected">disabled</option>
+                  <?php } else { ?>
+                  <option value="0">disabled</option>
+                  <?php } ?>
+                </select>
+              </div>
+              <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> filter</button>
+            </div>
+          </div>
+        </div>
+       
+        
         <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-category">
           <div class="table-responsive">
             <table class="table table-bordered table-hover">
@@ -79,4 +116,73 @@
     </div>
   </div>
 </div>
+
+  <script type="text/javascript"><!--
+$('#button-filter').on('click', function() {
+	var url = 'index.php?route=catalog/category&token=<?php echo $token; ?>';
+
+	var filter_name = $('input[name=\'filter_name\']').val();
+
+	if (filter_name) {
+		url += '&filter_name=' + encodeURIComponent(filter_name);
+	}
+
+	var filter_parent = $('input[name=\'filter_parent\']').val();
+
+	if (filter_parent) {
+		url += '&filter_parent=' + encodeURIComponent(filter_parent);
+	}
+	var filter_status = $('select[name=\'filter_status\']').val();
+
+	if (filter_status != '*') {
+		url += '&filter_status=' + encodeURIComponent(filter_status);
+	}
+
+	location = url;
+});
+//--></script>
+
+
+<script type="text/javascript"><!--
+$('input[name=\'filter_name\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['category_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'filter_name\']').val(item['label']);
+	}
+});
+
+$('input[name=\'filter_parent\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['category_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'filter_parent\']').val(item['label']);
+	}
+});
+--></script>
+
 <?php echo $footer; ?>
