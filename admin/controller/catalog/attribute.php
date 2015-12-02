@@ -111,6 +111,17 @@ class ControllerCatalogAttribute extends Controller {
 	}
 
 	protected function getList() {
+		if (isset($this->request->get['filter_name'])) {
+			$filter_name = $this->request->get['filter_name'];
+		} else {
+			$filter_name = null;
+		}
+		if (isset($this->request->get['filter_group'])) {
+			$filter_group = $this->request->get['filter_group'];
+		} else {
+			$filter_group = null;
+		}
+	
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
@@ -130,7 +141,16 @@ class ControllerCatalogAttribute extends Controller {
 		}
 
 		$url = '';
-
+		if (isset($this->request->get['filter_name'])) {
+			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+		}
+		
+		if (isset($this->request->get['filter_group'])) {
+			$url .= '&filter_group=' . urlencode(html_entity_decode($this->request->get['filter_group'], ENT_QUOTES, 'UTF-8'));
+		}
+		
+		
+		
 		if (isset($this->request->get['sort'])) {
 			$url .= '&sort=' . $this->request->get['sort'];
 		}
@@ -157,10 +177,12 @@ class ControllerCatalogAttribute extends Controller {
 
 		$data['add'] = $this->url->link('catalog/attribute/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$data['delete'] = $this->url->link('catalog/attribute/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-
+		$data['token'] =  $this->session->data['token'];
 		$data['attributes'] = array();
 
 		$filter_data = array(
+	  		'filter_name' => $filter_name,
+			'filter_group' => $filter_group,
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -254,6 +276,9 @@ class ControllerCatalogAttribute extends Controller {
 
 		$data['sort'] = $sort;
 		$data['order'] = $order;
+		$data['filter_name'] = $filter_name;
+		$data['filter_group'] = $filter_group;
+		
 
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
