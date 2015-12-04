@@ -11,8 +11,12 @@ class ModelModuleEnquiry extends Model {
 		  	PRIMARY KEY (`id`)a
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1") ;
 	}
-	 public function getEnquiry($data = array()){
+	 public function getEnquiries($data = array()){ // renamed from getEnquiry to getEnquiries
 	 	$query = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry` WHERE status <> '0' ORDER BY date DESC LIMIT " . (int)$data['start'] . "," . (int)$data['limit']);
+	 	return $query->rows;
+	 }
+	 public function getEnquiry($id){ // added New function
+	 	$query = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry` WHERE id = '" . (int)$id."'");
 	 	return $query->rows;
 	 }
 	 public function getTotalEnquiries($data = array()){
@@ -31,5 +35,4 @@ class ModelModuleEnquiry extends Model {
 	 		$query = $this->db->query("UPDATE `".DB_PREFIX."enquiry` SET status = '".(int)$select['status']."' WHERE id = '".(int)$key."'");
 	 	}
 	 }
-	 
 }
