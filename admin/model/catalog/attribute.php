@@ -52,12 +52,8 @@ class ModelCatalogAttribute extends Model {
 			$sql .= " AND ad.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
 		}
 
-		if (!empty($data['filter_attribute_group_name'])) {
-			$sql .= " AND a.attribute_group_id IN ('SELECT GROUP_CONCAT(attribute_group_id ORDER BY attribute_group_id SEPARATOR ',') " . DB_PREFIX . "attribute_group_description WHERE name LIKE '" . $this->db->escape($data['filter_attribute_group_name']) . "%'";
-		}
-		
-		if (!empty($data['filter_attribute_group_id'])) {
-			$sql .= " AND a.attribute_group_id = '" . $this->db->escape($data['filter_attribute_group_id']) . "'";
+		if (!empty($data['filter_group'])) {
+			$sql .= " AND a.attribute_group_id IN (SELECT agd2.attribute_group_id FROM " . DB_PREFIX . "attribute_group_description agd2 WHERE agd2.name LIKE '" . $this->db->escape($data['filter_group']) . "%') ";
 		}
 
 		$sort_data = array(
