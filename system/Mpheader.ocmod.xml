@@ -612,7 +612,7 @@
     </operation>
     </file>
 
-    <file path="catalog/controller/checkout/confirm.php,catalog/controller/checkout/confirm_onepage.php">
+    <file path="catalog/controller/checkout/confirm.php">
     <operation>
     <search><![CDATA[
     $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());

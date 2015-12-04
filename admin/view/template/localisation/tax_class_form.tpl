@@ -65,22 +65,13 @@
                     <?php } ?>
                     <?php } ?>
                   </select></td>
-                <td class="text-left"><select name="tax_rule[<?php echo $tax_rule_row; ?>][based]" class="form-control">
-                    <?php  if ($tax_rule['based'] == 'shipping') { ?>
-                    <option value="shipping" selected="selected"><?php echo $text_shipping; ?></option>
-                    <?php } else { ?>
-                    <option value="shipping"><?php echo $text_shipping; ?></option>
-                    <?php } ?>
-                    <?php  if ($tax_rule['based'] == 'payment') { ?>
-                    <option value="payment" selected="selected"><?php echo $text_payment; ?></option>
-                    <?php } else { ?>
-                    <option value="payment"><?php echo $text_payment; ?></option>
-                    <?php } ?>
-                    <?php  if ($tax_rule['based'] == 'store') { ?>
-                    <option value="store" selected="selected"><?php echo $text_store; ?></option>
-                    <?php } else { ?>
-                    <option value="store"><?php echo $text_store; ?></option>
-                    <?php } ?>
+                <td class="text-left"><select name="tax_rule[<?php echo $tax_rule_row; ?>][based]" class="form-control" id="tax-address">
+                    <option value="shipping" <?php  echo (($tax_rule['based']=='shipping')?'selected="selected"':''); ?>><?php echo $text_shipping; ?></option>
+                    <option value="payment" <?php  echo (($tax_rule['based']=='payment')?'selected="selected"':''); ?>><?php echo $text_payment; ?></option>
+                    <option value="store" <?php  echo (($tax_rule['based']=='store')?'selected="selected"':''); ?>><?php echo $text_store; ?></option>
+                    <option value="sanesa" <?php  echo (($tax_rule['based']=='sanesa')?'selected="selected"':''); ?>>Shipping and Seller Addresses</option>
+                    <option value="seller" <?php  echo (($tax_rule['based']=='seller')?'selected="selected"':''); ?>>Seller Addresses</option>
+					<option value="saesa" <?php  echo (($tax_rule['based']=='saesa')?'selected="selected"':''); ?>>Shipping and Seller Addresses Same</option>                    
                   </select></td>
                 <td class="text-left"><input type="text" name="tax_rule[<?php echo $tax_rule_row; ?>][priority]" value="<?php echo $tax_rule['priority']; ?>" placeholder="<?php echo $entry_priority; ?>" class="form-control" /></td>
                 <td class="text-left"><button type="button" onclick="$('#tax-rule-row<?php echo $tax_rule_row; ?>').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>

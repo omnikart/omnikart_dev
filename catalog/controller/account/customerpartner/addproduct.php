@@ -18,7 +18,13 @@ class ControllerAccountCustomerpartnerAddproduct extends Controller {
 		$data['add'] = false;
 		$data['list'] = false;
 		
-		if ($customerRights && array_key_exists('addproduct', $customerRights['rights']) && ($this->model_account_customerpartner->getProductEditAccess($this->request->get['product_id'],0))){
+		if (isset($this->request->get['product_id'])) {
+			$product_id = $this->request->get['product_id'];
+		} else {
+			$product_id = 0;
+		}
+		
+		if ($customerRights && array_key_exists('addproduct', $customerRights['rights']) && (!($product_id) || $this->model_account_customerpartner->getProductEditAccess($product_id,0) ) ){
 			$data['add'] = true; 
 		}
 		
@@ -515,7 +521,6 @@ class ControllerAccountCustomerpartnerAddproduct extends Controller {
 		} else {
 			$data['subtract'] = 1;
 		}
-
 		if (isset($this->request->post['sort_order'])) {
 			$data['sort_order'] = $this->request->post['sort_order'];
 		} elseif (!empty($product_info)) {

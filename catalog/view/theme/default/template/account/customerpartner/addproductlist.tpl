@@ -109,7 +109,7 @@
                   <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['thumb']; ?>" style="padding: 1px; border: 1px solid #DDDDDD;" class="img-thumbnail" />
                   &nbsp;
 	              <a href="index.php?route=product/product&product_id=<?php echo $product['product_id']; ?>"> <?php echo $product['name']; ?></a>
-                  <input type="hidden" name="products[<?php echo $product['product_id']; ?>][id]" value="<?php echo $product['product_id']; ?>" />
+                  <input type="hidden" name="products[<?php echo $product['product_id']; ?>][product_id]" value="<?php echo $product['product_id']; ?>" />
                   
                 </td>
                 <td class="text-left"><?php echo $product['model']; ?></td>

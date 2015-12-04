@@ -94,7 +94,26 @@ class ControllerCheckoutConfirmOnepage extends Controller {
             if ($this->customer->isLogged()) {
                 $this->load->model('account/customer');
 
-                $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+								/*
+								To order by company name not by sub user
+								*/
+								if($this->config->get('marketplace_status')) {
+									 $this->load->model('account/customerpartner');
+									 $sellerId = $this->model_account_customerpartner->isSubUser($this->customer->getId());
+									 if($sellerId) {
+												$sellerId = $sellerId;
+									 } else {
+												$sellerId = $this->customer->getId();
+									 }
+									 $customer_info = $this->model_account_customer->getCustomer($sellerId);
+									 $order_data['customer_id'] = $sellerId;
+								} else {
+										$customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+										$order_data['customer_id'] = $this->customer->getId();
+								}
+								/*
+								end here
+								*/
 
                 $order_data['customer_id'] = $this->customer->getId();
                 $order_data['customer_group_id'] = $customer_info['customer_group_id'];
@@ -349,7 +368,7 @@ class ControllerCheckoutConfirmOnepage extends Controller {
         /* check exit country and zone */
 
         if ($this->customer->isLogged()) {
-            $check_address = $this->model_checkout_checkout_onepage->calculate_shipping($mmos_checkout, $this->session->data["shipping_address"]);
+            $check_address = $this->model_checkout_checkout_onepage->calculate_shipping($mmos_checkout, $this->session->data['shipping_address']);
         } else {
             if ($this->session->data['account'] == 'guest') {
                 $check_address = $this->model_checkout_checkout_onepage->calculate_shipping($mmos_checkout, $this->session->data['guest']['shipping']);

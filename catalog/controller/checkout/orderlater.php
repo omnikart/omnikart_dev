@@ -131,6 +131,15 @@ class ControllerCheckoutOrderlater extends Controller {
 		$this->response->setOutput(json_encode($json));		
 		
 	}
+	public function removeproduct(){
+		$this->checkuser();
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+			$this->load->model("account/customerpartner");
+			$this->model_account_customerpartner->removeproduct($this->request->post);
+		}
+		$this->response->redirect($this->url->link('checkout/orderlater','', 'SSL'));
+	}
+	
 	private function checkuser(){
 		if (!$this->customer->isLogged()) {
 				

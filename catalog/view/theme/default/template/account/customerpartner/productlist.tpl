@@ -92,42 +92,42 @@
       </div>
       <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-product">
         <div class="table-responsive">
-          <table class="table table-bordered table-hover">
+          <table class="table table-bordered table-hover" id="product-list">
             <thead>
               <tr>
                 <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
 
-                <td class="text-left"><?php if ($sort == 'pd.name') { ?>
+                <td class="text-left" style="min-width:170px"><?php if ($sort == 'pd.name') { ?>
                   <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo str_replace(' ', '', $column_name); ?></a>
                   <?php } else { ?>
                   <a href="<?php echo $sort_name; ?>"><?php echo str_replace(' ', '', $column_name); ?></a>
                   <?php } ?></td>
-                <td class="text-left"><?php if ($sort == 'p.model') { ?>
+                <td class="text-left" style="min-width:100px"><?php if ($sort == 'p.model') { ?>
                   <a href="<?php echo $sort_model; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_model; ?></a>
                   <?php } else { ?>
                   <a href="<?php echo $sort_model; ?>"><?php echo $column_model; ?></a>
                   <?php } ?></td>
-                <td class="text-left" data-toggle="tooltip" data-original-title="Please mention price for one/minimum quantity of product. If you offer quantity based discount please edit the product using the button in an action and edit 'discounts' tab"><?php if ($sort == 'p.price') { ?>
+                <td class="text-left" style="min-width:110px" data-toggle="tooltip" data-original-title="Please mention price for one/minimum quantity of product. If you offer quantity based discount please edit the product using the button in an action and edit 'discounts' tab"><?php if ($sort == 'p.price') { ?>
                   <a href="<?php echo $sort_price; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_price; ?></a>
                   <?php } else { ?>
                   <a href="<?php echo $sort_price; ?>"><?php echo $column_price; ?></a>
                   <?php } ?></td>
-                <td class="text-right"><?php if ($sort == 'p.quantity') { ?>
+                <td class="text-right" style="min-width:110px"><?php if ($sort == 'p.quantity') { ?>
                   <a href="<?php echo $sort_quantity; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_quantity; ?></a>
                   <?php } else { ?>
                   <a href="<?php echo $sort_quantity; ?>"><?php echo $column_quantity; ?></a>
                   <?php } ?></td>
-				<td class="text-right" data-toggle="tooltip" data-original-title="Minimum Order Quantity">(MOQ)</td>                  
-                <td class="text-right">Stock Status</td> 
-                <td class="text-left"><?php if ($sort == 'p.status') { ?>
+				<td class="text-right" style="min-width:90px" data-toggle="tooltip" data-original-title="Minimum Order Quantity">(MOQ)</td>                  
+                <td class="text-right" style="min-width:100px" data-toggle="tooltip" title="" data-original-title="Status shown when a product is out of stock">Stock Status</td> 
+                <td class="text-left" style="min-width:110px"><?php if ($sort == 'p.status') { ?>
                   <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
                   <?php } else { ?>
                   <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
                   <?php } ?></td>
 
-                <td class="text-right"><?php echo $column_sold; ?></td>
-                <td class="text-right"><?php echo $column_earned; ?></td>
-                <td class="text-right"><?php echo $column_action; ?></td>
+                <td class="text-right" style="min-width:90px"><?php echo $column_sold; ?></td>
+                <td class="text-right" style="min-width:70px"><?php echo $column_earned; ?></td>
+                <td width="1" class="text-right"><?php echo $column_action; ?></td>
               </tr>
             </thead>
             <tbody>
@@ -147,25 +147,33 @@
                   <?php }else{ ?>
                     <?php echo $product['name']; ?>
                   <?php } ?>
-                  <input type="hidden" name="products[<?php echo $product['product_id']; ?>][id]" value="<?php echo $product['product_id']; ?>" />
+                  <input type="hidden" name="products[<?php echo $product['product_id']; ?>][id]" value="<?php echo $product['id']; ?>" />
+                  <input type="hidden" name="products[<?php echo $product['product_id']; ?>][product_id]" value="<?php echo $product['product_id']; ?>" />
                   
                 </td>
                 <td class="text-left"><?php echo $product['model']; ?></td>
                 <td class="text-left">
-                	<input type="text" style="width:70px;" class="form-control" name="products[<?php echo $product['product_id']; ?>][price]" value="<?php echo $product['price']; ?>"/>
+                	<input type="text" class="form-control" name="products[<?php echo $product['product_id']; ?>][price]" value="<?php echo $product['price']; ?>"/>
                 </td>
                 <td class="text-right">
-				  <input type="text" style="width:50px;"  name="products[<?php echo $product['product_id']; ?>][quantity]" class="form-control <?php if ($product['quantity'] <= 0) { echo "alert-danger"; } elseif ($product['quantity'] <= 5) { echo "alert-warning"; } else { echo "alert-success"; } ?>" value="<?php echo $product['quantity']; ?>"/>                  
+				  <input type="text" name="products[<?php echo $product['product_id']; ?>][quantity]" class="form-control <?php if ($product['quantity'] <= 0) { echo "alert-danger"; } elseif ($product['quantity'] <= 5) { echo "alert-warning"; } else { echo "alert-success"; } ?>" value="<?php echo $product['quantity']; ?>"/>                  
               	</td>
 				<td class="text-right">
-				  <input type="text" style="width:50px;"  name="products[<?php echo $product['product_id']; ?>][minimum]" class="form-control" value="<?php echo $product['minimum']; ?>"/>                  
+				  <input type="text" name="products[<?php echo $product['product_id']; ?>][minimum]" class="form-control" value="<?php echo $product['minimum']; ?>"/>                  
               	</td>              	
-				<td class="text-right">
-				  <?php echo $product['stock_status']; ?>                  
+				<td class="text-right" >
+					<select name="products[<?php echo $product['product_id']; ?>][stock_status_id]" id="input-stock-status" class="form-control">
+					<?php foreach ($stock_statuses as $stock_status) { ?>
+						<?php if ($stock_status['stock_status_id'] == $product['stock_status_id']) { ?>
+						<option value="<?php echo $stock_status['stock_status_id']; ?>" selected="selected"><?php echo $stock_status['name']; ?></option>
+						<?php } else { ?>
+						<option value="<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></option>
+						<?php } ?>
+					<?php } ?>
+					</select>
               	</td>
-              	
                 <td class="text-left">
-                	<select class="form-control" style="width:70px;" name="products[<?php echo $product['product_id']; ?>][status]">
+                	<select class="form-control" name="products[<?php echo $product['product_id']; ?>][status]">
                 		<option value="1" <?php echo $product['status'] ? 'selected' : '' ; ?>>Enabled</option>
                 		<option value="0" <?php echo $product['status'] ? '' : 'selected' ; ?>>Disabled</option>
                 	</select>

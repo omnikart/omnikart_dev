@@ -341,6 +341,7 @@ class ModelAccountCustomerpartner extends Model {
 		if ($query->num_rows) {
 			return array(
 				'product_id'       => $query->row['product_id'],//
+				'id'       				 => $query->row['id'],//
 				'name'             => $query->row['name'],//
 				'description'      => $query->row['description'],//
 				'meta_title'       => $query->row['meta_title'],//
@@ -761,7 +762,7 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	public function editProduct($data,$sellerId) {
-
+		
 		if($sellerId) {
 			$sellerId = $sellerId;
 		} else {
@@ -775,6 +776,9 @@ class ModelAccountCustomerpartner extends Model {
 		// $data['status'] = $this->config->get('marketplace_productapprov');		
 
 		$product_id = $this->request->get['product_id'];
+		
+		$this->load->model('tool/nitro');
+    $this->model_tool_nitro->clearProductCache($product_id);
 		
 		if (array_key_exists('addproduct', $customerRights['rights']) && ($this->getProductEditAccess($product_id, $sellerId))){
 			$add = true; 
@@ -859,37 +863,37 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	public function updateProducts($data,$sellerId = 0){
-		if (!$sellerId) $sellerId = $this->getuserseller();
+    if (!$sellerId) $sellerId = $this->getuserseller();
 		foreach($data['products'] as $product) {
-			if (in_array($product['id'],$data['selected'])){
-				$this->db->query("UPDATE `".DB_PREFIX."customerpartner_to_product` SET status = '".(int)$product['status']."',price = '".(float)$product['price']."',quantity = '".(int)$product['quantity']."',minimum = '".(int)$product['minimum']."' WHERE product_id = '".(int)$product['id']."' AND customer_id = '".(int)$sellerId."'");
-				echo "UPDATE `".DB_PREFIX."customerpartner_to_product` SET status = '".(int)$product['status']."',price = '".(float)$product['price']."',quantity = '".(int)$product['quantity']."',minimum = '".(int)$product['minimum']."' WHERE product_id = '".(int)$product['id']."' AND customer_id = '".(int)$sellerId."'";
+			if (in_array($product['product_id'],$data['selected'])){
+				$this->load->model('tool/nitro');
+				$this->model_tool_nitro->clearProductCache($product['product_id']);
+				$this->db->query("UPDATE `".DB_PREFIX."customerpartner_to_product` SET status = '".(int)$product['status']."', price = '".(float)$product['price']."', quantity = '".(int)$product['quantity']."', minimum = '".(int)$product['minimum']."', stock_status_id = '".(int)$product['stock_status_id']."' WHERE product_id = '".(int)$product['product_id']."' AND id = '".(int)$product['id']."' AND customer_id = '".(int)$sellerId."'");
 			}			
 		}
 	}
 	public function addProducts($data,$sellerId = 0){
 		if (!$sellerId) $sellerId = $this->getuserseller();
 		foreach($data['products'] as $product) {
-			if (in_array($product['id'],$data['selected'])){
-				$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_to_product SET customer_id = '".$sellerId."', product_id = '".$product['id']."', price = '".(float)$product['price']."', quantity = '".(int)$product['quantity']."', status = '0', sort_order = '1'");
+			if (in_array($product['product_id'],$data['selected'])){
+				$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_to_product SET customer_id = '".$sellerId."', product_id = '".$product['product_id']."', price = '".(float)$product['price']."', quantity = '".(int)$product['quantity']."', status = '0', sort_order = '1'");
 			}
 		}
 	}
 	public function disableProducts($data,$sellerId = 0){
 		if (!$sellerId) $sellerId = $this->getuserseller();
 		foreach($data['products'] as $product) {
-			if (in_array($product['id'],$data['selected'])){
-				$this->db->query("UPDATE ".DB_PREFIX."customerpartner_to_product SET status = '0' WHERE product_id = '".(int)$product['id']."' AND customer_id = '".(int)$sellerId."'");
+			if (in_array($product['product_id'],$data['selected'])){
+				$this->load->model('tool/nitro');
+				$this->model_tool_nitro->clearProductCache($product['product_id']);				
+				$this->db->query("UPDATE ".DB_PREFIX."customerpartner_to_product SET status = '0' WHERE product_id = '".(int)$product['product_id']."' AND id = '".(int)$product['id']."' AND customer_id = '".(int)$sellerId."'");
 			}
 		}
 	}
 	public function productQuery($sql,$data,$value){
-
 		$implode = array();
 		$mp_allowproductcolumn = $this->config->get('marketplace_allowedproductcolumn');
-		
 		$fields = array('model','upc','ean','jan','isbn','mpn','location','subtract','manufacturer_id','points','sort_order','tax_class_id','sku','price','quantity','minimum','stock_status_id','date_available','shipping','weight','weight_class_id','length','width','height','length_class_id','status');
-
 		foreach ($fields as $field){
 			if (isset($data[$field])) {
 				$implode[] = $field." = '" . $this->db->escape($data[$field]) . "'";
@@ -1536,7 +1540,7 @@ class ModelAccountCustomerpartner extends Model {
 		return(count($sql->rows));
 	}
 
-	public function getSellerOrders($data = array(),$seller_id){
+	public function getSellerOrders($data = array(),$seller_id = 0){
 		if($seller_id) {
 			$seller_id = $seller_id;
 		} else {
@@ -2331,6 +2335,17 @@ class ModelAccountCustomerpartner extends Model {
 		$query = $this->db->query("UPDATE ".DB_PREFIX."saved_cart SET ". implode(',',$sql) . " WHERE id = '". $data['id'] ."' AND customer_id = '".$customer_id."'");
 		
 	}
+	
+	public function removeproduct($data) {
+		if (isset($data['id'])) {
+			$current = $this->db->query("SELECT * FROM ".DB_PREFIX."saved_cart WHERE id = '".(int)$data['id']."' AND customer_id = '".(int)$this->customer->getId()."'");
+			if ($current->num_rows > 0) {
+						
+				
+			}
+		}
+	}
+	
 	public function deletecart($id) {
 		$customer_id = $this->customer->getId();
 		$this->db->query("DELETE FROM ".DB_PREFIX."saved_cart WHERE customer_id = '".$customer_id."' AND id = '".$id."'");
@@ -2442,6 +2457,7 @@ class ModelAccountCustomerpartner extends Model {
 	
 		return $options['lowercase'] ? mb_strtolower($str, 'UTF-8') : $str;
 	}
+	
 	
 	
 }

@@ -1349,3 +1349,12 @@ input.btn {padding: 7.5px 12px;}
  }
 
 .ans {position:absolute;top:100%;right:0;}
+
+.table-responsive>.fixed-column {
+    position: absolute;
+    display: inline-block;
+    width: auto;
+    border-right: 1px solid #ddd;
+    background:#fff;
+}
+

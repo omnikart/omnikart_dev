@@ -365,6 +365,11 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 			}
       	}
 	
+
+      	$this->load->model('localisation/stock_status');
+      	
+      	$this->data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses();
+      	
 		$this->data['mp_ap'] = $this->config->get('marketplace_selleraddproduct');
 		
 		$this->data['column_left'] = $this->load->controller('common/column_left');

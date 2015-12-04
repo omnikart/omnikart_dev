@@ -3,15 +3,15 @@
 class ControllerCheckoutCheckoutOnepage extends Controller {
 
     public function index($render_content = false) {
-        $this->load->model('checkout/checkout_onepage');
-
+    
+    $this->load->model('checkout/checkout_onepage');
 		
-		if ($this->config->get('config_secure') == '1' && !(isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1')))) {
-			  $urls = $this->url->link('checkout/checkout_onepage', '', true);
-					
-			   $this->response->redirect($urls);
-		
-		}
+				if ($this->config->get('config_secure') == '1' && !(isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1')))) {
+						$urls = $this->url->link('checkout/checkout_onepage', '', true);
+							
+						 $this->response->redirect($urls);
+				
+				}
 		
         $redirect = $this->model_checkout_checkout_onepage->validate_checkout();
 

@@ -71,7 +71,7 @@ class ModelCatalogProduct extends Model {
 				'manufacturer_id'  => $query->row['manufacturer_id'],
 				'manufacturer'     => $query->row['manufacturer'],
 				'original_price'	 => $query->row['price'],
-				'price'            => (isset($query->row['cprice'])?$query->row['cprice']:($query->row['price'] ? $query->row['price'] : '0')),
+				'price'            => ((isset($query->row['cprice']) && $query->row['cprice'])?$query->row['cprice']:($query->row['price'] ? $query->row['price'] : '0')),
 				'special'          => $query->row['special'],
 				'reward'           => $query->row['reward'],
 				'points'           => $query->row['points'],
@@ -92,7 +92,7 @@ class ModelCatalogProduct extends Model {
 				'type'             => $query->row['type'],
 				'date_added'       => $query->row['date_added'],
 				'date_modified'    => $query->row['date_modified'],
-				'viewed'           => $query->row['viewed']
+				'viewed'           => $query->row['viewed'],
 			);
 		} else {
 			return false;
@@ -248,6 +248,12 @@ class ModelCatalogProduct extends Model {
 		}
 
 		return $product_data;
+	}
+
+	public function getProductAddress($id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_product_to_address WHERE id = '" . (int)$id . "'");
+		if ($query->num_rows > 0) return $query->rows;
+		else return false;
 	}
 
 	public function getProductSpecials($data = array()) {

@@ -83,8 +83,11 @@
 							<?php foreach ($cart['products'] as $key1 => $product) { ?>
 								<li class="form-group">
 						            <label class="col-sm-8 control-label" min="0" for="input-firstname"><?php echo $product['name']; ?></label>
-						            <div class="col-sm-4">
+						            <div class="col-sm-4 input-group">
 						            	<input type="number" name="product[<?php echo $key1; ?>]" value="<?php echo $product['quantity']; ?>" placeholder="First Name" id="input-firstname" class="form-control">
+										<div class="input-group-btn">
+											<button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default removeproduct"><i class="fa fa-times"></i></button>
+										</div>		            	
 	                          		</div>
 								</li>
 							<?php } ?>
