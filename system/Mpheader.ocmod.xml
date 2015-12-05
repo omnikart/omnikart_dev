@@ -256,26 +256,41 @@
 						<li class="dropdown"><a href="<?php echo $account; ?>"
 												]]></search>
 												<add position="before"><![CDATA[
-						<?php if ($logged AND ($rights || $chkIsPartner)) { ?>
-							<li class="dropdown"><a href="<?php echo $menusell; ?>" title="<?php echo $menusell; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="hidden-lg"><i class="fa fa-users"></i></span>
-							<span class="hidden-xs hidden-sm hidden-md"><?php echo $text_sell_header; ?></span> <span class="caret"></span></a>
-									<ul class="dropdown-menu dropdown-menu-right">
-											<li><a href="<?php echo $mp_profile; ?>"><?php echo $text_my_profile; ?></a></li>
-											<li><a href="<?php echo $mp_dashboard; ?>"><?php echo $text_dashboard; ?></a></li>
-											<li><a href="<?php echo $mp_orderhistory; ?>"><?php echo $text_orderhistory; ?></a></li>
-											<li><a href="<?php echo $mp_transaction; ?>"><?php echo $text_transaction; ?></a></li>
-											<li><a href="<?php echo $mp_productlist; ?>"><?php echo $text_productlist; ?></a></li>
-											<li><a href="<?php echo $mp_download; ?>"><?php echo $text_download; ?></a></li>
-											<li><a href="<?php echo $mp_add_shipping_mod; ?>"><?php echo $text_wkshipping; ?></a></li>
-											<li role="presentation" class="divider"></li>
+						<?php if ($logged && ($rights || $chkIsPartner)) { ?>
+							<li class="dropdown"><a href="<?php echo $menusell; ?>" title="<?php echo $menusell; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="top-i"><i class="fa fa-th"></i></span><span class="hidden-sm hidden-xs hidden-md top-i">Menu</span><span class="caret"></span></a>
+									<ul class="dropdown-menu multi-column columns-2 dropdown-menu-right" style="width:300px;">
+											<div class="row">
+												<div class="col-sm-6">
+													<ul class="multi-column-dropdown" >
+															<li><a href="<?php echo $mp_profile; ?>"><?php echo $text_my_profile; ?></a></li>
+															<li><a href="<?php echo $mp_dashboard; ?>"><?php echo $text_dashboard; ?></a></li>
+															<li><a href="<?php echo $mp_orderhistory; ?>"><?php echo $text_orderhistory; ?></a></li>
+															<li><a href="<?php echo $mp_transaction; ?>"><?php echo $text_transaction; ?></a></li>
+															<li><a href="<?php echo $mp_productlist; ?>"><?php echo $text_productlist; ?></a></li>
+															<li><a href="<?php echo $mp_download; ?>"><?php echo $text_download; ?></a></li>
+															<li><a href="<?php echo $mp_add_shipping_mod; ?>"><?php echo $text_wkshipping; ?></a></li>
+															<li role="presentation" class="divider"></li>
+													</ul>
+												</div>
+												<div class="multi-column-dropdown">
+													<ul id="dashboard" class="list-unstyled">
+														<?php if (in_array('db',$rights)) {?>
+															<li><a href="<?php echo $b_db; ?>"><?php echo $t_db; ?></a></li>
+															<li><a href="<?php echo $b_so; ?>"><?php echo $t_so; ?></a></li>
+															<?php if (isset($modules['cd'])) {?>
+																<li><button id="button-pcd" class="btn">Add Products to DashBoard</button></li>
+															<?php } ?>
+														<?php } ?>
+													</ul>
+												</div>
+											</div>											
 									</ul>
 							</li>
 						<?php } else { ?>
-							<li class="dropdown"><a href="<?php echo $menusell; ?>"><span class="hidden-lg"><i class="fa fa-users"></i></span><span class="hidden-xs hidden-sm hidden-md"><?php echo $text_sell_header; ?></span> </a></li>
+							<li class="dropdown"><a href="<?php echo $menusell; ?>"><span class="hidden-sm hidden-xs hidden-md top-i">Sell Online</span></a></li>
 						<?php } ?>
-						
 						<?php if ($logged && $rights) { ?>
-						<li class="dropdown"><a href="<?php echo $menu_buy; ?>" title="<?php echo $menu_buy; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="hidden-lg"><i class="fa fa-tachometer"></i></span></span><span class="hidden-xs hidden-sm hidden-md">Dashboard</span> <span class="caret"></span></a>
+						<li class="dropdown hidden"><a href="<?php echo $menu_buy; ?>" title="<?php echo $menu_buy; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="top-i"><i class="fa fa-bar-chart"></i></span></a>
 								<ul class="dropdown-menu dropdown-menu-right" id="dashboard">
 									<?php if (in_array('db',$rights)) {?>
 										<li><a href="<?php echo $b_db; ?>"><?php echo $t_db; ?></a></li>

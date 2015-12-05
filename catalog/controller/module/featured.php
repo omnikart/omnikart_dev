@@ -1,6 +1,8 @@
 <?php
 class ControllerModuleFeatured extends Controller {
 	public function index($setting) {
+		static $module = 0;
+		
 		$this->load->language('module/featured');
 
 		$data['heading_title'] = $setting['name'];
@@ -14,7 +16,8 @@ class ControllerModuleFeatured extends Controller {
 		$this->load->model('catalog/product');
 
 		$this->load->model('tool/image');
-
+		$this->document->addStyle('catalog/view/javascript/jquery/homepage/flexslider.css');
+		$this->document->addScript('catalog/view/javascript/jquery/homepage/jquery.flexslider-min.js');
 		$data['products'] = array();
 
 		if (!$setting['limit']) {
@@ -84,7 +87,8 @@ class ControllerModuleFeatured extends Controller {
 				}
 			}
 		}
-
+		$data['module'] = $module++;
+		
 		if ($data['products']) {
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/featured.tpl')) {
 				return $this->load->view($this->config->get('config_template') . '/template/module/featured.tpl', $data);

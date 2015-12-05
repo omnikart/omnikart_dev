@@ -97,7 +97,7 @@ class ControllerCommonHeader extends Controller {
 		$this->load->model('catalog/product');
 
 		$data['categories'] = array();
-
+		
 		$categories = $this->model_catalog_category->getCategories(0);
 
 		foreach ($categories as $category) {
@@ -118,7 +118,7 @@ class ControllerCommonHeader extends Controller {
 				$data['categories'][] = array(
 					'name'     => $category['name'],
 					'column'   => $category['column'] ? $category['column'] : 1,
-					'childern' => $children_data,
+					'children' => $children_data,
 					'href'     => $this->url->link('product/category', 'path=' . $category['category_id'],'SSL')
 				);
 			}

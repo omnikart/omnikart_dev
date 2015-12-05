@@ -1,15 +1,24 @@
 <div class="row">
 	<div class="col-sm-<?php echo 12-$margin_left; ?>" <?php if ($status_side) echo 'style="padding-right:0"';?> >
-		<div id="slideshow<?php echo $module; ?>" class="owl-carousel" style="opacity: 1;">
-		  <?php foreach ($banners as $banner) { ?>
-		  <div class="item">
-		    <?php if ($banner['link']) { ?>
-		    <a href="<?php echo $banner['link']; ?>" ><img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" /></a>
-		    <?php } else { ?>
-		    <img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" />
-		    <?php } ?>
-		  </div>
-		  <?php } ?>
+		<div id="slideshow<?php echo $module; ?>" class="flexslider" style="opacity: 1;">
+			<ul class="slides">
+			  <?php foreach ($banners as $banner) { ?>
+			  <li>
+			    <?php if ($banner['link']) { ?>
+			    <a href="<?php echo $banner['link']; ?>" ><img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" /></a>
+			    <?php } else { ?>
+			    <img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" />
+			    <?php } ?>
+			  </li>
+			  <?php } ?>			
+			</ul>
+		</div>
+		<div class="flexslider-controls">
+		  <ol class="flex-control-nav">
+		    <li>Slide 1 Control</li>
+		    <li>Slide 2 Control</li>
+		    <li>Slide 3 Control</li>
+		  </ol>
 		</div>
 	</div>
 	<?php if ($status_side) { ?>
@@ -30,13 +39,17 @@
 		</div>
 	<?php } ?>
 </div>
+<style>
+.flex-control-nav li{
+width: <?php echo 100/count($banners); ?>%;
+}
+</style>
+
 <script type="text/javascript"><!--
-$('#slideshow<?php echo $module; ?>').owlCarousel({
-	items: 6,
-	autoPlay: 6000,
-	singleItem: true,
-	navigation: true,
-	navigationText: ['<i class="fa fa-chevron-left fa-5x"></i>', '<i class="fa fa-chevron-right fa-5x"></i>'],
-	pagination: true
-});
+$('#slideshow<?php echo $module; ?>').flexslider({
+	  animation: "slide",
+	  directionNav: false,
+	  manualControls: ".flex-control-nav li",
+	  useCSS: false /* Chrome fix*/
+	});
 --></script>

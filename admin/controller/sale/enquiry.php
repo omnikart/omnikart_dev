@@ -35,6 +35,7 @@ class ControllerSaleEnquiry extends Controller {
 			$this->response->redirect($this->url->link('sale/enquiry', 'token=' . $this->session->data['token'],'SSL'));
 		}
 	}
+
 	protected function getList() {
 		
 		if (isset($this->request->get['filter_order_id'])) {
@@ -156,7 +157,7 @@ class ControllerSaleEnquiry extends Controller {
 			'limit'                => 30
 		);
 
-		$results = $this->model_module_enquiry->getEnquiry($filter_data);
+		$results = $this->model_module_enquiry->getEnquiries($filter_data);
 		$total = $this->model_module_enquiry->getTotalEnquiries($filter_data);
 		$data['enquiries'] = array();
 		
