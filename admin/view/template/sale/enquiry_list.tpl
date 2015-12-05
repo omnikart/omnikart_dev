@@ -124,6 +124,7 @@
 									<?php } ?>
 									</table></td>
 				<td class="text-left">
+				  <div class="row">
 					<select name="query[<?php echo $enquiry['id']; ?>][status]">
 						<option value="1" <?php echo (1==$enquiry['status'])?'selected':''; ?> >Pending</option>
 						<option value="2" <?php echo (2==$enquiry['status'])?'selected':''; ?>>Query Confirmed</option>
@@ -131,6 +132,11 @@
 						<option value="4" <?php echo (4==$enquiry['status'])?'selected':''; ?>>Product Confirmed</option>
 						<option value="5" <?php echo (5==$enquiry['status'])?'selected':''; ?>>Voided</option>						
 					</select>
+				 </div>	
+				 <div class="row" style="margin-right: 8px; margin-top: 5px;" >
+				  <button type="button" id="" class="btn btn-primary pull-right get-quote" ><i class="fa fa-search">Update</i> </button>
+				  <input type="hidden" name="enquiry_id" value="<?php echo $enquiry['id']; ?>" >
+				 </div>
 				</td>									
                 </tr>
                 <?php } ?>
@@ -151,4 +157,230 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width: 1200px;">
+
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" align="center">Omnikart Quotation</h4>
+      </div>
+      <div class="modal-body">
+        <h1 align="Center">Omnikart Quotation</h1>
+        <form class="form-horizontal">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr style="height: 10px;">
+                  <td align="center" colspan="6">Omnikart Engineering Pvt. Ltd.</td>
+                  <td class="text-left" colspan="6">Query Details</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>  
+                  <td class="text-left" colspan="2">Quotation No:</td>
+                  <td colspan="10"></td>
+                </tr>
+                <tr style="color: #0000FF;">  
+                  <td colspan="6"><h1>Customer Details</h1></td>
+                  <td colspan="6"><h1>Information</h1</td>
+                </tr>  
+				<tr>
+				  <td colspan="6">
+				  	<div class="form-group">
+				  		<label class="col-sm-4 control-label">Contact Person :</label>
+				  		<div class="col-sm-8">
+				  			<input type="text" name="user_info[firstname]" value="" id="input-name" class="form-control">
+				  		</div>
+				  	</div>
+				  	<div class="form-group">
+				  		<label class="col-sm-4 control-label">Company Name :</label>
+				  		<div class="col-sm-8">
+				  			<input type="text"  name="user_info[company_name]" value="" id="input-company_name" class="form-control">
+				  		</div>
+				  	</div>
+				  	<div class="form-group">
+				  		<label class="col-sm-4 control-label">Company Address :</label>
+				  		<div class="col-sm-8">
+				  			<textarea type="text"  value="user_info[company_address]" id="input-company_address" class="form-control"></textarea>
+				  		</div>
+				  	</div>				  					  	
+                    <div class="form-group">
+				  		<label class="col-sm-4 control-label">Contact No :</label>
+				  		<div class="col-sm-8">
+				  			<input type="text"  value="" id="user_info[contact_no]" class="form-control">
+				  		</div>
+				  	</div>
+					<div class="form-group">
+				  		<label class="col-sm-4 control-label">Email :</label>
+				  		<div class="col-sm-8">
+				  			<input type="text"  value="" id="user_info[email]" class="form-control">
+				  		</div>
+				  	</div>
+				  </td>
+				  <td colspan="6">
+				   
+				  	<div class="form-group">
+				  		<label class="col-sm-4 control-label">Date :</label>
+				  		<div class="col-sm-8 input-group date">
+				  			<input type="text"  name="date" value="" id="input-date" class="form-control">
+				  		    <span class="input-group-btn">
+				               <button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default datebutton"><i class="fa fa-calendar"></i></button>
+			            	</span>
+		            	</div>
+	
+				  	</div>
+				  	<div class="form-group">
+				  		<label class="col-sm-4 control-label">Quote Expiration Date :</label>
+				  		<div class="col-sm-8">
+				  			<input type="text" name="quote_expiration_date" value="" id="input-expdate" class="form-control">
+				  		</div>
+				  	</div>
+				  	<div class="form-group">
+				  		<label class="col-sm-4 control-label">Omnikart Contact Name :</label>
+				  		<div class="col-sm-8">
+				  			<input type="text"  name="omnikart_contact_name" value="" id="input-name" class="form-control">
+				  		</div>
+				  	</div>
+				  	<div class="form-group">
+				  		<label class="col-sm-4 control-label">Omnikart Contact No :</label>
+				  		<div class="col-sm-8">
+				  			<input type="text"  name="omnikart_contact_no" value="" id="input-name" class="form-control">
+				  		</div>
+				  	</div>
+				  	<div class="form-group">
+				  		<label class="col-sm-4 control-label">Delivery Lead Time :</label>
+				  		<div class="col-sm-8">
+				  			<input type="text" name="lead_time" value="" id="input-name" class="form-control">
+				  		</div>
+				  	</div>
+				   </td>
+				   
+				</tr>
+			</tbody>
+			<tbody id="product-table">	
+			    <tr>
+			      <td colspan="1">Sr.No</td>
+				  <td colspan="3">Description</td>
+				  <td colspan="1">MOQ</td>
+				  <td colspan="2">UOM Name</td>
+				  <td colspan="2">Unit Price + Tax</td>
+				  <td colspan="3">Total(INR)</td>
+				</tr>
+			 </tbody>
+            </table>
+          </div>
+        </form>
+       </div>
+       <div>
+			<b>Commercial Terms and Conditions</b>				 </br>	
+			  1	 Tax & Duties : 5% (Inclusive in Unit Price)     </br>				
+		      2	 Price : As quoted								 </br>
+			  3	 Packing and Forwarding : Nil					 </br>		
+			  4	 Octroi : Nil				 					 </br>
+			  5  Payment Method : Cash/Cheque					 </br>			
+			  6  Payment Terms : 100% Advance					 </br>		
+			  7  Special Terms if Any : The above prices are subject to change if the quantity and material vary at the time of placing order.				
+										</br>
+	   </br></br>
+	   </div>
+	   
+	   <div class="container">
+	   <div class="col-sm-6">				 					
+			<b>Omnikart Bank Details				</b>  </br>
+			Bank Name & Branch : HDFC Bank, Powai		  </br>
+			Acoount Name : Omnikart Engineering Pvt Ltd	  </br>
+			Account Number : 50200008446091			      </br>
+			IFSC Code : HDFC0000239					      </br>
+	   </div>										
+	   <div class="col-sm-6">	 								
+			<b>Vat/Tin Details </b>			</br>
+			CIN	U29253MH2014PTC257831		</br>
+			PAN N0	AACCO0433A				</br>
+			VAT TIN	27641098315 V			</br>
+			CST TIN	27641098315 C			</br>
+	   </div>
+       </div>
+      <div align="center">
+        <button type="button" class="btn btn-default" >Submit</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+$('.get-quote').on('click', function(){
+	var ths = $(this);
+	var enquiry_id = ths.parent().children('input[name=\'enquiry_id\']');
+	$.ajax({
+		url: "<?php echo $enquiry_link; ?>&enquiry_id="+enquiry_id.val(),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#recurring-description').html('');
+		},
+		success: function(json) {
+			$('.alert, .text-danger').remove();
+				
+				$('#input-name').val(json.user_info.firstname+' '+json.user_info.lastname);
+				$('#input-company_name').val("Omnikart Pvt. Limited");
+				$('#input-company_address').val(json.user_info.firstname+' '+json.user_info.lastname);
+				$('#input-no').val(json.user_info.phone);
+				$('#input-email').val(json.user_info.email);
+				
+				
+				html = '<tr class="products">';
+				$(json.query).each(function(index,value){
+					html += '<td>'+index+'</td>';
+					html += '<td name="query['+index+'][name]" colspan="3">'+value.name+'</td>';
+					html += '<td name="query['+index+'][quantity]">'+value.quantity+'</td>';
+					html += '<td colspan="2"></td>';
+					html += '<td colspan="2"></td>'; 
+					html += '<td></td>';
+				});
+				html += '</tr>';
+				$('#product-table > .products').remove();
+				$('#product-table').append(html);
+				$('#myModal').modal({
+					show: 'true'
+				});
+		}
+	});
+});
+
+$('.date').datetimepicker({
+	pickTime: false
+});
+
+</script>
 <?php echo $footer; ?>
