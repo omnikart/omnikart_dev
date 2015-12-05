@@ -17,8 +17,9 @@ class ModelModuleEnquiry extends Model {
 	 }
 	 public function getEnquiry($id){ // added New function
 	 	$query = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry` WHERE id = '" . (int)$id."'");
-	 	return $query->rows;
+	 	return $query->row;
 	 }
+	 
 	 public function getTotalEnquiries($data = array()){
 	 	$query = $this->db->query("SELECT COUNT(*) AS total FROM `".DB_PREFIX."enquiry` WHERE status <> '0'");
 	 	return $query->row['total'];
@@ -27,6 +28,9 @@ class ModelModuleEnquiry extends Model {
 	 	$selected = $data['selected']; 
 	 	$implode = implode(',',$selected );
 	 	$query = $this->db->query("UPDATE `".DB_PREFIX."enquiry` SET status = '0' WHERE id IN (".$implode.")");
+	 }
+	 public function updateEnquiry(){
+	 	$this->db->query("UPDATE `".DB_PREFIX."enquiry` SET ");
 	 }
 	 public function updateQuery($data = array()){
 	 	$selected = $data['query'];

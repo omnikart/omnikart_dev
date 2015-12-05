@@ -35,6 +35,34 @@ class ControllerSaleEnquiry extends Controller {
 			$this->response->redirect($this->url->link('sale/enquiry', 'token=' . $this->session->data['token'],'SSL'));
 		}
 	}
+	public function updateEnquiry(){
+	//$this->load->model('model/enquiry');
+	//$this->model_module_enquiry->updateEnquiry($this->request->post);	
+    //$this->responsse->redirect($this->url->link('sale/enquiry', 'token=' . $this->session->data['token'],'SSL'));
+    var_dump($this->request->post);
+	}
+
+	public function getEnquiry() {
+		$json = array();
+		if(isset($this->request->get['enquiry_id'])) {
+			$enquiry_id=$this->request->get['enquiry_id'];
+		} else 
+			$enquiry_id=null;
+	
+		if($enquiry_id){
+			$this->load->model('module/enquiry');
+			$result = $this->model_module_enquiry->getEnquiry($enquiry_id);
+			$json = array(
+					"id" => $result['id'],
+					"user_info"=>unserialize($result['user_info']),
+					"query"=>unserialize($result['query']),
+					"date" => $result['date'],
+					"status" => $result['status']
+			);
+			
+		}
+		$this->response->setOutput(json_encode($json));
+	}
 	protected function getList() {
 		
 		if (isset($this->request->get['filter_order_id'])) {
@@ -156,7 +184,7 @@ class ControllerSaleEnquiry extends Controller {
 			'limit'                => 30
 		);
 
-		$results = $this->model_module_enquiry->getEnquiry($filter_data);
+		$results = $this->model_module_enquiry->getEnquiries($filter_data);
 		$total = $this->model_module_enquiry->getTotalEnquiries($filter_data);
 		$data['enquiries'] = array();
 		
@@ -170,6 +198,10 @@ class ControllerSaleEnquiry extends Controller {
 						"status" => $result['status']
 				);
 		}
+		
+		$data['company_name']=$this->config->get('config_name');
+		
+		$data['enquiry_link'] = $this->url->link('sale/enquiry/getEnquiry&token=' . $this->session->data['token'],'', 'SSL');
 
 		$data['heading_title'] = $this->language->get('heading_title');
 
