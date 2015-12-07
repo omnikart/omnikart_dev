@@ -1,13 +1,6 @@
 <div class="row">
 <div class="col-sm-12">
-<h3><?php echo $heading_title; ?>
-	<div class="pull-right">
-		<div class="btn-group custom-navigation<?php echo $module; ?>">
-		    <a href="#" class="btn flex-prev"><i class="fa fa-chevron-left"></i></a>
-  		    <a href="#" class="btn flex-next"><i class="fa fa-chevron-right"></i></a>
-		</div>
-	</div>
-</h3>
+<h3><?php echo $heading_title; ?></h3>
 <div class="row">
 <div class="flexslider" id="featured<?php echo $module; ?>">
 	<ul class="slides">
@@ -62,23 +55,16 @@
 </div>
 
 <script type="text/javascript"><!--
-$('#featured').owlCarousel({
-	items: 6,
-	autoPlay: 6000,
-	items : <?php echo $limit; ?>,
-	navigation: true,
-	navigationText: ['<div class="own-button-holder"><i class="fa fa-chevron-left fa-5x"></i></div>', '<div class="own-button-holder"><i class="fa fa-chevron-right fa-5x"></i></div>'],
-	pagination: false
-});
 $('#featured<?php echo $module; ?>').flexslider({
 	  animation: "slide",
-	  directionNav: false,
+	  controlNav: false,
+	  directionNav: true,
 	  itemWidth: 25,
+	  nextText: "",
+	  prevText: "",
       itemMargin: 5,
       minItems: 4, // use function to pull in initial value
       maxItems: 4,
-      directionNav: true,
-      customDirectionNav: $(".custom-navigation<?php echo $module; ?> a"),
 	  useCSS: false /* Chrome fix*/
 	});
 --></script>

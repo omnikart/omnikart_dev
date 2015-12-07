@@ -167,7 +167,16 @@ class Currency {
 			return 0;
 		}
 	}
-
+	
+	public function restFormat($value) {
+		$value = $this->convert($value, '', $this->code);
+		$decimal_place = $this->currencies[$this->code]['decimal_place'];
+		$decimal_point = $this->language->get('decimal_point');
+		$thousand_point = $this->language->get('thousand_point');
+	
+		return number_format(round($value, (int)$decimal_place), (int)$decimal_place, $decimal_point, $thousand_point);
+	}
+	
 	public function has($currency) {
 		return isset($this->currencies[$currency]);
 	}
