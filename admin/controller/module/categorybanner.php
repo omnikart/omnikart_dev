@@ -5,13 +5,15 @@ class ControllerModuleCategorybanner extends Controller {
 		$this->load->language('module/categorybanner');
 		$this->document->setTitle($this->language->get('heading_title'));
 		$this->load->model('extension/module');
+		$this->load->model('module/categorybanner');
+		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			if (!isset($this->request->get['module_id'])) {
 				$this->model_extension_module->addModule('categorybanner', $this->request->post);
 			} else {
 				$this->model_extension_module->editModule($this->request->get['module_id'], $this->request->post);
 			}
-			
+			$this->model_module_categorybanner->updateCategories($this->request->post);
 			$this->session->data['success'] = $this->language->get('text_success');
 			$this->response->redirect($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'));
 		}
@@ -93,17 +95,17 @@ class ControllerModuleCategorybanner extends Controller {
 		
 		$data['categories'] = array();
 		$this->load->model('catalog/category');
-		$this->load->model('module/categorybanner');
 		
 		$results = $this->model_catalog_category->getCategoriesByParent(0);
 		foreach ($results as $result){
 			$banner =  $this->model_module_categorybanner->getCategory(array('category_id'=>$result['category_id']));
+			if (!$banner) $banner = array('width'=>'0','height'=>'0','banner_id'=>'0','element_id'=>$result['category_id']);
 			$data['categories'][] = array(
 				'banner'	=>	$banner,
 				'name'		=>  $result['name'],
-				'category_id'=> $result['category_id']
+				'category_id'=> $result['category_id'],
+				'route'		=> 'product/category',
 			);
-			
 		}
 		
 		$this->load->model('design/banner');

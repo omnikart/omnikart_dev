@@ -116,7 +116,7 @@ type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
 	          <div class="dropdown-menu">
 	            <div class="dropdown-inner">
 	              <?php foreach (array_chunk($category['children'], ceil(count($category['children']) / $category['column'])) as $children) { ?>
-	              <ul class="list-unstyled">
+	              <ul class="list-unstyled" style="width: <?php echo ((float)100/$category['column']); ?>%;">
 	                <?php foreach ($children as $child) { ?>
 	                <li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>
 	                <?php } ?>

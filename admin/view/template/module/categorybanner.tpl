@@ -61,14 +61,19 @@
 					<table class="table table-bordered table-hover">
 						<thead>
 			                <tr>
-			                  <td class="text-right col-sm-6">Category</td>
-			                  <td class="text-left col-sm-6">Banner</td>
+			                  <td class="text-right col-sm-4">Category</td>
+			                  <td class="text-left col-sm-4">Banner</td>
+			                  <td class="text-left col-sm-2">Width</td>
+			                  <td class="text-left col-sm-2">Height</td>
 			                </tr>
 			              </thead>
 			              <tbody>
 			              	<?php foreach ($categories as $category) { ?> 
 				              	<tr>
-				              		<td><?php echo $category['name']; ?><input type="hidden" name="category[<?php echo $category['category_id']; ?>][category_id]" value="<?php echo $category['category_id']; ?>" ></td>
+				              		<td><?php echo $category['name']; ?>
+				              			<input type="hidden" name="category[<?php echo $category['category_id']; ?>][category_id]" value="<?php echo $category['category_id']; ?>" >
+				              			<input type="hidden" name="category[<?php echo $category['category_id']; ?>][route]" value="<?php echo $category['route']; ?>" >
+				              		</td>
 				              		<td>
 				              			<div>
 								            <select name="category[<?php echo $category['category_id']; ?>][banner_id]" id="input-banner" class="form-control">
@@ -78,6 +83,12 @@
 							                <?php } ?>
 							              </select>
 								        </div>
+          							</td>
+          							<td>
+          								<input type="number" name="category[<?php echo $category['category_id']; ?>][width]" value="<?php echo $category['banner']['width']; ?>" >
+          							</td>
+          							<td>
+          								<input type="number" name="category[<?php echo $category['category_id']; ?>][height]" value="<?php echo $category['banner']['height']; ?>" >
           							</td>
 				              	</tr>
 			              	<?php } ?>
