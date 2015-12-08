@@ -214,6 +214,7 @@ class ControllerCommonMenu extends Controller {
 		$data['cp_transaction'] = $this->url->link('customerpartner/transaction', 'token=' . $this->session->data['token'],'SSL');
 		$data['cp_shipping'] = $this->url->link('customerpartner/shipping', 'token=' . $this->session->data['token'],'SSL');               
 		$data['cp_mail'] = $this->url->link('customerpartner/mail', 'token=' . $this->session->data['token'],'SSL');
+		$data['cp_supplier'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'],'SSL');
 		$data['wk_customfield'] = $this->url->link('wkcustomfield/wkcustomfield', 'token=' . $this->session->data['token'], 'SSL');
 		$data['wk_customer_group'] = $this->url->link('customerpartner/customer_group', 'token=' . $this->session->data['token'],'SSL');
 		$data['wkcustomfields'] = false;              

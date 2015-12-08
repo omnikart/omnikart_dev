@@ -1,7 +1,15 @@
 <?php
 class ModelCustomerpartnerMaster extends Model {
 	
-
+  public function getSupplierQueries($data = array()) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_requests WHERE 1");
+		return $query->rows;
+  }	
+       
+  public function deleteSupplier($id) {
+		$this->db->query("DELETE FROM " . DB_PREFIX . "supplier_requests WHERE id = '" . (int)$id . "'");
+  }
+    
 	public function getPartnerIdBasedonProduct($productid){
 		return $this->db->query("SELECT c2p.customer_id as id FROM " . DB_PREFIX . "customerpartner_to_product c2p LEFT JOIN ".DB_PREFIX."product p ON(c2p.product_id = p.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id) WHERE c2p.product_id = '".(int)$productid."' AND p.status = 1 AND p2s.store_id = '".$this->config->get('config_store_id')."' ORDER BY c2p.id ASC ")->row;
 	}	

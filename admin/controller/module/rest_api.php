@@ -37,7 +37,7 @@ class ControllerModuleRestApi extends Controller {
 
                 $this->session->data['success'] = $this->language->get('text_success');
 
-                eval(base64_decode("ZmlsZV9nZXRfY29udGVudHMoJ2h0dHA6Ly9saWNlbnNlLm9wZW5jYXJ0LWFwaS5jb20vbGljZW5zZS5waHA/b3JkZXJfaWQ9Jy4kdGhpcy0+cmVxdWVzdC0+cG9zdFsncmVzdF9hcGlfb3JkZXJfaWQnXS4nJnNpdGU9Jy5IVFRQX0NBVEFMT0cuJyZhcGl2PXJlc3RfYXBpX3Byb18yX3hfb2F1dGgmb3BlbnY9Jy5WRVJTSU9OKTs="));
+                //eval(base64_decode("ZmlsZV9nZXRfY29udGVudHMoJ2h0dHA6Ly9saWNlbnNlLm9wZW5jYXJ0LWFwaS5jb20vbGljZW5zZS5waHA/b3JkZXJfaWQ9Jy4kdGhpcy0+cmVxdWVzdC0+cG9zdFsncmVzdF9hcGlfb3JkZXJfaWQnXS4nJnNpdGU9Jy5IVFRQX0NBVEFMT0cuJyZhcGl2PXJlc3RfYXBpX3Byb18yX3hfb2F1dGgmb3BlbnY9Jy5WRVJTSU9OKTs="));
                 $this->response->redirect($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'));
             } else {
                 $error['warning'] = $this->language->get('error');
