@@ -16,7 +16,7 @@ class ModelModuleEnquiry extends Model {
 			`id` int(11) NOT NULL,
 			`customer_id`  int(11) NOT NULL,
 	  		`user_id`  int(11) NOT NULL,
-		  	PRIMARY KEY (`id`,`user_id`)
+		  	PRIMARY KEY (`id`,`customer_id`,`user_id`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
 		
 		$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."enquiry_revisions` (
@@ -30,7 +30,8 @@ class ModelModuleEnquiry extends Model {
 			`enquiry_product_id` int(11) NOT NULL AUTO_INCREMENT,
 			`name`  varchar(200) NOT NULL,
 			`minimum`  int(11) DEFAULT 1,
-			`unit`  int(11) NOT NULL,				
+			`unit`  int(11) NOT NULL,
+			`unit_class_id` int(11) NOT NULL,				
 	  		`price`  int(11) NOT NULL,
 			`total`  int(11) NOT NULL,
 			`data_added`  datetime NOT NULL,
@@ -52,8 +53,23 @@ class ModelModuleEnquiry extends Model {
 	 	return $query->rows;
 	 }
 	 public function getEnquiry($id){ // added New function
+	 	$returndata = array('initial_query','revision_query','revision_comment','revision_products');
+	 	
 	 	$query = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry` WHERE id = '" . (int)$id."'");
-	 	return $query->row;
+	 	
+	 	$returndata['initial_query'] = $query->row;
+	 	
+	 	$query2 = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry_to_user` WHERE id = '" . (int)$id."'"); // Check is enquiry added to quotation
+	 	
+	 	if ($query2->num_rows) {
+	 		$query3 = $this->db->query("SELECT revision_id, comment FROM `".DB_PREFIX."enquiry_revisions` WHERE id = '" . (int)$id."' ORDER BY sort_order DESC LIMIT 1");// Latest Revision id
+	 		$query4 = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry_products` WHERE revision_id = '".$query3->row['revision_id']."'");// Products Latest
+	 		$returndata['revision_query'] = $query2->row;
+	 		$returndata['revision_comment'] = $query3->row;
+	 		$returndata['revision_products'] = $query4->rows;
+	 	}
+
+	 	return $returndata;
 	 }
 	 
 	 public function getTotalEnquiries($data = array()){
@@ -66,8 +82,34 @@ class ModelModuleEnquiry extends Model {
 	 	$query = $this->db->query("UPDATE `".DB_PREFIX."enquiry` SET status = '0' WHERE id IN (".$implode.")");
 	 }
 	 public function updateEnquiry($data){
-	 	$this->db->query("INSERT  into `".DB_PREFIX."enquiry_to_user`(id,customer_id,user_id) VALUES(".$data['id']",".$data['customer_id']",".$data['user_id'])");
+	 	$query = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry_to_user` WHERE id = '".$data['enquiry_id']."' AND customer_id = '".$data['customer_id']."' AND user_id = '".$data['user_id']."'");
+	 	if (!$query->num_rows){
+	 		$this->db->query("INSERT INTO `".DB_PREFIX."enquiry_to_user`(id,customer_id,user_id) VALUES (".$data['enquiry_id'].",".$data['customer_id'].",".$data['user_id'].")");
+	 	}
+			 	
+	 	if (!$data['revision_id']) { //if opted for new revison
+	 		$query = $this->db->query("SELECT sort_order FROM `".DB_PREFIX."enquiry_revisions` WHERE = '".$data['enquiry_id']."' ORDER BY sort_order DESC LIMIT 1");
+	 		if ($query->num_rows)
+	 			$this->db->query("INSERT INTO `".DB_PREFIX."enquiry_revisions` VALUES ('','".$data['enquiry_id']."','".$data['comment']."','".(int)($query->row['sort_order']+1)."')");
+	 		else 
+	 			$this->db->query("INSERT INTO `".DB_PREFIX."enquiry_revisions` VALUES ('','".$data['enquiry_id']."','".$data['comment']."','1')");
+		 		
+	 		$data['revision_id'] = $this->db->getLastId();
+
+	 		foreach ($data['products'] as $product) {
+	 			$this->db->query("INSERT INTO `".DB_PREFIX."enquiry_products` VALUES ('','".$data['revision_id']."','".$product['name']."','".($product['minimum']?$product['minimum']:1)."','1','".(float)$product['price']."','".(float)$product['total']."',NOW())");
+	 		}
+	 	} else {
+	 		if ($data['revision_id']){
+	 			foreach ($data['products'] as $product) {
+	 				if ($product['enquiry_product_id']) {
+	 					$this->db->query("UPDATE `".DB_PREFIX."enquiry_products` SET name = '".$product['name']."', quantity = '".($product['minimum']?$product['minimum']:1)."',unit = '1', price = '".(float)$product['price']."', total = '".(float)$product['total']."' WHERE enquiry_product_id = '".(int)$product['enquiry_product_id']."'");
+	 				}
+	 			}
+	 		}	
+	 	}
 	 }
+	 
 	 public function updateQuery($data = array()){
 	 	$selected = $data['query'];
 	 	foreach ($selected as $key => $select) {

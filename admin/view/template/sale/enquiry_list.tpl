@@ -113,16 +113,18 @@
                    	<?php echo $enquiry['user_info']['email']; ?> <br />
                    	<?php echo $enquiry['date']; ?>
                   </td>
-                  <td><table class="table">
+                  <td>
+                   <table class="table">
 									<tr><td>Product name</td><td>Quantity</td><td>Specifications</td></tr>
-                  <?php foreach ($enquiry['query'] as $query) { ?>
-                  <tr>
-										<td class="text-left"><?php echo $query['name']; ?></td>
-										<td class="text-left"><?php echo $query['quantity']; ?></td>
-										<td class="text-left"><?php echo $query['specification']; ?></td>
-									</tr>
-									<?php } ?>
-									</table></td>
+                   <?php foreach ($enquiry['query'] as $query) { ?>
+                   <tr>
+					 <td class="text-left"><?php echo $query['name']; ?></td>
+					 <td class="text-left"><?php echo $query['quantity']; ?></td>
+					 <td class="text-left"><?php echo $query['specification']; ?></td>
+				   </tr>
+			       <?php } ?>
+			       </table>
+			      </td>
 				<td class="text-left">
 				  <div class="row">
 					<select name="query[<?php echo $enquiry['id']; ?>][status]">
@@ -158,35 +160,6 @@
   </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog" style="width: 1200px;">
 
@@ -200,6 +173,8 @@
         <h1 align="Center">Omnikart Quotation</h1>
         <form class="form-horizontal" id="form-quotation">
         <input type="hidden" name="enquiry_id" value="" />
+        <input type="hidden" name="revision_id" value="1" />
+        <input type="hidden" name="comment" value="1" />
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
               <thead>
@@ -246,7 +221,7 @@
 					<div class="form-group">
 				  		<label class="col-sm-4 control-label">Email :</label>
 				  		<div class="col-sm-8">
-				  			<input type="text"  value="" name="user_info[email]" class="form-control">
+				  			<input type="text"  value="" name="user_info[email]" id="input-email" class="form-control">
 				  		</div>
 				  	</div>
 				  </td>
@@ -369,6 +344,15 @@
   </div>
 </div>
 <script>
+var unitclasses = '';
+<?php if ($unit_classes) { ?>
+	unitclasses += '<select name="unit_class_id" id="input-unit-class" >';
+    <?php foreach ($unit_classes as $unit_class) { ?>
+    unitclasses += '<option value="<?php echo $unit_class['unit_class_id']; ?>"><?php echo $unit_class['title']; ?></option>';
+    <?php } ?>
+	unitclasses += '</select>';
+<?php } ?>
+
 var productrow = 0;
 $('#button-form-update').on('click',function(){
 	$.ajax({
@@ -406,11 +390,11 @@ $('.get-quote').on('click', function(){
 				$(json.query).each(function(index,value){
 					html = '<tr class="products">';
 					html += '<td>'+(index*1+1)+'</td>';
-					html += '<td colspan="3"><input type="text" name="products['+index+'][name]"   value='+value.name+' class="form-control"></td>';
-					html += '<td ><input type="text"  name="products['+index+'][minimum]" value='+value.quantity+' id="input-name" class="form-control"></td>';
-					html += '<td colspan="2"><input type="text" name="products['+index+'][unit]" value="" id="input-name" class="form-control"></td>';
-					html += '<td colspan="2"><input type="text" name="products['+index+'][price]" value="" id="input-name" class="form-control"></td>'; 
-					html += '<td colspan="3"><input type="text" name="products['+index+'][total]" value="" id="input-name" class="form-control"></td>';
+					html += '<td colspan="3"><input type="text" name="products['+index+'][name]" value="'+value.name+'" class="form-control"></td>';
+					html += '<td ><input type="text"  name="products['+index+'][minimum]" value="'+value.quantity+'" id="input-name" class="form-control"></td>';
+					html += '<td colspan="2">'+unitclasses+'<input type="text" name="products['+index+'][unit]" value="'+value.unit+'" id="input-name" class="form-control"></td>';
+					html += '<td colspan="2"><input type="text" name="products['+index+'][price]" value="'+value.price+'" id="input-name" class="form-control"></td>'; 
+					html += '<td colspan="3"><input type="text" name="products['+index+'][total]" value="'+value.total+'" id="input-name" class="form-control"></td>';
 					html += '</tr>';
 					productrow=index;
 				});
@@ -432,7 +416,7 @@ $('#add_button').on('click', function(){
 	html += '<td>'+(productrow*1+1)+'</td>';
 	html += '<td colspan="3"><input type="text" name="products['+productrow+'][name]" class="form-control"></td>';
 	html += '<td ><input type="text" name="products['+productrow+'][minimum]" class="form-control"></td>';
-	html += '<td colspan="2"><input type="text" name="products['+productrow+'][unit]" class="form-control"></td>';
+	html += '<td colspan="2">'+unitclasses+'<input type="text" name="products['+productrow+'][unit]" class="form-control"></td>';
 	html += '<td colspan="2"><input type="text" name="products['+productrow+'][price]" class="form-control"></td>'; 
 	html += '<td colspan="3"><input type="text" name="products['+productrow+'][total]" class="form-control"></td>';
 	html += '</tr>';
