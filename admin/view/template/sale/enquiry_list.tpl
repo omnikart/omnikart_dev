@@ -198,7 +198,8 @@
       </div>
       <div class="modal-body">
         <h1 align="Center">Omnikart Quotation</h1>
-        <form class="form-horizontal">
+        <form class="form-horizontal" id="form-quotation">
+        <input type="hidden" name="enquiry_id" value="" />
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
               <thead>
@@ -233,19 +234,19 @@
 				  	<div class="form-group">
 				  		<label class="col-sm-4 control-label">Company Address :</label>
 				  		<div class="col-sm-8">
-				  			<textarea type="text"  value="user_info[company_address]" id="input-company_address" class="form-control"></textarea>
+				  			<textarea type="text"  name="user_info[company_address]" id="input-company_address" class="form-control"></textarea>
 				  		</div>
 				  	</div>				  					  	
                     <div class="form-group">
 				  		<label class="col-sm-4 control-label">Contact No :</label>
 				  		<div class="col-sm-8">
-				  			<input type="text"  value="" id="user_info[contact_no]" class="form-control">
+				  			<input type="text"  value="" name="user_info[contact_no]" class="form-control">
 				  		</div>
 				  	</div>
 					<div class="form-group">
 				  		<label class="col-sm-4 control-label">Email :</label>
 				  		<div class="col-sm-8">
-				  			<input type="text"  value="" id="user_info[email]" class="form-control">
+				  			<input type="text"  value="" name="user_info[email]" class="form-control">
 				  		</div>
 				  	</div>
 				  </td>
@@ -253,18 +254,25 @@
 				   
 				  	<div class="form-group">
 				  		<label class="col-sm-4 control-label">Date :</label>
-				  		<div class="col-sm-8 input-group date">
-				  			<input type="text"  name="date" value="" id="input-date" class="form-control">
-				  		    <span class="input-group-btn">
-				               <button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default datebutton"><i class="fa fa-calendar"></i></button>
-			            	</span>
+				  		<div class="col-sm-8">
+				  			<div class="input-group date">
+					  			<input type="text"  name="date" value="" id="input-date" class="form-control">
+					  		    <span class="input-group-btn">
+					               <button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default datebutton"><i class="fa fa-calendar"></i></button>
+				            	</span>
+			            	</div>
 		            	</div>
 	
 				  	</div>
 				  	<div class="form-group">
 				  		<label class="col-sm-4 control-label">Quote Expiration Date :</label>
 				  		<div class="col-sm-8">
-				  			<input type="text" name="quote_expiration_date" value="" id="input-expdate" class="form-control">
+				  			<div class="input-group date">
+					  			<input type="text"  name="quote_expiration_date" value="" id="input-date" class="form-control">
+					  		    <span class="input-group-btn">
+					               <button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default datebutton"><i class="fa fa-calendar"></i></button>
+				            	</span>
+			            	</div>
 				  		</div>
 				  	</div>
 				  	<div class="form-group">
@@ -299,11 +307,31 @@
 				  <td colspan="3">Total(INR)</td>
 				</tr>
 			 </tbody>
-            </table>
+			 <tbody style="visibility: hidden;">	
+			    <tr>
+			      <td class="col-sm-1"></td>
+				  <td class="col-sm-1"></td>
+				  <td class="col-sm-1"></td>
+				  <td class="col-sm-1"></td>
+				  <td class="col-sm-1"></td>
+				  <td class="col-sm-1"></td>
+				  <td class="col-sm-1"></td>
+				  <td class="col-sm-1"></td>
+				  <td class="col-sm-1"></td>
+				  <td class="col-sm-1"></td>
+				  <td class="col-sm-1"></td>
+				  <td class="col-sm-1"></td>
+				</tr>
+			 </tbody>
+			 <tfoot>
+		       <tr ><td colspan="12" border="0"> <button id="add_button"  title="add-button" type="button" class="btn btn-default"><i class="fa fa-plus"></i></button></td></tr>
+			 </tfoot>
+			</table>
           </div>
         </form>
        </div>
-       <div>
+       <div class="container">
+         <div class="col-sm-4">
 			<b>Commercial Terms and Conditions</b>				 </br>	
 			  1	 Tax & Duties : 5% (Inclusive in Unit Price)     </br>				
 		      2	 Price : As quoted								 </br>
@@ -313,33 +341,49 @@
 			  6  Payment Terms : 100% Advance					 </br>		
 			  7  Special Terms if Any : The above prices are subject to change if the quantity and material vary at the time of placing order.				
 										</br>
-	   </br></br>
-	   </div>
+	      </br></br>
+	     </div>
 	   
-	   <div class="container">
-	   <div class="col-sm-6">				 					
-			<b>Omnikart Bank Details				</b>  </br>
-			Bank Name & Branch : HDFC Bank, Powai		  </br>
-			Acoount Name : Omnikart Engineering Pvt Ltd	  </br>
-			Account Number : 50200008446091			      </br>
-			IFSC Code : HDFC0000239					      </br>
-	   </div>										
-	   <div class="col-sm-6">	 								
-			<b>Vat/Tin Details </b>			</br>
-			CIN	U29253MH2014PTC257831		</br>
-			PAN N0	AACCO0433A				</br>
-			VAT TIN	27641098315 V			</br>
-			CST TIN	27641098315 C			</br>
+	   
+		   <div class="col-sm-4">				 					
+				<b>Omnikart Bank Details				</b>  </br>
+				Bank Name & Branch : HDFC Bank, Powai		  </br>
+				Acoount Name : Omnikart Engineering Pvt Ltd	  </br>
+				Account Number : 50200008446091			      </br>
+				IFSC Code : HDFC0000239					      </br>
+		   </div>										
+		   <div class="col-sm-4">	 								
+				<b>Vat/Tin Details </b>			</br>
+				CIN	U29253MH2014PTC257831		</br>
+				PAN N0	AACCO0433A				</br>
+				VAT TIN	27641098315 V			</br>
+				CST TIN	27641098315 C			</br>
+		   </div>
 	   </div>
-       </div>
       <div align="center">
-        <button type="button" class="btn btn-default" >Submit</button>
+        <button type="button" class="btn btn-default" ><i class="fa fa-2x fa-paper-plane"></i></button>
+        <button id="button-form-update" data-toggle="tooltip" title="Update Seleted Queries" class="btn btn-info"><i class="fa fa-2x fa-save"></i></button>
       </div>
     </div>
 
   </div>
 </div>
 <script>
+var productrow = 0;
+$('#button-form-update').on('click',function(){
+	$.ajax({
+		url: '<?php echo $update_link; ?>',
+		data: $('#form-quotation').serialize(),
+		type: 'POST',
+		dataType: 'json',
+		beforeSend: function() {
+		},
+		success: function(json) {
+		}
+	});
+
+
+});
 $('.get-quote').on('click', function(){
 	var ths = $(this);
 	var enquiry_id = ths.parent().children('input[name=\'enquiry_id\']');
@@ -351,7 +395,7 @@ $('.get-quote').on('click', function(){
 		},
 		success: function(json) {
 			$('.alert, .text-danger').remove();
-				
+				$('#form-quotation input[name=\'enquiry_id\']').val(enquiry_id.val());
 				$('#input-name').val(json.user_info.firstname+' '+json.user_info.lastname);
 				$('#input-company_name').val("Omnikart Pvt. Limited");
 				$('#input-company_address').val(json.user_info.firstname+' '+json.user_info.lastname);
@@ -359,16 +403,17 @@ $('.get-quote').on('click', function(){
 				$('#input-email').val(json.user_info.email);
 				
 				
-				html = '<tr class="products">';
 				$(json.query).each(function(index,value){
-					html += '<td>'+index+'</td>';
-					html += '<td name="query['+index+'][name]" colspan="3">'+value.name+'</td>';
-					html += '<td name="query['+index+'][quantity]">'+value.quantity+'</td>';
-					html += '<td colspan="2"></td>';
-					html += '<td colspan="2"></td>'; 
-					html += '<td></td>';
+					html = '<tr class="products">';
+					html += '<td>'+(index*1+1)+'</td>';
+					html += '<td colspan="3"><input type="text" name="products['+index+'][name]"   value='+value.name+' class="form-control"></td>';
+					html += '<td ><input type="text"  name="products['+index+'][minimum]" value='+value.quantity+' id="input-name" class="form-control"></td>';
+					html += '<td colspan="2"><input type="text" name="products['+index+'][unit]" value="" id="input-name" class="form-control"></td>';
+					html += '<td colspan="2"><input type="text" name="products['+index+'][price]" value="" id="input-name" class="form-control"></td>'; 
+					html += '<td colspan="3"><input type="text" name="products['+index+'][total]" value="" id="input-name" class="form-control"></td>';
+					html += '</tr>';
+					productrow=index;
 				});
-				html += '</tr>';
 				$('#product-table > .products').remove();
 				$('#product-table').append(html);
 				$('#myModal').modal({
@@ -381,6 +426,17 @@ $('.get-quote').on('click', function(){
 $('.date').datetimepicker({
 	pickTime: false
 });
-
+$('#add_button').on('click', function(){
+	productrow+=1;
+	html = '<tr class="products">';
+	html += '<td>'+(productrow*1+1)+'</td>';
+	html += '<td colspan="3"><input type="text" name="products['+productrow+'][name]" class="form-control"></td>';
+	html += '<td ><input type="text" name="products['+productrow+'][minimum]" class="form-control"></td>';
+	html += '<td colspan="2"><input type="text" name="products['+productrow+'][unit]" class="form-control"></td>';
+	html += '<td colspan="2"><input type="text" name="products['+productrow+'][price]" class="form-control"></td>'; 
+	html += '<td colspan="3"><input type="text" name="products['+productrow+'][total]" class="form-control"></td>';
+	html += '</tr>';
+    $('#product-table').append(html);
+});
 </script>
 <?php echo $footer; ?>

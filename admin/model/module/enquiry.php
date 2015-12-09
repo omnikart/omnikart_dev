@@ -37,7 +37,7 @@ class ModelModuleEnquiry extends Model {
 		  	PRIMARY KEY (`enquiry_product_id`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1");
 
-		$this->db->query("CREATE TABLE IF NOT EXISTS `enquiry_totals` (
+		$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."enquiry_totals` (
 			`enquiry_total_id` int(10) NOT NULL,
 		  	`id` int(11) NOT NULL,
 		  	`code` varchar(32) NOT NULL,
@@ -45,7 +45,7 @@ class ModelModuleEnquiry extends Model {
 		  	`value` decimal(15,4) NOT NULL DEFAULT '0.0000',
 		  	`sort_order` int(3) NOT NULL,
 		  	PRIMARY KEY (`enquiry_total_id`)
-		) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8");
+		) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
 	}
 	 public function getEnquiries($data = array()){ // renamed from getEnquiry to getEnquiries
 	 	$query = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry` WHERE status <> '0' ORDER BY date DESC LIMIT " . (int)$data['start'] . "," . (int)$data['limit']);
@@ -65,8 +65,8 @@ class ModelModuleEnquiry extends Model {
 	 	$implode = implode(',',$selected );
 	 	$query = $this->db->query("UPDATE `".DB_PREFIX."enquiry` SET status = '0' WHERE id IN (".$implode.")");
 	 }
-	 public function updateEnquiry(){
-	 	$this->db->query("UPDATE `".DB_PREFIX."enquiry` SET ");
+	 public function updateEnquiry($data){
+	 	$this->db->query("INSERT  into `".DB_PREFIX."enquiry_to_user`(id,customer_id,user_id) VALUES(".$data['id']",".$data['customer_id']",".$data['user_id'])");
 	 }
 	 public function updateQuery($data = array()){
 	 	$selected = $data['query'];

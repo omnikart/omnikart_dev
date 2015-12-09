@@ -37,10 +37,22 @@ class ControllerSaleEnquiry extends Controller {
 	}
 
 	public function updateEnquiry(){
-	//$this->load->model('model/enquiry');
-	//$this->model_module_enquiry->updateEnquiry($this->request->post);	
-    //$this->responsse->redirect($this->url->link('sale/enquiry', 'token=' . $this->session->data['token'],'SSL'));
-    var_dump($this->request->post);
+		if (isset($this->request->post['enquiry_id'])) {
+			$post = $this->request->post['enquiry_id'];
+			$this->load->model('model/enquiry');
+			$this->load->model('sale/customer');
+			$result = $this->model_module_enquiry->getEnquiry($enquiry_id);
+			if (!$this->model_sale_customer->getCustomerByEmail($post['user_info']['email'])){
+				//$customer_id = $this->model_sale_customer->();
+			} else { 
+				$customer = $this->model_sale_customer->getCustomerByEmail($post['user_info']['email']);
+				$customer_id = $customer['customer_id'];
+			}
+			
+			$this->model_module_enquiry->updateEnquiry($this->request->post);	
+		    $this->responsse->redirect($this->url->link('sale/enquiry', 'token=' . $this->session->data['token'],'SSL'));
+		    var_dump($this->request->post);
+		}
 	}
 
 	public function getEnquiry() {
@@ -203,7 +215,7 @@ class ControllerSaleEnquiry extends Controller {
 		$data['company_name']=$this->config->get('config_name');
 		
 		$data['enquiry_link'] = $this->url->link('sale/enquiry/getEnquiry&token=' . $this->session->data['token'],'', 'SSL');
-
+		$data['update_link'] = $this->url->link('sale/enquiry/updateEnquiry&token=' . $this->session->data['token'],'', 'SSL');
 		$data['heading_title'] = $this->language->get('heading_title');
 
 		$data['text_list'] = $this->language->get('text_list');
