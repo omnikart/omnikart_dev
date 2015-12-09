@@ -110,6 +110,11 @@ class ControllerDesignBanner extends Controller {
 		$this->getList();
 	}
 
+	public function autocomplete(){
+		
+		
+	}
+	
 	protected function getList() {
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];

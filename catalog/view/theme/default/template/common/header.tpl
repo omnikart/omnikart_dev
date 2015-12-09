@@ -28,11 +28,11 @@
 <script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700" rel="stylesheet" type="text/css" />
-<link href="catalog/view/theme/default/stylesheet/stylesheet.css" rel="stylesheet">
+<link href="catalog/view/theme/default/stylesheet/stylesheet.css?v=1" rel="stylesheet">
 <?php foreach ($styles as $style) { ?>
 <link href="<?php echo $style['href']; ?>" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
-<script src="catalog/view/javascript/common.js" type="text/javascript"></script>
+<script src="catalog/view/javascript/common.js?v=1" type="text/javascript"></script>
 <?php foreach ($scripts as $script) { ?>
 <script src="<?php echo $script; ?>" type="text/javascript"></script>
 <?php } ?>
@@ -43,7 +43,16 @@ _atrk_opts = { atrk_acct:"GTT9m1a47E805T", domain:"omnikart.com",dynamic: true};
 (function() { var as = document.createElement('script'); as.type = 'text/javascript'; as.async = true; as.src = "https://d31qbv1cthcecs.cloudfront.net/atrk.js"; var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(as, s); })();
 </script>
 <noscript><img src="https://d5nxst8fruw4z.cloudfront.net/atrk.gif?account=GTT9m1a47E805T" style="display:none" height="1" width="1" alt="" /></noscript>
-<!-- End Alexa Certify Javascript -->  
+<!-- End Alexa Certify Javascript --> 
+<!--Start of Zopim Live Chat Script-->
+<script type="text/javascript">
+window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
+d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
+_.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute("charset","utf-8");
+$.src="//v2.zopim.com/?3WcMX96RW4gJ31zAU5MjXSgqmKvWIgXf";z.t=+new Date;$.
+type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
+</script>
+<!--End of Zopim Live Chat Script-->
 </head>
 <body class="<?php echo $class; ?>">
 <nav id="top">
@@ -101,13 +110,13 @@ _atrk_opts = { atrk_acct:"GTT9m1a47E805T", domain:"omnikart.com",dynamic: true};
 	    </div>
 	    <div class="collapse navbar-collapse navbar-ex1-collapse">
 	      <ul class="nav navbar-nav">
-	        <?php foreach (array_slice($categories,0,7) as $category) { ?>
+	        <?php foreach (array_slice($categories,0,8) as $category) { ?>
 	        <?php if ($category['children']) { ?>
 	        <li class="dropdown"><a href="<?php echo $category['href']; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $category['name']; ?></a>
 	          <div class="dropdown-menu">
 	            <div class="dropdown-inner">
 	              <?php foreach (array_chunk($category['children'], ceil(count($category['children']) / $category['column'])) as $children) { ?>
-	              <ul class="list-unstyled">
+	              <ul class="list-unstyled" style="width: <?php echo ((float)100/$category['column']); ?>%;">
 	                <?php foreach ($children as $child) { ?>
 	                <li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>
 	                <?php } ?>

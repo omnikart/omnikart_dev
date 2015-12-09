@@ -261,6 +261,7 @@ background:#fff;
 }
 #menu .dropdown-inner {
 	display: table;
+	width:100%;
 }
 #menu .dropdown-inner ul {
 	display: table-cell;
@@ -628,7 +629,6 @@ padding:0;
 .product-thumb {
 	border: 1px solid transparent;
 	margin-bottom: 20px;
-	overflow: auto;
 	background:#fff;
 	position: relative;
 	border: 1px solid #ddd;
@@ -1332,3 +1332,13 @@ input.btn {padding: 7.5px 12px;}
     background:#fff;
 }
 
+#menu .nav>li{
+	position: inherit;
+}
+
+.category-container{
+overflow:hidden;
+height:200px;
+}
+
+.nmt{margin-top:0;}

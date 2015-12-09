@@ -1,5 +1,11 @@
 <?php
 class ModelSettingSetting extends Model {
+	
+	public function setOauthClient($clientid, $clientsecret) {
+		$this->db->query("DELETE FROM `oauth_clients`");
+		$this->db->query("INSERT INTO `oauth_clients` SET client_id = '" . $this->db->escape($clientid) . "', client_secret = '" . $this->db->escape($clientsecret)."'");
+	}
+	
 	public function getSetting($code, $store_id = 0) {
 		$setting_data = array();
 

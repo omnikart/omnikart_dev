@@ -39,6 +39,15 @@ $(document).ready(function() {
 		$('#content .product-layout:nth-child(4n+4)').after('<div class="clearfix"></div>');
 	}
 	
+		cols1 = $('#column-right, #column-left').length;
+	if (cols1 == 2) {
+		$('#content .category-layout:nth-child(2n+2)').after('<div class="clearfix visible-md visible-sm"></div>');
+	} else if (cols1 == 1) {
+		$('#content .category-layout:nth-child(4n+4)').after('<div class="clearfix visible-lg"></div>');
+	} else {
+		$('#content .category-layout:nth-child(4n+4)').after('<div class="clearfix"></div>');
+	}
+	
 	// Highlight any found errors
 	$('.text-danger').each(function() {
 		var element = $(this).parent().parent();
@@ -91,10 +100,10 @@ $(document).ready(function() {
 		var dropdown = $(this).parent().offset();
 
 		var i = (dropdown.left + $(this).outerWidth()) - (menu.left + $('#menu').outerWidth());
-
+		/*
 		if (i > 0) {
 			$(this).css('margin-left', '-' + (i + 5) + 'px');
-		}
+		}*/
 	});
 
 	// Product List

@@ -104,21 +104,28 @@ class ControllerCommonHeader extends Controller {
 			if ($category['top']) {
 				// Level 2
 				$result = $this->model_catalog_category->getCategories($category['category_id']);
-				$result = array_slice($result,0,4);
+				/*$result = array_slice($result,0,20);*/
 				$children_data = array();
 				
-					foreach ($result as $cat){
-						$children_data[] = array(
-						'name'     => $cat['name'],
-						'href'     => $this->url->link('product/category', 'path=' . $cat['category_id'],'SSL')
+				foreach ($result as $cat){
+					$filter_data = array(
+							'filter_category_id'  => $cat['category_id'],
+							'filter_sub_category' => true
 					);
-				}
+					$total = $this->model_catalog_product->getTotalProducts($filter_data);
+					if ($total) {
 					
+						$children_data[] = array(
+						'name'  => $cat['name'],
+						'href'  => $this->url->link('product/category', 'path=' . $cat['category_id'],'SSL')
+						);
+					}
+				}
 				// Level 1
 				$data['categories'][] = array(
 					'name'     => $category['name'],
-					'column'   => $category['column'] ? $category['column'] : 1,
-					'children' => $children_data,
+					'column'   => ($category['column'] ? $category['column'] : 1),
+					'children' => array_slice($children_data,0,12),
 					'href'     => $this->url->link('product/category', 'path=' . $category['category_id'],'SSL')
 				);
 			}

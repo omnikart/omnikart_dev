@@ -10,6 +10,7 @@
 			<li><a href="<?php echo $cp_transaction ?>"><?php echo "Transaction"; ?></a></li>
 			<li><a href="<?php echo $cp_shipping ?>"><?php echo "Shipping"; ?></a></li>
 			<li><a href="<?php echo $cp_mail ?>"><?php echo "Mail"; ?></a></li>
+			<li><a href="<?php echo $cp_supplier ?>"><?php echo "Supplier"; ?></a></li>
 			<?php if(isset($wkcustomfields) && $wkcustomfields) { ?>
 					<li id="wkcustomefield"><a href="<?php echo $wk_customfield; ?>"><?php echo "Custom fields"; ?></a>
 			<?php } ?>

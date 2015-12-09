@@ -6,6 +6,7 @@
     <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
     <?php } ?>
   </ul>
+	
   <div class="row"><?php echo $column_left; ?>
     <?php if ($column_left && $column_right) { ?>
     <?php $class = 'col-sm-6'; ?>
@@ -14,9 +15,33 @@
     <?php } else { ?>
     <?php $class = 'col-sm-12'; ?>
     <?php } ?>
-    <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?><div id="mfilter-content-container">
-      <h2><?php echo $heading_title; ?></h2>
-      <?php if ($thumb || $description) { ?>
+    <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
+      <h2 class="nmt"><?php echo $heading_title; ?></h2>
+      <?php if ($banners) { ?>
+      	<div class="row">
+      		<div class="col-sm-12">
+				<div id="slideshow" class="flexslider" style="opacity: 1;">
+					<ul class="slides">
+				  		<?php foreach ($banners as $banner) { ?>
+				  			<li>
+								<?php if ($banner['link']) { ?>
+					   				<a href="<?php echo $banner['link']; ?>" ><img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" /></a>
+					   			<?php } else { ?>
+					   				<img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" />
+					   			<?php } ?>
+					 		</li>
+					 	<?php } ?>			
+					</ul>
+				</div>
+			</div>
+		</div>
+	
+		<div class="row">
+			<?php if ($description) { ?>
+	        <div class="col-sm-10"><?php echo $description; ?></div>
+	        <?php } ?>
+		</div>
+	  <?php } elseif ($thumb || $description) { ?>
       <div class="row">
         <?php if ($thumb) { ?>
         <div class="col-sm-2"><img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" title="<?php echo $heading_title; ?>" class="img-thumbnail" /></div>
@@ -27,11 +52,12 @@
       </div>
       <hr>
       <?php } ?>
+    <div id="mfilter-content-container">
       <?php if ($categories) { ?>
-      <h3><?php echo $text_refine; ?></h3>
-      <div class="row">
+      <!-- <h3><?php echo $text_refine; ?></h3>  -->
+      <div class="row category-container">
         <?php foreach ($categories as $category) { ?>
-        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+        <div class="category-layout col-lg-3 col-md-3 col-sm-4 col-xs-6">
             <div class="product-thumb transition">
                 <div class="image"><a href="<?php echo $category['href']; ?>"><img src="<?php echo $category['image']; ?>" alt="<?php echo $category['name']; ?>" title="<?php echo $category['name']; ?>" class="img-responsive" /></a></div>
                 <div class="caption" style="min-height: 60px">
@@ -40,6 +66,11 @@
             </div>
         </div>
         <?php } ?>
+      </div>
+      <div class="row">
+	      <div class="col-sm-12">
+			<a class="showmore" data-showmore="category-container">More...</a>
+	      </div>
       </div>
       <?php } ?>
       <?php if ($products) { ?>
@@ -194,4 +225,32 @@
 			});
 		
 		});
+		var element = $(".category-container");
+		var category_container_curHeight = element.height();
+		var category_container_autoHeight = element.css('height','auto').height();
+		element.height(category_container_curHeight); 
+		
+		$("#content").on('click','a.showmore',function(e){
+			var target = $(this).attr('data-showmore');
+			var ths = $("."+target);
+		    if($(ths).hasClass("open")){
+		        $(ths).animate({"height":category_container_curHeight}).removeClass("open");
+		        $(this).html("Show More...");
+		    }else{
+		        $(ths).animate({"height":category_container_autoHeight}).addClass("open");
+		        $(this).html("Show Less...");
+		    }
+		    e.preventDefault();
+		});
+		
 	</script>
+	<script type="text/javascript"><!--
+		$('#slideshow').flexslider({
+			  animation: "slide",
+			  controlNav: false,
+			  directionNav: true,
+			  nextText: "",
+			  prevText: "",
+		     useCSS: false /* Chrome fix*/
+			});
+		--></script>

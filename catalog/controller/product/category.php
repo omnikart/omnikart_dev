@@ -96,7 +96,8 @@ class ControllerProductCategory extends Controller {
 			$this->document->setDescription($category_info['meta_description']);
 			$this->document->setKeywords($category_info['meta_keyword']);
 			$this->document->addLink($this->url->link('product/category', 'path=' . $this->request->get['path']), 'canonical');
-
+			$this->document->addStyle('catalog/view/javascript/jquery/homepage/flexslider.css');
+			$this->document->addScript('catalog/view/javascript/jquery/homepage/jquery.flexslider-min.js');
 			$data['heading_title'] = $category_info['name'];
 
 			$data['text_refine'] = $this->language->get('text_refine');
@@ -162,12 +163,12 @@ class ControllerProductCategory extends Controller {
 				);
 				$total_products = $this->model_catalog_product->getTotalProducts($filter_data);
 				
-				if (!empty($total_products)) {
+				/*if (!empty($total_products)) {*/
 					$data['categories'][] = array(
 						'name'  => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $total_products . ')' : ''),
 						'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url)
 					);
-				}
+				/* } */
 			}
 
 			$data['products'] = array();
@@ -360,8 +361,25 @@ class ControllerProductCategory extends Controller {
 			$data['order'] = $order;
 			$data['limit'] = $limit;
 
+			$data['banners'] = array();
+			$this->load->model('module/categorybanner');
+			$banner = $this->model_module_categorybanner->getCategory(array('category_id'=>$category_id));	
+			
+			if ($banner){
+				$this->load->model('design/banner');
+				$results = $this->model_design_banner->getBanner($banner['banner_id']);
+				foreach ($results as $result) {
+					if (is_file(DIR_IMAGE . $result['image'])) {
+						$data['banners'][] = array(
+								'title' => $result['title'],
+								'link'  => $result['link'],
+								'image' => $this->model_tool_image->resize($result['image'], $banner['width'], $banner['height'])
+						);
+					}
+				}
+			}
+			
 			$data['continue'] = $this->url->link('common/home');
-
 			$data['hover_content'] = '<div class=""><i class="fa fa-plus-square-o"></i> Add to Dashboard</div>';
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['column_right'] = $this->load->controller('common/column_right');

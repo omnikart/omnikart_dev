@@ -3206,7 +3206,7 @@ function display_MFP(view) {
 		} else if (cols == 1) {
 			jQuery('#content .product-layout').attr('class', 'product-layout product-grid col-lg-3 col-md-3 col-sm-6 col-xs-12');
 
-			jQuery('#content .product-layout:nth-child(3)').after('<div class="clearfix visible-lg"></div>');
+			jQuery('#content .product-layout:nth-child(4)').after('<div class="clearfix visible-lg"></div>');
 		} else {
 			jQuery('#content .product-layout').attr('class', 'product-layout product-grid col-lg-3 col-md-3 col-sm-6 col-xs-12');
 

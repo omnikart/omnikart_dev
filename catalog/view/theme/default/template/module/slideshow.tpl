@@ -15,9 +15,9 @@
 		</div>
 		<div class="flexslider-controls">
 		  <ol class="flex-control-nav">
-		    <li>Slide 1 Control</li>
-		    <li>Slide 2 Control</li>
-		    <li>Slide 3 Control</li>
+	  		  <?php foreach ($banners as $banner) { ?>
+			    <li><?php echo $banner['title']; ?></li>
+			  <?php } ?>
 		  </ol>
 		</div>
 	</div>
