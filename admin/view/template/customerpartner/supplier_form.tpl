@@ -20,11 +20,11 @@
 				<label class="control-label" for="date">Calender</label>
 				<input name="date" class="form-control" placeholder="" type="date" id="date" /> 
 			</div>
-			<div class="form-group required">
+			<div class="form-group">
 				<label class="control-label" for="reg">Registration</label>
 				<input name="reg" class="form-control" placeholder="" type="checkbox" id="reg" /> 
 			</div>
-			<div class="form-group required">
+			<div class="form-group">
 				<label class="control-label" for="pri">Pricelist</label>
 				<input name="pri" class="form-control" placeholder="" type="checkbox" id="pri" /> 
 			</div>

@@ -45,32 +45,16 @@
 				<label class="control-label" for="city">City</label>
 				<input  class="form-control" placeholder="" type="text" id="city" /> 
 			</div>
-			<div class="form-group required">
-				<label class="control-label" for="con">Conversation Highlights</label>
-				<textarea id="area" rows rows="4" cols="30"> </textarea>
-			</div>
-		
-		 
-		 	<form action="upload.php" method="post" enctype="multipart/form-data">
+			 
+		  <form action="upload.php" method="post" enctype="multipart/form-data">
                <label>Upload file</label>
                 <input type="file" name="fileToUpload" id="fileToUpload">
                  </form>
-               
-        <div class="form-group">
-				<label class="control-label" for="reg">Registration</label>
-				<input name="reg" class="form-control" placeholder="" type="checkbox" id="reg" /> 
+           
+            <div class="form-group required">
+                <button class="btn btn-primary">Registration</button>
 			</div>
-			<div class="form-group">
-				<label class="control-label" for="pri">Pricelist</label>
-				<input name="pri" class="form-control" placeholder="" type="checkbox" id="pri" /> 
-			</div>
-				<div class="form-group">
-				<label class="control-label" for="up">Schedule follow up</label>
-				<input  class="form-control" placeholder="" type="date" id="up" /> 
-			</div>
-		  
-     <button class="btn btn-primary">Registration</button>
-	</div>	 
+       </div>	 
 		</form>
 	 </div>
       </div>

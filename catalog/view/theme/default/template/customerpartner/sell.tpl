@@ -280,10 +280,10 @@ $('.seller-thumb').bind({'mouseenter' : seller_display,'mouseleave':seller_hide 
         type: 'post',
         dataType: 'json',
         beforeSend: function() {
-            $(buttont).buttont('loading');
+            $(buttont).button('loading');
         },
         complete: function() {
-            $(buttont).buttont('reset');
+            $(buttont).button('reset');
         },
         success: function(json) {
             $('.text-danger').remove();
