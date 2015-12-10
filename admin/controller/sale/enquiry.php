@@ -44,10 +44,11 @@ class ControllerSaleEnquiry extends Controller {
 			$result = $this->model_module_enquiry->getEnquiry($post['enquiry_id']);
 			if (!$this->model_sale_customer->getCustomerByEmail($post['user_info']['email'])){
 				//$customer_id = $this->model_sale_customer->();
-			} else { 
+			} else {
 				$customer = $this->model_sale_customer->getCustomerByEmail($post['user_info']['email']);
 				$customer_id = $customer['customer_id'];
 			}
+			
 			$post['customer_id'] = $customer_id;
 			$post['user_id'] = $this->user->getId();
 				
@@ -65,11 +66,23 @@ class ControllerSaleEnquiry extends Controller {
 			$enquiry_id=null;
 	
 		if($enquiry_id){
+			$customer_id = 0;
+			$json['addresses'] = array();
+			$json['address_id'] = '0';
 			$this->load->model('module/enquiry');
+			$this->load->model('sale/customer');
+			
 			$result = $this->model_module_enquiry->getEnquiry($enquiry_id);
-			$result1 = $result['initial_query'];
+			$initial_query = $result['initial_query'];
+			
 			$json['query'] = array();
+			
 			if ($result['revision_products']){
+				$revision_products = $result['revision_products']; 
+				$revision_data = $result['revision_data'];
+				
+				
+				$customer_id = $result['revision_query']['customer_id'];
 				$json['query'] = $result['revision_products'];
 				foreach ($result['revision_products'] as $product){	
 					$json['query'][] = array(
@@ -80,7 +93,19 @@ class ControllerSaleEnquiry extends Controller {
 						'total'=>$product['total'],
 					);
 				}
+				
+				$json['address_id'] = $revision_data['address_id'];
+				
 			} else { // Enquiry not saved to quotation
+				$user_info = unserialize($initial_query['user_info']);// extract user info from serialized data
+				if (isset($user_info['email'])) {
+					if ($this->model_sale_customer->getCustomerByEmail($user_info['email'])){
+						$customer = $this->model_sale_customer->getCustomerByEmail($user_info['email']);
+						$customer_id = $customer['customer_id'];//initialized 
+					}
+				}
+				
+
 				foreach (unserialize($result1['query']) as $product){
 					$json['query'][] = array(
 						'name'=>$product['name'],
@@ -92,8 +117,17 @@ class ControllerSaleEnquiry extends Controller {
 				}
 			}
 			
-			$json['id'] = $result1['id'];
-			$json['user_info']=unserialize($result1['user_info']);
+			if ($customer_id){
+				$addresses = $this->model_sale_customer->getAddresses($customer_id);
+				foreach ($addresses as $address){
+					$json['addresses'][] = $address;
+				}
+			}
+								
+			
+			
+			$json['id'] = $initial_query['id'];
+			$json['user_info']=unserialize($initial_query['user_info']);
 			
 		}
 		$this->response->setOutput(json_encode($json));
@@ -370,6 +404,9 @@ class ControllerSaleEnquiry extends Controller {
 			$url .= '&order=' . $this->request->get['order'];
 		}
 		
+		$this->load->model('localisation/country');
+		$data['countries'] = $this->model_localisation_country->getCountries();
+		
 		$pagination = new Pagination();
 		$pagination->total = $total;
 		$pagination->page = $page;
@@ -387,6 +424,10 @@ class ControllerSaleEnquiry extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 
 		$this->response->setOutput($this->load->view('sale/enquiry_list.tpl', $data));
+	}
+	public function install(){
+		$this->load->model('module/enquiry');
+		$this->model_module_enquiry->install();
 	}
 
 }
