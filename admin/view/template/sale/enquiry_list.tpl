@@ -211,6 +211,19 @@
 				  		<div class="col-sm-8">
 				  			<textarea type="text"  name="user_info[company_address]" id="input-company_address" class="form-control"></textarea>
 				  		</div>
+				  	</div>
+				  	<div class="form-group">
+				  		<label class="col-sm-4 control-label">City</label>
+				  		<div class="col-sm-8">
+				  			<input type="text"  value="" name="user_info[city]" class="form-control">
+				  		</div>
+				  	</div>
+				  	<div class="form-group">
+				  		<label class="col-sm-4 control-label">state</label>
+				  		<div class="col-sm-8">
+				  			<input type="text"  value="" name="user_info[state]" class="form-control">
+				  		</div>
+				  		
 				  	</div>				  					  	
                     <div class="form-group">
 				  		<label class="col-sm-4 control-label">Contact No :</label>
@@ -278,7 +291,7 @@
 				  <td colspan="3">Description</td>
 				  <td colspan="1">MOQ</td>
 				  <td colspan="2">UOM Name</td>
-				  <td colspan="2">Unit Price + Tax</td>
+				  <td colspan="2">Unit Price	</td>
 				  <td colspan="3">Total(INR)</td>
 				</tr>
 			 </tbody>
