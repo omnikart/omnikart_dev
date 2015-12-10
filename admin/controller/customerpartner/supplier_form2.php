@@ -17,6 +17,7 @@ private function getList() {
 	$data['header'] = $this->load->controller('common/header');
 	$data['footer'] = $this->load->controller('common/footer');
 	$data['column_left'] = $this->load->controller('common/column_left');
+	$data['button'] = $this->url->link('customerpartner/supplier_form2', 'token=' . $this->session->data['token'] . $url, 'SSL');
 	$this->response->setOutput($this->load->view('customerpartner/supplier_form2.tpl',$data));
   	
     }
