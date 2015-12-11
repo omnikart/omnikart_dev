@@ -1,17 +1,13 @@
 <?php  class ControllerCustomerpartnervendorlist extends Controller {
 
-public function index() {
-
-		$this->load->language('customerpartner/vendor_list');
-    	
-		$this->document->setTitle($this->language->get('heading_title')); 
-		
+ public function index() {
+        $this->load->language('customerpartner/vendor_list');
+    	$this->document->setTitle("Vendor List"); 
 		$this->load->model('customerpartner/master');
-		
 		$this->getList();
   	}	
   	
-private function getList() {
+ private function getList() {
 	
 	if (isset($this->request->get['filter_name'])) {
 		$filter_name = $this->request->get['filter_name'];
@@ -69,16 +65,17 @@ private function getList() {
 				'filter_trade'   =>  $filter_trade,
 	 );
 	
-	$data['sort_name'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-	$data['sort_mail'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'] . '&sort=pd.mail' . $url, 'SSL');
-	$data['sort_category'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'] . '&sort=pd.category' . $url, 'SSL');
-	$data['sort_brand'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'] . '&sort=pd.brand' . $url, 'SSL');
-	$data['sort_trade'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'] . '&sort=pd.trade' . $url, 'SSL');
-	$data['token'] = $this->session->data['token'];
-	  $results = $this->model_customerpartner_master->getSupplierQueries($data = array());
-	  $this->load->model('catalog/category');
-	  $this->load->model('catalog/manufacturer');
-	  $data['enquiries'] = array();
+		$data['sort_name'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+		$data['sort_mail'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'] . '&sort=pd.mail' . $url, 'SSL');
+		$data['sort_category'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'] . '&sort=pd.category' . $url, 'SSL');
+		$data['sort_brand'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'] . '&sort=pd.brand' . $url, 'SSL');
+		$data['sort_trade'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'] . '&sort=pd.trade' . $url, 'SSL');
+		$data['token'] = $this->session->data['token'];
+		
+		$results = $this->model_customerpartner_master->getSupplierQueries($data = array());
+		$this->load->model('catalog/category');
+		$this->load->model('catalog/manufacturer');
+		$data['enquiries'] = array();
 
 	   foreach ($results as $result){
 	  	$categories = array();
@@ -109,7 +106,7 @@ private function getList() {
 	  	 	  	 'id'=>$result['id']
 	 	);
 	 }
-	   $url='';
+	$url='';
 	$data['vendor'] = $this->language->get('vendor');
 	$data['header'] = $this->load->controller('common/header');
 	$data['footer'] = $this->load->controller('common/footer');
@@ -120,6 +117,7 @@ private function getList() {
 	$data['entry_brand'] = $this->language->get('entry_brand');
 	$data['entry_trade'] = $this->language->get('entry_trade');
 	$data['button_filter'] = $this->language->get('button_filter');
+	$data['add'] = $this->language->get('add');
 	
 	
 	$data['filter_name'] =  $filter_name;
@@ -133,10 +131,11 @@ private function getList() {
 	$data['button1'] = $this->url->link('customerpartner/supplier_form2', 'token=' . $this->session->data['token'] . $url, 'SSL');
 	$data['filterLink'] = $this->url->link('customerpartner/vendor_list&token=' . $this->session->data['token'] . $url,'', 'SSL');
 	$this->response->setOutput($this->load->view('customerpartner/vendor_list.tpl',$data));
+	$data['token'] =  $this->session->data['token'];
   	
     }
     
-    public function delete() {
+  public function delete() {
     	$this->load->language('customerpartner/vendor_list');
      	$this->load->model('customerpartner/master');
     
@@ -154,7 +153,7 @@ private function getList() {
      	$this->getList();
     }
     
-    public function getForm() {
+  public function getForm() {
     	
     	$url = '';
 
@@ -192,7 +191,7 @@ private function getList() {
 		$data['token'] = $this->session->data['token'];
     }
      	
-     	public function autocomplete() {
+  public function autocomplete() {
 			$json = array();
 			
  		if (isset($this->request->get['filter_name'])) {

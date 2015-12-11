@@ -1,23 +1,21 @@
 <?php echo $header; ?><?php echo $column_left; ?>
-<div id="content">
-  <div class="page-header">
-   </div>
-  <div class="container-fluid">
-   
-    <div class="panel panel-default">
+    <div id="content">
+    <div class="page-header">
+    </div>
+      <div class="container-fluid">
+      <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo  "Supplier Form "; ?></h3>
-         </div>
-  <div class="panel-body">
-    <form id="supplier_form" class="col-sm-12" action="<?php echo $button; ?>" method="post" enctype="multipart/form-data" >
-	<div class="row">
-	  <div class="col-sm-4">
+      <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo  "Supplier Form "; ?></h3>
+       </div>
+		    <div class="panel-body">
+		    <form id="supplier_form" class="col-sm-12" action="<?php echo $button; ?>" method="post" enctype="multipart/form-data" >
+			<div class="row">
+			<div class="col-sm-4">
 			<div class="form-group required">
 				<label class="control-label" for="company" >Name of company</label>
-   <input  class="form-control" placeholder="" type="text" id="company" />
-    </div>
-			 
-			<div class="form-group required">
+                <input  class="form-control" placeholder="" type="text" id="company" />
+            </div>
+	 		<div class="form-group required">
 				<label class="control-label" for="cat">Category</label>
 				<input  class="form-control" placeholder="" type="text" id="cat" /> 
 			</div>
@@ -45,19 +43,17 @@
 				<label class="control-label" for="city">City</label>
 				<input  class="form-control" placeholder="" type="text" id="city" /> 
 			</div>
-			 
-		  <form action="upload.php" method="post" enctype="multipart/form-data">
-               <label>Upload file</label>
+	 	    <form action="upload.php" method="post" enctype="multipart/form-data">
+                <label>Upload file</label>
                 <input type="file" name="fileToUpload" id="fileToUpload">
                  </form>
-           
-            <div class="form-group required">
-                <button class="btn btn-primary">Registration</button>
+             <div class="form-group required">
+                 <button class="btn btn-primary">Registration</button>
 			</div>
-       </div>	 
+        </div>	 
 		</form>
-	 </div>
-      </div>
-      </div>
-      </div>
+	    </div>
+        </div>
+        </div>
+        </div>
  

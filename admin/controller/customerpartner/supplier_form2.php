@@ -1,17 +1,12 @@
 <?php  class ControllerCustomerpartnersupplierform2 extends Controller {
 
 public function index() {
-
-		$this->load->language('customerpartner/supplier_form2');
-    	
-		$this->document->setTitle($this->language->get('heading_title')); 
-		
-		 $this->getList();
+        $this->load->language('customerpartner/supplier_form2');
+    	$this->document->setTitle($this->language->get('heading_title')); 
+	    $this->getList();
   	}	
   	
 private function getList() {
-	  
-	 
 	$url='';
 	$data['button_upload'] =$this->language->get('button_upload');
 	$data['header'] = $this->load->controller('common/header');
@@ -21,8 +16,5 @@ private function getList() {
 	$this->response->setOutput($this->load->view('customerpartner/supplier_form2.tpl',$data));
   	
     }
-    
-     
-  }
-  
-  ?>
+   }
+?>
