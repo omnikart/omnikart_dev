@@ -33,6 +33,7 @@ class ModelModuleEnquiry extends Model {
 			`unit`  int(11) NOT NULL,
 			`unit_class_id` int(11) NOT NULL,				
 	  		`price`  int(11) NOT NULL,
+			`tax_rate` decimal(15,8) NOT NULL DEFAULT '0.000000000',
 			`total`  int(11) NOT NULL,
 			`data_added`  datetime NOT NULL,
 		  	PRIMARY KEY (`enquiry_product_id`)
@@ -47,6 +48,17 @@ class ModelModuleEnquiry extends Model {
 		  	`sort_order` int(3) NOT NULL,
 		  	PRIMARY KEY (`enquiry_total_id`)
 		) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
+		
+		$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."enquiry_terms` (
+				`revision_id` int(11) NOT NULL,
+				`term_price` text,
+				`packing_forwarding` text,
+				`octroi` text,
+				`payment_method` text,
+				`payment_terms` text,
+				PRIMARY KEY (`revision_id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
+		
 	}
 	 public function getEnquiries($data = array()){ // renamed from getEnquiry to getEnquiries
 	 	$query = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry` WHERE status <> '0' ORDER BY date DESC LIMIT " . (int)$data['start'] . "," . (int)$data['limit']);
@@ -62,10 +74,10 @@ class ModelModuleEnquiry extends Model {
 	 	$query2 = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry_to_user` WHERE id = '" . (int)$id."'"); // Check is enquiry added to quotation
 	 	
 	 	if ($query2->num_rows) {
-	 		$query3 = $this->db->query("SELECT revision_id, comment FROM `".DB_PREFIX."enquiry_revisions` WHERE id = '" . (int)$id."' ORDER BY sort_order DESC LIMIT 1");// Latest Revision id
+	 		$query3 = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry_revisions` WHERE id = '" . (int)$id."' ORDER BY revision_id DESC LIMIT 1");// Latest Revision id
 	 		$query4 = $this->db->query("SELECT * FROM `".DB_PREFIX."enquiry_products` WHERE revision_id = '".$query3->row['revision_id']."'");// Products Latest
 	 		$returndata['revision_query'] = $query2->row;
-	 		$returndata['revision_comment'] = $query3->row;
+	 		$returndata['revision_data'] = $query3->row;
 	 		$returndata['revision_products'] = $query4->rows;
 	 	}
 

@@ -171,7 +171,7 @@
       </div>
       <div class="modal-body">
         <h1 align="Center">Omnikart Quotation</h1>
-        <form class="form-horizontal" id="form-quotation">
+        <form class="form" id="form-quotation">
         <input type="hidden" name="enquiry_id" value="" />
         <input type="hidden" name="revision_id" value="1" />
         <input type="hidden" name="comment" value="1" />
@@ -194,82 +194,165 @@
                 </tr>  
 				<tr>
 				  <td colspan="6">
-				  	<div class="form-group">
-				  		<label class="col-sm-4 control-label">Contact Person :</label>
-				  		<div class="col-sm-8">
-				  			<input type="text" name="user_info[firstname]" value="" id="input-name" class="form-control">
-				  		</div>
-				  	</div>
-				  	<div class="form-group">
-				  		<label class="col-sm-4 control-label">Company Name :</label>
-				  		<div class="col-sm-8">
-				  			<input type="text"  name="user_info[company_name]" value="" id="input-company_name" class="form-control">
-				  		</div>
-				  	</div>
-				  	<div class="form-group">
-				  		<label class="col-sm-4 control-label">Company Address :</label>
-				  		<div class="col-sm-8">
-				  			<textarea type="text"  name="user_info[company_address]" id="input-company_address" class="form-control"></textarea>
-				  		</div>
-				  	</div>				  					  	
-                    <div class="form-group">
-				  		<label class="col-sm-4 control-label">Contact No :</label>
-				  		<div class="col-sm-8">
-				  			<input type="text"  value="" name="user_info[contact_no]" class="form-control">
-				  		</div>
-				  	</div>
-					<div class="form-group">
-				  		<label class="col-sm-4 control-label">Email :</label>
-				  		<div class="col-sm-8">
-				  			<input type="text"  value="" name="user_info[email]" id="input-email" class="form-control">
-				  		</div>
-				  	</div>
+					  <div class="row">
+					  	<div class="col-sm-6">
+					  		<div class="form-group">
+			  		  			<label class="control-label">Contact Person :</label>
+			  		  			<input type="text" name="firstname" value="" id="input-name" class="form-control">
+				  	  		</div>
+                      	</div>
+                        <div class="col-sm-6">
+                        	<div class="form-group">
+				  				<label class="control-label">Company Name :</label>
+				  				<input type="text"  name="companyname" value="" id="input-company_name" class="form-control">
+				  			</div>
+                        </div>
+					  </div>
+                      <div class="form-group">
+				       	  <label class="control-label" for="input-address">Address</label>
+				          <select name="address" id="input-address" class="form-control">
+			                    
+				          </select>
+				      </div>
+					  <div class="row">
+					    <div class="col-sm-6">
+					        <div class="form-group required">
+			                	<label class="control-label" for="input-address-1">Address 1:</label>
+			                	<input type="text" name="address_1" value="" id="input-address-1" class="form-control" />
+			                </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group required">
+				                <label class="control-label" for="input-address-2">Address 2:</label>
+				                <input type="text" name="address_2" value="" id="input-address-2" class="form-control" />
+			                </div>
+			            </div>
+                      </div>
+					  <div class="row">
+					    <div class="col-sm-6">
+			                <div class="form-group required">
+			                	<label class="control-label" for="input-city">City:</label>
+			                	<input type="text" name="city" value="" id="input-city" class="form-control" />
+			           		</div>
+				        </div>     
+				        <div class="col-sm-6">
+			                 <div class="form-group required">
+		                	 	<label class="control-label" for="input-postcode">Postcode:</label>
+		                		<input type="text" name="postcode" value="" id="input-postcode" class="form-control" />
+		                	 </div>
+		              	</div>
+				      </div>	 
+				      <div class="row">
+					    <div class="col-sm-6">
+			            	<div class="form-group required">
+					             <label class="control-label" for="input-zone">Zone:</label>
+					             <select name="zone_id" id="input-zone" class="form-control"></select>    
+				            </div>
+				        </div>
+				        <div class="col-sm-6">
+							<div class="form-group required">
+		                		 <label class="control-label" for="input-country">Country</label>
+		                		 <select name="country_id" id="input-country" class="form-control">
+				                    <option value="">-- Select Country--</option>
+				                    <?php foreach ($countries as $country) { ?>
+					                    <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+				                    <?php } ?>
+				                 </select>
+		                	</div>			           
+			            </div>
+				      </div>
+				      <div class="row">
+					    <div class="col-sm-6">     
+				            <div class="form-group">
+					  		    <label class="control-label">Contact No :</label>
+					  		    <input type="text"  value="" name="phone" id="input-phone" class="form-control">
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+							  	<label class="control-label">Email :</label>
+							    <input type="text"  value="" name="email" id="input-email" class="form-control">
+						   </div>
+			            </div>
+			          </div>
 				  </td>
-				  <td colspan="6">
-				   
-				  	<div class="form-group">
-				  		<label class="col-sm-4 control-label">Date :</label>
-				  		<div class="col-sm-8">
-				  			<div class="input-group date">
-					  			<input type="text"  name="date" value="" id="input-date" class="form-control">
-					  		    <span class="input-group-btn">
-					               <button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default datebutton"><i class="fa fa-calendar"></i></button>
-				            	</span>
-			            	</div>
-		            	</div>
-	
-				  	</div>
-				  	<div class="form-group">
-				  		<label class="col-sm-4 control-label">Quote Expiration Date :</label>
-				  		<div class="col-sm-8">
-				  			<div class="input-group date">
-					  			<input type="text"  name="quote_expiration_date" value="" id="input-date" class="form-control">
-					  		    <span class="input-group-btn">
-					               <button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default datebutton"><i class="fa fa-calendar"></i></button>
-				            	</span>
-			            	</div>
+			      <td colspan="6">
+					 <div class="row">
+					    <div class="col-sm-6"> 
+							<div class="form-group">
+						  		<label class="control-label">Date :</label>
+						  		<div class="input-group date">
+							  			<input type="text"  name="date" value="" id="input-date" class="form-control">
+							  		    <span class="input-group-btn">
+							               <button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default datebutton"><i class="fa fa-calendar"></i></button>
+						            	</span>
+					            </div>
+						    </div>
+				  	    </div>
+				  	    <div class="col-sm-6">    
+				  	        <div class="form-group">
+				  				<label class="control-label">Quote Expiration Date :</label>
+				  				<div class="input-group date">
+					  				<input type="text"  name="quote_expiration_date" value="" id="input-date" class="form-control">
+					  		    	<span class="input-group-btn">
+					               		<button data-toggle="tooltip" title="Click here to pick date!" type="button" class="btn btn-default datebutton"><i class="fa fa-calendar"></i></button>
+				            		</span>
+			            		</div>
+				    		</div>
+				    	</div>
+				     </div> 		
+				  	 <div class="form-group">
+				  		<label class="control-label">Omnikart Contact Name :</label>
+				  		<input type="text"  name="omnikart_contact_name" value="" id="input-name" class="form-control">
+				  	 </div>
+				  	 <div class="form-group">
+				  		<label class="control-label">Omnikart Contact No :</label>
+				  		<input type="text"  name="omnikart_contact_no" value=""  class="form-control">
+				  	 </div>
+				  	 <div class="row">
+					    <div class="col-sm-6"> 
+					       <div class="form-group">
+				  				<label class="control-label">Delivery Lead Time :</label>
+				  				<input type="text" name="lead_time" value=""  class="form-control">
+				  		   </div>
+				  	    </div>
+				  	    <div class="col-sm-6"> 
+						   <div class="form-group">
+				  			    <label class="control-label">Price :</label>
+				  				<input type="text" name="price" value=""  class="form-control">
+				  		   </div>
 				  		</div>
-				  	</div>
+				     </div>
+				  	 <div class="row">
+					    <div class="col-sm-6"> 
+					
 				  	<div class="form-group">
-				  		<label class="col-sm-4 control-label">Omnikart Contact Name :</label>
-				  		<div class="col-sm-8">
-				  			<input type="text"  name="omnikart_contact_name" value="" id="input-name" class="form-control">
-				  		</div>
+				  		<label class="control-label">Packing and Forwarding :</label>
+				  		<input type="text" name="packing_forwarding" value=""  class="form-control">
 				  	</div>
-				  	<div class="form-group">
-				  		<label class="col-sm-4 control-label">Omnikart Contact No :</label>
-				  		<div class="col-sm-8">
-				  			<input type="text"  name="omnikart_contact_no" value="" id="input-name" class="form-control">
-				  		</div>
-				  	</div>
-				  	<div class="form-group">
-				  		<label class="col-sm-4 control-label">Delivery Lead Time :</label>
-				  		<div class="col-sm-8">
-				  			<input type="text" name="lead_time" value="" id="input-name" class="form-control">
-				  		</div>
-				  	</div>
-				   </td>
-				   
+				  	  </div>  	
+					  <div class="col-sm-6">
+				  	     <div class="form-group">
+				  		   <label class="control-label">Octroi :</label>
+				  	  	   <input type="text" name="lead_time" value="" class="form-control">
+				  	     </div>
+				  	  </div>
+					</div>
+				  	<div class="row">
+					    <div class="col-sm-6"> 
+						  	<div class="form-group">
+						  		<label class="control-label">Payment Method :</label>
+						  		<input type="text" name="payment_method" value=""  class="form-control">
+						  	</div>
+						</div>  	
+						<div class="col-sm-6">
+						    <div class="form-group">
+						  		<label class="control-label">Payment Terms :</label>
+						  		<input type="text" name="payment_terms" value=""  class="form-control">
+						  	</div>
+						</div>
+					 </div>	  	
+				  </td>
 				</tr>
 			</tbody>
 			<tbody id="product-table">	
@@ -278,8 +361,9 @@
 				  <td colspan="3">Description</td>
 				  <td colspan="1">MOQ</td>
 				  <td colspan="2">UOM Name</td>
-				  <td colspan="2">Unit Price + Tax</td>
-				  <td colspan="3">Total(INR)</td>
+				  <td colspan="2">Unit Price	</td>
+				  <td colspan="1">Tax Rate</td>
+				  <td colspan="2">Total(INR)</td>
 				</tr>
 			 </tbody>
 			 <tbody style="visibility: hidden;">	
@@ -352,8 +436,9 @@ var unitclasses = '';
     <?php } ?>
 	unitclasses += '</select>';
 <?php } ?>
-
+var zone_id = 0;	
 var productrow = 0;
+
 $('#button-form-update').on('click',function(){
 	$.ajax({
 		url: '<?php echo $update_link; ?>',
@@ -365,8 +450,6 @@ $('#button-form-update').on('click',function(){
 		success: function(json) {
 		}
 	});
-
-
 });
 $('.get-quote').on('click', function(){
 	var ths = $(this);
@@ -383,29 +466,48 @@ $('.get-quote').on('click', function(){
 				$('#input-name').val(json.user_info.firstname+' '+json.user_info.lastname);
 				$('#input-company_name').val("Omnikart Pvt. Limited");
 				$('#input-company_address').val(json.user_info.firstname+' '+json.user_info.lastname);
-				$('#input-no').val(json.user_info.phone);
+				$('#input-phone').val(json.user_info.phone);
 				$('#input-email').val(json.user_info.email);
 				
+				var addresses = json.addresses;
+				loadaddress(addresses);
+				var products = json.query;
+				loadproducts(products);
 				
-				$(json.query).each(function(index,value){
-					html = '<tr class="products">';
-					html += '<td>'+(index*1+1)+'</td>';
-					html += '<td colspan="3"><input type="text" name="products['+index+'][name]" value="'+value.name+'" class="form-control"></td>';
-					html += '<td ><input type="text"  name="products['+index+'][minimum]" value="'+value.quantity+'" id="input-name" class="form-control"></td>';
-					html += '<td colspan="2">'+unitclasses+'<input type="text" name="products['+index+'][unit]" value="'+value.unit+'" id="input-name" class="form-control"></td>';
-					html += '<td colspan="2"><input type="text" name="products['+index+'][price]" value="'+value.price+'" id="input-name" class="form-control"></td>'; 
-					html += '<td colspan="3"><input type="text" name="products['+index+'][total]" value="'+value.total+'" id="input-name" class="form-control"></td>';
-					html += '</tr>';
-					productrow=index;
-				});
-				$('#product-table > .products').remove();
-				$('#product-table').append(html);
+				$('#myModal select[name=\'address\']').val(json['address_id']);
+				$('#myModal select[name=\'address\']').trigger('change');
+				
+				
 				$('#myModal').modal({
 					show: 'true'
 				});
 		}
 	});
 });
+function loadaddress(address){
+	html = '<option value="0"	>-- Select Address --</option>';
+	
+	$(address).each(function(index,value){
+		html += '<option value="'+value.address_id+'">'+value.company+' '+value.address_1+' '+value.city+' '+value.zone+' '+value.postcode+'</option>';
+	});
+	$('#input-address').html(html);
+}
+function loadproducts(products){
+	$(products).each(function(index,value){
+		html = '<tr class="products">';
+		html += '<td>'+(index*1+1)+'</td>';
+		html += '<td colspan="3"><input type="text" name="products['+index+'][name]" value="'+value.name+'" class="form-control"></td>';
+		html += '<td ><input type="text"  name="products['+index+'][minimum]" value="'+value.quantity+'" id="input-name" class="form-control"></td>';
+		html += '<td colspan="2">'+unitclasses+'<input type="text" name="products['+index+'][unit]" value="'+value.unit+'" id="input-name" class="form-control"></td>';
+		html += '<td colspan="2"><input type="text" name="products['+index+'][price]" value="'+value.price+'"  class="form-control"></td>'; 
+		html += '<td colspan="1"><input type="text" name="products['+index+'][tax_rate]" value="'+value.tax_rate+'"  class="form-control"></td>'; 
+		html += '<td colspan="2"><input type="text" name="products['+index+'][total]" value="'+value.total+'"  class="form-control"></td>';
+		html += '</tr>';
+		productrow=index;
+	});
+	$('#product-table > .products').remove();
+	$('#product-table').append(html);
+}
 
 $('.date').datetimepicker({
 	pickTime: false
@@ -418,9 +520,87 @@ $('#add_button').on('click', function(){
 	html += '<td ><input type="text" name="products['+productrow+'][minimum]" class="form-control"></td>';
 	html += '<td colspan="2">'+unitclasses+'<input type="text" name="products['+productrow+'][unit]" class="form-control"></td>';
 	html += '<td colspan="2"><input type="text" name="products['+productrow+'][price]" class="form-control"></td>'; 
-	html += '<td colspan="3"><input type="text" name="products['+productrow+'][total]" class="form-control"></td>';
+	html += '<td colspan="1"><input type="text" name="" value=""  class="form-control"></td>'; 
+	html += '<td colspan="2"><input type="text" name="products['+productrow+'][total]" class="form-control"></td>';
 	html += '</tr>';
     $('#product-table').append(html);
+});
+
+
+$('#myModal select[name=\'country_id\']').on('change', function() {
+	$.ajax({
+		url: 'index.php?route=sale/order/country&token=<?php echo $token; ?>&country_id=' + this.value,
+		dataType: 'json',
+		beforeSend: function() {
+			$('#myModal select[name=\'country_id\']').after(' <i class="fa fa-circle-o-notch fa-spin"></i>');
+		},
+		complete: function() {
+			
+			$('#myModal .fa-spin').remove();
+		},			
+		success: function(json) {
+			if (json['postcode_required'] == '1') {
+				$('#myModal input[name=\'postcode\']').parent().parent().addClass('required');
+			} else {
+				$('#myModal input[name=\'postcode\']').parent().parent().removeClass('required');
+			}
+			
+			html = '<option value="">-- Select Zone --</option>';
+			
+			if (json['zone'] && json['zone'] != '') {
+				for (i = 0; i < json['zone'].length; i++) {
+        			html += '<option value="' + json['zone'][i]['zone_id'] + '"';
+	    			
+					if (json['zone'][i]['zone_id'] == zone_id) {
+	      				html += ' selected="selected"';
+	    			}
+	
+	    			html += '>' + json['zone'][i]['name'] + '</option>';
+				}
+			} else {
+				html += '<option value="0" selected="selected">-- No zone available --</option>';
+			}
+			
+			
+			$('#myModal select[name=\'zone_id\']').html(html);
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+$('select[name=\'address\']').on('change', function() {
+	$.ajax({
+		url: 'index.php?route=sale/customer/address&token=<?php echo $token; ?>&address_id=' + this.value,
+		dataType: 'json',
+		beforeSend: function() {
+			$('select[name=\'payment_address\']').after(' <i class="fa fa-circle-o-notch fa-spin"></i>');
+		},
+		complete: function() {
+			$('#tab-payment .fa-spin').remove();
+		},		
+		success: function(json) {
+			// Reset all fields
+			$('#myModal select option').not('#myModal select[name=\'address\']').removeAttr('selected');
+					
+			/*$('#myModal input[name=\'firstname\']').val(json['firstname']);
+			$('#myModal input[name=\'lastname\']').val(json['lastname']);
+			$('#myModal input[name=\'company\']').val(json['company']);*/
+			
+			$('#myModal input[name=\'address_1\']').val(json['address_1']);
+			$('#myModal input[name=\'address_2\']').val(json['address_2']);
+			$('#myModal input[name=\'city\']').val(json['city']);
+			$('#myModal input[name=\'postcode\']').val(json['postcode']);
+			$('#myModal select[name=\'country_id\']').val(json['country_id']);
+			
+			zone_id = json['zone_id'];
+			
+			$('#myModal select[name=\'country_id\']').trigger('change');
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});	
 });
 </script>
 <?php echo $footer; ?>
