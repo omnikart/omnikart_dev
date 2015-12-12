@@ -13,11 +13,11 @@ class ModelModuleEnquiry extends Model {
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1");
 		
 		$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."enquiry_to_user` (
-			`id` int(11) NOT NULL,
-			`customer_id`  int(11) NOT NULL,
-	  		`user_id`  int(11) NOT NULL,
-		  	PRIMARY KEY (`id`,`customer_id`,`user_id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
+			  `id` int(11) NOT NULL,
+			  `customer_id` int(11) NOT NULL,
+			  `user_id` int(11) NOT NULL,
+			  PRIMARY KEY (`id`,`customer_id`,`user_id`)
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
 		
 		$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."enquiry_revisions` (
 			`revision_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -27,37 +27,36 @@ class ModelModuleEnquiry extends Model {
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1");
 		
 		$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."enquiry_products` (
-			`enquiry_product_id` int(11) NOT NULL AUTO_INCREMENT,
-			`name`  varchar(200) NOT NULL,
-			`minimum`  int(11) DEFAULT 1,
-			`unit`  int(11) NOT NULL,
-			`unit_class_id` int(11) NOT NULL,				
-	  		`price`  int(11) NOT NULL,
-			`tax_rate` decimal(15,8) NOT NULL DEFAULT '0.000000000',
-			`total`  int(11) NOT NULL,
-			`data_added`  datetime NOT NULL,
-		  	PRIMARY KEY (`enquiry_product_id`)
+		  `enquiry_product_id` int(11) NOT NULL AUTO_INCREMENT,
+		  `revision_id` int(11) NOT NULL DEFAULT 1,
+		  `name` varchar(200) COLLATE utf8_bin NOT NULL,
+		  `quantity` int(11) DEFAULT 1,
+		  `unit` int(11) NOT NULL,
+		  `unit_class_id` int(11) NOT NULL DEFAULT 1,
+		  `price` int(11) NOT NULL,
+		  `tax_rate` decimal(15,8) NOT NULL,
+		  `total` int(11) NOT NULL,
+		  `data_added` datetime NOT NULL,
+		  PRIMARY KEY (`enquiry_product_id`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1");
 
 		$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."enquiry_totals` (
-			`enquiry_total_id` int(10) NOT NULL,
-		  	`id` int(11) NOT NULL,
-		  	`code` varchar(32) NOT NULL,
-		  	`title` varchar(255) NOT NULL,
-		  	`value` decimal(15,4) NOT NULL DEFAULT '0.0000',
-		  	`sort_order` int(3) NOT NULL,
-		  	PRIMARY KEY (`enquiry_total_id`)
+		  `enquiry_total_id` int(10) NOT NULL AUTO_INCREMENT,
+		  `id` int(11) NOT NULL,
+		  `revision_id` int(11) NOT NULL, 	
+		  `code` varchar(32) COLLATE utf8_bin NOT NULL,
+		  `title` varchar(255) COLLATE utf8_bin NOT NULL,
+		  `value` decimal(15,4) NOT NULL DEFAULT '0.0000',
+		  `sort_order` int(3) NOT NULL,
+		  PRIMARY KEY (`enquiry_total_id`)
 		) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
 		
 		$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."enquiry_terms` (
-				`revision_id` int(11) NOT NULL,
-				`term_price` text,
-				`packing_forwarding` text,
-				`octroi` text,
-				`payment_method` text,
-				`payment_terms` text,
-				PRIMARY KEY (`revision_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
+		  `revision_id` int(11) NOT NULL,
+		  `term` varchar(128) COLLATE utf8_bin NOT NULL,
+		  `value` text COLLATE utf8_bin NOT NULL,
+		  `sort_order` int(11) NOT NULL
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
 		
 	}
 	 public function getEnquiries($data = array()){ // renamed from getEnquiry to getEnquiries
