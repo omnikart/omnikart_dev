@@ -4,7 +4,12 @@ class ModelCustomerpartnerMaster extends Model {
   public function getSupplierQueries($data = array()) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_requests WHERE 1");
 		return $query->rows;
-  }	
+  }
+  
+  public function getSupplierQuery($enquiryId) {
+  	$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_requests WHERE id = ".(int)$enquiryId);
+  	return $query->row;
+  }
        
   public function deleteSupplier($id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "supplier_requests WHERE id = '" . (int)$id . "'");
