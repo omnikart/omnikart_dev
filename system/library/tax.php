@@ -84,7 +84,7 @@ final class Tax {
 		}
 	}
 
-	public function getTax($value, $tax_class_id) {
+	public function getTax($value, $tax_class_id, $data = array()) { // Add $data to accomodate product address and zone id
 		$amount = 0;
 
 		$tax_rates = $this->getRates($value, $tax_class_id);

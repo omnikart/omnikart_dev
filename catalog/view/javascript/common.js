@@ -41,11 +41,11 @@ $(document).ready(function() {
 	
 		cols1 = $('#column-right, #column-left').length;
 	if (cols1 == 2) {
-		$('#content .category-layout:nth-child(2n+2)').after('<div class="clearfix visible-md visible-sm"></div>');
+		$('#columns .category-layout:nth-child(2n+2)').after('<div class="clearfix visible-md visible-sm"></div>');
 	} else if (cols1 == 1) {
-		$('#content .category-layout:nth-child(4n+4)').after('<div class="clearfix visible-lg"></div>');
+		$('#columns .category-layout:nth-child(6n+6)').after('<div class="clearfix visible-lg"></div>');
 	} else {
-		$('#content .category-layout:nth-child(4n+4)').after('<div class="clearfix"></div>');
+		$('#columns .category-layout:nth-child(6n+6)').after('<div class="clearfix"></div>');
 	}
 	
 	// Highlight any found errors
@@ -202,7 +202,7 @@ var cart = {
 				
 					$('html, body').animate({ scrollTop: 0 }, 'slow');
 
-					$('#cart > ul').load('index.php?route=common/cart/info ul li');
+					$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
 				}
 			}
 		});

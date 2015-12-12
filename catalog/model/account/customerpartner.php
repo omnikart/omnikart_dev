@@ -2333,7 +2333,6 @@ class ModelAccountCustomerpartner extends Model {
 		if (isset($data['name'])) $sql[] = " name = '".$data['name']."'";
 		if (isset($data['product'])) $sql[] = " cart = '".serialize($products)."'";
 		$query = $this->db->query("UPDATE ".DB_PREFIX."saved_cart SET ". implode(',',$sql) . " WHERE id = '". $data['id'] ."' AND customer_id = '".$customer_id."'");
-		
 	}
 	
 	public function removeproduct($data) {

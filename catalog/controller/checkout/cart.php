@@ -279,7 +279,8 @@ class ControllerCheckoutCart extends Controller {
 
 	public function add() {
 		$this->load->language('checkout/cart');
-
+		$this->load->language('total/combo_products');
+		
 		$json = array();
 
 		if (isset($this->request->post['product_id'])) {
@@ -394,6 +395,7 @@ class ControllerCheckoutCart extends Controller {
 				$json['total'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total));
 			} else {
 				$json['redirect'] = str_replace('&amp;', '&', $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']));
+				$json['warning'] = sprintf($this->language->get('text_warning'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));
 			}
 		}
 

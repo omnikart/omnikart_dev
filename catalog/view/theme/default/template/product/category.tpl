@@ -1,23 +1,8 @@
 <?php echo $header; ?>
 <?php if( ! empty( $mfilter_json ) ) { echo '<div id="mfilter-json" style="display:none">' . base64_encode( $mfilter_json ) . '</div>'; } ?>
 <div class="container">
-  <ul class="breadcrumb">
-    <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-    <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
-    <?php } ?>
-  </ul>
-	
-  <div class="row"><?php echo $column_left; ?>
-    <?php if ($column_left && $column_right) { ?>
-    <?php $class = 'col-sm-6'; ?>
-    <?php } elseif ($column_left || $column_right) { ?>
-    <?php $class = 'col-sm-9'; ?>
-    <?php } else { ?>
-    <?php $class = 'col-sm-12'; ?>
-    <?php } ?>
-    <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
-      <h2 class="nmt"><?php echo $heading_title; ?></h2>
-      <?php if ($banners) { ?>
+
+  <?php if ($banners) { ?>
       	<div class="row">
       		<div class="col-sm-12">
 				<div id="slideshow" class="flexslider" style="opacity: 1;">
@@ -35,44 +20,62 @@
 				</div>
 			</div>
 		</div>
-	
-		<div class="row">
-			<?php if ($description) { ?>
-	        <div class="col-sm-10"><?php echo $description; ?></div>
+  <?php } else { ?>	
+   <ul class="breadcrumb">
+    <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+    <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+    <?php } ?>
+  </ul>
+  <?php } ?>
+  <div class="row">
+  	<div class="col-sm-12">
+      <h2 class="nmt"><?php echo $heading_title; ?></h2>
+    <?php if ($categories) { ?>
+      <div class="col-sm-12">
+	      <div class="row category-container">
+	        <?php foreach ($categories as $category) { ?>
+	        <div class="category-layout col-lg-2 col-md-3 col-sm-4 col-xs-6">
+	            <div class="product-thumb transition">
+	                <div class="image"><a href="<?php echo $category['href']; ?>"><img src="<?php echo $category['image']; ?>" alt="<?php echo $category['name']; ?>" title="<?php echo $category['name']; ?>" class="img-responsive" /></a></div>
+	                <div class="caption">
+	                    <h5><a style="text-decoration: none" href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></h5>
+	                </div>
+	            </div>
+	        </div>
 	        <?php } ?>
-		</div>
-	  <?php } elseif ($thumb || $description) { ?>
-      <div class="row">
-        <?php if ($thumb) { ?>
-        <div class="col-sm-2"><img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" title="<?php echo $heading_title; ?>" class="img-thumbnail" /></div>
-        <?php } ?>
-        <?php if ($description) { ?>
-        <div class="col-sm-10"><?php echo $description; ?></div>
-        <?php } ?>
-      </div>
-      <hr>
-      <?php } ?>
-    <div id="mfilter-content-container">
-      <?php if ($categories) { ?>
-      <!-- <h3><?php echo $text_refine; ?></h3>  -->
-      <div class="row category-container">
-        <?php foreach ($categories as $category) { ?>
-        <div class="category-layout col-lg-3 col-md-3 col-sm-4 col-xs-6">
-            <div class="product-thumb transition">
-                <div class="image"><a href="<?php echo $category['href']; ?>"><img src="<?php echo $category['image']; ?>" alt="<?php echo $category['name']; ?>" title="<?php echo $category['name']; ?>" class="img-responsive" /></a></div>
-                <div class="caption" style="min-height: 60px">
-                    <h4><a style="text-decoration: none" href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></h4>
-                </div>
-            </div>
-        </div>
-        <?php } ?>
+      	</div>
       </div>
       <div class="row">
-	      <div class="col-sm-12">
-			<a class="showmore" data-showmore="category-container">More...</a>
+      	<div class="col-sm-12">
+	      <div class="col-sm-12 text-center arrowdown">
+			<a class="showmore" data-showmore="category-container"><i class="fa fa-chevron-down"></i>&nbsp;Show More&nbsp;<i class="fa fa-chevron-down"></i></a>
 	      </div>
+	    </div>
       </div>
-      <?php } ?>
+    <?php } ?>
+    <?php  if (!$banners && $thumb) { ?>
+        <div class="col-sm-12"><img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" title="<?php echo $heading_title; ?>" class="img-thumbnail" /></div>
+    <?php } ?>
+    <div class="row">
+        <?php if ($description) { ?>
+        <div class="col-sm-12"><?php echo $description; ?></div>
+        <?php } ?>    
+    </div>
+    </div>
+  </div>
+  
+  <div class="row" style="padding-top:15px;"><?php echo $column_left; ?>
+    <?php if ($column_left && $column_right) { ?>
+    <?php $class = 'col-sm-6'; ?>
+    <?php } elseif ($column_left || $column_right) { ?>
+    <?php $class = 'col-sm-9'; ?>
+    <?php } else { ?>
+    <?php $class = 'col-sm-12'; ?>
+    <?php } ?>
+    <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
+
+    <div id="mfilter-content-container">
+
       <?php if ($products) { ?>
       <p><a href="<?php echo $compare; ?>" id="compare-total"><?php echo $text_compare; ?></a></p>
       <div class="row">
@@ -226,19 +229,20 @@
 		
 		});
 		var element = $(".category-container");
-		var category_container_curHeight = element.height();
-		var category_container_autoHeight = element.css('height','auto').height();
+		var category_container_curHeight = $(".category-container > .category-layout:first-child").height();
 		element.height(category_container_curHeight); 
 		
-		$("#content").on('click','a.showmore',function(e){
+		$("#columns").on('click','a.showmore',function(e){
 			var target = $(this).attr('data-showmore');
 			var ths = $("."+target);
 		    if($(ths).hasClass("open")){
 		        $(ths).animate({"height":category_container_curHeight}).removeClass("open");
-		        $(this).html("Show More...");
+		        $(this).html("<i class=\"fa fa-chevron-down\"></i>&nbsp;Show More&nbsp;<i class=\"fa fa-chevron-down\"></i>");
 		    }else{
+		    	var category_container_autoHeight = element.css('height','auto').height();
+				element.height(category_container_curHeight); 
 		        $(ths).animate({"height":category_container_autoHeight}).addClass("open");
-		        $(this).html("Show Less...");
+		        $(this).html("<i class=\"fa fa-chevron-up\"></i>&nbsp;Show More&nbsp;<i class=\"fa fa-chevron-up\"></i>");
 		    }
 		    e.preventDefault();
 		});

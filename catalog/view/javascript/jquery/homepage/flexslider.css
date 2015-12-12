@@ -296,8 +296,9 @@ html[xmlns] .flexslider .slides {
 }
 
 .flex-control-nav li {
-  background: #000;
-  border-right: solid #fff 1px;
+  background: #333;
+  border-right: 1px solid #666;
+  border-bottom: 2px solid #333;
   color: #fff;
   cursor: pointer;
   float: left;
@@ -311,11 +312,13 @@ html[xmlns] .flexslider .slides {
 
 .flex-control-nav li:last-child {
    border: none;
+   border-bottom: 2px solid #333;
 }
 
 .flex-control-nav .flex-active {
   background: #ccc;
   color: #000;
+  border-bottom-color: #666;
 }
 
 /* Minified FlexSlider CSS with Chrome fix */

@@ -23,18 +23,18 @@
 		        </div>
 		        <?php } ?>
 		        <?php if ($product['price']) { ?>
-		        <p class="price">
-		          <?php if (!$product['special']) { ?>
-							<?php if ($product['discount']) { ?>
-		      				<span style="text-decoration: line-through;color:#aaa;"><?php echo $product['original_price']; ?></span>&nbsp;<span style="padding:1px;background:#ddd;border-radius:2px;background:#8FBB6C;color:#fff;">&nbsp;<?php echo $product['discount']; ?>% Off&nbsp;</span>
-		              		<?php } ?>
-		                  <h4><?php echo $product['price']; ?></h4>          
-		          
-		          <?php } else { ?>
-		          <span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
-		          <?php } ?>
-		        </p>
-		        <?php } ?>
+			       <div class="price">
+			          <?php if (!$product['special']) { ?>
+						<?php if ($product['discount']) { ?>
+			      				<span style="text-decoration: line-through;color:#aaa;"><?php echo $product['original_price']; ?></span>&nbsp;<span style="padding:1px;background:#ddd;border-radius:2px;background:#8FBB6C;color:#fff;">&nbsp;<?php echo $product['discount']; ?>% Off&nbsp;</span>
+	              		<?php } ?>
+			                  <h4><?php echo $product['price']; ?></h4>          
+			          
+	          			<?php } else { ?>
+			          		<span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
+			          <?php } ?>
+			       </div>
+		       <?php } ?>
 		      </div>
 		      <div class="button-group">
 				<input id="qty-<?php echo $product['product_id']; ?>" type="number" min="<?php echo $product['minimum']; ?>" value="<?php echo $product['minimum']; ?>" placeholder="" id="quantity" class="form-control quantity" />
