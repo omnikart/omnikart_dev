@@ -102,7 +102,7 @@ abstract class RestController extends Controller {
 
         if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
             $serverResp = $server->getResponse();
-            $resp  = array('statusCode'=>$serverResp->getStatusCode(), 'statusText'=>$serverResp->getStatusText());
+            $resp  = array('statusCode'=>$serverResp->getStatusCode(), 'statusText'=>$serverResp->getStatusText(), 'success' => false);
             echo(json_encode($resp));
             exit;
         }
