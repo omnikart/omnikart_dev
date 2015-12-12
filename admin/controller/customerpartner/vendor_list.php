@@ -128,11 +128,12 @@
 	
 	$data['delete'] = $this->url->link('customerpartner/vendor_list/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 	$data['button'] = $this->url->link('customerpartner/supplier_form', 'token=' . $this->session->data['token'] . $url, 'SSL');
-	$data['button1'] = $this->url->link('customerpartner/supplier_form2', 'token=' . $this->session->data['token'] . $url, 'SSL');
+	$data['supplier_form2'] = $this->url->link('customerpartner/vendor_list/supplier_form2&token=' . $this->session->data['token'] . $url,'', 'SSL');
 	$data['filterLink'] = $this->url->link('customerpartner/vendor_list&token=' . $this->session->data['token'] . $url,'', 'SSL');
-	$this->response->setOutput($this->load->view('customerpartner/vendor_list.tpl',$data));
 	$data['token'] =  $this->session->data['token'];
-  	
+	
+	
+	$this->response->setOutput($this->load->view('customerpartner/vendor_list.tpl',$data));
     }
     
   public function delete() {
@@ -192,7 +193,8 @@
     }
      	
   public function autocomplete() {
-			$json = array();
+
+  	$json = array();
 			
  		if (isset($this->request->get['filter_name'])) {
 				$filter_name = $this->request->get['filter_name'];
@@ -229,5 +231,183 @@
 				$limit = 5;
 			}
  	 	}		
-    }
-   ?>
+
+ 	 	
+	public function supplier_form2(){
+		$url='';
+		$this->load->model('customerpartner/master');
+		
+		if (isset($this->request->get['enquiryId'])) $enquiryId = $this->request->get['enquiryId'];
+		else $enquiryId = 0;
+		
+		$fields = array(
+		 'company_name',
+		 'category',
+		 'area',
+		 'name',
+		 'number',
+		 'email',
+		 'add',
+		 'city'
+		 );
+		foreach ($fields as $field){
+			$data[$field] = ''; // Initialize all values in supplier form 2
+		}
+		
+		if ($enquiryId){
+			$enquiry = $this->model_customerpartner_master->getSupplierQuery($enquiryId);
+			if (isset($enquiry['user_info'])){
+				$user_info = unserialize($enquiry['user_info']);
+				$this->load->model('sale/customer');
+				$customer = $this->model_sale_customer->getCustomerByEmail($user_info['email']);
+				
+				if ($customer){
+					
+					$data['name']       =$customer['firstname'].$customer['lastname'];
+					$data['number']     = $customer['telephone'];
+					$data['email']      = $customer['email'];
+					 
+			 	} else {
+					$name = explode(' ',$user_info['name']);
+					
+					$data1 = array(
+						'customer_group_id' => $this->config->get('config_customer_group_id'),
+						'firstname' => $name[0], 
+						'lastname' => (isset($name[1])?$name[1]:''),
+						'email' => $user_info['email'],
+						'telephone' => $user_info['number'],
+						'fax' => $user_info['number_2'],
+						'newsletter' => '1',
+						'password' => '12345678',
+						'status' => '1',
+						'approved' => '1',
+						'safe' => '1'
+					);
+					$customer_id = $this->model_sale_customer->addCustomer($data1);
+				}
+			 }
+		} else {
+		}
+		$data['registration'] = $this->url->link('customerpartner/vendor_list/supplier_form2_save&token=' . $this->session->data['token'] . $url,'', 'SSL');
+		$data['button_upload'] = "Upload"; //
+		$data['button'] = $this->url->link('customerpartner/vendor_list/supplier_form2', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		
+		$this->response->setOutput($this->load->view('customerpartner/supplier_form2.tpl',$data));
+		
+	}
+	
+	public function supplier_form2_save(){
+		
+		if (isset($this->request->post['email'])) {
+			$this->load->model('sale/customer');
+			$customer = $this->model_sale_customer->getCustomerByEmail($this->request->post['email']);
+			if (!$customer) {
+				$fields = array(
+						 'company_name',
+						 'category',
+						 'area',
+						 'name',
+						 'number',
+						 'email',
+						 'add',
+						 'city'
+				);
+				foreach ($fields as $field){
+					if (isset($this->request->post[$field])) {
+						$data[$field] = $this->request->post[$field];
+					} else {
+						$data[$field] = '';
+					}
+				}
+				$name = explode(' ',$data['name']);
+				$data1 = array(
+					'customer_group_id' => $this->config->get('config_customer_group_id'),
+					'firstname' => $name[0], 
+					'lastname' => (isset($name[1])?$name[1]:''),
+					'email' => $user_info['email'],
+					'telephone' => $user_info['number'],
+					'fax' => $user_info['number_2'],
+					'newsletter' => '1',
+					'password' => '12345678',
+					'status' => '1',
+					'approved' => '1',
+					'safe' => '1'
+				);
+				$customer_id = $this->model_sale_customer->addCustomer($data1);
+			} else {
+				$json = array();
+				$url ="";
+				$uploads = array(
+								   'front',
+								   'back'
+				              );
+				foreach ($uploads as $upload){
+					
+					
+					
+			 	 	if (!empty($this->request->files[$upload]['name']) && is_file($this->request->files[$upload]['tmp_name'])) {
+						$filename = basename(html_entity_decode($this->request->files[$upload]['name'], ENT_QUOTES, 'UTF-8'));
+						
+						if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 128)) {
+							$json['error'] = $this->language->get('error_filename');
+						}
+						
+						// Allowed file extension types
+						$allowed = array();
+			
+						$extension_allowed = preg_replace('~\r?\n~', "\n", $this->config->get('config_file_ext_allowed'));
+			
+						$filetypes = explode("\n", $extension_allowed);
+			
+						foreach ($filetypes as $filetype) {
+							$allowed[] = trim($filetype);
+						}
+			
+						if (!in_array(strtolower(substr(strrchr($filename, '.'), 1)), $allowed)) {
+							$json['error'] = $this->language->get('error_filetype');
+						}
+							
+								// Allowed file mime types
+						$allowed = array();
+		
+						$mime_allowed = preg_replace('~\r?\n~', "\n", $this->config->get('config_file_mime_allowed'));
+		
+						$filetypes = explode("\n", $mime_allowed);
+		
+						foreach ($filetypes as $filetype) {
+							$allowed[] = trim($filetype);
+						}
+		
+						if (!in_array($this->request->files[$upload]['type'], $allowed)) {
+							$json['error'] = $this->language->get('error_filetype');
+						}
+			
+						$content = file_get_contents($this->request->files[$upload]['tmp_name']);
+						if (preg_match('/\<\?php/i', $content)) {
+							$json['error'] = $this->language->get('error_filetype');
+						}
+						
+						// Return any upload error
+						if ($this->request->files[$upload]['error'] != UPLOAD_ERR_OK) {
+							$json['error'] = $this->language->get('error_upload_' . $this->request->files[$upload]['error']);
+						}
+					} else {
+						$json['error'] = $this->language->get('error_upload');
+					}
+						
+					if (!$json) {
+						$file = $filename;
+		 				move_uploaded_file($this->request->files[$upload]['tmp_name'], DIR_UPLOAD.'supplier/' . $file);
+		 				$json['filename'] = $file;
+						$json['mask'] = $filename;
+						$json = array();
+					}
+				}
+			}
+		}
+		
+		//$this->response->redirect($this->url->link('customerpartner/vendor_list/supplier_form2', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+		
+	}
+ 	
+}
