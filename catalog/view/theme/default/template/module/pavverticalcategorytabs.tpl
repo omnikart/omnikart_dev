@@ -26,7 +26,7 @@ $productLayout = DIR_TEMPLATE.$objconfig->get('config_template').'/template/comm
 ?>
 <div class="box pav-verticalcategorytabs clearfix <?php echo $prefix_class; ?>">
 
-	<div class="box-wapper <?php echo $prefix_class ?> clearfix">
+	<div class="box-wapper clearfix">
 		<div class="tab-nav tabs-x tabs-<?php echo $tab_position;?>">
 			<?php if($banner_position == 1){ ?>
 				<div class="banner-image hidden-md hidden-sm hidden-xs">

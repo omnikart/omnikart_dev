@@ -205,7 +205,7 @@
 }
 /* line 110, ../development/scss/pavverticalcategorytabs.scss */
 .pav-verticalcategorytabs .tabs-right li.active:after {
-  right: 5px;
+	left: -1px;
 }
 /* line 430, ../development/scss/mixins/_app.scss */
 .rtl .pav-verticalcategorytabs .tabs-right li.active:after {

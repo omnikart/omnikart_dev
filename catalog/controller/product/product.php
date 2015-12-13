@@ -589,6 +589,25 @@ class ControllerProductProduct extends Controller {
 			$data['header'] = $this->load->controller('common/header');
 			$data['ct_right'] = $this->load->controller('common/ct_right');
 			
+			// combo products //
+			
+			$getcombos = $this->model_checkout_combo_products->getCombosinclProduct($this->request->get['product_id']);
+			$html = '';
+			if ($getcombos) {
+				$html .= '<div class="combo-section">';
+				$html .= '<h3>'.$this->language->get('text_combo_header').'</h3>';
+			}
+			foreach ($getcombos as $combo) {
+				$getcombo = $this->model_checkout_combo_products->getCombo($combo['combo_id']);
+				if ($getcombo['display_detail']) {
+					$html .= $this->returnCombo_HTML($getcombo['combo_id']);
+				}
+			}
+			if ($getcombos) $html .= '</div>';
+			$data['description'] = $data['description'].$html;
+			//
+			
+			
 			if ($is_gp_grouped) {
 				// Clear default data
 				$data['model'] = '';
@@ -824,25 +843,6 @@ class ControllerProductProduct extends Controller {
 				$data['column_gp_price'] = $tcg_customer_price ? $this->language->get('column_gp_price') : false;
 				$data['column_gp_option'] = $gp_child_option_col ? $this->language->get('column_gp_option') : false;
 				$data['column_gp_qty'] = $this->language->get('column_gp_qty');
-				
-				// combo products //
-				
-				$getcombos = $this->model_checkout_combo_products->getCombosinclProduct($this->request->get['product_id']);
-				$html = '';
-				if ($getcombos) {
-					$html .= '<div class="combo-section">';
-					$html .= '<h3>'.$this->language->get('text_combo_header').'</h3>';
-				}
-				foreach ($getcombos as $combo) {
-					$getcombo = $this->model_checkout_combo_products->getCombo($combo['combo_id']);
-					if ($getcombo['display_detail']) {
-						$html .= $this->returnCombo_HTML($getcombo['combo_id']);
-					}
-				}
-				if ($getcombos) $html .= '</div>';
-				$data['description'] = $data['description'].$html;
-				//
-				
 				
 				if (file_exists(DIR_TEMPLATE . $template . '/template/product/gp_grouped_' . $is_gp_grouped['gp_template'] . '.tpl')) {
 					$this->response->setOutput($this->load->view($template . '/template/product/gp_grouped_' . $is_gp_grouped['gp_template'] . '.tpl', $data));

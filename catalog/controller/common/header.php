@@ -114,7 +114,6 @@ class ControllerCommonHeader extends Controller {
 					);
 					$total = $this->model_catalog_product->getTotalProducts($filter_data);
 					if ($total) {
-					
 						$children_data[] = array(
 						'name'  => $cat['name'],
 						'href'  => $this->url->link('product/category', 'path=' . $cat['category_id'],'SSL')

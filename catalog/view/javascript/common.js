@@ -100,10 +100,10 @@ $(document).ready(function() {
 		var dropdown = $(this).parent().offset();
 
 		var i = (dropdown.left + $(this).outerWidth()) - (menu.left + $('#menu').outerWidth());
-		/*
+		
 		if (i > 0) {
 			$(this).css('margin-left', '-' + (i + 5) + 'px');
-		}*/
+		}
 	});
 
 	// Product List
