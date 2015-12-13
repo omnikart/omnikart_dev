@@ -73,15 +73,16 @@ class ControllerModuleFeatured extends Controller {
 					$data['products'][] = array(
 						'product_id'  => $product_info['product_id'],
 						'thumb'       => $image,
-						'name'        => (strlen($product_info['name'])>50?substr($product_info['name'], 0, 50)."...":$product_info['name']),
+						'name'        => $product_info['name'],
 						'description' => utf8_substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
 						'price'       => $price,
 						'original_price' => $original_price,
-						'discount' => $discount,
+						'discount'    => $discount,
 						'minimum'     => $product_info['minimum'] > 0 ? $product_info['minimum'] : 1,
 						'special'     => $special,
 						'tax'         => $tax,
 						'rating'      => $rating,
+						'type'		  => $product_info['type'],
 						'href'        => $this->url->link('product/product', 'product_id=' . $product_info['product_id'])
 					);
 				}

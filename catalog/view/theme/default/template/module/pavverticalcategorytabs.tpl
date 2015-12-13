@@ -64,32 +64,13 @@ $productLayout = DIR_TEMPLATE.$objconfig->get('config_template').'/template/comm
                     $active = ($i==1)?"active":'';
                 ?>
 				<div class="tab-pane <?php echo $active;?> " id="tab<?php echo $id."-cat".$key;?>">
-					<?php if( count($products) > $itemsperpage ) { ?>
-					<div class="carousel-controls">
-						<a class="carousel-control left" href="#list<?php echo $id."-cat".$key;?>" data-slide="prev"><i class="fa fa-angle-left"></i></a>
-						<a class="carousel-control right" href="#list<?php echo $id."-cat".$key;?>" data-slide="next"><i class="fa fa-angle-right"></i></a>
-					</div><!-- end div.carousel-controls-->
-					<?php } ?>
-
-					<div class="carousel-inner carousel<?php echo $id;?> slide" id="list<?php echo $id."-cat".$key;?>">
-						<?php $pages = array_chunk( $products, $itemsperpage);?>
-						<?php foreach ($pages as  $k => $tproducts ) {   ?>
-						<div class="item <?php if($k==0) {?>active<?php } ?>">
-							<?php foreach( $tproducts as $i => $product ) {  $i=$i+1;?>
-								<?php if( $i%$cols == 1 || $cols == 1) { ?>
-								<div class="row products-row <?php ;if($i == count($tproducts) - $cols +1) { echo "last";} ?>"><?php //start box-product?>
-								<?php } ?>
+						 	<div class="row products-row last"><?php //start box-product?>
+							<?php foreach( $products as $i => $product ) { ?>
 									<div class="col-lg-<?php echo $span;?> col-md-<?php echo $span;?> col-sm-<?php echo $span;?> col-xs-12 product-col">
 										<?php require( $productLayout );  ?>
 									</div>
-								<?php if( $i%$cols == 0 || $i==count($tproducts) ) { ?>
-								</div><?php //end box-product?>
-								<?php } ?>
 							<?php } //endforeach; ?>
-						</div>
-					  <?php } ?>
-					</div><!-- end div.carousel-content-->
-
+							</div><?php //end box-product?>
 				</div><!-- end div.tab-panel-->
 			<?php } ?>
 		</div><!-- end div.tab-content -->
@@ -99,8 +80,9 @@ $productLayout = DIR_TEMPLATE.$objconfig->get('config_template').'/template/comm
 
 <script>
 $(function() {
-	$('.carousel<?php echo $id;?>').carousel({interval:99999999999999,auto:false,pause:'hover'});
 	$('#pav-categorytabs<?php echo $id;?> a:first').tab('show');
 });
 </script>
-
+<style>
+.products-row .product-col:last-child{border-right:none;}
+</style>
