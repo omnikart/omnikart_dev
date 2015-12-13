@@ -163,12 +163,12 @@ class ControllerProductCategory extends Controller {
 				);
 				$total_products = $this->model_catalog_product->getTotalProducts($filter_data);
 				
-				/*if (!empty($total_products)) {*/
+				if (!empty($total_products)) {
 					$data['categories'][] = array(
 						'name'  => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $total_products . ')' : ''),
 						'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url)
 					);
-				/* } */
+				}
 			}
 
 			$data['products'] = array();
