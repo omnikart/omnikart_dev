@@ -22,7 +22,7 @@ class ModelCustomerpartnerMaster extends Model {
 	}
 
 	public function getOldPartner(){		
-		return $this->db->query("SELECT *,co.name as country FROM " . DB_PREFIX . "customerpartner_to_customer c2c LEFT JOIN ".DB_PREFIX ."customer c ON (c2c.customer_id = c.customer_id) LEFT JOIN ".DB_PREFIX ."country co ON (c2c.country = co.iso_code_2) WHERE is_partner = 1 AND c.status = '1' ORDER BY c2c.customer_id ASC LIMIT 4")->rows;	
+		return $this->db->query("SELECT *, (SELECT COUNT(id) AS total FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.customer_id = c2c.customer_id) AS total, co.name as country FROM " . DB_PREFIX . "customerpartner_to_customer c2c LEFT JOIN ".DB_PREFIX ."customer c ON (c2c.customer_id = c.customer_id) LEFT JOIN ".DB_PREFIX ."country co ON (c2c.country = co.iso_code_2) WHERE is_partner = 1 AND c.status = '1' ORDER BY total DESC, c2c.customer_id ASC LIMIT 4")->rows;	
 	}
 
 	public function getProfile($customerid){
