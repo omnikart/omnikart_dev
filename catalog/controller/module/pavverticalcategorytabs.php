@@ -201,6 +201,7 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 		$products = array();
 		$data = array(
 			'filter_category_id' => $category_id,
+			'filter_sub_category' => true,
 			'sort'  => 'p.date_added',
 			'order' => 'DESC',
 			'start' => 0,
