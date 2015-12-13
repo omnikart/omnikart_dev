@@ -1,6 +1,6 @@
 <?php
 $span = 12/$cols;
-$id = rand(1,9).substr(md5($title),0,3);
+$id = rand(1,9).substr(md5($title),0,3).$module;
 $themeConfig = (array)$objconfig->get('themecontrol');
 $listingConfig = array(
 	'category_pzoom'                     => 1,
