@@ -68,7 +68,7 @@
                 <div class="action">
                     <?php if( !isset($listingConfig['catalog_mode']) || !$listingConfig['catalog_mode']) { ?>
                     <div class="cart">
-                        <button data-loading-text="Loading..." class="btn btn-outline" type="button" onclick="cart.addcart('<?php echo $product['product_id']; ?>');">
+                        <button data-loading-text="Loading..." class="btn btn-outline" type="button" onclick="cart.add('<?php echo $product['product_id']; ?>');">
                             <i class="fa fa-shopping-cart"></i>
                             <span><?php echo $olang->get('button_cart'); ?></span>
                         </button>
