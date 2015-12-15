@@ -245,7 +245,7 @@ class ControllerModuleExcelport extends Controller {
 		ini_set('error_reporting', E_ALL);
 		$this->load->model('module/excelport');
 		$error = false;
-		//$this->model_module_excelport->deleteProgress();
+		$this->model_module_excelport->deleteProgress();
 		
 		set_error_handler(
 			create_function(

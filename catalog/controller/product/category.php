@@ -2,13 +2,13 @@
 class ControllerProductCategory extends Controller {
 	public function index() {
 		$this->load->language('product/category');
-
 		$this->load->model('catalog/category');
-
 		$this->load->model('catalog/product');
-
 		$this->load->model('tool/image');
-
+		$this->load->model('checkout/combo_products');
+		$this->load->language('total/combo_products');
+		
+		
 		if (isset($this->request->get['filter'])) {
 			$filter = $this->request->get['filter'];
 		} else {
@@ -163,12 +163,12 @@ class ControllerProductCategory extends Controller {
 				);
 				$total_products = $this->model_catalog_product->getTotalProducts($filter_data);
 				
-				/*if (!empty($total_products)) {*/
+				if (!empty($total_products)) {
 					$data['categories'][] = array(
 						'name'  => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $total_products . ')' : ''),
 						'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url)
 					);
-				/* } */
+				}
 			}
 
 			$data['products'] = array();
@@ -379,6 +379,21 @@ class ControllerProductCategory extends Controller {
 				}
 			}
 			
+			// Combo //
+			
+			$getcombo = $this->model_checkout_combo_products->getCombosinclCate($category_id);
+			$html = '';
+			if ($getcombo) {
+				$html .= '<div class="combo-section">';
+				$html .= '<h3>'.$this->language->get('text_combo_header').'</h3>';
+				$html .= $this->returnCombo_HTML($getcombo['combo_id']);
+				$html .= '</div>';
+			}
+			$data['description'] = $data['description'].$html;
+			// combo end //
+			
+			
+			
 			$data['continue'] = $this->url->link('common/home');
 			$data['hover_content'] = '<div class=""><i class="fa fa-plus-square-o"></i> Add to Dashboard</div>';
 			$data['column_left'] = $this->load->controller('common/column_left');
@@ -452,6 +467,71 @@ class ControllerProductCategory extends Controller {
 		}
 	}
 
+	public function returnCombo_HTML ($combo_id) {
+	
+		$this->load->language('total/combo_products');
+		$this->load->model('catalog/product');
+		$this->load->model('checkout/combo_products');
+	
+		$getcombo = $this->model_checkout_combo_products->getCombo($combo_id);
+	
+		$products_in_combo = explode(",",$getcombo['product_id']);
+	
+		$price_total = 0;
+		$price_ori = 0;
+		$price_all = 0;
+	
+		$wishlist_combo = array();
+		$wishlist_combo_unique = array();
+		$cart_combo = array();
+	
+		foreach ($products_in_combo as $product_id) {
+			$product_info = $this->model_catalog_product->getProduct($product_id);
+			$this->load->model('tool/image');
+				
+			$href = $this->url->link('product/product', 'product_id=' . $product_info['product_id']);
+				
+			if ($getcombo['override']) $price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+			elseif ($product_info['special']) $price = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+			else $price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+				
+			if ($getcombo['override']) $price_total += $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+			elseif ($product_info['special']) $price_total += $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+			else $price_total += $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+				
+			$price_ori += $product_info['price'];
+				
+			if ($product_info['image']) $product_array[] = '<div class="combo-item"><div class="combo-item-img"><a href="'.$href.'"><img class="img-thumbnail" src="'. $this->model_tool_image->resize($product_info['image'], 80, 80) .'"></a></div><div class="combo-item-name">'.$product_info['name'].'</div><div class="combo-item-price">'.$price.'</div></div>';
+			else $product_array[] = '<div class="combo-item"><div class="combo-item-img"><a href="'.$href.'"><img class="img-thumbnail" src="'. $this->model_tool_image->resize('no_image.png', 80, 80) .'"></a></div><div class="combo-item-name">'.$product_info['name'].'</div><div class="combo-item-price">'.$price.'</div></div>';
+				
+			$wishlist_combo[] = 'wishlist_combo.add(\''.$product_id.'\')';
+			$cart_combo[] = 'cart_combo.add(\''.$product_id.'\')';
+		}
+	
+		$wishlist_combo_unique = array_unique($wishlist_combo);
+	
+		if ($getcombo['discount_type'] == 'fixed amount') {
+			$price_discount = $price_total - $getcombo['discount_number'];
+			$discount = $this->currency->format($getcombo['discount_number']);
+			$discount_save = $this->language->get('text_save').' '.$discount;
+		} else {
+			$price_discount = $price_total - ($price_ori/100)*$getcombo['discount_number'];
+			$discount = $getcombo['discount_number'].'%';
+			$discount_save = $this->language->get('text_save').' '.$discount;
+		}
+	
+		$price_all = '<div class="combo-save">'.$this->language->get('text_price_all').': <span class="price_discount">'.$this->currency->format($price_discount).'</span></br>('.$discount_save.')</div>';
+		$wishlist_button = '<div><button data-original-title="'.$this->language->get('text_add_wishlist').'" type="button" data-toggle="tooltip" class="btn-combo btn-combo-wishlist" title="" onclick="'.implode(";",$wishlist_combo_unique).'">'.$this->language->get('text_add_wishlist').'</button></div>';
+		$cart_button = '<div><button data-original-title="'.$this->language->get('text_add_cart').'" type="button" data-toggle="tooltip" class="btn-combo btn-combo-cart" title="" onclick="'.implode(";",$cart_combo).'">'.$this->language->get('text_add_cart').'</button></div>';
+	
+		$html = '<div id="combo-'.$combo_id.'" class="combo-set">';
+		$html .= '<div class="combo-contain">'.implode(' <div class="combo-plus"> + </div> ',$product_array);
+		$html .= $price_all.'</div><div class="combo-action">'.$wishlist_button.$cart_button.'</div>';
+		$html .= '</div>';
+	
+		return $html;
+	}	
+	
 	private function checkdb(){
 		if (!$this->customer->isLogged()) {
 			return false;

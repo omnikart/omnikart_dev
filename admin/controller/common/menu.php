@@ -2,7 +2,12 @@
 class ControllerCommonMenu extends Controller {
 	public function index() {
 		$this->load->language('common/menu');
-
+		$this->load->model('extension/extension');
+		$data['text_combo_module'] = $this->language->get('text_combo_module');
+		$data['get_installed'] = array();
+		$data['get_installed'] = $this->model_extension_extension->getInstalled('module');
+		$data['combo_module'] = $this->url->link('module/comboproducts', 'token=' . $this->session->data['token'], 'SSL');
+		
 		$data['text_affiliate'] = $this->language->get('text_affiliate');
 		$data['text_api'] = $this->language->get('text_api');
 		$data['text_attribute'] = $this->language->get('text_attribute');

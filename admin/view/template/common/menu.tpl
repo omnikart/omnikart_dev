@@ -20,6 +20,9 @@
     <ul>
       <li><a href="<?php echo $category; ?>"><?php echo $text_category; ?></a></li>
       <li><a href="<?php echo $product; ?>"><?php echo $text_product; ?></a></li>
+	  <?php if (in_array('comboproducts',$get_installed)) {?>
+		<li><a href="<?php echo $combo_module; ?>"><?php echo $text_combo_module; ?></a></li>
+	  <?php }?>	      
       <li><a href="<?php echo $recurring; ?>"><?php echo $text_recurring; ?></a></li>
       <li><a href="<?php echo $filter; ?>"><?php echo $text_filter; ?></a></li>
       <li><a class="parent"><?php echo $text_attribute; ?></a>

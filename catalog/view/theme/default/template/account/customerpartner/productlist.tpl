@@ -28,11 +28,21 @@
       <?php echo $heading_title; ?>
 	  	<div class="pull-right">
 	        <?php if($list || (($allowedAddEdit) && $mp_ap)) { ?>
-						<a href="<?php echo $insert; ?>"  data-toggle="tooltip" title="<?php echo $button_insert; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+						<a href="<?php echo $insert; ?>"  data-toggle="tooltip" title="<?php echo $button_insert; ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Add</a>
 	        <?php } ?>
-			<button data-toggle="tooltip" class="btn btn-primary" id="updateProducts"  title="Update changes for selected products. Page will not refresh after this."><i class="fa fa-save"></i></button>
-			<button data-toggle="tooltip" class="btn btn-info" id="disableProducts"  title="Disable Current Changes"><i class="fa fa-times"></i></button>
-	        <a onclick="$('#form-product').submit();" data-toggle="tooltip" class="btn btn-danger"  title="<?php echo $button_delete; ?>"><i class="fa fa-trash-o"></i></a>
+	       	<a href = "index.php?route=account/customerpartner/excelport/ajaxgenerate" class="btn btn-primary">
+	       		<span data-toggle="tooltip" title="Excel Port Products Download product database in Excel format, Edit is and upload the updated workbook">
+	        		<i class="fa fa-download"></i> Download Products</span>
+	        </a>
+	        
+	        <button class="btn btn-primary" id="button-upload">
+	       		<span data-toggle="tooltip" title="Excel Port Products Download product database in Excel format, Edit is and upload the updated workbook">
+	        		<i class="fa fa-upload"></i> Upload Products</span>
+	        </button>
+	        
+		<button data-toggle="tooltip" class="btn btn-primary" id="updateProducts"  title="Update changes for selected products. Page will not refresh after this."><i class="fa fa-save"></i> Update</button>
+			<button data-toggle="tooltip" class="btn btn-info" id="disableProducts"  title="Disable Current Changes"><i class="fa fa-times"></i> Disable</button>
+	        <a onclick="$('#form-product').submit();" data-toggle="tooltip" class="btn btn-danger"  title="<?php echo $button_delete; ?>"><i class="fa fa-trash-o"></i> Delete</a>
       	</div> 
     </h1>
 
@@ -227,6 +237,20 @@
   <?php echo $column_right; ?>
   </div>
 </div>  
+<div id="progress-dialog" class="modal" data-backdrop="static" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content padding20">
+      <div id="progressbar">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+          </div>
+        </div>
+      </div>
+      <div id="progressinfo"></div>
+      <button class="btn btn-default finishActionButton" style="display: none;">Abort</button>
+    </div>
+  </div>
+</div>
 <script type="text/javascript"><!--
 
 $('#form-product').submit(function(){
@@ -382,5 +406,57 @@ $('#disableProducts').on('click',function(){
 		}	
 	});
 });
+
+<!--
+$('#button-upload').on('click', function() {
+	$('#form-upload').remove();
+	
+	$('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
+
+	$('#form-upload input[name=\'file\']').trigger('click');
+	
+	if (typeof timer != 'undefined') {
+    	clearInterval(timer);
+	}
+	
+	timer = setInterval(function() {
+		if ($('#form-upload input[name=\'file\']').val() != '') {
+			clearInterval(timer);		
+			
+			$.ajax({
+				url: 'index.php?route=account/customerpartner/excelport/ajaximport',
+				type: 'post',		
+				dataType: 'json',
+				data: new FormData($('#form-upload')[0]),
+				cache: false,
+				contentType: false,
+				processData: false,		
+				beforeSend: function() {
+					$('#button-upload').button('loading');
+				},
+				complete: function() {
+					$('#button-upload').button('reset');
+				},	
+				success: function(json) {
+					if (json['error']) {
+						alert(json['error']);
+					}
+								
+					if (json['success']) {
+						alert(json['success']);
+						
+						$('input[name=\'filename\']').attr('value', json['filename']);
+						$('input[name=\'mask\']').attr('value', json['mask']);
+					}
+					location.reload(); 
+				},			
+				error: function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				}
+			});
+		}
+	}, 500);
+});
+//-->
 //--></script> 
 <?php echo $footer; ?>

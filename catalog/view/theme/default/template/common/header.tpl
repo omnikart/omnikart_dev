@@ -29,6 +29,23 @@
 <link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700" rel="stylesheet" type="text/css" />
 <link href="catalog/view/theme/default/stylesheet/stylesheet.css?v=1" rel="stylesheet">
+<script src="catalog/view/javascript/comboproducts.js" type="text/javascript"></script>
+<style type="text/css">
+	.combo-section {width: 100%;border-top: 1px solid #CCC;}
+	.combo-section .combo-set {padding: 2px;width: 100%;min-height: 180px;}
+	.combo-section .combo-set .combo-item {display: block;line-height: 14px;font-weight: bold;min-height: 14px;float: left;width: 14%;}
+	.combo-item-img {padding-right: 5px;padding-left: 5px;text-align: center;}
+	.combo-item-name,.combo-item-price {text-align: center;font-size: small;}
+	.combo-action {float:left;width: 25%;}
+	.combo-plus, .combo-save {float: left;font-weight: bold;padding-left:10px;}
+	.combo-save {float:none;}
+	.combo-plus {line-height: 100px}
+	.price_discount {color: #900;}
+	.btn-combo {text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.25);border: 1px solid #CCC;border-radius: 4px;box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset, 0px 1px 2px rgba(0, 0, 0, 0.05);}
+	.btn-combo-wishlist {background: linear-gradient(to bottom, #F7DFA5, #F0C14B) repeat scroll 0% 0% transparent;}
+	.btn-combo-cart {color: #FFF;background: linear-gradient(to bottom, #23A1D1, #1F90BB) repeat-x scroll 0% 0% transparent;}
+	@media only screen and (max-width: 500px) {.combo-plus {display:none;}.combo-action {width: 100%;}.combo-action .btn-combo {width: 100%;height: 40px;display:block;	}.combo-contain {min-height: 85px;}	.combo-save {font-size: 90%;}.combo-item-name,.combo-item-price {font-size: smaller;}}
+</style>
 <?php foreach ($styles as $style) { ?>
 <link href="<?php echo $style['href']; ?>" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
@@ -102,7 +119,9 @@ type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
 			</div>
 		</div>
 	</div>
+	
 	<?php if ($categories) { ?>
+	<div class="container-fluid" id="menu-holder">
 	<div class="container">
 	  <nav id="menu" class="navbar">
 	    <div class="navbar-header"><span id="category" class="visible-xs"><?php echo $text_category; ?></span>
@@ -111,27 +130,28 @@ type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
 	    <div class="collapse navbar-collapse navbar-ex1-collapse">
 	      <ul class="nav navbar-nav">
 	        <?php foreach (array_slice($categories,0,8) as $category) { ?>
-	        <?php if ($category['children']) { ?>
-	        <li class="dropdown"><a href="<?php echo $category['href']; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $category['name']; ?></a>
-	          <div class="dropdown-menu">
-	            <div class="dropdown-inner">
-	              <?php foreach (array_chunk($category['children'], ceil(count($category['children']) / $category['column'])) as $children) { ?>
-	              <ul class="list-unstyled" style="width: <?php echo ((float)100/$category['column']); ?>%;">
-	                <?php foreach ($children as $child) { ?>
-	                <li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>
-	                <?php } ?>
-	              </ul>
-	              <?php } ?>
-	            </div>
-	            <a href="<?php echo $category['href']; ?>" class="see-all"><?php echo $text_all; ?> <?php echo $category['name']; ?></a> </div>
-	        </li>
-	        <?php } else { ?>
-	        <li><a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></li>
-	        <?php } ?>
+		        <?php if ($category['children']) { ?>
+		        <li class="dropdown"><a href="<?php echo $category['href']; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $category['name']; ?> <span class="caret"></span></a>
+		          <div class="dropdown-menu">
+		            <div class="dropdown-inner">
+		              <?php foreach (array_chunk($category['children'], ceil(count($category['children']) / $category['column'])) as $children) { ?>
+		              <ul class="list-unstyled">
+		                <?php foreach ($children as $child) { ?>
+		                <li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>
+		                <?php } ?>
+		              </ul>
+		              <?php } ?>
+		            </div>
+		            <a href="<?php echo $category['href']; ?>" class="see-all"><?php echo $text_all; ?> <?php echo $category['name']; ?></a> </div>
+		        </li>
+		        <?php } else { ?>
+		        <li><a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></li>
+		        <?php } ?>
 	        <?php } ?>
 	      </ul>
 	    </div>
 	  </nav>
+	</div>
 	</div>
 	<?php } ?>	
 </header>

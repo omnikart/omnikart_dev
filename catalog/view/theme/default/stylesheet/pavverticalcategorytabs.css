@@ -102,7 +102,7 @@
 /* line 56, ../development/scss/pavverticalcategorytabs.scss */
 .pav-verticalcategorytabs .box-heading {
   float: none;
-  width: 200px;
+  width: 230px;
   padding: 20px 20px 20px 0px;
   color: white;
   font-weight: bold;
@@ -205,7 +205,7 @@
 }
 /* line 110, ../development/scss/pavverticalcategorytabs.scss */
 .pav-verticalcategorytabs .tabs-right li.active:after {
-  right: 5px;
+	left: -1px;
 }
 /* line 430, ../development/scss/mixins/_app.scss */
 .rtl .pav-verticalcategorytabs .tabs-right li.active:after {

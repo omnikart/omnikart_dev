@@ -235,9 +235,40 @@
 				$limit = 5;
 			}
  	 	}		
-
+	
+  public function install(){
+  	$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."supplier_fields` (
+	  	`history_id` int(11) NOT NULL,
+  		`field_code` int(11) NOT NULL,
+		`field_type` varchar(64) NOT NULL,
+  		`value_text` varchar(64) NOT NULL
+	) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+  	
+  	$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."supplier_history` (
+	  	`history_id` int(11) NOT NULL,
+  		`comment` text NOT NULL
+	) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+  	 
+  	$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."supplier_requests` (
+  	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `user_info` text NOT NULL,
+	  `categories` text NOT NULL,
+	  `brands` text NOT NULL,
+	  `trade` text NOT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1");	
+  	
+  	$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."supplier_schedule` (
+	  `history_id` int(11) NOT NULL AUTO_INCREMENT,
+	  `id` int(11) NOT NULL,
+	  `date_scheduled` datetime NOT NULL,
+	  `status` tinyint(11) NOT NULL,
+	  `date_added` date NOT NULL,
+	  PRIMARY KEY (`history_id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1");
+  }
  	 	
-	public function supplier_form2(){
+public function supplier_form2(){
 		$url='';
 		$this->load->model('customerpartner/master');
 		
@@ -425,3 +456,4 @@
 	}
 		    					 	
   }
+

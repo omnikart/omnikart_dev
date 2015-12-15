@@ -367,10 +367,15 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 	
 
       	$this->load->model('localisation/stock_status');
-      	
       	$this->data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses();
+
+      	$this->load->model('localisation/weight_class');
+      	$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses();
+
+      	$this->load->model('localisation/length_class');
+      	$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses();
       	
-		$this->data['mp_ap'] = $this->config->get('marketplace_selleraddproduct');
+      	$this->data['mp_ap'] = $this->config->get('marketplace_selleraddproduct');
 		
 		$this->data['column_left'] = $this->load->controller('common/column_left');
 		$this->data['column_right'] = $this->load->controller('common/column_right');
@@ -498,6 +503,10 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		$this->index();
 	}
 
+	public function excelport(){
+		
+	}
+	
 	public function updateProduct(){
 		$json = array();
 		$this->load->model('account/customerpartner');

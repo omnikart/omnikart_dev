@@ -344,7 +344,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 
 					$values = array(
 			        	'order' => $data['html'],
-						'commission' => $commission,
+								'commission' => $commission,
 			        );
 			        
 					$this->model_customerpartner_mail->mail($data,$values);

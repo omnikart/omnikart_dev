@@ -56,7 +56,7 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 			'cols'         => 4,
 			'limit'        => 16,
 
-			'limit_tabs'   => 8,
+			'limit_tabs'   => 4,
 			'status_nav'   => 1,
 			'prefix_class' => '',
 			'image'        => '',
@@ -143,7 +143,7 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 			$result[$category['category_id']]['products'] = $this->_getProducts($category['category_id'], $setting);
 			$result[$category['category_id']]['name'] = $category['name'];
 		}
-		return array_slice($result, 0, 7);
+		return array_slice($result, 0, 4);
 	}
 
 	public function _getCProducts($products, $setting){
@@ -154,12 +154,12 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 				if ($product_info['image']) {
 					$image = $this->model_tool_image->resize($product_info['image'], $setting['width'], $setting['height']);
                     // Image Attribute for product
-                    $product_images = $this->model_catalog_product->getProductImages($result['product_id']);
-                    if(isset($product_images) && !empty($product_images)) {
-                        $thumb2 = $this->model_tool_image->resize($product_images[0]['image'], $setting['width'], $setting['height']);
-                    }
+					$product_images = $this->model_catalog_product->getProductImages($result['product_id']);
+					if(isset($product_images) && !empty($product_images)) {
+							$thumb2 = $this->model_tool_image->resize($product_images[0]['image'], $setting['width'], $setting['height']);
+					}
 				} else {
-					$image = false;
+						$image = $this->model_tool_image->resize('placeholder.png', $setting['width'], $setting['height']);
 				}
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -190,7 +190,7 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 					'rating'     => $rating,
 					'reviews'    => sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']),
 					'href'    	 => $this->url->link('product/product', 'product_id=' . $product_info['product_id']),
-                    'thumb2'     => isset($thumb2)?$thumb2:'',
+					'thumb2'     => isset($thumb2)?$thumb2:'',
 				);
 			}
 		}
@@ -201,10 +201,11 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 		$products = array();
 		$data = array(
 			'filter_category_id' => $category_id,
+			'filter_sub_category' => true,
 			'sort'  => 'p.date_added',
 			'order' => 'DESC',
 			'start' => 0,
-			'limit' => $setting['limit'],
+			'limit' => $setting['itemsperpage'],
 		);
 		$results = $this->model_catalog_product->getProducts($data);
 		foreach ($results as $result) {
@@ -216,7 +217,7 @@ class ControllerModulePavverticalcategorytabs extends Controller {
                     $thumb2 = $this->model_tool_image->resize($product_images[0]['image'], $setting['width'], $setting['height']);
                 }
 			} else {
-				$image = false;
+						$image = $this->model_tool_image->resize('placeholder.png', $setting['width'], $setting['height']);
 			}
 
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {

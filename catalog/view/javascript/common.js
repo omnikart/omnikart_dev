@@ -41,11 +41,11 @@ $(document).ready(function() {
 	
 		cols1 = $('#column-right, #column-left').length;
 	if (cols1 == 2) {
-		$('#content .category-layout:nth-child(2n+2)').after('<div class="clearfix visible-md visible-sm"></div>');
+		$('#columns .category-layout:nth-child(2n+2)').after('<div class="clearfix visible-md visible-sm"></div>');
 	} else if (cols1 == 1) {
-		$('#content .category-layout:nth-child(4n+4)').after('<div class="clearfix visible-lg"></div>');
+		$('#columns .category-layout:nth-child(6n+6)').after('<div class="clearfix visible-lg"></div>');
 	} else {
-		$('#content .category-layout:nth-child(4n+4)').after('<div class="clearfix"></div>');
+		$('#columns .category-layout:nth-child(6n+6)').after('<div class="clearfix"></div>');
 	}
 	
 	// Highlight any found errors
@@ -100,10 +100,10 @@ $(document).ready(function() {
 		var dropdown = $(this).parent().offset();
 
 		var i = (dropdown.left + $(this).outerWidth()) - (menu.left + $('#menu').outerWidth());
-		/*
+		
 		if (i > 0) {
 			$(this).css('margin-left', '-' + (i + 5) + 'px');
-		}*/
+		}
 	});
 
 	// Product List
@@ -202,7 +202,7 @@ var cart = {
 				
 					$('html, body').animate({ scrollTop: 0 }, 'slow');
 
-					$('#cart > ul').load('index.php?route=common/cart/info ul li');
+					$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
 				}
 			}
 		});
@@ -228,7 +228,7 @@ var cart = {
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
 					location = 'index.php?route=checkout/cart';
 				} else {
-					$('#cart > ul').load('index.php?route=common/cart/info ul li');
+					$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
 				}
 			}
 		});
@@ -256,7 +256,7 @@ var cart = {
 				} else if (getURLVar('route') == 'b2bcheckout/checkout') {
 					location = 'index.php?route=b2bcheckout/checkout';
 				} else {
-					$('#cart > ul').load('index.php?route=common/cart/info ul li');
+					$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
 				}
 			}
 		});

@@ -1,7 +1,5 @@
 <?php $olang = $this->registry->get('language');  $ourl = $this->registry->get('url');   ?>
 <div class="product-block item-default clearfix" itemtype="http://schema.org/Product" itemscope>
-
-
     <?php if ($product['thumb']) {    ?>
         <?php if( $product['special'] ) {   ?>
         <span class="product-label ribbon"><span class="product-label-special"><?php echo $olang->get( 'text_sale' ); ?></span></span>
@@ -27,7 +25,7 @@
                 <div class="review clearfix">
                     <h3 class="name" itemprop="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h3>
 
-                    <?php if ( isset($product['rating']) ) { ?>
+                    <?php /*if ( isset($product['rating']) ) { ?>
                     <div class="rating">
                         <?php for ($is = 1; $is <= 5; $is++) { ?>
                         <?php if ($product['rating'] < $is) { ?>
@@ -38,7 +36,7 @@
                         <?php } ?>
                         <?php } ?>
                     </div>
-                    <?php } ?>
+                    <?php } */?>
                 </div>
 
                 <?php if ($product['price']) { ?>
@@ -70,7 +68,7 @@
                 <div class="action">
                     <?php if( !isset($listingConfig['catalog_mode']) || !$listingConfig['catalog_mode']) { ?>
                     <div class="cart">
-                        <button data-loading-text="Loading..." class="btn btn-outline" type="button" onclick="cart.addcart('<?php echo $product['product_id']; ?>');">
+                        <button data-loading-text="Loading..." class="btn btn-outline" type="button" onclick="cart.add('<?php echo $product['product_id']; ?>');">
                             <i class="fa fa-shopping-cart"></i>
                             <span><?php echo $olang->get('button_cart'); ?></span>
                         </button>
