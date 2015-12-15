@@ -6,6 +6,16 @@ class ModelCustomerpartnerMaster extends Model {
 		return $query->rows;
   }
   
+   public function supplierSchedule($data = array()){
+  	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_schedule VALUES ('','".$data['enquiry_id']."','".$data['date']."','".$data['status']."',NOW())");
+  	$his_id = $this->db->getLastId();
+  	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_history VALUES ('" . $his_id . "','".$data['comment']."')");
+  	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_fields VALUES ('" . $his_id . "','1','".$data['registration']."','')");
+  	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_fields VALUES ('" . $his_id. "','2','".$data['pricelist']."','')");
+  	 
+   }
+  
+  
   public function getSupplierQuery($enquiryId) {
   	$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_requests WHERE id = ".(int)$enquiryId);
   	return $query->row;
