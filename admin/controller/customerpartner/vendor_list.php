@@ -116,7 +116,10 @@
 	$data['entry_category'] = $this->language->get('entry_category');
 	$data['entry_brand'] = $this->language->get('entry_brand');
 	$data['entry_trade'] = $this->language->get('entry_trade');
+	$data['entry_status'] = $this->language->get('entry_status');
 	$data['button_filter'] = $this->language->get('button_filter');
+	$data['text_enabled'] = "Enabled";
+	$data['text_disabled'] = "disabled";
 	$data['add'] = $this->language->get('add');
 	
 	
@@ -129,6 +132,7 @@
 	$data['delete'] = $this->url->link('customerpartner/vendor_list/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 	$data['button'] = $this->url->link('customerpartner/supplier_form', 'token=' . $this->session->data['token'] . $url, 'SSL');
 	$data['supplier_form2'] = $this->url->link('customerpartner/vendor_list/supplier_form2&token=' . $this->session->data['token'] . $url,'', 'SSL');
+	$data['supplier_schedule_link'] = $this->url->link('customerpartner/vendor_list/supplierschedule&token=' . $this->session->data['token'] . $url,'', 'SSL');
 	$data['filterLink'] = $this->url->link('customerpartner/vendor_list&token=' . $this->session->data['token'] . $url,'', 'SSL');
 	$data['token'] =  $this->session->data['token'];
 	
@@ -409,5 +413,15 @@
 		//$this->response->redirect($this->url->link('customerpartner/vendor_list/supplier_form2', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		
 	}
- 	
-}
+	 public function supplierschedule(){
+		$data = array();
+		$json = array();
+		$data= $this->request->post;
+		
+		if (isset($data['enquiry_id']) && $data['enquiry_id']){
+			$this->load->model('customerpartner/master');
+			$this->model_customerpartner_master->supplierSchedule($data);
+		}
+	}
+		    					 	
+  }
