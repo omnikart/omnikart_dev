@@ -12,9 +12,13 @@ class ModelCustomerpartnerMaster extends Model {
   	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_history VALUES ('" . $his_id . "','".$data['comment']."')");
   	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_fields VALUES ('" . $his_id . "','1','".$data['registration']."','')");
   	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_fields VALUES ('" . $his_id. "','2','".$data['pricelist']."','')");
-  	 
+  	  	 
    }
   
+   public function getSupplierSchedule($enquiry_id){
+   	return $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_schedule ss LEFT JOIN " . DB_PREFIX . "supplier_fields sf ON (ss.history_id = sf.history_id) LEFT JOIN " . DB_PREFIX . "supplier_history sh ON (ss.history_id = sh.history_id) WHERE ss.id=".(int)$enquiry_id." ORDER BY ss.history_id DESC LIMIT 1")->rows;
+   	
+   }
   
   public function getSupplierQuery($enquiryId) {
   	$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_requests WHERE id = ".(int)$enquiryId);

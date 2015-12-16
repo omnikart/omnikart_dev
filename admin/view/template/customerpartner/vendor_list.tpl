@@ -63,6 +63,7 @@
 										<td class="text-center">Brands</td>
 										<td class="text-center">Trade</td>
 										<td class="text-center">Action</td>
+										<td class="text-center">History</td>
 									</tr>
 								</thead>
 								<tbody>
@@ -95,8 +96,11 @@
 										  			<button type="button" class="btn btn-primary" data-toggle="modal" data-enquiryid="<?php echo $enquiry['id']; ?>" data-target="#supplier-modal"><i class="fa fa-plus"></i></button>
 												</div>
 											</td>
+											<td>
+											<button type="button" class="btn btn-primary" data-toggle="modal" data-enquiryid="<?php echo $enquiry['id']; ?>" data-target="#demo"><i class="fa fa-history"></i></button>
+                                          	</td>
 										</tr>
-										<?php } ?>
+									 	<?php } ?>
 									<?php } ?>
 								</tbody>
 							</table>
@@ -105,8 +109,19 @@
 				</div>
 			</div>
 	</div>
-
-	<div class="modal fade" id="schedule-modal" role="dialog" aria-labelledby="schedule-modal">
+	
+	<div class="container">
+      <div class="modal fade" id="demo" role="dialog" aria-labelledby="schedule-modal">
+       <div class="modal-dialog">
+         <div class="modal-content">
+           <div class="modal-body">
+          </div>
+       </div>
+     </div>
+  </div>
+ </div>
+	
+   <div class="modal fade" id="schedule-modal" role="dialog" aria-labelledby="schedule-modal">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header bg-primary">
@@ -235,12 +250,12 @@ $('#button-filter').on('click', function() {
 });
 
 $('#schedule-modal').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget) // Button that triggered the modal
-  var recipient = button.data('enquiryid') // Extract info from data-* attributes
-  var modal = $(this)
-  modal.find('.modal-title').text('Supplier Form')
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var recipient = button.data('enquiryid'); // Extract info from data-* attributes
+  var modal = $(this);
+  modal.find('.modal-title').text('Supplier Form');
   modal.find('.modal-body #enquiry_id').val(recipient);
-  alert(recipient);
+ 
 });
 $('#supplier-modal').on('show.bs.modal', function (event) {
   var modal = $(this);	
@@ -248,6 +263,33 @@ $('#supplier-modal').on('show.bs.modal', function (event) {
   var enquiryId = button.data('enquiryid'); // Extract info from data-* attributes
 	$('#supplier-modal .modal-body').load('<?php echo $supplier_form2; ?>&enquiryId='+enquiryId);
 });
+
+$('#demo').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var recipient = button.data('enquiryid'); // Extract info from data-* attributes
+  var modal = $(this);
+  modal.find('.modal-body #enquiry_id').val(recipient);
+ 
+});
+$('#demo').on('show.bs.modal', function (event) {
+  var modal = $(this);	
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var enquiryId = button.data('enquiryid'); // Extract info from data-* attributes
+  alert(enquiryId);
+  $.ajax({
+      url : '<?php echo $supplier_schedule_link1; ?>&enquiryId='+enquiryId,
+      type: 'post',
+      dataType: 'json',
+      beforeSend: function() {
+      },
+      complete: function() {
+      },
+      success: function(json) {
+	    }
+  });	 
+});
+
+
 //--></script>
 
 <script  type="text/javascript">
@@ -263,10 +305,11 @@ $('#supplier-modal').on('show.bs.modal', function (event) {
         complete: function() {
         },
         success: function(json) {
-		
-        }
+	    }
         
       });
   });
-</script>
- <?php echo $footer; ?>   
+  
+ </script>
+
+<?php echo $footer; ?>   

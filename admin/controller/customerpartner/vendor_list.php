@@ -128,16 +128,15 @@
 	$data['filter_category'] =  $filter_category;
 	$data['filter_brand'] =  $filter_brand;
 	$data['filter_trade'] =  $filter_trade;
-	
+	$data['token'] =  $this->session->data['token'];
 	$data['delete'] = $this->url->link('customerpartner/vendor_list/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 	$data['button'] = $this->url->link('customerpartner/supplier_form', 'token=' . $this->session->data['token'] . $url, 'SSL');
 	$data['supplier_form2'] = $this->url->link('customerpartner/vendor_list/supplier_form2&token=' . $this->session->data['token'] . $url,'', 'SSL');
 	$data['supplier_schedule_link'] = $this->url->link('customerpartner/vendor_list/supplierschedule&token=' . $this->session->data['token'] . $url,'', 'SSL');
+	$data['supplier_schedule_link1'] = $this->url->link('customerpartner/vendor_list/supplierschedule1&token=' . $this->session->data['token'] . $url,'', 'SSL');
 	$data['filterLink'] = $this->url->link('customerpartner/vendor_list&token=' . $this->session->data['token'] . $url,'', 'SSL');
-	$data['token'] =  $this->session->data['token'];
-	
-	
-	$this->response->setOutput($this->load->view('customerpartner/vendor_list.tpl',$data));
+	 
+	 $this->response->setOutput($this->load->view('customerpartner/vendor_list.tpl',$data));
     }
     
   public function delete() {
@@ -454,6 +453,16 @@ public function supplier_form2(){
 			$this->model_customerpartner_master->supplierSchedule($data);
 		}
 	}
-		    					 	
-  }
+
+	public function supplierschedule1(){
+		$data = array();
+		$json = array();
+
+		$this->load->model('customerpartner/master');
+		 if (isset($data['enquiry_id']) && $data['enquiry_id']){
+		 $enquiry_id = $this->request->get['enquiry_id'];
+		 $this->model_customerpartner_master->getSupplierSchedule($enquiry_id);
+   }
+	}
+}
 
