@@ -6,21 +6,41 @@ class ModelCustomerpartnerMaster extends Model {
 		return $query->rows;
   }
   
-   public function supplierSchedule($data = array()){
-  	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_schedule VALUES ('','".$data['enquiry_id']."','".$data['date']."','".$data['status']."',NOW())");
+  public function supplierSchedule($data = array()){
+  	$user_id = $this->user->getId();
+   	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_schedule VALUES ('','".$data['enquiry_id']."','".$user_id."','".$data['date']."','".$data['status']."',NOW())");
   	$his_id = $this->db->getLastId();
   	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_history VALUES ('" . $his_id . "','".$data['comment']."')");
-  	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_fields VALUES ('" . $his_id . "','1','".$data['registration']."','')");
-  	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_fields VALUES ('" . $his_id. "','2','".$data['pricelist']."','')");
-  	  	 
-   }
+  	if(isset($data['registration'])){
+  	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_fields VALUES ('" . $his_id . "','1','registration','".$data['registration']."')");
+  	}
+  	if(isset($data['pricelist'])){
+  	$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_fields VALUES ('" . $his_id. "','2','pricelist','".$data['pricelist']."')");
+  	}  	 
+  }
   
-   public function getSupplierSchedule($enquiry_id){
-   	return $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_schedule ss LEFT JOIN " . DB_PREFIX . "supplier_fields sf ON (ss.history_id = sf.history_id) LEFT JOIN " . DB_PREFIX . "supplier_history sh ON (ss.history_id = sh.history_id) WHERE ss.id=".(int)$enquiry_id." ORDER BY ss.history_id DESC LIMIT 1")->rows;
-   	
-   }
-  
-  public function getSupplierQuery($enquiryId) {
+  public function getSupplierSchedule($enquiry_id){
+  	$data = array();
+  	$query = $this->db->query("SELECT ss.*,sh.comment FROM " . DB_PREFIX . "supplier_schedule ss LEFT JOIN " . DB_PREFIX . "supplier_history sh ON (ss.history_id = sh.history_id) WHERE ss.id=".(int)$enquiry_id." ORDER BY ss.history_id DESC LIMIT 2");
+   	// sf ON (ss.history_id = sf.history_id)
+   	$fields=array();
+    
+   	foreach ($query->rows as $result) {
+   		$this->load->model('user/user');
+   		$user_id = $this->user->getId();
+   		$fields = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_fields WHERE history_id='".$result['history_id']."'");
+   	    $data['histories'][] = array(
+   			'history_id' 	=> $result['history_id'],
+   			'comment'		=> $result['comment'],
+   			'user_id'       => $this->model_user_user->getUser($user_id),
+   			'date_scheduled'=> $result['date_scheduled'],
+   			'fields'		=> $fields->rows,
+   			'status' 		=> $result['status']
+   		);
+   	}
+   	return $data;
+  }
+   public function getSupplierQuery($enquiryId) {
   	$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_requests WHERE id = ".(int)$enquiryId);
   	return $query->row;
   }
