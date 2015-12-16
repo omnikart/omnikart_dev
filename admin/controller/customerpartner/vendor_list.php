@@ -133,7 +133,7 @@
 	$data['button'] = $this->url->link('customerpartner/supplier_form', 'token=' . $this->session->data['token'] . $url, 'SSL');
 	$data['supplier_form2'] = $this->url->link('customerpartner/vendor_list/supplier_form2&token=' . $this->session->data['token'] . $url,'', 'SSL');
 	$data['supplier_schedule_link'] = $this->url->link('customerpartner/vendor_list/supplierschedule&token=' . $this->session->data['token'] . $url,'', 'SSL');
-	$data['supplier_schedule_link1'] = $this->url->link('customerpartner/vendor_list/supplierschedule1&token=' . $this->session->data['token'] . $url,'', 'SSL');
+	$data['get_supplier_schedule_link'] = $this->url->link('customerpartner/vendor_list/getSupplierSchedule&token=' . $this->session->data['token'] . $url,'', 'SSL');
 	$data['filterLink'] = $this->url->link('customerpartner/vendor_list&token=' . $this->session->data['token'] . $url,'', 'SSL');
 	 
 	 $this->response->setOutput($this->load->view('customerpartner/vendor_list.tpl',$data));
@@ -327,7 +327,6 @@ public function supplier_form2(){
 		$data['button'] = $this->url->link('customerpartner/vendor_list/supplier_form2', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		
 		$this->response->setOutput($this->load->view('customerpartner/supplier_form2.tpl',$data));
-		
 	}
 	
 	public function supplier_form2_save(){
@@ -454,15 +453,15 @@ public function supplier_form2(){
 		}
 	}
 
-	public function supplierschedule1(){
+	public function getSupplierSchedule(){
 		$data = array();
-		$json = array();
-
 		$this->load->model('customerpartner/master');
-		 if (isset($data['enquiry_id']) && $data['enquiry_id']){
-		 $enquiry_id = $this->request->get['enquiry_id'];
-		 $this->model_customerpartner_master->getSupplierSchedule($enquiry_id);
-   }
+		 
+		if (isset($this->request->get['enquiry_id']) && $this->request->get['enquiry_id']) { 
+			$enquiry_id = $this->request->get['enquiry_id'];
+			$data = $this->model_customerpartner_master->getSupplierSchedule($enquiry_id);
+   		}
+   		$this->response->setOutput($this->load->view('customerpartner/suppliersschedule.tpl',$data));
 	}
 }
 
