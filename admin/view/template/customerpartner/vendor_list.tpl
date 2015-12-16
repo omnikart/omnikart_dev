@@ -63,7 +63,7 @@
 										<td class="text-center">Brands</td>
 										<td class="text-center">Trade</td>
 										<td class="text-center">Action</td>
-										<td class="text-center">History</td>
+										 
 									</tr>
 								</thead>
 								<tbody>
@@ -91,15 +91,13 @@
 											</td>
 											<td class=text-right>    
 												<input type="hidden" name="enquiry_id" value="<?php echo $enquiry['id']; ?>" />
-												<div class="btn-group" role="group">
+												<div class="btn-group" role="group" >
 													<button type="button" class="btn btn-primary" data-toggle="modal" data-enquiryid="<?php echo $enquiry['id']; ?>" data-target="#schedule-modal"><i class="fa fa-calendar-plus-o"></i></button>
 										  			<button type="button" class="btn btn-primary" data-toggle="modal" data-enquiryid="<?php echo $enquiry['id']; ?>" data-target="#supplier-modal"><i class="fa fa-plus"></i></button>
-												</div>
+											        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#getSchedule" data-enquiryid="<?php echo $enquiry['id']; ?>"><i class="fa fa-history"></i></button>
+                                          	 	</div>
 											</td>
-											<td>
-											<button type="button" class="btn btn-primary" data-toggle="modal" data-enquiryid="<?php echo $enquiry['id']; ?>" data-target="#demo"><i class="fa fa-history"></i></button>
-                                          	</td>
-										</tr>
+										 </tr>
 									 	<?php } ?>
 									<?php } ?>
 								</tbody>
@@ -110,16 +108,18 @@
 			</div>
 	</div>
 	
-	<div class="container">
-      <div class="modal fade" id="demo" role="dialog" aria-labelledby="schedule-modal">
-       <div class="modal-dialog">
-         <div class="modal-content">
-           <div class="modal-body">
-          </div>
-       </div>
-     </div>
-  </div>
- </div>
+<div class="modal fade" id="getSchedule" role="dialog" aria-labelledby="schedule-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Supplier Form</h4>
+			</div>
+			<div class="modal-body">
+			</div>
+		</div>
+	</div>
+</div>
 	
    <div class="modal fade" id="schedule-modal" role="dialog" aria-labelledby="schedule-modal">
 		<div class="modal-dialog">
@@ -264,30 +264,12 @@ $('#supplier-modal').on('show.bs.modal', function (event) {
 	$('#supplier-modal .modal-body').load('<?php echo $supplier_form2; ?>&enquiryId='+enquiryId);
 });
 
-$('#demo').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget); // Button that triggered the modal
-  var recipient = button.data('enquiryid'); // Extract info from data-* attributes
-  var modal = $(this);
-  modal.find('.modal-body #enquiry_id').val(recipient);
- 
-});
-$('#demo').on('show.bs.modal', function (event) {
+$('#getSchedule').on('show.bs.modal', function (event) {
   var modal = $(this);	
   var button = $(event.relatedTarget); // Button that triggered the modal
   var enquiryId = button.data('enquiryid'); // Extract info from data-* attributes
-  alert(enquiryId);
-  $.ajax({
-      url : '<?php echo $supplier_schedule_link1; ?>&enquiryId='+enquiryId,
-      type: 'post',
-      dataType: 'json',
-      beforeSend: function() {
-      },
-      complete: function() {
-      },
-      success: function(json) {
-	    }
-  });	 
-});
+  $('#getSchedule .modal-body').load('<?php echo $get_supplier_schedule_link; ?>&enquiry_id='+enquiryId);
+ });
 
 
 //--></script>
@@ -303,13 +285,14 @@ $('#demo').on('show.bs.modal', function (event) {
         beforeSend: function() {
         },
         complete: function() {
-        },
+        	alert("successfully saved");
+        	 },
         success: function(json) {
-	    }
+         }
         
       });
   });
-  
- </script>
+
+  </script>
 
 <?php echo $footer; ?>   
