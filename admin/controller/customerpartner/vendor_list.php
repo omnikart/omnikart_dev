@@ -60,9 +60,9 @@
 	$filter_data = array(
 				'filter_name'	  => $filter_name,
 				'filter_mail'	  => $filter_mail,
-				'filter_category'	  => $filter_category,
-				'filter_brand' =>  $filter_brand,
-				'filter_trade'   =>  $filter_trade,
+				'filter_category' => $filter_category,
+				'filter_brand'    =>  $filter_brand,
+				'filter_trade'    =>  $filter_trade,
 	 );
 	
 		$data['sort_name'] = $this->url->link('customerpartner/vendor_list', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
@@ -107,6 +107,8 @@
 	 	);
 	 }
 	$url='';
+	 
+	$data['address_1'] = $this->language->get('address_1');
 	$data['vendor'] = $this->language->get('vendor');
 	$data['header'] = $this->load->controller('common/header');
 	$data['footer'] = $this->load->controller('common/footer');
@@ -120,7 +122,9 @@
 	$data['button_filter'] = $this->language->get('button_filter');
 	$data['text_enabled'] = "Enabled";
 	$data['text_disabled'] = "disabled";
-	$data['add'] = $this->language->get('add');
+	$data['address_1'] = $this->language->get('address_1');
+	$data['address_2'] = $this->language->get('address_2');
+	$data['postcode'] = $this->language->get('postcode');
 	
 	
 	$data['filter_name'] =  $filter_name;
@@ -276,8 +280,6 @@ public function supplier_form2(){
 		
 		$fields = array(
 		 'company_name',
-		 'category',
-		 'area',
 		 'name',
 		 'number',
 		 'email',
@@ -294,8 +296,20 @@ public function supplier_form2(){
 				$user_info = unserialize($enquiry['user_info']);
 				$this->load->model('sale/customer');
 				$customer = $this->model_sale_customer->getCustomerByEmail($user_info['email']);
+				$customer_add= $this->model_sale_customer->getAddress(isset($customer['address_id']));
 				
-				if ($customer){
+				if ($customer_add){
+					$data['address_1']      = $customer_add['address_1'];
+					$data['address_2']      = $customer_add['address_2'];
+					$data['city']           = $customer_add['city'];
+					$data['postcode']       = $customer_add['postcode'];
+					$data['country_id']     = $customer_add['country_id'];
+					$data['zone_id']        = $customer_add['zone_id'];
+					$data['company']        = $customer_add['company'];
+					
+				  }
+
+				  if ($customer){
 					
 					$data['name']       =$customer['firstname'].$customer['lastname'];
 					$data['number']     = $customer['telephone'];
@@ -322,10 +336,12 @@ public function supplier_form2(){
 			 }
 		} else {
 		}
+		$data['token'] =  $this->session->data['token'];
 		$data['registration'] = $this->url->link('customerpartner/vendor_list/supplier_form2_save&token=' . $this->session->data['token'] . $url,'', 'SSL');
 		$data['button_upload'] = "Upload"; //
 		$data['button'] = $this->url->link('customerpartner/vendor_list/supplier_form2', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		
+		$this->load->model('localisation/country');
+        $data['countries'] = $this->model_localisation_country->getCountries();
 		$this->response->setOutput($this->load->view('customerpartner/supplier_form2.tpl',$data));
 	}
 	
@@ -333,6 +349,7 @@ public function supplier_form2(){
 		
 		if (isset($this->request->post['email'])) {
 			$this->load->model('sale/customer');
+	 
 			$customer = $this->model_sale_customer->getCustomerByEmail($this->request->post['email']);
 			if (!$customer) {
 				$fields = array(
@@ -355,19 +372,68 @@ public function supplier_form2(){
 				$name = explode(' ',$data['name']);
 				$data1 = array(
 					'customer_group_id' => $this->config->get('config_customer_group_id'),
-					'firstname' => $name[0], 
-					'lastname' => (isset($name[1])?$name[1]:''),
-					'email' => $user_info['email'],
-					'telephone' => $user_info['number'],
-					'fax' => $user_info['number_2'],
-					'newsletter' => '1',
-					'password' => '12345678',
-					'status' => '1',
-					'approved' => '1',
-					'safe' => '1'
-				);
+					'firstname'         => $name[0], 
+					'lastname'          => (isset($name[1])?$name[1]:''),
+					'email'             => isset($user_info['email']),
+					'telephone'         => isset($user_info['number']),
+					'fax'               => isset($user_info['number_2']),
+					'newsletter'        => '1',
+					'password'          => '12345678',
+					'status'            => '1',
+					'approved'          => '1',
+					'safe'              => '1'
+				); 
 				$customer_id = $this->model_sale_customer->addCustomer($data1);
-			} else {
+				
+              } else {
+			  	$fields = array(
+ 							 'name',
+ 							 'number',
+ 							 'email',
+ 							 'address_1',
+			 	             'address_2',
+ 							 'city',
+ 							 'postcode',
+ 							 'country_id',
+ 							 'zone_id',
+ 							 'company'
+			 	);
+			 	foreach ($fields as $field){
+			 		if (isset($this->request->post[$field])) {
+			 			$data[$field] = $this->request->post[$field];
+			 		} else {
+			 			$data[$field] = '';
+			 		}
+			 	}
+			 	$name = explode(' ',$data['name']);
+			 	$data2 =array(
+			 	    'customer_group_id' => $this->config->get('config_customer_group_id'),
+					'firstname'         => $name[0], 
+					'lastname'          => (isset($name[1])?$name[1]:''),
+					'email'             => isset($user_info['email']),
+					'telephone'         => isset($user_info['number']),
+					'fax'               => isset($user_info['number_2']),
+					'newsletter'        => '1',
+					'password'          => '12345678',
+					'status'            => '1',
+					'approved'          => '1',
+					'safe'              => '1');
+			 	
+ 			 	$data2['address'][] = array (
+			 	'address_id'  =>'',
+			 	'firstname'    => $name[0],
+			 	'lastname'     => (isset($name[1])?$name[1]:''),
+			    'company'      => '',
+			 	'address_1'    => '',
+			 	'address_2'    => '',
+			 	'city'         => '',
+			    'postcode'     => '',
+			 	'country_id'   => '',
+			 	'zone_id'      => ''
+			    );
+			 					 
+			 	$this->model_sale_customer->editCustomer($customer['customer_id'], $data2);
+			 	
 				$json = array();
 				$url ="";
 				$uploads = array(
@@ -376,9 +442,7 @@ public function supplier_form2(){
 				              );
 				foreach ($uploads as $upload){
 					
-					
-					
-			 	 	if (!empty($this->request->files[$upload]['name']) && is_file($this->request->files[$upload]['tmp_name'])) {
+					 	if (!empty($this->request->files[$upload]['name']) && is_file($this->request->files[$upload]['tmp_name'])) {
 						$filename = basename(html_entity_decode($this->request->files[$upload]['name'], ENT_QUOTES, 'UTF-8'));
 						
 						if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 128)) {
@@ -438,8 +502,8 @@ public function supplier_form2(){
 				}
 			}
 		}
-		
-		//$this->response->redirect($this->url->link('customerpartner/vendor_list/supplier_form2', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+		$url='';
+		$this->response->redirect($this->url->link('customerpartner/vendor_list/', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		
 	}
 	 public function supplierschedule(){

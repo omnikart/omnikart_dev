@@ -1,64 +1,74 @@
-		<form id="supplier_form" class="form-horizontal" action="<?php echo $registration; ?>" method="POST" enctype="multipart/form-data" >
+	 
+		<form id="supplier_form" class=" " action="<?php echo $registration; ?>" method="POST" enctype="multipart/form-data" >
+					<div class="col-sm-4">
 					<div class="form-group required">
-						<label class="control-label col-sm-4" for="company" >Name of company</label>
-						<div class="col-sm-8">
-	                		<input  name="company_name" value="<?php echo $company_name;?>" class="form-control" placeholder="" type="text" id="company" />		
+						<label class="control-label " for="name">Name of contact person</label>
+					    <input  name="name" value="<?php echo $name;?>" class="form-control" placeholder="" type="text" id="name" /> 
+					</div>
+					<div class="form-group required">
+						<label class="control-label" for="number">Moblie Number</label>
+					 	<input  name="number" value="<?php echo $number;?>" class="form-control" placeholder="" type="text" id="number" /> 
+				 	</div>
+					<div class="form-group required">
+						<label class="control-label" for="email">Email Id</label>
+				 		<input  name="email" value="<?php echo $email;?>" class="form-control" placeholder="" type="email" id="email" /> 
+				 	</div>
+					<div class="form-group required">
+						<label class="control-label" for="address_1">Address1</label>
+				 		<input name="address_1" value="<?php echo(isset($address_1)?$address_1:'') ;?>"  class="form-control" placeholder="" type="text" id="address_1" /> 
+				 	</div>
+				 	</div>
+				 	<div class="col-sm-4">
+					<div class="form-group ">
+						<label class="control-label" for="address_2">Address2</label>
+					    <input name="address_2" value="<?php echo(isset($address_2)?$address_2:'') ;?>"  class="form-control" placeholder="" type="text" id="address_2" /> 
+					 </div>
+					  <div class="form-group required">
+						<label class="control-label" for="city">City</label>
+					 	<input name="city" value="<?php echo(isset($city)?$city:'') ;?>"  class="form-control" placeholder="" type="text" id="city" /> 
+					 </div>
+			       	<div class="form-group">
+						<label class="control-label" for="postcode" >postcode</label>
+					    <input name="postcode" value="<?php echo(isset($postcode)?$postcode:'') ;?>" class="form-control" placeholder="" type="text" id="postcode" />		
 	                	</div>
-            		</div>
-	 				<div class="form-group required">
-						<label class="control-label col-sm-4" for="cat">Category</label>
-					  <div class="col-sm-8">
-						   <input name="category" value="<?php echo $category ;?>" class="form-control" placeholder="" type="text" id="cat" /> 
-					</div>
-					</div>
-					<div class="form-group required">
-						<label class="control-label col-sm-4" for="area">Area</label>
-					   <div class="col-sm-8">
-						    <input name="area" value="<?php echo $area;?>"  class="form-control" placeholder="" type="text" id="area" /> 
-					</div>
-					</div>
-					<div class="form-group required">
-						<label class="control-label col-sm-4" for="name">Name of contact person</label>
-					  <div class="col-sm-8">
-						   <input  name="name" value="<?php echo $name;?>" class="form-control" placeholder="" type="text" id="name" /> 
-					</div>
-					</div>
-					<div class="form-group required">
-						<label class="control-label col-sm-4" for="number">Moblie Number</label>
-					  <div class="col-sm-8">
-						   <input  name="number" value="<?php echo $number;?>" class="form-control" placeholder="" type="text" id="number" /> 
-					</div>
-					</div>
-					<div class="form-group required">
-						<label class="control-label col-sm-4" for="email">Email Id</label>
-					  <div class="col-sm-8">
-						   <input  name="email" value="<?php echo $email;?>" class="form-control" placeholder="" type="email" id="email" /> 
-					</div>
-					</div>
-					<div class="form-group required">
-						<label class="control-label col-sm-4" for="add">Address</label>
-					 <div class="col-sm-8">
-						   <input name="add" value="<?php echo $add;?>"  class="form-control" placeholder="" type="text" id="add" /> 
-					</div>
-					</div>
-					<div class="form-group required">
-						<label class="control-label col-sm-4" for="city">City</label>
-					 	<div class="col-sm-8">
-						   <input name="city" value="<?php echo $city;?>"  class="form-control" placeholder="" type="text" id="city" /> 
-						</div>
-					</div>
-					<div class="form-group">
-		            	<label class="col-sm-4 control-label" for="input-filename"><span data-original-title="You can upload via the upload button or use FTP to upload to the download directory and enter the details below." data-toggle="tooltip" title="">Upload front image</span></label>
-		            	<div class="col-sm-8">
-			               		<input type="file" name="front" id="input-filename" class="form-control"/>
+            		   <div class="form-group required">
+                        <label class=" control-label" for="input-country"><?php echo  "Country"; ?></label>
+                         <select name="country_id" id="input-country " onchange="$('#input-zone').load('index.php?route=localisation/geo_zone/zone&token=<?php echo $token; ?>&zone_id=0&country_id=' + this.value);" class="form-control">
+                            <option value="*"></option>
+                            <?php foreach ($countries as $country) { ?>
+                            <?php if ($country['country_id'] == $country_id) { ?>
+                            <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
+                            <?php } else { ?>
+                            <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+                            <?php } ?>
+                            <?php } ?>
+                          </select> 
+                          </div>
+                      </div>
+                      <div class="col-sm-4">
+					   <div class="form-group required">
+                        <label class="control-label" for="input-zone "><?php echo "Region/State"; ?></label>
+                        <select name="zone_id" id="input-zone" class="form-control">
+                          </select>
+                         </div>
+                      <div class="form-group required">
+						<label class="control-label" for="company" >Name of company</label>
+						<input  name="company" value="<?php echo (isset($company)?$company:'');?>" class="form-control" placeholder="" type="text" id="company" />		
+	                	</div>
+            	 	 <div class="form-group">
+		            	<label class="control-label" for="input-filename"><span data-original-title="upload files" data-toggle="tooltip" title="">Upload front image</span></label>
+		                <input type="file" name="front" id="input-filename" class=" "/>
 			            </div>
-			           	<label class="col-sm-4 control-label" for="input-filename1"><span data-original-title="You can upload via the upload button or use FTP to upload to the download directory and enter the details below." data-toggle="tooltip" title="">Upload back image</span></label>
-		            	<div class="col-sm-8">
-			               		<input type="file" name="back" id="input-filename1" class="form-control"/>
-			            	</div> 	
+			           	<label class="control-label" for="input-filename1"><span data-original-title=" upload files" data-toggle="tooltip" title="">Upload back image</span></label>
+		            	<input type="file" name="back" id="input-filename1" class=" "/>
+			          </div> 	
           			</div>
 	 	    		<!-- fileupload -->
 		             <div class="text-right">
 		                 <input type="submit" class="btn btn-primary"></input>
 					</div>
-		</form>
+		     </form>
+		
+<script type="text/javascript"><!--
+			$('#input-zone').load('index.php?route=localisation/geo_zone/zone&token=<?php echo $token; ?>&country_id=' + <?php echo (isset($country_id)?$country_id:'0'); ?>+'&zone_id=' + <?php echo (isset($zone_id)?$zone_id:'0'); ?>);
+//--></script> 

@@ -91,7 +91,7 @@
 											</td>
 											<td class=text-right>    
 												<input type="hidden" name="enquiry_id" value="<?php echo $enquiry['id']; ?>" />
-												<div class="btn-group" role="group" >
+												<div class="btn-group" role="group" style="width: 134px;" >
 													<button type="button" class="btn btn-primary" data-toggle="modal" data-enquiryid="<?php echo $enquiry['id']; ?>" data-target="#schedule-modal"><i class="fa fa-calendar-plus-o"></i></button>
 										  			<button type="button" class="btn btn-primary" data-toggle="modal" data-enquiryid="<?php echo $enquiry['id']; ?>" data-target="#supplier-modal"><i class="fa fa-plus"></i></button>
 											        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#getSchedule" data-enquiryid="<?php echo $enquiry['id']; ?>"><i class="fa fa-history"></i></button>
@@ -183,7 +183,7 @@
 		</div>
 	</div>
 <div class="modal fade" id="supplier-modal" role="dialog" aria-labelledby="supplier-modal">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
