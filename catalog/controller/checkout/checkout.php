@@ -1,11 +1,62 @@
 <?php
 class ControllerCheckoutCheckout extends Controller {
 	public function index() {
+		$this->load->model('setting/setting');
+		$mmos_checkout_extra = $this->model_setting_setting->getSetting('mmos_checkout', $this->config->get('config_store_id'));
+		$mmos_checkout = $mmos_checkout_extra['mmos_checkout'];
+		$cg_id = $this->customer->getGroupId();
+		if ($mmos_checkout && $mmos_checkout['status'] && in_array($cg_id,$mmos_checkout['customer_group_access'])) {
+			if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+				$urls = $this->url->link('checkout/checkout_onepage', '', true);
+			} else {
+				$urls = $this->url->link('checkout/checkout_onepage');
+			}
+			/*Fixed Mijoshop*/
+			if(defined('JPATH_MIJOSHOP_OC')) {
+			$urls = $this->url->link('checkout/checkout').'_onepage';
+			}
+			/* redirect to checkout One */		
+			$this->response->redirect($urls);
+		} 	
+		
 		// Validate cart has products and has stock.
 		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
 			$this->response->redirect($this->url->link('checkout/cart'));
 		}
 
+
+    /*
+    To check customer has access to order or not
+    */
+    if($this->config->get('marketplace_status')) {
+        $this->load->model('account/customerpartner');
+        $this->load->language('customerpartner/orderReview');
+				
+        $customerRights = $this->model_account_customerpartner->getCustomerGroupRights($this->customer->getGroupId());
+
+        $approvedDetails = $this->model_account_customerpartner->getApprovedProducts($this->customer->getId());
+        $approveProducts = unserialize($approvedDetails['approve_cart']);
+
+        if($customerRights && !array_key_exists('make-order', $customerRights['rights'])) {
+            $this->session->data['forReview'] = true;
+            $currentCart = $this->session->data['cart'];
+            if($approveProducts) {
+                foreach ($currentCart as $key => $value) {
+                    if(!array_key_exists($key, $approveProducts)) {
+                        $this->session->data['warning'] = $this->language->get('warning_reviewtoadmin');
+                        $this->response->redirect($this->url->link('account/customerpartner/orderReview','', 'SSL'));
+                    }
+                }
+            } else if(!$approveProducts) {
+                $this->session->data['warning'] = " Warning: You are not allowed to place order without permission, please send your order for review to your administrator!";
+                $this->response->redirect($this->url->link('account/customerpartner/orderReview','', 'SSL'));
+            }
+        }
+    }
+    /*
+    end here
+    */
+    
 		// Validate minimum quantity requirements.
 		$products = $this->cart->getProducts();
 

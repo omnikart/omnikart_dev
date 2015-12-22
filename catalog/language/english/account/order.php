@@ -34,4 +34,16 @@ $_['column_status']         = 'Order Status';
 $_['column_comment']        = 'Comment';
 
 // Error
+
+         $_['text_telephone']           = 'Telephone:';
+$_['text_fax']                 = 'Fax:';
+$_['text_website']             = 'Web Site:';
+$_['text_email']               = 'E-Mail:';
+$_['text_vattin']              = "Vat/Tin: ";
+$_['text_to']                  = 'To';
+$_['text_invoice']             = 'Invoice';
+$_['text_ship_to']             = 'Ship To (if different address)';
+$_['column_product_name']      = 'Product';
+$_['column_image']           = 'Image';
+  
 $_['error_reorder']         = '%s is not currently available to be reordered.';

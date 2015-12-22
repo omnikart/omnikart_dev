@@ -1,6 +1,7 @@
 <?php
 class ControllerModuleFeatured extends Controller {
 	public function index($setting) {
+		$this->load->language('product/gp_grouped');
 		static $module = 0;
 		
 		$this->load->language('module/featured');
@@ -69,7 +70,25 @@ class ControllerModuleFeatured extends Controller {
 					} else {
 						$rating = false;
 					}
+					if ($price && $is_gp = $this->model_catalog_product->getGroupedProductGrouped($product_info['product_id'])) {
+						$gp_price_min = $is_gp['gp_price_min'];
+						$gp_price_max = $is_gp['gp_price_max'];
 
+						if ($gp_price_min[0] == '#') {
+							$child_info = $this->model_catalog_product->getProduct(substr($gp_price_min,1));
+							$gp_price_min = $child_info['special'] ? $child_info['special'] : $child_info['price'];
+						}
+						if ($gp_price_max[0] == '#') {
+							$child_info = $this->model_catalog_product->getProduct(substr($gp_price_max,1));
+							$gp_price_max = $child_info['special'] ? $child_info['special'] : $child_info['price'];
+						}
+
+						if ($gp_price_min && $gp_price_max) {
+							$price = $this->language->get('text_gp_price_min') . $this->currency->format($this->tax->calculate($gp_price_min, $product_info['tax_class_id'], $this->config->get('config_tax'))) . $this->language->get('text_gp_price_max') . $this->currency->format($this->tax->calculate($gp_price_max, $product_info['tax_class_id'], $this->config->get('config_tax')));
+						} else {
+							$price = $this->language->get('text_gp_price_start') . $this->currency->format($this->tax->calculate($gp_price_min, $product_info['tax_class_id'], $this->config->get('config_tax')));
+						}
+					}
 					$data['products'][] = array(
 						'product_id'  => $product_info['product_id'],
 						'thumb'       => $image,

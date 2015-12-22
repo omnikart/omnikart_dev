@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <?php if($chkIsPartner){ ?>
 <div class="container">
   <ul class="breadcrumb">
@@ -96,4 +96,4 @@ $('#form-download').submit(function(){
     }
 });
 </script>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

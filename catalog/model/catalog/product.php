@@ -14,9 +14,7 @@ class ModelCatalogProduct extends Model {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		return $query->row['total'];
 	}
-	
-	
-	
+			
 	public function getProductsData($data = array(), $customer) {
 		if ($customer->isLogged()) {
 			$customer_group_id = $customer->getGroupId();
@@ -530,7 +528,6 @@ class ModelCatalogProduct extends Model {
 			'date_added'=>'p.date_added'
 	);
 	
-	
 	private function searchHelper($request){
 		$sql = "";
 	
@@ -606,7 +603,6 @@ class ModelCatalogProduct extends Model {
 		return $sql;
 	
 	}
-	
 	
 	public function search($data = array(), $request, $customer) {
 		if ($customer->isLogged()) {

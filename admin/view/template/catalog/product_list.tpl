@@ -6,6 +6,7 @@
         <button type="button" data-toggle="tooltip" title="<?php echo $button_copy; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $copy; ?>').submit()"><i class="fa fa-copy"></i></button>
         <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
       </div>
+      <div class="pull-right"><a href="<?php echo $add_gp_grouped; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Grouped</a>&nbsp;</div>
       <h1><?php echo $heading_title; ?></h1>
       <ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -28,6 +29,16 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
+        <?php if (isset($filter_gpt) && $filter_gpt == 'gp_grouped') { ?>
+        - <a href="index.php?route=catalog/product&token=<?php echo $token; ?>" style="text-decoration:underline;font-weight:bold;">Grouped</a>
+        <?php } else { ?>
+        - <a href="index.php?route=catalog/product&token=<?php echo $token; ?>&filter_gpt=gp_grouped">Grouped</a>
+        <?php } ?>        
+        <?php if (isset($filter_gpt)) { ?>
+					<input type="hidden" name="filter_gpt" value="<?php echo $filter_gpt; ?>" />
+				<?php } else { ?>
+					<input type="hidden" name="filter_gpt" value="" />
+				<?php } ?>
       </div>
       <div class="panel-body">
         <div class="well">
@@ -162,6 +173,12 @@ $('#button-filter').on('click', function() {
 	var url = 'index.php?route=catalog/product&token=<?php echo $token; ?>';
 
 	var filter_name = $('input[name=\'filter_name\']').val();
+
+	var filter_gpt = $('input[name=\'filter_gpt\']').val();
+
+	if (filter_name) {
+		url += '&filter_gpt=' + encodeURIComponent(filter_gpt);
+	}
 
 	if (filter_name) {
 		url += '&filter_name=' + encodeURIComponent(filter_name);

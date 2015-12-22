@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <style>
 .banner{
  position: relative;
@@ -444,4 +444,4 @@ $('#button-feedback').on('click', function() {
 });
 
 </script>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

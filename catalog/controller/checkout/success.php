@@ -6,6 +6,18 @@ class ControllerCheckoutSuccess extends Controller {
 		if (isset($this->session->data['order_id'])) {
 			$this->cart->clear();
 
+            /*
+            To close previous review
+            */
+            if($this->config->get('marketplace_status')) {
+               $this->load->model('account/customerpartner');
+               $this->model_account_customerpartner->closePreviousReview($this->customer->getId(),$this->session->data['order_id']);
+            }
+            /*
+            end here
+            */
+    
+
 			// Add to activity log
 			$this->load->model('account/activity');
 

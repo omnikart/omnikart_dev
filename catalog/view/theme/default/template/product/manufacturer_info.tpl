@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <?php if( ! empty( $mfilter_json ) ) { echo '<div id="mfilter-json" style="display:none">' . base64_encode( $mfilter_json ) . '</div>'; } ?>
 <div class="container">
   <ul class="breadcrumb">
@@ -59,42 +59,7 @@
         <?php foreach ($products as $product) { ?>
         <div class="product-layout product-list col-xs-12">
           <div class="product-thumb">
-            <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a></div>
-            <div class="caption">
-              <h4><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4>
-              <p><?php echo $product['description']; ?></p>
-              <?php if ($product['rating']) { ?>
-              <div class="rating">
-                <?php for ($i = 1; $i <= 5; $i++) { ?>
-                <?php if ($product['rating'] < $i) { ?>
-                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                <?php } else { ?>
-                <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
-                <?php } ?>
-                <?php } ?>
-              </div>
-              <?php } ?>
-              <?php if ($product['price']) { ?>
-              <p class="price">
-                <?php if (!$product['special']) { ?>
-                <?php if ($product['discount']) { ?>
-          			<span style="text-decoration: line-through;color:#aaa;"><?php echo $product['original_price']; ?></span>&nbsp;<span style="padding:1px;background:#ddd;border-radius:2px;background:#8FBB6C;color:#fff;">&nbsp;<?php echo $product['discount']; ?>% Off&nbsp;</span>
-              		<?php } ?>
-                  <h4><?php echo $product['price']; ?></h4>
-                <?php } else { ?>
-                <span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
-                <?php } ?>
-                <?php if ($product['tax']) { ?>
-                <span class="price-tax"><?php echo $text_tax; ?> <?php echo $product['tax']; ?></span>
-                <?php } ?>
-              </p>
-              <?php } ?>
-            </div>
-            <div class="button-group">
-              <button type="button" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span></button>
-              <button type="button" data-toggle="tooltip" title="<?php echo $button_wishlist; ?>" onclick="wishlist.add('<?php echo $product['product_id']; ?>');"><i class="fa fa-heart"></i></button>
-              <button type="button" data-toggle="tooltip" title="<?php echo $button_compare; ?>" onclick="compare.add('<?php echo $product['product_id']; ?>');"><i class="fa fa-exchange"></i></button>
-            </div>
+			<?php require(DIR_TEMPLATE.'default/template/common/product/product.tpl'); ?>
           </div>
         </div>
         <?php } ?>
@@ -112,4 +77,68 @@
       </div><?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>
 </div>
-<?php echo $footer; ?>
+<script type="text/javascript">
+	var menu = '<li role="presentation" class="divider"></li>';
+	menu += '<li><a href="" id="button-pcd">Add Products to DashBoard</a></li>'; 
+	$('#dashboard > div').append(menu);
+
+	$('#button-pcd').on('click', function() {
+			$('#modal-db').remove();
+			$.ajax({
+				url: 'index.php?route=account/cd/getCategories',
+				type: 'post',
+				dataType: 'json',
+				beforeSend: function() {
+					$('#button-pcd').button('loading');
+				},
+				complete: function() {
+					$('#button-pcd').button('reset');
+				},
+				success: function(json) {
+					
+					html  = '<div id="modal-db" class="modal">';
+					html += '  <div class="modal-dialog">';
+					html += '    <div class="modal-content">';
+					html += '      <div class="modal-header">Hello';
+					html += '      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div>';
+					html += '      <div class="modal-body">';
+					html += '		<div class="row">'+json+'<br /><br />';
+					html += '			<div class="col-sm-4"><div class="radio"><label><input type="radio" name="category_id" value="0"/>New Category</label></div></div>';
+					html += '      		<div class="col-sm-8"><input class="form-control" id="newcat" name="category-name" type="text" placeholder="Input Name in case of new category" value=""></input></div><br /><br />';
+					html += '	   		<div class="col-sm-12"><button id="button-update" onclick="updatedb();" class="btn btn-primary btn-lg">Update to DashBoard</button></div></div>';
+					html += '    	</div>';
+					html += '    </div>';
+					html += '  </div>';
+					html += '</div>';
+					
+					$('body').append(html);
+	
+					$('#modal-db').modal('show');		
+				}
+			});
+		});
+	function updatedb() {
+		$.ajax({
+			url: 'index.php?route=account/cd/addProductCd',
+			type: 'post',
+			data: $('input[type=\'hidden\'][name^=\'products\'],input[name^=\'products\']:checked,.radio input[type=\'radio\']:checked,input[name="category-name"]'),
+			dataType: 'json',
+			beforeSend: function() {
+				$('#button-pcd').button('loading');
+			},
+			complete: function() {
+				$('#button-pcd').button('reset');
+			},
+			success: function(json) {
+				$('.alert').remove();
+				if (json['error_text']) $('.modal-header').after('<div class="alert alert-danger"><div class="text-danger">'+ json['error_text'] +'</div></div>');
+				if (json['success']) { 
+					$('#modal-db .modal-header button').click();
+					$('#modal-db').remove();
+					$('input[name^=\'products\']:checked').prop('checked',false);
+				}
+			}
+		});
+	}		
+</script>
+</div><?php echo $footer; ?>

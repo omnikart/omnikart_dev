@@ -99,7 +99,13 @@ class ControllerPaymentCod extends Controller {
 		} else {
 			$data['cod_sort_order'] = $this->config->get('cod_sort_order');
 		}
-
+		
+		if (isset($this->request->post['cod_postcode_payment'])) {
+			$data['cod_postcode_payment'] = $this->request->post['cod_postcode_payment'];
+		} else {
+			$data['cod_postcode_payment'] = $this->config->get('cod_postcode_payment');
+		}
+		
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');

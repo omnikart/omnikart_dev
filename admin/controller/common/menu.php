@@ -1,6 +1,35 @@
 <?php
 class ControllerCommonMenu extends Controller {
 	public function index() {
+		if ($this->config->get('ne_key')) {
+			$this->load->language('module/ne');
+			$data['text_ne_email'] = $this->language->get('text_ne_email');
+			$data['text_ne_draft'] = $this->language->get('text_ne_draft');
+			$data['text_ne_marketing'] = $this->language->get('text_ne_marketing');
+			$data['text_ne_subscribers'] = $this->language->get('text_ne_subscribers');
+			$data['text_ne_stats'] = $this->language->get('text_ne_stats');
+			$data['text_ne_robot'] = $this->language->get('text_ne_robot');
+			$data['text_ne_template'] = $this->language->get('text_ne_template');
+			$data['text_ne_subscribe_box'] = $this->language->get('text_ne_subscribe_box');
+			$data['text_ne_blacklist'] = $this->language->get('text_ne_blacklist');
+			$data['text_ne_support'] = $this->language->get('text_ne_support');
+			$data['text_ne_support_register'] = $this->language->get('text_ne_support_register');
+			$data['text_ne_support_login'] = $this->language->get('text_ne_support_login');
+			$data['text_ne_support_dashboard'] = $this->language->get('text_ne_support_dashboard');
+			$data['text_ne'] = $this->language->get('text_ne');
+			$data['text_ne_update_check'] = $this->language->get('text_ne_update_check');
+			
+			$data['ne_email'] = $this->url->link('ne/newsletter', 'token=' . $this->session->data['token'], 'SSL');
+			$data['ne_draft'] = $this->url->link('ne/draft', 'token=' . $this->session->data['token'], 'SSL');
+			$data['ne_marketing'] = $this->url->link('ne/marketing', 'token=' . $this->session->data['token'], 'SSL');
+			$data['ne_subscribers'] = $this->url->link('ne/subscribers', 'token=' . $this->session->data['token'], 'SSL');
+			$data['ne_stats'] = $this->url->link('ne/stats', 'token=' . $this->session->data['token'], 'SSL');
+			$data['ne_robot'] = $this->url->link('ne/schedule', 'token=' . $this->session->data['token'], 'SSL');
+			$data['ne_template'] = $this->url->link('ne/template', 'token=' . $this->session->data['token'], 'SSL');
+			$data['ne_subscribe_box'] = $this->url->link('ne/subscribe_box', 'token=' . $this->session->data['token'], 'SSL');
+			$data['ne_blacklist'] = $this->url->link('ne/blacklist', 'token=' . $this->session->data['token'], 'SSL');
+			$data['ne_update_check'] = $this->url->link('ne/check_update', 'token=' . $this->session->data['token'], 'SSL');
+		}		
 		$this->load->language('common/menu');
 		$this->load->model('extension/extension');
 		$data['text_combo_module'] = $this->language->get('text_combo_module');
@@ -39,6 +68,8 @@ class ControllerCommonMenu extends Controller {
 		$data['text_fraud'] = $this->language->get('text_fraud');
 		$data['text_filter'] = $this->language->get('text_filter');
 		$data['text_geo_zone'] = $this->language->get('text_geo_zone');
+		$data['text_postcode'] = $this->language->get('text_postcode');
+		$data['text_city'] = $this->language->get('text_city');
 		$data['text_dashboard'] = $this->language->get('text_dashboard');
 		$data['text_help'] = $this->language->get('text_help');
 		$data['text_information'] = $this->language->get('text_information');
@@ -133,10 +164,17 @@ class ControllerCommonMenu extends Controller {
 		$data['custom_field'] = $this->url->link('sale/custom_field', 'token=' . $this->session->data['token'], 'SSL');
 		$data['download'] = $this->url->link('catalog/download', 'token=' . $this->session->data['token'], 'SSL');
 		$data['error_log'] = $this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL');
+
+                $data['nitropack'] = $this->url->link('tool/nitro', 'token=' . $this->session->data['token'], 'SSL');
+                $data['nitropack_has_permission'] = $this->user->hasPermission('access', 'tool/nitro');
+            
 		$data['feed'] = $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL');
+		$data['gp_grouped'] = $this->url->link('extension/gp_grouped', 'token=' . $this->session->data['token'], 'SSL');
 		$data['filter'] = $this->url->link('catalog/filter', 'token=' . $this->session->data['token'], 'SSL');
 		$data['fraud'] = $this->url->link('extension/fraud', 'token=' . $this->session->data['token'], 'SSL');
 		$data['geo_zone'] = $this->url->link('localisation/geo_zone', 'token=' . $this->session->data['token'], 'SSL');
+		$data['postcode'] = $this->url->link('localisation/postcode', 'token=' . $this->session->data['token'], 'SSL');
+		$data['city'] = $this->url->link('localisation/city', 'token=' . $this->session->data['token'], 'SSL');
 		$data['information'] = $this->url->link('catalog/information', 'token=' . $this->session->data['token'], 'SSL');
 		$data['installer'] = $this->url->link('extension/installer', 'token=' . $this->session->data['token'], 'SSL');
 		$data['language'] = $this->url->link('localisation/language', 'token=' . $this->session->data['token'], 'SSL');

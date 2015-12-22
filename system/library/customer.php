@@ -9,7 +9,8 @@ class Customer {
 	private $newsletter;
 	private $customer_group_id;
 	private $address_id;
-
+	private $rights;
+	
 	public function __construct($registry) {
 		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
@@ -31,7 +32,20 @@ class Customer {
 				$this->address_id = $customer_query->row['address_id'];
 
 				$this->db->query("UPDATE " . DB_PREFIX . "customer SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
-
+				$customerRights = $this->db->query("SELECT cpc.rights,cpc.isParent,cpcn.name,cpcn.description FROM ".DB_PREFIX."customerpartner_customer_group cpc LEFT JOIN ".DB_PREFIX."customerpartner_customer_group_name cpcn ON (cpc.id=cpcn.customer_group_id) WHERE cpc.id = '".$this->customer_group_id."' AND cpcn.language_id = '".$this->config->get('config_language_id')."' ")->row;
+				if ($customerRights) {
+					$customerRightsExploded = explode(':', rtrim($customerRights['rights'],":"));
+					foreach ($customerRightsExploded as $key => $value) {
+						$rightsArray[$value] = str_replace('-', ' ', $value);
+					}
+					$returnArray['rights'] = $rightsArray;
+					$returnArray['isParent'] = $customerRights['isParent'];
+					$returnArray['name'] = $customerRights['name'];
+					$returnArray['description'] = $customerRights['description'];
+					$this->rights = $returnArray;
+				} else {
+					$this->rights = false;
+				}
 				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
 
 				if (!$query->num_rows) {
@@ -148,7 +162,10 @@ class Customer {
 	public function getGroupId() {
 		return $this->customer_group_id;
 	}
-
+	
+	public function getRights() {
+			return $this->rights;
+	}
 	public function getAddressId() {
 		return $this->address_id;
 	}

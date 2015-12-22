@@ -334,7 +334,9 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		$pagination->url = $this->url->link('account/customerpartner/productlist', '' . $url . '&page={page}', 'SSL');
 
 		$this->data['pagination'] = $pagination->render();
-		$this->data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($product_total - 10)) ? $product_total : ((($page - 1) * 10) + 10), $product_total, ceil($product_total / 10));
+		
+		$limit = $this->config->get('config_product_limit');
+		$this->data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
 
 		$this->data['filter_name'] = $filter_name;
 		$this->data['filter_model'] = $filter_model;

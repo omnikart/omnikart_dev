@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <?php $class = 'col-sm-12'; ?>
 <div class="container">
 	<div class="row">
@@ -317,4 +317,4 @@ $('.seller-thumb').bind({'mouseenter' : seller_display,'mouseleave':seller_hide 
   });
 </script>
 
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

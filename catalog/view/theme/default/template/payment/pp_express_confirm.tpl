@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <div class="container">
   <ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -122,7 +122,7 @@
       <?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>
 </div>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>
 <script type="text/javascript"><!--
 $('input[name=\'shipping_method\']').change(function() {
 	$('#shipping_form').submit();

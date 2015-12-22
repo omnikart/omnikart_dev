@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <?php if($chkIsPartner){ ?>
 
 <div class="container">
@@ -124,4 +124,4 @@ $('#button-upload').on('click',function(){
 </div>
 <?php } ?>
 <?php } ?>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

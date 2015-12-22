@@ -1,5 +1,8 @@
 <?php
 // Heading
+ 
+         $_['text_vattin'] = "Vat/Tin: ";
+        
 $_['heading_title']            = 'Orders';
 
 // Text

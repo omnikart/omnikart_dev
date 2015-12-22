@@ -20,7 +20,7 @@ class Config {
 		if (file_exists($file)) {
 			$_ = array();
 
-			require($file);
+			require(modification($file));
 
 			$this->data = array_merge($this->data, $_);
 		} else {

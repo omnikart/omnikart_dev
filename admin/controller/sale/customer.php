@@ -20,7 +20,15 @@ class ControllerSaleCustomer extends Controller {
 		$this->load->model('sale/customer');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_sale_customer->addCustomer($this->request->post);
+			
+                $customer_id = $this->model_sale_customer->addCustomer($this->request->post);
+
+                if ($this->request->post['tobecomepartner']=='1' && $this->request->post['shoppartner']) {
+                    $this->load->model('customerpartner/customerpartner');
+										$this->model_customerpartner_customerpartner->becomePartner($customer_id,$this->request->post['shoppartner']);
+                }
+						 
+						 
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -81,6 +89,12 @@ class ControllerSaleCustomer extends Controller {
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 			$this->model_sale_customer->editCustomer($this->request->get['customer_id'], $this->request->post);
+
+                if ($this->request->post['tobecomepartner']=='1' && $this->request->post['shoppartner']) {
+                    $this->load->model('customerpartner/customerpartner');
+										$this->model_customerpartner_customerpartner->becomePartner($this->request->get['customer_id'],$this->request->post['shoppartner']);
+                }
+						 
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -669,6 +683,55 @@ class ControllerSaleCustomer extends Controller {
 	}
 
 	protected function getForm() {
+
+            $this->language->load('sale/customerpartner/become_partner');
+
+            $data['text_register_becomePartner'] = $this->language->get('text_register_becomePartner');
+            $data['text_register_douwant'] = $this->language->get('text_register_douwant');
+            $data['text_shop_name'] = $this->language->get('text_shop_name');
+            $data['text_avaiable'] = $this->language->get('text_avaiable');
+            $data['text_no_avaiable'] = $this->language->get('text_no_avaiable');
+
+            if (isset($this->request->post['shoppartner'])) {
+                $data['shoppartner'] = $this->request->post['shoppartner'];
+            } else {
+                $data['shoppartner'] = '';
+            }
+
+            if (isset($this->request->post['tobecomepartner'])) {
+                $data['tobecomepartner'] = $this->request->post['tobecomepartner'];
+            } else {
+                $data['tobecomepartner'] = '';
+            }
+
+            if (isset($this->error['errshoppartner'])) {
+                $data['error_shoppartner'] = $this->error['errshoppartner'];
+            } else {
+                $data['error_shoppartner'] = '';
+            }
+						$data['marketplace_customerGroup'] = false;
+						if($this->config->get('marketplace_customerGroup')){
+								$data['marketplace_customerGroup'] = true;
+								$this->load->model("customerpartner/customerpartner");
+								$filterData = array (
+										'start' => 0,
+										'limit' => 50,
+										'groupIsParent' => 0,
+										'groupStatus' => 'enable',
+								);
+								$data['parentGroups'] = array();
+								$parentGroups = $this->model_customerpartner_customerpartner->getCustomerGroupList($filterData);
+								if($parentGroups) {
+										foreach($parentGroups as $key => $group) {
+												$data['parentGroups'][] = array (
+														'id' => $group['id'],
+														'name' => $group['name'],
+														'description' => $group['description'],
+												);
+										}
+								}
+						}
+						 
 		$data['heading_title'] = $this->language->get('heading_title');
 
 		$data['text_form'] = !isset($this->request->get['customer_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');

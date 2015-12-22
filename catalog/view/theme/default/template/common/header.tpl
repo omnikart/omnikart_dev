@@ -23,29 +23,18 @@
 <?php foreach ($links as $link) { ?>
 <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
 <?php } ?>
+<?php if (getNitroPersistence('GoogleJQuery')) { ?>
+                <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <?php } else { ?>
 <script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js" type="text/javascript"></script>
+<?php } ?>
+<script src="catalog/view/javascript/mf/jquery-ui.min.js" type="text/javascript"></script>
 <link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
 <script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700" rel="stylesheet" type="text/css" />
 <link href="catalog/view/theme/default/stylesheet/stylesheet.css?v=1" rel="stylesheet">
 <script src="catalog/view/javascript/comboproducts.js" type="text/javascript"></script>
-<style type="text/css">
-	.combo-section {width: 100%;border-top: 1px solid #CCC;}
-	.combo-section .combo-set {padding: 2px;width: 100%;min-height: 180px;}
-	.combo-section .combo-set .combo-item {display: block;line-height: 14px;font-weight: bold;min-height: 14px;float: left;width: 14%;}
-	.combo-item-img {padding-right: 5px;padding-left: 5px;text-align: center;}
-	.combo-item-name,.combo-item-price {text-align: center;font-size: small;}
-	.combo-action {float:left;width: 25%;}
-	.combo-plus, .combo-save {float: left;font-weight: bold;padding-left:10px;}
-	.combo-save {float:none;}
-	.combo-plus {line-height: 100px}
-	.price_discount {color: #900;}
-	.btn-combo {text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.25);border: 1px solid #CCC;border-radius: 4px;box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset, 0px 1px 2px rgba(0, 0, 0, 0.05);}
-	.btn-combo-wishlist {background: linear-gradient(to bottom, #F7DFA5, #F0C14B) repeat scroll 0% 0% transparent;}
-	.btn-combo-cart {color: #FFF;background: linear-gradient(to bottom, #23A1D1, #1F90BB) repeat-x scroll 0% 0% transparent;}
-	@media only screen and (max-width: 500px) {.combo-plus {display:none;}.combo-action {width: 100%;}.combo-action .btn-combo {width: 100%;height: 40px;display:block;	}.combo-contain {min-height: 85px;}	.combo-save {font-size: 90%;}.combo-item-name,.combo-item-price {font-size: smaller;}}
-</style>
 <?php foreach ($styles as $style) { ?>
 <link href="<?php echo $style['href']; ?>" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
@@ -72,35 +61,17 @@ type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
 <!--End of Zopim Live Chat Script-->
 </head>
 <body class="<?php echo $class; ?>">
-<nav id="top">
+<!-- nav id="top">
   <div class="container">
     <?php //echo $currency; ?>
     <?php //echo $language; ?>
-    <div id="top-links" class="nav pull-right">
-      <ul class="list-inline">
-        <li><a href="<?php echo $contact; ?>"><span class="top-i"><i class="fa fa-phone"></i></span></a><span class="hidden-xs hidden-sm hidden-md top-i"><?php echo $telephone; ?></span></li>
-        <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="top-i"><i class="fa fa-user"></i></span><span class="hidden-xs hidden-sm hidden-md top-i"><?php echo $text_account; ?></span><span class="caret"></span></a>
-          <ul class="dropdown-menu dropdown-menu-right">
-            <?php if ($logged) { ?>
-            <li><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
-            <li><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
-            <li><a href="<?php echo $transaction; ?>"><?php echo $text_transaction; ?></a></li>
-            <li><a href="<?php echo $download; ?>"><?php echo $text_download; ?></a></li>
-            <li><a href="<?php echo $logout; ?>"><?php echo $text_logout; ?></a></li>
-            <?php } else { ?>
-            <li><a href="<?php echo $register; ?>"><?php echo $text_register; ?></a></li>
-            <li><a href="<?php echo $login; ?>"><?php echo $text_login; ?></a></li>
-            <?php } ?>
-          </ul>
-        </li>
-      </ul>
-    </div>
+
   </div>
-</nav>
+</nav -->
 <header>
 	<div class="container-fluid">
 		<div class="container">
-			<div class="row">
+			<div class="row" id="header">
 				<div class="col-sm-3">
 					<div id="logo">
 						<?php if ($logo) { ?>
@@ -110,12 +81,66 @@ type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
 						<?php } ?>
 					</div>
 				</div>
-				<div class="col-sm-6"><?php echo $search; ?>
+				<div class="col-sm-9">
+					<div class="row">
+						<div class="col-sm-12">
+							<div id="top-links" class="nav pull-right">
+								<ul class="list-inline">
+									<li><a href="<?php echo $contact; ?>"><span class="top-i"><i class="fa fa-phone"></i></span></a><span class="hidden-xs hidden-sm hidden-md top-i"><?php echo $telephone; ?></span></li>
+
+						<?php if ($logged && ($rights || $chkIsPartner)) { ?>
+							<li class="dropdown"><a href="<?php echo $menusell; ?>" title="<?php echo $menusell; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="top-i"><i class="fa fa-th"></i></span><span class="hidden-sm hidden-xs hidden-md top-i">Menu</span><span class="caret"></span></a>
+									<div class="dropdown-menu dropdown-menu-right">
+										<div class="dropdown-inner">
+											<ul class="list-unstyled">
+												<div class="col-sm-12">
+													<li><a href="<?php echo $mp_profile; ?>"><?php echo $text_my_profile; ?></a></li>
+													<li><a href="<?php echo $mp_dashboard; ?>"><?php echo $text_dashboard; ?></a></li>
+													<li><a href="<?php echo $mp_orderhistory; ?>"><?php echo $text_orderhistory; ?></a></li>
+													<li><a href="<?php echo $mp_transaction; ?>"><?php echo $text_transaction; ?></a></li>
+													<li><a href="<?php echo $mp_productlist; ?>"><?php echo $text_productlist; ?></a></li>
+													<li><a href="<?php echo $mp_download; ?>"><?php echo $text_download; ?></a></li>
+													<li><a href="<?php echo $mp_add_shipping_mod; ?>"><?php echo $text_wkshipping; ?></a></li>
+												</div>
+											</ul>
+											<ul id="dashboard" class="list-unstyled">
+												<div class="col-sm-12 hb">
+													<?php if (in_array('db',$rights)) {?>
+														<li><a class="btn btn-primary" href="<?php echo $b_db; ?>"><i class="fa fa-line-chart"></i><?php echo $t_db; ?></a></li>
+														<li><a class="btn btn-primary" href="<?php echo $b_so; ?>"><i class="fa fa-calendar-plus-o"></i><?php echo $t_so; ?></a></li>
+													<?php } ?>
+											</ul>
+										</div>
+									</div>
+							</li>
+						<?php } else { ?>
+							<li class="dropdown"><a href="<?php echo $menusell; ?>"><span class="hidden-sm hidden-xs hidden-md top-i">Sell Online</span></a></li>
+						<?php } ?>
+						
+									<li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="top-i"><i class="fa fa-user"></i></span><span class="hidden-xs hidden-sm hidden-md top-i"><?php echo $text_account; ?></span><span class="caret"></span></a>
+										<ul class="dropdown-menu dropdown-menu-right">
+											<?php if ($logged) { ?>
+											<li><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
+											<li><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
+											<li><a href="<?php echo $transaction; ?>"><?php echo $text_transaction; ?></a></li>
+											<li><a href="<?php echo $download; ?>"><?php echo $text_download; ?></a></li>
+											<li><a href="<?php echo $logout; ?>"><?php echo $text_logout; ?></a></li>
+											<?php } else { ?>
+											<li><a href="<?php echo $register; ?>"><?php echo $text_register; ?></a></li>
+											<li><a href="<?php echo $login; ?>" id="marketinsg-login"><?php echo $text_login; ?></a></li>
+											<?php } ?>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-9"><?php echo $search; ?>
+						</div>
+						<div class="col-sm-3 hidden-xs ns1 pull-right"><?php echo $cart; ?></div>				
+					</div>
 				</div>
-				<div class="col-sm-1">
-					
-				</div>
-				<div class="col-sm-3 hidden-xs ns1 pull-right"><?php echo $cart; ?></div>				
 			</div>
 		</div>
 	</div>
@@ -131,16 +156,16 @@ type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
 	      <ul class="nav navbar-nav">
 	        <?php foreach (array_slice($categories,0,8) as $category) { ?>
 		        <?php if ($category['children']) { ?>
-		        <li class="dropdown"><a href="<?php echo $category['href']; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $category['name']; ?> <span class="caret"></span></a>
+		        <li class="dropdown"><a href="<?php echo $category['href']; ?>" class="dropdown-toggle disabled" data-toggle="dropdown"><?php echo $category['name']; ?> <span class="caret"></span></a>
 		          <div class="dropdown-menu">
 		            <div class="dropdown-inner">
-		              <?php foreach (array_chunk($category['children'], ceil(count($category['children']) / $category['column'])) as $children) { ?>
-		              <ul class="list-unstyled">
-		                <?php foreach ($children as $child) { ?>
-		                <li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>
-		                <?php } ?>
-		              </ul>
-		              <?php } ?>
+									<?php foreach (array_chunk($category['children'], ceil(count($category['children']) / $category['column'])) as $children) { ?>
+									<ul class="list-unstyled">
+										<?php foreach ($children as $child) { ?>
+										<li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>
+										<?php } ?>
+									</ul>
+									<?php } ?>
 		            </div>
 		            <a href="<?php echo $category['href']; ?>" class="see-all"><?php echo $text_all; ?> <?php echo $category['name']; ?></a> </div>
 		        </li>

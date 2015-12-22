@@ -1,5 +1,44 @@
 <?php
 class ModelCatalogCategory extends Model {
+
+	
+			public function getCategories_MF($data) {
+				if( version_compare( VERSION, '1.5.5', '>=' ) ) {
+					$sql = "SELECT cp.category_id AS category_id, GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name, c.parent_id, c.sort_order FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "category c ON (cp.path_id = c.category_id) LEFT JOIN " . DB_PREFIX . "category_description cd1 ON (c.category_id = cd1.category_id) LEFT JOIN " . DB_PREFIX . "category_description cd2 ON (cp.category_id = cd2.category_id) WHERE cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+					if( ! empty( $data['filter_name'] ) ) {
+						$sql .= " AND cd2.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+					} 
+				
+					$sql .= " GROUP BY cp.category_id ORDER BY name";
+				} else {
+					$sql = "SELECT * FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+				
+					if( ! empty( $data['filter_name'] ) ) {
+						$sql .= " AND LOWER(cd.name) LIKE '" . $this->db->escape( function_exists( 'mb_strtolower' ) ? mb_strtolower( $data['filter_name'], 'utf-8' ) : $data['filter_name'] ) . "%'";
+					}
+				
+					$sql .= " GROUP BY c.category_id ORDER BY name";
+				}
+
+				if (isset($data['start']) || isset($data['limit'])) {
+					if ($data['start'] < 0) {
+						$data['start'] = 0;
+					}				
+
+					if ($data['limit'] < 1) {
+						$data['limit'] = 20;
+					}	
+
+					$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+				}
+				
+				$query = $this->db->query($sql);
+
+				return $query->rows;
+			}
+				
+			
 	public function addCategory($data) {
 		$this->event->trigger('pre.admin.category.add', $data);
 

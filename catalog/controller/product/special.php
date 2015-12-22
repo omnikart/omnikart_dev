@@ -42,6 +42,11 @@ class ControllerProductSpecial extends Controller {
 
 		$url = '';
 
+				if( ! empty( $this->request->get['mfp'] ) ) {
+					$url .= '&mfp=' . $this->request->get['mfp'];
+				}
+			
+
 		if (isset($this->request->get['sort'])) {
 			$url .= '&sort=' . $this->request->get['sort'];
 		}
@@ -93,7 +98,9 @@ class ControllerProductSpecial extends Controller {
 			'start' => ($page - 1) * $limit,
 			'limit' => $limit
 		);
-
+		if( isset( $this->request->get['category_id'] ) ) {
+			$filter_data['filter_category_id'] = (int) $this->request->get['category_id'];
+		}
 		$product_total = $this->model_catalog_product->getTotalProductSpecials();
 
 		$results = $this->model_catalog_product->getProductSpecials($filter_data);
@@ -144,6 +151,11 @@ class ControllerProductSpecial extends Controller {
 		}
 
 		$url = '';
+
+				if( ! empty( $this->request->get['mfp'] ) ) {
+					$url .= '&mfp=' . $this->request->get['mfp'];
+				}
+			
 
 		if (isset($this->request->get['limit'])) {
 			$url .= '&limit=' . $this->request->get['limit'];
@@ -209,6 +221,11 @@ class ControllerProductSpecial extends Controller {
 
 		$url = '';
 
+				if( ! empty( $this->request->get['mfp'] ) ) {
+					$url .= '&mfp=' . $this->request->get['mfp'];
+				}
+			
+
 		if (isset($this->request->get['sort'])) {
 			$url .= '&sort=' . $this->request->get['sort'];
 		}
@@ -232,6 +249,11 @@ class ControllerProductSpecial extends Controller {
 		}
 
 		$url = '';
+
+				if( ! empty( $this->request->get['mfp'] ) ) {
+					$url .= '&mfp=' . $this->request->get['mfp'];
+				}
+			
 
 		if (isset($this->request->get['sort'])) {
 			$url .= '&sort=' . $this->request->get['sort'];
@@ -269,8 +291,90 @@ class ControllerProductSpecial extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/special.tpl')) {
+
+				if( isset( $this->request->get['mfilterAjax'] ) ) {
+					$settings	= $this->config->get('mega_filter_settings');
+					$baseTypes	= array( 'stock_status', 'manufacturers', 'rating', 'attributes', 'price', 'options', 'filters' );
+		
+					if( isset( $this->request->get['mfilterBTypes'] ) ) {
+						$baseTypes = explode( ',', $this->request->get['mfilterBTypes'] );
+					}
+					
+					if( ! empty( $settings['calculate_number_of_products'] ) || in_array( 'categories:tree', $baseTypes ) ) {
+						if( empty( $settings['calculate_number_of_products'] ) ) {
+							$baseTypes = array( 'categories:tree' );
+						}
+				
+						$this->load->model( 'module/mega_filter' );
+
+						$idx = 0;
+		
+						if( isset( $this->request->get['mfilterIdx'] ) )
+							$idx = (int) $this->request->get['mfilterIdx'];
+						
+						$data['mfilter_json'] = json_encode( MegaFilterCore::newInstance( $this, NULL )->getJsonData($baseTypes, $idx) );
+					}
+				
+					$data['header'] = $data['column_left'] = $data['column_right'] = $data['content_top'] = $data['content_bottom'] = $data['footer'] = '';
+				}
+				
+				if( ! empty( $data['breadcrumbs'] ) && ! empty( $this->request->get['mfp'] ) ) {
+					foreach( $data['breadcrumbs'] as $mfK => $mfBreadcrumb ) {
+						$mfReplace = preg_replace( '/path\[[^\]]+\],?/', '', $this->request->get['mfp'] );
+						$mfFind = ( mb_strpos( $mfBreadcrumb['href'], '?mfp=', 0, 'utf-8' ) !== false ? '?mfp=' : '&mfp=' );
+						
+						$data['breadcrumbs'][$mfK]['href'] = str_replace(array(
+							$mfFind . $this->request->get['mfp'],
+							'&amp;mfp=' . $this->request->get['mfp'],
+							$mfFind . urlencode( $this->request->get['mfp'] ),
+							'&amp;mfp=' . urlencode( $this->request->get['mfp'] )
+						), $mfReplace ? $mfFind . $mfReplace : '', $mfBreadcrumb['href'] );
+					}
+				}
+			
 			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/special.tpl', $data));
 		} else {
+
+				if( isset( $this->request->get['mfilterAjax'] ) ) {
+					$settings	= $this->config->get('mega_filter_settings');
+					$baseTypes	= array( 'stock_status', 'manufacturers', 'rating', 'attributes', 'price', 'options', 'filters' );
+		
+					if( isset( $this->request->get['mfilterBTypes'] ) ) {
+						$baseTypes = explode( ',', $this->request->get['mfilterBTypes'] );
+					}
+					
+					if( ! empty( $settings['calculate_number_of_products'] ) || in_array( 'categories:tree', $baseTypes ) ) {
+						if( empty( $settings['calculate_number_of_products'] ) ) {
+							$baseTypes = array( 'categories:tree' );
+						}
+				
+						$this->load->model( 'module/mega_filter' );
+
+						$idx = 0;
+		
+						if( isset( $this->request->get['mfilterIdx'] ) )
+							$idx = (int) $this->request->get['mfilterIdx'];
+						
+						$data['mfilter_json'] = json_encode( MegaFilterCore::newInstance( $this, NULL )->getJsonData($baseTypes, $idx) );
+					}
+				
+					$data['header'] = $data['column_left'] = $data['column_right'] = $data['content_top'] = $data['content_bottom'] = $data['footer'] = '';
+				}
+				
+				if( ! empty( $data['breadcrumbs'] ) && ! empty( $this->request->get['mfp'] ) ) {
+					foreach( $data['breadcrumbs'] as $mfK => $mfBreadcrumb ) {
+						$mfReplace = preg_replace( '/path\[[^\]]+\],?/', '', $this->request->get['mfp'] );
+						$mfFind = ( mb_strpos( $mfBreadcrumb['href'], '?mfp=', 0, 'utf-8' ) !== false ? '?mfp=' : '&mfp=' );
+						
+						$data['breadcrumbs'][$mfK]['href'] = str_replace(array(
+							$mfFind . $this->request->get['mfp'],
+							'&amp;mfp=' . $this->request->get['mfp'],
+							$mfFind . urlencode( $this->request->get['mfp'] ),
+							'&amp;mfp=' . urlencode( $this->request->get['mfp'] )
+						), $mfReplace ? $mfFind . $mfReplace : '', $mfBreadcrumb['href'] );
+					}
+				}
+			
 			$this->response->setOutput($this->load->view('default/template/product/special.tpl', $data));
 		}
 	}

@@ -5,6 +5,9 @@
       <div class="pull-right">
         <button type="submit" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-info"><i class="fa fa-truck"></i></button>
         <button type="submit" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-info"><i class="fa fa-print"></i></button>
+ 
+      <button type="submit" id="button-pdf" form="form-order" formaction="<?php echo $pdf; ?>" data-toggle="tooltip" title="Tax Invoice(PDF)" class="btn btn-info"><i class="fa fa-file-pdf-o"></i></button>
+        
         <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a></div>
       <h1><?php echo $heading_title; ?></h1>
       <ul class="breadcrumb">
@@ -228,11 +231,17 @@ $('input[name=\'filter_customer\']').autocomplete({
   <script type="text/javascript"><!--
 $('input[name^=\'selected\']').on('change', function() {
 	$('#button-shipping, #button-invoice').prop('disabled', true);
+   
+        $('#button-pdf').prop('disabled', true);
+        
 	
 	var selected = $('input[name^=\'selected\']:checked');
 	
 	if (selected.length) {
 		$('#button-invoice').prop('disabled', false);
+   
+        $('#button-pdf').prop('disabled', false);
+        
 	}
 	
 	for (i = 0; i < selected.length; i++) {

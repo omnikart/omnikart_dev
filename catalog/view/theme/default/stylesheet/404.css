@@ -1,0 +1,67 @@
+/*
+ * Opencart Blog Extension v1.0 - 404.css
+ * This file is part of Opencart Blog Extension, an Admin template build for sale at Evanto Marketplace.
+ * All copyright to this file is hold by techbuz <techbuzz69@gmail.com>.
+ * Last Updated:
+ * April 09, 2015
+ *
+ */
+
+.title {
+	font-size: 25px;
+	color: #9099A2;
+}
+
+.list li {
+	padding: 3px 0;
+}
+
+.list li a {
+	font-size: 16px;
+	display: inline-block;
+	border-bottom: 1px dotted #CCC;
+	color: #9099A2;
+}
+
+.list li a:hover {
+	color: #000;
+}
+
+.left-panel {
+	text-align: center;
+	border-right: 2px dotted #CCC;
+}
+
+.left-panel .fa {
+	font-size: 25px;
+	color: #FF2525;
+}
+
+.not_found_title {
+	font-size: 10rem;
+	font-size: 100px;
+	font-weight: 700;
+	color: #BAC2CD;
+}
+
+.left-panel .desc {
+	font-size: 25px;
+	color: #9099A2;
+	margin-bottom: 20px;
+}
+
+.social {
+	font-size: 18px;
+	margin: 10px 0;
+}
+
+.social .title {
+	display: inline;
+	font-size: 18px;
+	font-weight: 700;
+	color: #9099A2;
+}
+
+.social a .fa {
+	font-size: 22px;
+}

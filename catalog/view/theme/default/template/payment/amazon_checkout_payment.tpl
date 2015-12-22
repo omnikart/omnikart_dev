@@ -1,4 +1,4 @@
-<?php echo $header; ?><?php echo $column_left; ?><?php echo $column_right; ?>
+<?php echo $header; ?><div id="columns"><?php echo $column_left; ?><?php echo $column_right; ?>
 <div class="container"><?php echo $content_top; ?>
   <div style="text-align:center;">
     <h3><?php echo $heading_payment; ?></h3>
@@ -38,4 +38,4 @@
     }).render('amazon-wallet-widget');
   });
 //--></script>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

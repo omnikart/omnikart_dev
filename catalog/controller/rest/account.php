@@ -193,7 +193,14 @@ class ControllerRestAccount extends RestController {
 		if (!$this->customer->isLogged()) {
 			$json["error"] = "User is not logged in";
 			$json["success"] = false;
-		}else {
+		} else {
+			
+			$customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($this->customer->getEmail())) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($post['old_password']) . "'))))) OR password = '" . $this->db->escape(md5($post['old_password'])) . "') AND status = '1' AND approved = '1'");
+			
+			if (!$customer_query->num_rows) {
+				$json["error"]['old_password'] = "Old password incorrect";
+			}
+			
 			if ((utf8_strlen($post['password']) < 4) || (utf8_strlen($post['password']) > 20)) {
 				$json["error"]['password'] = $this->language->get('error_password');
 			}
@@ -216,7 +223,7 @@ class ControllerRestAccount extends RestController {
 				);
 
 				$this->model_account_activity->addActivity('password', $activity_data);			
-			}else {
+			} else {
 				$json["success"] = false;
 			}
 		}

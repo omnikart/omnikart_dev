@@ -367,9 +367,14 @@ class ControllerDesignLayout extends Controller {
 
 		// Get a list of installed modules
 		$extensions = $this->model_extension_extension->getInstalled('module');
-
+		foreach( $data['layout_modules'] as $mfp_k => $mfp_v ) {
+			if( strpos( $mfp_v['code'], 'mega_filter' ) === 0 ) {
+				unset( $data['layout_modules'][$mfp_k] );
+			}
+		}
 		// Add all the modules which have multiple settings for each module
 		foreach ($extensions as $code) {
+			if( $code == 'mega_filter' ) continue;
 			$this->load->language('module/' . $code);
 
 			$module_data = array();

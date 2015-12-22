@@ -25,6 +25,15 @@ class ControllerAccountRegister extends Controller {
 			
 			$this->customer->login($this->request->post['email'], $this->request->post['password']);
 
+
+								if($this->config->get('marketplace_becomepartnerregistration')){
+										if ($this->request->post['tobecomepartner']=='1' && $this->request->post['shoppartner']) {
+												$this->load->model('account/customerpartner');
+												$this->model_account_customerpartner->becomePartner($this->request->post['shoppartner']);
+										} 
+								}                
+
+													 
 			unset($this->session->data['guest']);
 
 			// Add to activity log
@@ -333,6 +342,61 @@ class ControllerAccountRegister extends Controller {
 			$data['agree'] = false;
 		}
 
+
+						$data['marketplace_becomepartnerregistration'] = $this->config->get('marketplace_becomepartnerregistration');
+						if($this->config->get('marketplace_becomepartnerregistration')){
+
+								$this->language->load('account/customerpartner/become_partner');
+
+								$data['text_register_becomePartner'] = $this->language->get('text_register_becomePartner');
+								$data['text_register_douwant'] = $this->language->get('text_register_douwant');
+								$data['text_shop_name'] = $this->language->get('text_shop_name');
+								$data['text_avaiable'] = $this->language->get('text_avaiable');
+								$data['text_no_avaiable'] = $this->language->get('text_no_avaiable');
+
+								if (isset($this->request->post['shoppartner'])) {
+										$data['shoppartner'] = $this->request->post['shoppartner'];
+								} else {
+										$data['shoppartner'] = '';
+								}
+
+								if (isset($this->request->post['tobecomepartner'])) {
+										$data['tobecomepartner'] = $this->request->post['tobecomepartner'];
+								} else {
+										$data['tobecomepartner'] = '';
+								}
+
+								if (isset($this->error['errshoppartner'])) {
+										$data['error_shoppartner'] = $this->error['errshoppartner'];
+								} else {
+										$data['error_shoppartner'] = '';
+								}
+
+						}
+						$data['marketplace_customerGroup'] = false;
+						if($this->config->get('marketplace_customerGroup')){
+								$data['marketplace_customerGroup'] = true;
+								$this->load->model("account/customerpartner");
+								$filterData = array (
+										'start' => 0,
+										'limit' => 50,
+										'groupIsParent' => 0,
+										'groupStatus' => 'enable',
+								);
+								$data['parentGroups'] = array();
+								$parentGroups = $this->model_account_customerpartner->getCustomerGroupList($filterData);
+								if($parentGroups) {
+										foreach($parentGroups as $key => $group) {
+												$data['parentGroups'][] = array (
+														'id' => $group['id'],
+														'name' => $group['name'],
+														'description' => $group['description'],
+												);
+										}
+								}
+						}
+
+														
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
 		$data['content_top'] = $this->load->controller('common/content_top');
@@ -348,6 +412,24 @@ class ControllerAccountRegister extends Controller {
 	}
 
 	public function validate() {
+
+
+						if($this->config->get('marketplace_becomepartnerregistration') AND isset($this->request->post['tobecomepartner'])){        
+
+								$this->language->load('account/customerpartner/become_partner');
+
+								if(utf8_strlen($this->request->post['shoppartner'])<=3 && $this->request->post['tobecomepartner']==1){
+										$this->error['errshoppartner'] = $this->language->get('error_validshop');
+								}else if(utf8_strlen($this->request->post['shoppartner']) >1 && $this->request->post['tobecomepartner']==1){
+										$this->load->model('customerpartner/master');                           
+										if(!$this->model_customerpartner_master->getShopData($this->request->post['shoppartner'])){
+											$this->error['errshoppartner'] = $this->language->get('error_noshop');
+										}
+								}
+
+								$this->language->load('account/register');
+						}
+														
 		if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
 		}

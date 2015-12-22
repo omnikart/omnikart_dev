@@ -319,7 +319,9 @@ class ControllerCheckoutCart extends Controller {
 			}
 
 			$product_options = $this->model_catalog_product->getProductOptions($this->request->post['product_id']);
-
+			if ($this->model_catalog_product->getGroupedProductGrouped($this->request->post['product_id'])) {
+				$json['error']['gp_data'] = true;
+			}
 			foreach ($product_options as $product_option) {
 				if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
 					$json['error']['option'][$product_option['product_option_id']] = sprintf($this->language->get('error_required'), $product_option['name']);

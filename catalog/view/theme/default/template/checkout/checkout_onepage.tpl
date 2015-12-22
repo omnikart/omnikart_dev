@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 
 <?php
 /*Mijoshop detector */
@@ -2256,4 +2256,4 @@
                             });   
                      //--></script>
 
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

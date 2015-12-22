@@ -36,6 +36,10 @@ class Image {
 	}
 
 	public function save($file, $quality = 90) {
+
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                require_once NITRO_INCLUDE_FOLDER . 'image_quality_override.php';
+            
 		$info = pathinfo($file);
 
 		$extension = strtolower($info['extension']);

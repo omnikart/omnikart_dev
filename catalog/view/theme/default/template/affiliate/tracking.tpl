@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <div class="container">
   <ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -64,4 +64,4 @@ $('input[name=\'product\']').autocomplete({
 	}
 });
 //--></script>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

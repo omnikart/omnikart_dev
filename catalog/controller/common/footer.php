@@ -45,6 +45,7 @@ class ControllerCommonFooter extends Controller {
 		$data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
 		$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));
 		$data['careers'] = $this->url->link('information/careers', '', 'SSL');
+		$data['search_action'] = $this->url->link('product/json', '', 'SSL');
 		
 		// Whos Online
 		if ($this->config->get('config_customer_online')) {

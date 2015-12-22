@@ -20,7 +20,8 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 		$this->load->model('tool/image');
 		$this->load->language('module/pavverticalcategorytabs');
 		$this->load->model('catalog/category');
-
+		$this->load->language('product/gp_grouped');
+		
 		if (file_exists('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/pavverticalcategorytabs.css')) {
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/pavverticalcategorytabs.css');
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/bootstrap-tabs-x.css');
@@ -242,6 +243,25 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 				$rating = (int)$result['rating'];
 			} else {
 				$rating = false;
+			}
+			if ($price && $is_gp = $this->model_catalog_product->getGroupedProductGrouped($result['product_id'])) {
+				$gp_price_min = $is_gp['gp_price_min'];
+				$gp_price_max = $is_gp['gp_price_max'];
+			
+				if ($gp_price_min[0] == '#') {
+					$child_info = $this->model_catalog_product->getProduct(substr($gp_price_min,1));
+					$gp_price_min = $child_info['special'] ? $child_info['special'] : $child_info['price'];
+				}
+				if ($gp_price_max[0] == '#') {
+					$child_info = $this->model_catalog_product->getProduct(substr($gp_price_max,1));
+					$gp_price_max = $child_info['special'] ? $child_info['special'] : $child_info['price'];
+				}
+			
+				if ($gp_price_min && $gp_price_max) {
+					$price = $this->currency->format($this->tax->calculate($gp_price_min, $result['tax_class_id'], $this->config->get('config_tax'))) . '-' . $this->currency->format($this->tax->calculate($gp_price_max, $result['tax_class_id'], $this->config->get('config_tax')));
+				} else {
+					$price = $this->language->get('text_gp_price_start') . $this->currency->format($this->tax->calculate($gp_price_min, $result['tax_class_id'], $this->config->get('config_tax')));
+				}
 			}
 			$products[] = array(
 					'product_id'  => $result['product_id'],

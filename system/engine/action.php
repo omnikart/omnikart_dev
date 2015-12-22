@@ -1,4 +1,10 @@
 <?php
+
+                if (!function_exists('generateNameOfCacheFile')) {
+                    require_once DIR_SYSTEM . 'nitro/core/core.php';
+                    require_once NITRO_INCLUDE_FOLDER . 'pagecache_top.php';
+                }
+            
 final class Action {
 	private $file;
 	private $class;
@@ -55,7 +61,7 @@ final class Action {
 		}
 
 		if (is_file($this->file)) {
-			include_once($this->file);
+			include_once(modification($this->file));
 
 			$class = $this->class;
 

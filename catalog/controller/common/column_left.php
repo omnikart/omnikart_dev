@@ -47,8 +47,19 @@ class ControllerCommonColumnLeft extends Controller {
 
 		foreach ($modules as $module) {
 			$part = explode('.', $module['code']);
-
-			if (isset($part[0]) && $this->config->get($part[0] . '_status')) {
+			if( $part[0] == 'mega_filter' ) {
+				if( ! isset( $part[1] ) ) {
+					continue;
+				}
+			
+				$mfp_setting = $this->config->get($part[0] . '_module');
+				$mfp_setting['_idx'] = $part[1];
+				$mfp_setting['position'] = $module['position'];
+			
+				if( NULL != ( $mfp = $this->load->controller('module/' . $part[0], $mfp_setting) ) ) {
+					$data['modules'][] = $mfp;
+				}
+			} else if (isset($part[0]) && $this->config->get($part[0] . '_status')) {
 				$data['modules'][] = $this->load->controller('module/' . $part[0]);
 			}
 

@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <div class="container">
   <ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -505,6 +505,106 @@
             </div>
           </div>
         </fieldset>
+
+					<?php if($marketplace_becomepartnerregistration){ ?>
+
+        <fieldset>
+          <legend><?php echo $text_register_becomePartner; ?></legend>
+          <div class="form-group">
+            <label class="col-sm-2 control-label"><?php echo $text_register_douwant; ?></label>
+            <div class="col-sm-10">
+              <?php if ($tobecomepartner) { ?>
+              <label class="radio-inline">
+                <input type="radio" name="tobecomepartner" value="1" checked="checked" />
+                <?php echo $text_yes; ?></label>
+              <label class="radio-inline">
+                <input type="radio" name="tobecomepartner" value="0" />
+                <?php echo $text_no; ?></label>
+              <?php } else { ?>
+              <label class="radio-inline">
+                <input type="radio" name="tobecomepartner" value="1" />
+                <?php echo $text_yes; ?></label>
+              <label class="radio-inline">
+                <input type="radio" name="tobecomepartner" value="0" checked="checked" />
+                <?php echo $text_no; ?></label>
+              <?php } ?>
+            </div>
+          </div>
+
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="input-shop"><?php echo $text_shop_name; ?></label>
+            <div class="col-sm-10">
+              <div class="input-group"> 
+                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                <input type="text" name="shoppartner" value="<?php echo $shoppartner; ?>" placeholder="<?php echo $text_shop_name; ?>" id="input-shop" class="form-control" />                
+              </div>
+              <?php if ($error_shoppartner) { ?>
+              <div class="text-danger"><?php echo $error_shoppartner; ?></div>
+              <?php } ?>
+            </div>
+          </div>
+
+        </fieldset>
+
+        <script>
+            $( "#input-shop" ).change(function() {
+              thisshop = this;
+              shop = $(thisshop).val();
+              
+              if(shop){
+
+                jQuery(thisshop).prev().html('<i class="fa fa-spinner fa-spin"></i>');
+
+                $.ajax({
+                       type: 'POST',
+                       data: ({shop: shop}),
+                       dataType: 'json',
+                       url: 'index.php?route=customerpartner/sell/wkmpregistation',
+                       success: function(data){     
+
+                          if(data['success']){
+                            jQuery(thisshop).prev().html('<span data-toggle="tooltip" class="text-success" title="<?php echo $text_avaiable; ?>"><i class="fa fa-thumbs-o-up"></i></span>');
+                          }else if(data['error']){
+                            jQuery(thisshop).prev().html('<span data-toggle="tooltip" class="text-danger" title="<?php echo $text_no_avaiable; ?>"><i class="fa fa-thumbs-o-down"></i></span>');
+                          }       
+                        
+                        }
+                    });
+              }
+            });
+        </script>
+    <?php } ?>
+
+    <?php if($marketplace_customerGroup) { ?>
+        <fieldset>
+            <legend>Become Multi user customer</legend>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Customer Group</label>
+                <div class="col-sm-10" >
+                    <select class="form-control" name="mpCustomerGroup">
+                        <option value=""></option>
+                        <?php if($parentGroups) { ?>
+                            <?php foreach($parentGroups as $key => $group) { ?>
+                                <option value="<?php echo $group['id'] ?>" title="<?php echo $group['description'] ?>"><?php echo $group['name'] ?></option>
+                            <?php } ?>    
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+        <script type="text/javascript">
+            $('#account div.form-group:nth-child(2)').css('display','none');
+            $('select[name="mpCustomerGroup"]').on('change',function(){
+                val = $(this).val();
+                $.each($('input[name="customer_group_id"]'),function(){
+                    if($(this).val() == val) {
+                        $(this).prop("checked","checked");
+                    }
+                });
+            });
+        </script>
+    <?php } ?>
+                              
         <?php if ($text_agree) { ?>
         <div class="buttons">
           <div class="pull-right"><?php echo $text_agree; ?>
@@ -697,4 +797,4 @@ $('select[name=\'country_id\']').on('change', function() {
 
 $('select[name=\'country_id\']').trigger('change');
 //--></script>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

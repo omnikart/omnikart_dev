@@ -1,0 +1,73 @@
+/*
+ * Opencart Blog Extension v1.0 - blog_search.css
+ * This file is part of Opencart Blog Extension, an Admin template build for sale sale at Evanto Marketplace.
+ * All copyright to this file is hold by techbuz <techbuzz69@gmail.com>.
+ * Last Updated:
+ * April 09, 2015
+ *
+ */
+
+#content {}
+#content h1 {
+	font-size: 30px;
+	color: #970000;
+	margin: 0 0 10px 0;
+	padding: 3px 0;
+}
+
+#refine-search {
+	margin-bottom: 10px;
+	padding: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	border: 2px solid #DDD;
+}
+
+#result h2 {
+	position: relative;
+	font-size: 22px;
+	color: #000;
+	margin: 0;
+	padding: 5px 10px;
+	-webkit-border-radius: 10px 10px 0 0;
+	-moz-border-radius: 10px 10px 0 0;
+	border-radius: 10px 10px 0 0;
+}
+
+#result .display-controls {
+	background: #F5F5F5;
+	padding: 5px 0;
+}
+
+
+#result {
+	margin-bottom: 10px;
+	padding: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	border: 2px solid #DDD;
+}
+
+.product-list .image  a {
+	display: inline-block;
+}
+
+.product-grid .post-thumb {
+	border: 1px solid #CCC;
+	padding: 10px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+
+.post-thumb {
+	border-bottom: 1px dotted #ccc;
+}
+
+.post-thumb h4 {
+	font-size: 20px;
+}
+

@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <div class="container">
   <ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -51,4 +51,4 @@
   </div>  <!--content-->
 <?php echo $column_right; ?></div>   <!--row-->
 </div>  <!--container-->
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

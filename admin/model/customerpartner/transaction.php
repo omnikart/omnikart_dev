@@ -145,14 +145,15 @@ class ModelCustomerpartnerTransaction extends Model {
 
 		$order_product_id = '';
 		$order_id = '';
-		foreach ($data['select'] as $key => $value) {
-			$order_id .= $key.",";
-			foreach ($value as $key => $detail) {
-				$order_product_id .= $detail.",";
-				$this->db->query("UPDATE ".DB_PREFIX."customerpartner_to_order SET paid_status = 1 WHERE order_product_id = '".$detail."' ");
+		if (isset($data['select'])) {
+			foreach ($data['select'] as $key => $value) {
+				$order_id .= $key.",";
+				foreach ($value as $key => $detail) {
+					$order_product_id .= $detail.",";
+					$this->db->query("UPDATE ".DB_PREFIX."customerpartner_to_order SET paid_status = 1 WHERE order_product_id = '".$detail."' ");
+				}
 			}
 		}
-
 		$this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_transaction SET customer_id = '" . (int)$data['customer_id'] . "', order_id = '".trim($order_id,',')."', order_product_id = '".trim($order_product_id,',')."', details = '" . $this->db->escape($data['details']) . "', amount = '" . (float)$data['amount'] . "', `text` = '".$this->currency->format($data['amount'])."', date_added = NOW()");
 
 	 //    $mail_data = array('customer_id' => $data['customer_id'],

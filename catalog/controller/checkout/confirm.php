@@ -103,9 +103,28 @@ class ControllerCheckoutConfirm extends Controller {
 			if ($this->customer->isLogged()) {
 				$this->load->model('account/customer');
 
-				$customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-
-				$order_data['customer_id'] = $this->customer->getId();
+				
+    /*
+    To order by company name not by sub user
+    */
+    if($this->config->get('marketplace_status')) {
+       $this->load->model('account/customerpartner');
+       $sellerId = $this->model_account_customerpartner->isSubUser($this->customer->getId());
+       if($sellerId) {
+            $sellerId = $sellerId;
+       } else {
+            $sellerId = $this->customer->getId();
+       }
+       $customer_info = $this->model_account_customer->getCustomer($sellerId);
+       $order_data['customer_id'] = $sellerId;
+    } else {
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $order_data['customer_id'] = $this->customer->getId();
+    }
+    /*
+    end here
+    */
+    
 				$order_data['customer_group_id'] = $customer_info['customer_group_id'];
 				$order_data['firstname'] = $customer_info['firstname'];
 				$order_data['lastname'] = $customer_info['lastname'];

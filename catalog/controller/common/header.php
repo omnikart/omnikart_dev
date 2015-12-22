@@ -14,7 +14,16 @@ class ControllerCommonHeader extends Controller {
 		$data['keywords'] = $this->document->getKeywords();
 		$data['links'] = $this->document->getLinks();
 		$data['styles'] = $this->document->getStyles();
+
+                require_once(DIR_SYSTEM . 'nitro/core/core.php');
+                require_once(DIR_SYSTEM . 'nitro/core/cdn.php');
+
+                $data['styles'] = nitroCDNResolve($data['styles']);
+            
 		$data['scripts'] = $this->document->getScripts();
+
+                $data['scripts'] = nitroCDNResolve($data['scripts']);
+            
 		$data['lang'] = $this->language->get('code');
 		$data['direction'] = $this->language->get('direction');
 
@@ -63,13 +72,48 @@ class ControllerCommonHeader extends Controller {
 		$data['logged'] = $this->customer->isLogged();
 		$data['account'] = $this->url->link('account/account', '', 'SSL');
 		$data['register'] = $this->url->link('account/register', '', 'SSL');
-		$data['login'] = $this->url->link('account/login', '', 'SSL');
+		$data['login'] = $this->url->link('module/login', '', 'SSL');//$this->url->link('account/login', '', 'SSL');
 		$data['order'] = $this->url->link('account/order', '', 'SSL');
 		$data['transaction'] = $this->url->link('account/transaction', '', 'SSL');
 		$data['download'] = $this->url->link('account/download', '', 'SSL');
 		$data['logout'] = $this->url->link('account/logout', '', 'SSL');
 		$data['shopping_cart'] = $this->url->link('checkout/cart', '', 'SSL');
 		$data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+
+						$data['menusell'] = $this->url->link('customerpartner/sell', '', 'SSL');
+						$data['menu_buy'] = $this->url->link('account/cd', '', 'SSL');
+						$this->language->load('module/marketplace');
+						$data['text_sell_header'] = $this->language->get('text_sell_header');
+						$data['text_my_profile'] = $this->language->get('text_my_profile');
+						$data['text_addproduct'] = $this->language->get('text_addproduct');
+						$data['text_wkshipping'] = $this->language->get('text_wkshipping');
+						$data['text_productlist'] = $this->language->get('text_productlist');
+						$data['text_dashboard'] = $this->language->get('text_dashboard');
+						$data['text_orderhistory'] = $this->language->get('text_orderhistory');
+						$data['text_becomePartner'] = $this->language->get('text_becomePartner');
+						$data['text_download'] = $this->language->get('text_download');
+						$data['text_transaction'] = $this->language->get('text_transaction'); 
+						$data['t_db'] = "Dashboard";
+						$data['t_so'] = "Schedule Order";
+
+						$this->load->model('account/customerpartner');
+						$data['chkIsPartner'] = $this->model_account_customerpartner->chkIsPartner();
+						$data['mp_addproduct'] = $this->url->link('account/customerpartner/addproduct', '', 'SSL');
+						$data['mp_productlist'] = $this->url->link('account/customerpartner/productlist', '', 'SSL');
+						$data['mp_dashboard'] = $this->url->link('account/customerpartner/dashboard', '', 'SSL');
+						$data['mp_add_shipping_mod'] = $this->url->link('account/customerpartner/add_shipping_mod','', 'SSL');
+						$data['mp_orderhistory'] = $this->url->link('account/customerpartner/orderlist','', 'SSL');
+						$data['mp_download'] = $this->url->link('account/customerpartner/download','', 'SSL');
+						$data['mp_profile'] = $this->url->link('account/customerpartner/profile','','SSL');      
+						$data['mp_want_partner'] = $this->url->link('account/customerpartner/become_partner','','SSL'); 
+						$data['mp_transaction'] = $this->url->link('account/customerpartner/transaction','','SSL'); 
+						$data['b_db'] = $this->url->link('account/cd','','SSL');
+						$data['b_so'] = $this->url->link('checkout/orderlater','','SSL');
+
+						$rights = $this->customer->getRights();
+						$data['rights'] = $rights['rights'];
+						
+						
 		$data['contact'] = $this->url->link('information/contact', '', 'SSL');
 		$data['careers'] = $this->url->link('information/careers', '', 'SSL');
 		$data['gift'] = $this->url->link('account/voucher', '', 'SSL');
@@ -110,7 +154,8 @@ class ControllerCommonHeader extends Controller {
 				foreach ($result as $cat){
 					$filter_data = array(
 							'filter_category_id'  => $cat['category_id'],
-							'filter_sub_category' => true
+							'filter_sub_category' => true,
+							'mfp_disabled' => true
 					);
 					$total = $this->model_catalog_product->getTotalProducts($filter_data);
 					if ($total) {

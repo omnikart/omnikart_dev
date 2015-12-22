@@ -334,8 +334,8 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 		
 		// Set document properties
 		$objPHPExcel->getProperties()
-					->setCreator($this->user->getUserName())
-					->setLastModifiedBy($this->user->getUserName())
+					->setCreator($this->customer->getFirstName())
+					->setLastModifiedBy($this->customer->getFirstName())
 					->setTitle($name)
 					->setSubject($name)
 					->setDescription("Backup for Office 2007 and later, generated using PHPExcel and ExcelPort.")

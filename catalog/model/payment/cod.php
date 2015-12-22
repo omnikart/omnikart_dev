@@ -4,7 +4,9 @@ class ModelPaymentCOD extends Model {
 		$this->load->language('payment/cod');
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('cod_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
-
+		
+		$query2 = $this->db->query("SELECT * FROM " . DB_PREFIX . "postcode WHERE (postcode = '" . (int)$address['postcode'] . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0') AND payment=".(int)$this->config->get('cod_postcode_payment').")");
+		
 		if ($this->config->get('cod_total') > 0 && $this->config->get('cod_total') > $total) {
 			$status = false;
 		} elseif (!$this->config->get('cod_geo_zone_id')) {
@@ -14,7 +16,11 @@ class ModelPaymentCOD extends Model {
 		} else {
 			$status = false;
 		}
-
+		
+		if (!$query2->num_rows) {
+			$status = false;
+		}
+		
 		$method_data = array();
 
 		if ($status) {

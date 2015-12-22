@@ -17,7 +17,7 @@ final class Loader {
 		$class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
 
 		if (file_exists($file)) {
-			include_once($file);
+			include_once(modification($file));
 
 			$this->registry->set('model_' . str_replace('/', '_', $model), new $class($this->registry));
 		} else {
@@ -34,7 +34,7 @@ final class Loader {
 
 			ob_start();
 
-			require($file);
+			require(modification($file));
 
 			$output = ob_get_contents();
 
@@ -51,7 +51,7 @@ final class Loader {
 		$file = DIR_SYSTEM . 'library/' . $library . '.php';
 
 		if (file_exists($file)) {
-			include_once($file);
+			include_once(modification($file));
 		} else {
 			trigger_error('Error: Could not load library ' . $file . '!');
 			exit();
@@ -62,7 +62,7 @@ final class Loader {
 		$file = DIR_SYSTEM . 'helper/' . $helper . '.php';
 
 		if (file_exists($file)) {
-			include_once($file);
+			include_once(modification($file));
 		} else {
 			trigger_error('Error: Could not load helper ' . $file . '!');
 			exit();

@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <?php if($chkIsPartner){ ?>
 <div class="container">
   <ul class="breadcrumb">
@@ -222,7 +222,7 @@
 <?php }else{  echo "<h2 style='color:#F93D49;'>Please inform Admin</h2>";   } ?>
 <?php echo $column_right; ?></div>
 </div>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>
 
 <script type="text/javascript">
 jQuery('input[name=up_file]').change(function(){

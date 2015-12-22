@@ -47,6 +47,7 @@
       <li><a href="<?php echo $payment; ?>"><?php echo $text_payment; ?></a></li>
       <li><a href="<?php echo $total; ?>"><?php echo $text_total; ?></a></li>
       <li><a href="<?php echo $feed; ?>"><?php echo $text_feed; ?></a></li>
+      <li><a href="<?php echo $gp_grouped; ?>">GP Grouped</a></li>
       <li><a href="<?php echo $fraud; ?>"><?php echo $text_fraud; ?></a></li>
       <?php if ($openbay_show_menu == 1) { ?>
       <li><a class="parent"><?php echo $text_openbay_extension; ?></a>
@@ -131,6 +132,29 @@
       <li><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
     </ul>
   </li>
+	<?php if(isset($text_ne)) { ?>
+		<li id="ne"><a class="parent"><i class="fa fa-envelope fa-fw"></i> <span><?php echo $text_ne; ?></span></a>
+				<ul>
+						<li><a href="<?php echo $ne_email; ?>"><?php echo $text_ne_email; ?></a></li>
+						<li><a href="<?php echo $ne_draft; ?>"><?php echo $text_ne_draft; ?></a></li>
+						<li><a href="<?php echo $ne_marketing; ?>"><?php echo $text_ne_marketing; ?></a></li>
+						<li><a href="<?php echo $ne_subscribers; ?>"><?php echo $text_ne_subscribers; ?></a></li>
+						<li><a href="<?php echo $ne_stats; ?>"><?php echo $text_ne_stats; ?></a></li>
+						<li><a href="<?php echo $ne_robot; ?>"><?php echo $text_ne_robot; ?></a></li>
+						<li><a href="<?php echo $ne_template; ?>"><?php echo $text_ne_template; ?></a></li>
+						<li><a href="<?php echo $ne_subscribe_box; ?>"><?php echo $text_ne_subscribe_box; ?></a></li>
+						<li><a href="<?php echo $ne_blacklist; ?>"><?php echo $text_ne_blacklist; ?></a></li>
+						<li><a href="<?php echo $ne_update_check; ?>"><?php echo $text_ne_update_check; ?></a></li>
+						<li><a class="parent"><?php echo $text_ne_support; ?></a>
+								<ul>
+										<li><a href="https://www.codersroom.com/support/register.php" target="_blank"><?php echo $text_ne_support_register; ?></a></li>
+										<li><a href="https://www.codersroom.com/support/clientarea.php" target="_blank"><?php echo $text_ne_support_login; ?></a></li>
+										<li><a href="https://www.codersroom.com/support/" target="_blank"><?php echo $text_ne_support_dashboard; ?></a></li>
+								</ul>
+						</li>
+				</ul>
+		</li>
+	<?php } ?>  
   <li id="system"><a class="parent"><i class="fa fa-cog fa-fw"></i> <span><?php echo $text_system; ?></span></a>
     <ul>
       <li><a href="<?php echo $setting; ?>"><?php echo $text_setting; ?></a></li>
@@ -163,6 +187,8 @@
           </li>
           <li><a href="<?php echo $country; ?>"><?php echo $text_country; ?></a></li>
           <li><a href="<?php echo $zone; ?>"><?php echo $text_zone; ?></a></li>
+          <li><a href="<?php echo $city; ?>"><?php echo $text_city; ?></a></li>
+          <li><a href="<?php echo $postcode; ?>"><?php echo $text_postcode; ?></a></li>
           <li><a href="<?php echo $geo_zone; ?>"><?php echo $text_geo_zone; ?></a></li>
           <li><a class="parent"><?php echo $text_tax; ?></a>
             <ul>
@@ -182,6 +208,7 @@
       <li><a href="<?php echo $upload; ?>"><?php echo $text_upload; ?></a></li>
       <li><a href="<?php echo $backup; ?>"><?php echo $text_backup; ?></a></li>
       <li><a href="<?php echo $error_log; ?>"><?php echo $text_error_log; ?></a></li>
+<?php if ($nitropack_has_permission) { ?><li><a href="<?php echo $nitropack; ?>">NitroPack</a></li><?php } ?>
     </ul>	
   </li>
   <li id="reports"><a class="parent"><i class="fa fa-bar-chart-o fa-fw"></i> <span><?php echo $text_reports; ?></span></a>

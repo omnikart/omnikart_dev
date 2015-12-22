@@ -61,6 +61,9 @@ class ControllerAccountOrder extends Controller {
 		$this->load->model('account/order');
 
 		$order_total = $this->model_account_order->getTotalOrders();
+ 
+     $data['pdforders_order_status_customer'] = $this->config->get('pdforders_order_status_customer');
+        
 
 		$data['heading_title'] .= '('.$order_total.')';
 
@@ -71,6 +74,10 @@ class ControllerAccountOrder extends Controller {
 			$voucher_total = $this->model_account_order->getTotalOrderVouchersByOrderId($result['order_id']);
 
 			$data['orders'][] = array(
+ 
+      'pdf'       => $this->url->link('account/order/pdf', 'order_id=' . $result['order_id'], 'SSL'),
+      'order_status_id' => $this->model_account_order->getOrderstatusid($result['order_id']),
+        
 				'order_id'   => $result['order_id'],
 				'name'       => $result['firstname'] . ' ' . $result['lastname'],
 				'status'     => $result['status'],
@@ -433,6 +440,316 @@ class ControllerAccountOrder extends Controller {
 			}
 		}
 	}
+
+   
+      public function pdf() {
+
+    $this->load->language('account/order');
+
+    if (isset($this->request->get['order_id'])) {
+      $order_id = $this->request->get['order_id'];
+    } else {
+      $order_id = 0;
+    }
+
+    if (!$this->customer->isLogged()) {
+      $this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL');
+
+      $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+    }
+
+
+    $data['title'] = $this->language->get('text_invoice');
+
+    if ($this->request->server['HTTPS']) {
+      $data['base'] = HTTPS_SERVER;
+    } else {
+      $data['base'] = HTTP_SERVER;
+    }
+
+    if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+      $data['logo'] = HTTP_SERVER . 'image/' . $this->config->get('config_logo');
+    } else {
+      $data['logo'] = '';
+    }
+    
+    $data['direction'] = $this->language->get('direction');
+    $data['lang'] = $this->language->get('code');
+
+    $data['text_invoice'] = $this->language->get('text_invoice');
+    $data['text_order_detail'] = $this->language->get('text_order_detail');
+    $data['text_order_id'] = $this->language->get('text_order_id');
+    $data['text_date_added'] = $this->language->get('text_date_added');
+    $data['text_telephone'] = $this->language->get('text_telephone');
+    $data['text_fax'] = $this->language->get('text_fax');
+    $data['text_email'] = $this->language->get('text_email');
+    $data['text_website'] = $this->language->get('text_website');
+  $data['text_vattin']  = $this->language->get('text_vattin');
+    $data['text_to'] = $this->language->get('text_to');
+    $data['text_ship_to'] = $this->language->get('text_ship_to');
+    $data['text_payment_method'] = $this->language->get('text_payment_method');
+    $data['text_shipping_method'] = $this->language->get('text_shipping_method');
+
+    $data['column_product'] = $this->language->get('column_product_name');
+    $data['column_model'] = $this->language->get('column_model');
+    $data['column_quantity'] = $this->language->get('column_quantity');
+    $data['column_price'] = $this->language->get('column_price');
+    $data['column_total'] = $this->language->get('column_total');$data['column_image'] = "Image";$data['column_comment'] = $this->language->get('column_comment');require_once('tcpdf/tcpdf.php');$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, $this->config->get('pdforders_format'), true, 'UTF-8', false);$pdf->SetCreator(PDF_CREATOR);$pdf->SetAuthor($this->config->get('config_owner'));$pdf->SetTitle('Order PDF');$pdf->SetSubject('PDF Invoice');$pdf->SetKeywords('TCPDF, PDF Invoice');$pdf->setPrintHeader(false);$pdf->setFooterData(array(0,64,0), array(0,64,128));$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+    $this->load->model('account/order');
+    $this->load->model('setting/setting');
+
+  $order_info = $this->model_account_order->getOrder($order_id);
+
+  if ($order_info) {
+        $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
+
+        if ($store_info) {
+          $store_address = $store_info['config_address'];
+          $store_email = $store_info['config_email'];
+          $store_telephone = $store_info['config_telephone'];
+          $store_fax = $store_info['config_fax'];
+        } else {
+          $store_address = $this->config->get('config_address');
+          $store_email = $this->config->get('config_email');
+          $store_telephone = $this->config->get('config_telephone');
+          $store_fax = $this->config->get('config_fax');
+        }
+
+        if ($order_info['invoice_no']) {
+          $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'];
+        } else {
+          $invoice_no = '';
+        }
+
+        if ($order_info['payment_address_format']) {
+          $format = $order_info['payment_address_format'];
+        } else {
+          $format = '{firstname} {lastname}' . "\n " . '{company}' .  "\n " . '{address_1}' .  "\n " . '{address_2}' .  "\n " . '{city} {postcode}' .  "\n " . '{zone}' . "\n " . '{country}';
+        }
+
+        $find = array(
+          '{firstname}',
+          '{lastname}',
+          '{company}',
+          '{address_1}',
+          '{address_2}',
+          '{city}',
+          '{postcode}',
+          '{zone}',
+          '{zone_code}',
+          '{country}'
+        );
+
+        $replace = array(
+          'firstname' => $order_info['payment_firstname'],
+          'lastname'  => $order_info['payment_lastname'],
+          'company'   => $order_info['payment_company'],
+          'address_1' => $order_info['payment_address_1'],
+          'address_2' => $order_info['payment_address_2'],
+          'city'      => $order_info['payment_city'],
+          'postcode'  => $order_info['payment_postcode'],
+          'zone'      => $order_info['payment_zone'],
+          'zone_code' => $order_info['payment_zone_code'],
+          'country'   => $order_info['payment_country']
+        );
+        $pdf->SetFont($this->config->get('pdforders_fontstyle'), '',$this->config->get('pdforders_fontsize') , '', true);
+        $payment_address = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
+
+        if ($order_info['shipping_address_format']) {
+          $format = $order_info['shipping_address_format'];
+        } else {
+          $format = '{firstname} {lastname}' .  "\n " . '{company}' .  "\n " . '{address_1}' .  "\n " . '{address_2}' .  "\n ". '{city} {postcode}' .  "\n " . '{zone}' .  "\n " . '{country}';
+        }
+
+        $find = array(
+          '{firstname}',
+          '{lastname}',
+          '{company}',
+          '{address_1}',
+          '{address_2}',
+          '{city}',
+          '{postcode}',
+          '{zone}',
+          '{zone_code}',
+          '{country}'
+        );
+
+        $replace = array(
+          'firstname' => $order_info['shipping_firstname'],
+          'lastname'  => $order_info['shipping_lastname'],
+          'company'   => $order_info['shipping_company'],
+          'address_1' => $order_info['shipping_address_1'],
+          'address_2' => $order_info['shipping_address_2'],
+          'city'      => $order_info['shipping_city'],
+          'postcode'  => $order_info['shipping_postcode'],
+          'zone'      => $order_info['shipping_zone'],
+          'zone_code' => $order_info['shipping_zone_code'],
+          'country'   => $order_info['shipping_country']
+        );
+
+        $shipping_address = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
+
+        $this->load->model('tool/upload');
+        $this->load->model('tool/image');
+
+        $product_data = array();
+
+        $products = $this->model_account_order->getorderProducts($order_id);
+
+        $productcount  = count($products);$addextrarows = false;
+        if($this->config->get('pdforders_numberproducts') > $productcount) {
+          $addextrarows = true;
+        }
+
+        foreach ($products as $product) {
+          $option_data = array();
+
+          $options = $this->model_account_order->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
+
+          foreach ($options as $option) {
+            if ($option['type'] != 'file') {
+              $value = $option['value'];
+            } else {
+              $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
+
+              if ($upload_info) {
+                $value = $upload_info['name'];
+              } else {
+                $value = '';
+              }
+            }
+
+            $option_data[] = array(
+              'name'  => $option['name'],
+              'value' => $value
+            );
+          }
+
+          if($this->config->get('pdforders_showimage')) {
+              $image = $this->model_account_order->getProductimage($product['product_id']);
+
+              if (is_file(DIR_IMAGE . $image)) {
+                $image = $this->model_tool_image->resize($image, 60, 60);
+                $image = str_replace(' ','%20',$image);
+              } else {
+                $image = $this->model_tool_image->resize('no_image.png', 60, 60);
+              }
+          } else {
+            $image = "";
+          } 
+
+          $product_data[] = array(
+            'name'     => $product['name'],
+            'thumb'     => $image,
+            'model'    => $product['model'],
+            'option'   => $option_data,
+            'quantity' => $product['quantity'],
+            'price'    => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+            'total'    => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
+          );
+        }
+        $pdf->AddPage($this->config->get('pdforders_orientation'), $this->config->get('pdforders_format'));
+        $tbl = "";
+        $voucher_data = array();
+
+        $total_data = array();
+
+        $totals = $this->model_account_order->getOrderTotals($order_id);
+
+        foreach ($totals as $total) {
+          $total_data[] = array(
+            'title' => $total['title'],
+            'text'  => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+          );
+        } 
+        
+        if($data['logo'] && $this->config->get('pdforders_logo')) { 
+          $tbl .=  '<table cellpadding="1" cellspacing="1" border="0" ><tr style="text-align:left;"><td><img src="' . $data['logo'] . '" border="0" width="auto" /></td><td align="right">'.$data['text_invoice'].'#' . $order_id . '</td></tr></table>';
+        } else {
+          $tbl .=  '<table cellpadding="1" cellspacing="1" border="0" ><tr style="text-align:left;"><td>'.$data['text_invoice'].'#' . $order_id . '</td></tr></table>';
+        }
+
+         $tbl .= '<table border="0" cellpadding="4">';
+
+        $tbl .= '<tbody><tr><td><b>'.$order_info['store_name'].'</b><br/><b>Address: </b> '.nl2br($store_address).'<br><br><b>'.$data['text_telephone'].'</b> '.$store_telephone . '<br />';
+         if (!($this->config->get('pdforders_vattin'))) { 
+          $tbl .= '<b>'.$data['text_vattin'].'</b>'.$this->config->get('pdforders_vattin').'<br /> ';
+        }
+        if ($store_fax) { 
+          $tbl .= '<b>'.$data['text_fax'].'</b>'.$store_fax.'<br /> ';
+        }
+
+        $tbl .= '<b>' . $data['text_email'] . '</b>'.rtrim($store_email, '/').'<br/><b>'.$data['text_website'].'</b><a href=' . rtrim($order_info['store_url'], '/') . '>'.rtrim($order_info['store_url'], '/').'</a></td><td><b>'.$data['text_date_added'].'</b> '.date($this->language->get('date_format_short'), strtotime($order_info['date_added'])).'<br />';
+
+        if ($invoice_no) {
+          $tbl .= '<b>'.$data['text_invoice'].'</b> '.$invoice_no.'<br />';
+        }
+
+        $tbl .= '<b>' . $data['text_order_id'].'</b> '.$order_id.'<br /><b>'.$data['text_payment_method'].'</b> '.$order_info['payment_method'].'<br/>';
+
+        if ($order_info['shipping_method']) { 
+          $tbl .= '<b>'.$data['text_shipping_method'].'</b> '.$order_info['shipping_method'].'<br />';
+        }
+
+        $tbl .= '</td></tr></tbody></table>';
+
+        $tbl .= '<table border="0.2" cellpadding="4"><thead><tr><td style="width: 50%;"><b>' . $data['text_to'] . '</b></td><td style="width: 50%;"><b>' . $data['text_ship_to'] . '</b></td></tr></thead><tbody><tr><td>' . $payment_address . '<br>'.$order_info['email'].'<br>'.$order_info['telephone'].'</td><td >' . $shipping_address . '</td></tr></tbody></table>';
+        
+        $tbl .= '<table border="0.2"  cellpadding="4" ><thead><tr>';
+        if($this->config->get('pdforders_showimage')) {
+          $tbl .= '<td style="width: 12%;" align="left"><b>' . $data['column_image'] . '</b></td>';
+          $tbl .= '<td style="width: 38%;" align="left"><b>' . $data['column_product'] . '</b></td>';
+        }else {
+          $tbl .= '<td style="width: 50%;" align="left"><b>' . $data['column_product'] . '</b></td>';
+        }
+         $tbl .= '<td style="width: 14%;" align="left"><b>' . $data['column_model'] . '</b></td><td style="width: 13%;" align="right"><b>' . $data['column_quantity'] . '</b></td><td style="width: 11%;" align="right"><b>' . $data['column_price'] . '</b></td><td style="width: 12%;" align="right"><b>' . $data['column_total'] . '</b></td></tr></thead>';
+        $tbl .= '<tbody>';
+        foreach ($product_data as $product) { 
+          $tbl .= '<tr>';
+           if($this->config->get('pdforders_showimage')) {
+            if($product['thumb']) {
+              $tbl .='<td style="width: 12%;" align="left"><img src="'.$product['thumb'].'" alt="'.$product['name'].'" title="'.$product['name'].'" class="img-thumbnail" /></td>';
+             }
+             $tbl .= '<td style="width: 38%;" align="left">'.$product['name'];
+            }else {
+            $tbl .= '<td style="width: 50%;" align="left">'.$product['name'];
+            }
+          
+            foreach ($product['option'] as $option) {
+            $tbl .= '<br /><small> - ' . $option['name'] . ': ' . $option['value'] . '</small>';
+            }
+          $tbl .= ' </td><td style="width: 14%;" align="left">' . $product['model'] . '</td><td style="width: 13%;" align="right">' . $product['quantity'] . '</td><td style="width: 11%;" align="right">' . $product['price'] . '</td><td style="width: 12%;" align="right">' . $product['total'] . '</td></tr>';
+        }
+        if($this->config->get('pdforders_showimage')) {$colspan = 5;} else {$colspan = 4;}
+        if($this->config->get('pdforders_addextrarows') && $addextrarows) { 
+          for ($i=0; $i < $this->config->get('pdforders_numberextrarows'); $i++) { 
+            $tbl .= '<tr><td colspan="'.$colspan.'"></td><td></td></tr>';
+          }
+        }
+
+        foreach ($voucher_data as $voucher) { 
+          $tbl .= '<tr><td>' . $voucher['description'] . '</td><td align="right">1</td><td align="right">' . $voucher['amount'] . '</td><td align="right">' . $voucher['amount'] . '</td></tr>';
+        }
+         
+        foreach ($total_data as $total) { 
+          $tbl .= '<tr><td align="right" colspan="'.$colspan.'"><b>' . $total['title'] . '</b></td><td align="right">' . $total['text'] . '</td></tr>';
+        }
+        $tbl .= '</tbody></table>';
+        if ($order_info['comment']) { 
+          $tbl .= '<table border="0" cellpadding="4"><thead><tr><td><b>' . $data['column_comment'] . '</b></td></tr></thead><tbody><tr><td>' .  nl2br($order_info['comment']) . '</td></tr></tbody></table>'; 
+        }
+    $message = $this->config->get('pdforders_textfooter');
+        if (isset($message[$this->config->get('config_language_id')])) { 
+         $tbl .= '<br><br><br>';
+          $tbl .= '<table border="0" cellpadding="4"><tbody><tr><td align="left">' . $message[$this->config->get('config_language_id')]['name'] . '</td></tr></tbody></table>'; 
+        }
+        $pdf->writeHTML($tbl, true, false, false, false, '');
+      }
+    
+    $pdf->Output('Invoice-Order'.$order_id.'.pdf', 'I');
+
+  }
 
 	public function reorder() {
 		$this->load->language('account/order');

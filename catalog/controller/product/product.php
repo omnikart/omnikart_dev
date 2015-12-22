@@ -487,6 +487,12 @@ class ControllerProductProduct extends Controller {
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+					$original_price  = 0;
+					$discount = 0;
+					if ($result['price'] < $result['original_price']) {
+						$original_price = $this->currency->format($this->tax->calculate($result['original_price'], $result['tax_class_id'], $this->config->get('config_tax')));
+						$discount = (int)(($result['original_price'] - $result['price'])*100/$result['original_price']);
+					}
 				} else {
 					$price = false;
 				}
@@ -541,6 +547,8 @@ class ControllerProductProduct extends Controller {
 					'name'        => $result['name'],
 					'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
 					'price'       => $price,
+					'original_price' => $original_price,
+					'discount' => $discount,
 					'special'     => $special,
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
@@ -595,7 +603,6 @@ class ControllerProductProduct extends Controller {
 			$html = '';
 			if ($getcombos) {
 				$html .= '<div class="combo-section">';
-				$html .= '<h3>'.$this->language->get('text_combo_header').'</h3>';
 			}
 			foreach ($getcombos as $combo) {
 				$getcombo = $this->model_checkout_combo_products->getCombo($combo['combo_id']);
@@ -604,10 +611,9 @@ class ControllerProductProduct extends Controller {
 				}
 			}
 			if ($getcombos) $html .= '</div>';
-			$data['description'] = $data['description'].$html;
+			$data['combo'] = $html;
+			$data['combo_title'] = $this->language->get('text_combo_header');
 			//
-			
-			
 			if ($is_gp_grouped) {
 				// Clear default data
 				$data['model'] = '';
@@ -1128,7 +1134,22 @@ class ControllerProductProduct extends Controller {
 				
 			$price_ori += $product_info['price'];
 				
-			if ($product_info['image']) $product_array[] = '<div class="combo-item"><div class="combo-item-img"><a href="'.$href.'"><img class="img-thumbnail" src="'. $this->model_tool_image->resize($product_info['image'], 80, 80) .'"></a></div><div class="combo-item-name">'.$product_info['name'].'</div><div class="combo-item-price">'.$price.'</div></div>';
+			if ($product_info['image']) {
+				$html =  '<div class="combo-item col-sm-3">';
+				$html .=  '<div class="row">';
+				$html .=  '	<div class="col-sm-6">';
+				$html .= '		<div class="combo-item-img">';
+				$html .= '			<a href="'.$href.'"><img class="img-thumbnail" src="'. $this->model_tool_image->resize($product_info['image'], 100, 100) .'"></a>';
+				$html .= '		</div>';
+				$html .= '	</div>';
+				$html .=  '	<div class="col-sm-6">';
+				$html .= '		<div class="combo-item-name"><h4>'.$product_info['name'].'</h4></div>';
+				$html .= '		<div class="combo-item-price">'.$price.'</div>';
+				$html .= '	</div>';
+				$html .= '</div>';
+				$html .= '</div>';
+				$product_array[] = $html;
+			}
 			else $product_array[] = '<div class="combo-item"><div class="combo-item-img"><a href="'.$href.'"><img class="img-thumbnail" src="'. $this->model_tool_image->resize('no_image.png', 80, 80) .'"></a></div><div class="combo-item-name">'.$product_info['name'].'</div><div class="combo-item-price">'.$price.'</div></div>';
 				
 			$wishlist_combo[] = 'wishlist_combo.add(\''.$product_id.'\')';
@@ -1148,8 +1169,8 @@ class ControllerProductProduct extends Controller {
 		}
 	
 		$price_all = '<div class="combo-save">'.$this->language->get('text_price_all').': <span class="price_discount">'.$this->currency->format($price_discount).'</span></br>('.$discount_save.')</div>';
-		$wishlist_button = '<div><button data-original-title="'.$this->language->get('text_add_wishlist').'" type="button" data-toggle="tooltip" class="btn-combo btn-combo-wishlist" title="" onclick="'.implode(";",$wishlist_combo_unique).'">'.$this->language->get('text_add_wishlist').'</button></div>';
-		$cart_button = '<div><button data-original-title="'.$this->language->get('text_add_cart').'" type="button" data-toggle="tooltip" class="btn-combo btn-combo-cart" title="" onclick="'.implode(";",$cart_combo).'">'.$this->language->get('text_add_cart').'</button></div>';
+		$wishlist_button = '<div class="pull-left"><button data-original-title="'.$this->language->get('text_add_wishlist').'" type="button" data-toggle="tooltip" class="btn" title="" onclick="'.implode(";",$wishlist_combo_unique).'">'.$this->language->get('text_add_wishlist').'</button>';
+		$cart_button = '<button data-original-title="'.$this->language->get('text_add_cart').'" type="button" data-toggle="tooltip" class="btn btn-primary" title="" onclick="'.implode(";",$cart_combo).'">'.$this->language->get('text_add_cart').'</button></div>';
 	
 		$html = '<div id="combo-'.$combo_id.'" class="combo-set">';
 		$html .= '<div class="combo-contain">'.implode(' <div class="combo-plus"> + </div> ',$product_array);

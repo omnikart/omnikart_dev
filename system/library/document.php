@@ -51,6 +51,12 @@ class Document {
 	}
 
 	public function getStyles() {
+
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                require_once NITRO_INCLUDE_FOLDER . 'minify_css.php';
+
+                return nitro_minify_css($this->styles);
+            
 		return $this->styles;
 	}
 
@@ -59,6 +65,12 @@ class Document {
 	}
 
 	public function getScripts() {
+
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                require_once NITRO_INCLUDE_FOLDER . 'minify_js.php';
+
+                return nitro_minify_js($this->scripts);
+            
 		return $this->scripts;
 	}
 }
