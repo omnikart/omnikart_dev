@@ -80,14 +80,15 @@
 	   foreach ($results as $result){
 	  	$categories = array();
 	  	foreach (explode(',',$result['categories']) as $category_id){
-	  		$cat=$this->model_catalog_category->getCategory($category_id);
-	  		$categories[] = $cat['name'];
+	  		$cat = $this->model_catalog_category->getCategory($category_id);
+	  		if($cat) $categories[] =  $cat['name'];
 	  	}
 	  	
 	  	$manufacturers = array();
-	  	foreach (explode(',',$result['brands']) as $manufacturer_id){
-	  		$man=$this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
-	  		$manufacturers[] = $man['name'];
+	  	 
+	    foreach (explode(',',$result['brands']) as $manufacturer_id){
+	    	$man = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+	    	if ($man)	$manufacturers[] = $man['name'];
 	  	}
 	  	
 	  	 	$van= array(
@@ -99,15 +100,14 @@
 	  		);
 	  		
 	  	 	 $data['enquiries'][] = array(
-	 			'user_info' => unserialize($result['user_info']),
-	 			'manufacturers' => $manufacturers,
-	 		 	'categories' =>  $categories,
-	 			'trade' =>$van[$result['trade']],
-	  	 	  	 'id'=>$result['id']
-	 	);
-	 }
+				 			  'user_info'     =>  unserialize($result['user_info']),
+				 			  'manufacturers' =>  $manufacturers,
+				 		 	  'categories'    =>  $categories,
+				 			  'trade'         =>  $van[$result['trade']],
+				  	 	      'id'            =>  $result['id']
+	 	        );
+	           }
 	$url='';
-	 
 	$data['address_1'] = $this->language->get('address_1');
 	$data['vendor'] = $this->language->get('vendor');
 	$data['header'] = $this->load->controller('common/header');
@@ -279,13 +279,13 @@ public function supplier_form2(){
 		else $enquiryId = 0;
 		
 		$fields = array(
-		 'company_name',
-		 'name',
-		 'number',
-		 'email',
-		 'add',
-		 'city'
-		 );
+					 'company_name',
+					 'name',
+					 'number',
+					 'email',
+					 'add',
+					 'city'
+		    );
 		foreach ($fields as $field){
 			$data[$field] = ''; // Initialize all values in supplier form 2
 		}
@@ -296,25 +296,23 @@ public function supplier_form2(){
 				$user_info = unserialize($enquiry['user_info']);
 				$this->load->model('sale/customer');
 				$customer = $this->model_sale_customer->getCustomerByEmail($user_info['email']);
-				$customer_add= $this->model_sale_customer->getAddress(isset($customer['address_id']));
-				
-				if ($customer_add){
-					$data['address_1']      = $customer_add['address_1'];
-					$data['address_2']      = $customer_add['address_2'];
-					$data['city']           = $customer_add['city'];
-					$data['postcode']       = $customer_add['postcode'];
-					$data['country_id']     = $customer_add['country_id'];
-					$data['zone_id']        = $customer_add['zone_id'];
-					$data['company']        = $customer_add['company'];
-					
-				  }
-
-				  if ($customer){
-					
-					$data['name']       =$customer['firstname'].$customer['lastname'];
-					$data['number']     = $customer['telephone'];
-					$data['email']      = $customer['email'];
-					 
+			  	if ($customer){
+				  	$customer_add = $this->model_sale_customer->getAddress($customer['address_id']);
+				  	
+				  	if ($customer_add){
+				  		$data['address_1']      = $customer_add['address_1'];
+				  		$data['address_2']      = $customer_add['address_2'];
+				  		$data['city']           = $customer_add['city'];
+				  		$data['postcode']       = $customer_add['postcode'];
+				  		$data['country_id']     = $customer_add['country_id'];
+				  		$data['zone_id']        = $customer_add['zone_id'];
+				  		$data['company']        = $customer_add['company'];
+				  	}
+				  	   
+						$data['name']       =$customer['firstname'].$customer['lastname'];
+						$data['number']     = $customer['telephone'];
+						$data['email']      = $customer['email'];
+						 
 			 	} else {
 					$name = explode(' ',$user_info['name']);
 					
@@ -354,12 +352,12 @@ public function supplier_form2(){
 			if (!$customer) {
 				$fields = array(
 						 'company_name',
-						 'category',
-						 'area',
 						 'name',
 						 'number',
 						 'email',
-						 'add',
+						 'address_1',
+				         'address_2',
+				         'postcode',
 						 'city'
 				);
 				foreach ($fields as $field){
@@ -406,35 +404,37 @@ public function supplier_form2(){
 			 		}
 			 	}
 			 	$name = explode(' ',$data['name']);
-			 	$data2 =array(
-			 	    'customer_group_id' => $this->config->get('config_customer_group_id'),
-					'firstname'         => $name[0], 
-					'lastname'          => (isset($name[1])?$name[1]:''),
-					'email'             => isset($user_info['email']),
-					'telephone'         => isset($user_info['number']),
-					'fax'               => isset($user_info['number_2']),
-					'newsletter'        => '1',
-					'password'          => '12345678',
-					'status'            => '1',
-					'approved'          => '1',
-					'safe'              => '1');
+			 	$data2 =   array(
+					 	    'customer_group_id' => $this->config->get('config_customer_group_id'),
+							'firstname'         => $name[0], 
+							'lastname'          => (isset($name[1])?$name[1]:''),
+							'email'             => isset($user_info['email']),
+							'telephone'         => isset($user_info['number']),
+							'fax'               => isset($user_info['number_2']),
+							'newsletter'        => '1',
+							'password'          => '12345678',
+							'status'            => '1',
+							'approved'          => '1',
+							'safe'              => '1'
+			 	          );
 			 	
  			 	$data2['address'][] = array (
-			 	'address_id'  =>'',
-			 	'firstname'    => $name[0],
-			 	'lastname'     => (isset($name[1])?$name[1]:''),
-			    'company'      => '',
-			 	'address_1'    => '',
-			 	'address_2'    => '',
-			 	'city'         => '',
-			    'postcode'     => '',
-			 	'country_id'   => '',
-			 	'zone_id'      => ''
-			    );
+							 	'address_id'   => '',
+							 	'firstname'    => $name[0],
+							 	'lastname'     => (isset($name[1])?$name[1]:''),
+							    'company'      => $data['company'],
+							 	'address_1'    => $data['address_1'],
+							 	'address_2'    => $data['address_2'],
+							 	'city'         => $data['city'],
+							    'postcode'     => $data['postcode'],
+							 	'country_id'   => $data['country_id'],
+							 	'zone_id'      => $data['zone_id'],
+							 	'default'      => ''
+			                );
 			 					 
 			 	$this->model_sale_customer->editCustomer($customer['customer_id'], $data2);
 			 	
-				$json = array();
+			    $json = array();
 				$url ="";
 				$uploads = array(
 								   'front',

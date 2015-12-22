@@ -51,7 +51,7 @@
                         <select name="zone_id" id="input-zone" class="form-control">
                           </select>
                          </div>
-                      <div class="form-group required">
+                      <div class="form-group">
 						<label class="control-label" for="company" >Name of company</label>
 						<input  name="company" value="<?php echo (isset($company)?$company:'');?>" class="form-control" placeholder="" type="text" id="company" />		
 	                	</div>
