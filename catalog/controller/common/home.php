@@ -4,12 +4,12 @@ class ControllerCommonHome extends Controller {
 		$this->document->setTitle($this->config->get('config_meta_title'));
 		$this->document->setDescription($this->config->get('config_meta_description'));
 		$this->document->setKeywords($this->config->get('config_meta_keyword'));
-		/*
+		
 		if ($this->cache->get('home')){
 			$this->response->setOutput($this->cache->get('home'));
 			return 0;
 		}
-		*/
+		
 		if (isset($this->request->get['route'])) {
 			$this->document->addLink(HTTP_SERVER, 'canonical');
 		}
@@ -22,7 +22,7 @@ class ControllerCommonHome extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 		
 		$view = $this->load->view('default/template/common/home.tpl', $data);
-		//$this->cache->set('home',$view);
+		$this->cache->set('home',$view);
 		
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl')) {
 			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));
