@@ -63,6 +63,7 @@
 										<td class="text-center">Brands</td>
 										<td class="text-center">Trade</td>
 										<td class="text-center">Action</td>
+										 
 									</tr>
 								</thead>
 								<tbody>
@@ -90,13 +91,14 @@
 											</td>
 											<td class=text-right>    
 												<input type="hidden" name="enquiry_id" value="<?php echo $enquiry['id']; ?>" />
-												<div class="btn-group" role="group">
+												<div class="btn-group" role="group" style="width: 134px;" >
 													<button type="button" class="btn btn-primary" data-toggle="modal" data-enquiryid="<?php echo $enquiry['id']; ?>" data-target="#schedule-modal"><i class="fa fa-calendar-plus-o"></i></button>
 										  			<button type="button" class="btn btn-primary" data-toggle="modal" data-enquiryid="<?php echo $enquiry['id']; ?>" data-target="#supplier-modal"><i class="fa fa-plus"></i></button>
-												</div>
+											        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#getSchedule" data-enquiryid="<?php echo $enquiry['id']; ?>"><i class="fa fa-history"></i></button>
+                                          	 	</div>
 											</td>
-										</tr>
-										<?php } ?>
+										 </tr>
+									 	<?php } ?>
 									<?php } ?>
 								</tbody>
 							</table>
@@ -105,8 +107,21 @@
 				</div>
 			</div>
 	</div>
-
-	<div class="modal fade" id="schedule-modal" role="dialog" aria-labelledby="schedule-modal">
+	
+<div class="modal fade" id="getSchedule" role="dialog" aria-labelledby="schedule-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Supplier Form</h4>
+			</div>
+			<div class="modal-body">
+			</div>
+		</div>
+	</div>
+</div>
+	
+   <div class="modal fade" id="schedule-modal" role="dialog" aria-labelledby="schedule-modal">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header bg-primary">
@@ -115,35 +130,50 @@
 				</div>
 				<div class="modal-body bgColorWhite">
 					<div class="panel-body">
-						<form id="supplier_form" class="form-horizontal" action="" method="post" enctype="multipart/form-data" >
+						<form id="supplier_form1" class="form-horizontal" >
+								<input name="enquiry_id" id="enquiry_id" class="form-control"  type="hidden" value="" /> 
 								<div class="form-group required">
-									<label class="control-label col-sm-4" for="name-of-person" >What did he say?</label>
+									<label class="control-label col-sm-4" for="comment" >What did he say?</label>
 									<div class="col-sm-8">
-										<textarea rows="5" class="form-control"></textarea>
+										<textarea name="comment" rows="5" class="form-control" id="comment"></textarea>
 									</div> 
 								</div>
-								<div class="form-group required">
+								<div class="form-group">
 									<label class="control-label col-sm-4" for="date">Calender</label>
 									<div class="col-sm-8">
-									    <input name="date" class="form-control"  type="date" id="date" /> 
-								    </div> 
-								</div>
-								<div class="form-group">
+										<div class="input-group date">
+										<input type="text" name="date" value="" placeholder="" data-date-format="YYYY-MM-DD" class="form-control" />
+										<span class="input-group-btn">
+											<button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                          				</span>
+                          				</div>
+                          			</div>
+                          		</div>
+              				<div class="form-group required">
+                				<label class="control-label col-sm-4" for="input-status"><?php echo $entry_status; ?></label>
+                				<div class="col-sm-8">
+                				<select name="status" id="input-status" class="form-control">
+                  						<option value="1" selected="selected">Enabled</option>
+            			      			<option value="0">Disabled</option>
+                				</select>
+              					</div>
+              				</div>
+    	                       <div class="form-group">
 									<label class="control-label col-sm-4" for="reg">Registration</label>
 									<div class="col-sm-8">
-									     <input name="reg" class="form-control" placeholder="" type="checkbox" id="reg" /> 
+									     <input name="registration" class="form-control" placeholder="" type="checkbox" id="reg" /> 
 								   </div> 
 								</div>
 								<div class="form-group">
 									<label class="control-label col-sm-4" for="pri">Pricelist</label>
 									<div class="col-sm-8">
-									     <input name="pri" class="form-control" placeholder="" type="checkbox" id="pri" /> 
+									     <input name="pricelist" class="form-control" placeholder="" type="checkbox" id="pri" /> 
 								    </div> 
 								</div>
-								 <div class="text-right">
-								         <button class="btn btn-primary" onClick="location.href='<?php echo $filterLink; ?>'">Registration</button>
-						         </div>
 						</form>
+						<div class="text-right">
+							<button id="registration" class="btn btn-primary">Registration</button>
+						</div>
 					</div> 
 				</div>
 				<div  class="modal-footer ">
@@ -153,7 +183,7 @@
 		</div>
 	</div>
 <div class="modal fade" id="supplier-modal" role="dialog" aria-labelledby="supplier-modal">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -169,7 +199,20 @@
 		</div>
 	</div>	 
 </div>	
-    <script type="text/javascript"><!--
+<script type="text/javascript"><!--
+$('.date').datetimepicker({
+	pickTime: false
+});
+
+$('.time').datetimepicker({
+	pickDate: false
+});
+
+$('.datetime').datetimepicker({
+	pickDate: true,
+	pickTime: true
+});
+
 $('#button-filter').on('click', function() {
 	var url = "<?php echo $filterLink; ?>";
 
@@ -207,21 +250,49 @@ $('#button-filter').on('click', function() {
 });
 
 $('#schedule-modal').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget) // Button that triggered the modal
-  var recipient = button.data('enquiryid') // Extract info from data-* attributes
-  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-  var modal = $(this)
-  modal.find('.modal-title').text('Supplier Form')
-  modal.find('.modal-body input').val(recipient)
-})
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var recipient = button.data('enquiryid'); // Extract info from data-* attributes
+  var modal = $(this);
+  modal.find('.modal-title').text('Supplier Form');
+  modal.find('.modal-body #enquiry_id').val(recipient);
+ 
+});
 $('#supplier-modal').on('show.bs.modal', function (event) {
   var modal = $(this);	
   var button = $(event.relatedTarget); // Button that triggered the modal
   var enquiryId = button.data('enquiryid'); // Extract info from data-* attributes
 	$('#supplier-modal .modal-body').load('<?php echo $supplier_form2; ?>&enquiryId='+enquiryId);
-  
-  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-})
-//--></script>   
+});
+
+$('#getSchedule').on('show.bs.modal', function (event) {
+  var modal = $(this);	
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var enquiryId = button.data('enquiryid'); // Extract info from data-* attributes
+  $('#getSchedule .modal-body').load('<?php echo $get_supplier_schedule_link; ?>&enquiry_id='+enquiryId);
+ });
+
+
+//--></script>
+
+<script  type="text/javascript">
+ $('#registration').on('click', function(){
+    buttont = $(this);
+      $.ajax({
+        url : '<?php echo $supplier_schedule_link; ?>',
+        data: $('#supplier_form1').serialize(),
+        type: 'post',
+        dataType: 'json',
+        beforeSend: function() {
+        },
+        complete: function() {
+        	alert("successfully saved");
+        	 },
+        success: function(json) {
+         }
+        
+      });
+  });
+
+  </script>
+
+<?php echo $footer; ?>   
