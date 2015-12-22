@@ -1,21 +1,5 @@
-/*
- * jQuery FlexSlider v2.6.0
- * http://www.woothemes.com/flexslider/
- *
- * Copyright 2012 WooThemes
- * Free to use under the GPLv2 and later license.
- * http://www.gnu.org/licenses/gpl-2.0.html
- *
- * Contributing author: Tyler Smith (@mbmufffin)
- *
- */
-/* ====================================================================================================================
- * FONT-FACE
- * ====================================================================================================================*/
+
 @font-face{font-family:'FontAwesome';src:url('../../font-awesome/fonts/fontawesome-webfont.eot?v=4.5.0');src:url('../../font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.5.0') format('embedded-opentype'),url('../../font-awesome/fonts/fontawesome-webfont.woff2?v=4.5.0') format('woff2'),url('../../font-awesome/fonts/fontawesome-webfont.woff?v=4.5.0') format('woff'),url('../../font-awesome/fonts/fontawesome-webfont.ttf?v=4.5.0') format('truetype'),url('../../font-awesome/fonts/fontawesome-webfont.svg?v=4.5.0#fontawesomeregular') format('svg');font-weight:normal;font-style:normal}
-/* ====================================================================================================================
- * RESETS
- * ====================================================================================================================*/
 .flex-container a:hover,
 .flex-slider a:hover {
   outline: none;
@@ -31,9 +15,7 @@
 .flex-pauseplay span {
   text-transform: capitalize;
 }
-/* ====================================================================================================================
- * BASE STYLES
- * ====================================================================================================================*/
+
 .flexslider {
   margin: 0;
   padding: 0;
@@ -192,7 +174,7 @@ html[xmlns] .flexslider .slides {
 .flex-control-nav {
   width: 100%;
   position: absolute;
-  bottom: -40px;
+  bottom: -48px;
   text-align: center;
 }
 .flex-control-nav li {
@@ -302,11 +284,12 @@ html[xmlns] .flexslider .slides {
   cursor: pointer;
   float: left;
   margin: 0.09em 0 0 0;
-  padding: 1em 1.5em;  
+  padding: 1.2em 1.5em;  
   vertical-align: middle;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  font-size:14px;
 }
 
 .flex-control-nav li:last-child {
