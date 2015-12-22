@@ -25,7 +25,6 @@ if( !is_file($productLayout) ){
 $productLayout = DIR_TEMPLATE.$objconfig->get('config_template').'/template/common/product/'.$listingConfig['product_layout'].'.tpl';
 ?>
 <div class="box pav-verticalcategorytabs clearfix <?php echo $prefix_class; ?>">
-
 	<div class="box-wapper clearfix">
 		<div class="tab-nav tabs-x tabs-<?php echo $tab_position;?>">
 			<?php if($banner_position == 1){ ?>
@@ -36,7 +35,6 @@ $productLayout = DIR_TEMPLATE.$objconfig->get('config_template').'/template/comm
 				</div>
 			<?php }?>
 			<?php if(count($tabs) > 1) { $hidden = "hidden-sm"; } ?>
-
 			<ul class="nav nav-tabs " id="pav-categorytabs<?php echo $id;?>" role="tablist">
                 <div class="nav-header box-heading">
                     <span><?php echo $category_name; ?></span>
