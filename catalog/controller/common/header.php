@@ -15,14 +15,12 @@ class ControllerCommonHeader extends Controller {
 		$data['links'] = $this->document->getLinks();
 		$data['styles'] = $this->document->getStyles();
 
-                require_once(DIR_SYSTEM . 'nitro/core/core.php');
-                require_once(DIR_SYSTEM . 'nitro/core/cdn.php');
+		require_once(DIR_SYSTEM . 'nitro/core/core.php');
+        require_once(DIR_SYSTEM . 'nitro/core/cdn.php');
 
-                $data['styles'] = nitroCDNResolve($data['styles']);
-            
+        $data['styles'] = nitroCDNResolve($data['styles']);
 		$data['scripts'] = $this->document->getScripts();
-
-                $data['scripts'] = nitroCDNResolve($data['scripts']);
+        $data['scripts'] = nitroCDNResolve($data['scripts']);
             
 		$data['lang'] = $this->language->get('code');
 		$data['direction'] = $this->language->get('direction');
@@ -80,38 +78,38 @@ class ControllerCommonHeader extends Controller {
 		$data['shopping_cart'] = $this->url->link('checkout/cart', '', 'SSL');
 		$data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
 
-						$data['menusell'] = $this->url->link('customerpartner/sell', '', 'SSL');
-						$data['menu_buy'] = $this->url->link('account/cd', '', 'SSL');
-						$this->language->load('module/marketplace');
-						$data['text_sell_header'] = $this->language->get('text_sell_header');
-						$data['text_my_profile'] = $this->language->get('text_my_profile');
-						$data['text_addproduct'] = $this->language->get('text_addproduct');
-						$data['text_wkshipping'] = $this->language->get('text_wkshipping');
-						$data['text_productlist'] = $this->language->get('text_productlist');
-						$data['text_dashboard'] = $this->language->get('text_dashboard');
-						$data['text_orderhistory'] = $this->language->get('text_orderhistory');
-						$data['text_becomePartner'] = $this->language->get('text_becomePartner');
-						$data['text_download'] = $this->language->get('text_download');
-						$data['text_transaction'] = $this->language->get('text_transaction'); 
-						$data['t_db'] = "Dashboard";
-						$data['t_so'] = "Schedule Order";
+		$data['menusell'] = $this->url->link('customerpartner/sell', '', 'SSL');
+		$data['menu_buy'] = $this->url->link('account/cd', '', 'SSL');
+		$this->language->load('module/marketplace');
+		$data['text_sell_header'] = $this->language->get('text_sell_header');
+		$data['text_my_profile'] = $this->language->get('text_my_profile');
+		$data['text_addproduct'] = $this->language->get('text_addproduct');
+		$data['text_wkshipping'] = $this->language->get('text_wkshipping');
+		$data['text_productlist'] = $this->language->get('text_productlist');
+		$data['text_dashboard'] = $this->language->get('text_dashboard');
+		$data['text_orderhistory'] = $this->language->get('text_orderhistory');
+		$data['text_becomePartner'] = $this->language->get('text_becomePartner');
+		$data['text_download'] = $this->language->get('text_download');
+		$data['text_transaction'] = $this->language->get('text_transaction'); 
+		$data['t_db'] = "Dashboard";
+		$data['t_so'] = "Schedule Order";
 
-						$this->load->model('account/customerpartner');
-						$data['chkIsPartner'] = $this->model_account_customerpartner->chkIsPartner();
-						$data['mp_addproduct'] = $this->url->link('account/customerpartner/addproduct', '', 'SSL');
-						$data['mp_productlist'] = $this->url->link('account/customerpartner/productlist', '', 'SSL');
-						$data['mp_dashboard'] = $this->url->link('account/customerpartner/dashboard', '', 'SSL');
-						$data['mp_add_shipping_mod'] = $this->url->link('account/customerpartner/add_shipping_mod','', 'SSL');
-						$data['mp_orderhistory'] = $this->url->link('account/customerpartner/orderlist','', 'SSL');
-						$data['mp_download'] = $this->url->link('account/customerpartner/download','', 'SSL');
-						$data['mp_profile'] = $this->url->link('account/customerpartner/profile','','SSL');      
-						$data['mp_want_partner'] = $this->url->link('account/customerpartner/become_partner','','SSL'); 
-						$data['mp_transaction'] = $this->url->link('account/customerpartner/transaction','','SSL'); 
-						$data['b_db'] = $this->url->link('account/cd','','SSL');
-						$data['b_so'] = $this->url->link('checkout/orderlater','','SSL');
+		$this->load->model('account/customerpartner');
+		$data['chkIsPartner'] = $this->model_account_customerpartner->chkIsPartner();
+		$data['mp_addproduct'] = $this->url->link('account/customerpartner/addproduct', '', 'SSL');
+		$data['mp_productlist'] = $this->url->link('account/customerpartner/productlist', '', 'SSL');
+		$data['mp_dashboard'] = $this->url->link('account/customerpartner/dashboard', '', 'SSL');
+		$data['mp_add_shipping_mod'] = $this->url->link('account/customerpartner/add_shipping_mod','', 'SSL');
+		$data['mp_orderhistory'] = $this->url->link('account/customerpartner/orderlist','', 'SSL');
+		$data['mp_download'] = $this->url->link('account/customerpartner/download','', 'SSL');
+		$data['mp_profile'] = $this->url->link('account/customerpartner/profile','','SSL');      
+		$data['mp_want_partner'] = $this->url->link('account/customerpartner/become_partner','','SSL'); 
+		$data['mp_transaction'] = $this->url->link('account/customerpartner/transaction','','SSL'); 
+		$data['b_db'] = $this->url->link('account/cd','','SSL');
+		$data['b_so'] = $this->url->link('checkout/orderlater','','SSL');
 
-						$rights = $this->customer->getRights();
-						$data['rights'] = $rights['rights'];
+		$rights = $this->customer->getRights();
+		$data['rights'] = $rights['rights'];
 						
 						
 		$data['contact'] = $this->url->link('information/contact', '', 'SSL');
@@ -125,7 +123,6 @@ class ControllerCommonHeader extends Controller {
 
 		if (isset($this->request->server['HTTP_USER_AGENT'])) {
 			$robots = explode("\n", str_replace(array("\r\n", "\r"), "\n", trim($this->config->get('config_robots'))));
-
 			foreach ($robots as $robot) {
 				if ($robot && strpos($this->request->server['HTTP_USER_AGENT'], trim($robot)) !== false) {
 					$status = false;
@@ -134,23 +131,15 @@ class ControllerCommonHeader extends Controller {
 				}
 			}
 		}
-
 		// Menu
 		$this->load->model('catalog/category');
-
 		$this->load->model('catalog/product');
-
 		$data['categories'] = array();
-		
 		$categories = $this->model_catalog_category->getCategories(0);
-
 		foreach ($categories as $category) {
 			if ($category['top']) {
-				// Level 2
 				$result = $this->model_catalog_category->getCategories($category['category_id']);
-				/*$result = array_slice($result,0,20);*/
 				$children_data = array();
-				
 				foreach ($result as $cat){
 					$filter_data = array(
 							'filter_category_id'  => $cat['category_id'],
@@ -165,7 +154,6 @@ class ControllerCommonHeader extends Controller {
 						);
 					}
 				}
-				// Level 1
 				$data['categories'][] = array(
 					'name'     => $category['name'],
 					'column'   => ($category['column'] ? $category['column'] : 1),

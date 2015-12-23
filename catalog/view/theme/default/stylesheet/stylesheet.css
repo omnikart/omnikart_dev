@@ -6,12 +6,24 @@ body {
 	line-height: 20px;
 	width: 100%;
 	background:#f7f5ee;
-	/*background-image: url('../image/diwali.png'),url('../image/diwali.png'),url('../image/link.png');
- 	background-repeat: no-repeat,no-repeat,repeat-x;
- 	background-position: left 50px,right 50px,center 450px;
- 	background-attachment: fixed;*/
- 	 
+
 }
+.background{
+width:100%;
+position:fixed;
+height:500px;
+background:#000;
+background-image: url('../image/xmas3.jpg');
+background-repeat: no-repeat;
+background-position: center top;
+background-size: 100% auto;
+ -webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+z-index:-1;
+}
+
 @font-face {
   font-family: 'Kelsonb';
   src: url("../fonts/KelsonBold/kelson_sans_bold-webfont.eot");
@@ -107,7 +119,7 @@ div.required .control-label:before {
 }
 /* top */
 header {
-background:#fff;
+/*background:#fff;*/
 /*webkit-box-shadow: 0 2px 4px rgba(0,0,0,.2);
 -moz-box-shadow: 0 2px 4px rgba(0,0,0,.2);
 -o-box-shadow: 0 2px 4px rgba(0,0,0,.2);
@@ -115,6 +127,7 @@ box-shadow: 0 2px 4px rgba(0,0,0,.2);*/
 }
 header.navbar-fixed-top {
 border-bottom:2px solid #333333;
+background:#fff;
 }
 #top-links li, #top-links a {
 	color: #666;

@@ -1,6 +1,7 @@
 <div class="row">
 <div class="col-sm-12">
-<h3><?php echo $heading_title; ?></h3>
+<div class="col-sm-12 white">
+<h3 class="nmt"><?php echo $heading_title; ?></h3>
 <div class="row">
 <div class="flexslider featured" id="featured<?php echo $module; ?>">
 	<ul class="slides">
@@ -57,7 +58,7 @@
 </div>
 </div>
 </div>
-
+</div>
 <script type="text/javascript"><!--
 $('#featured<?php echo $module; ?>').flexslider({
 	  animation: "slide",
@@ -72,3 +73,6 @@ $('#featured<?php echo $module; ?>').flexslider({
 	  useCSS: false /* Chrome fix*/
 	});
 --></script>
+<style>
+.featured .product-thumb{margin-bottom:0;}
+</style>
