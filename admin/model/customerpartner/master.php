@@ -21,18 +21,17 @@ class ModelCustomerpartnerMaster extends Model {
   
   public function getSupplierSchedule($enquiry_id){
   	$data = array();
-  	$query = $this->db->query("SELECT ss.*,sh.comment FROM " . DB_PREFIX . "supplier_schedule ss LEFT JOIN " . DB_PREFIX . "supplier_history sh ON (ss.history_id = sh.history_id) WHERE ss.id=".(int)$enquiry_id." ORDER BY ss.history_id DESC LIMIT 2");
+  	$query = $this->db->query("SELECT ss.*,sh.comment FROM " . DB_PREFIX . "supplier_schedule ss LEFT JOIN " . DB_PREFIX . "supplier_history sh ON (ss.history_id = sh.history_id) WHERE ss.id=".(int)$enquiry_id." ORDER BY ss.history_id DESC LIMIT 4");
    	// sf ON (ss.history_id = sf.history_id)
    	$fields=array();
     
    	foreach ($query->rows as $result) {
    		$this->load->model('user/user');
-   		$user_id = $this->user->getId();
    		$fields = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_fields WHERE history_id='".$result['history_id']."'");
    	    $data['histories'][] = array(
    			'history_id' 	=> $result['history_id'],
    			'comment'		=> $result['comment'],
-   			'user_id'       => $this->model_user_user->getUser($user_id),
+   			'user_id'       => $this->model_user_user->getUser($result['user_id']),
    			'date_scheduled'=> $result['date_scheduled'],
    			'fields'		=> $fields->rows,
    			'status' 		=> $result['status']
