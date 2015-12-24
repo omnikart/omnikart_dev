@@ -155,14 +155,14 @@ background:#fff;
 .headlink {height:40px;}
 
 .navbar-fixed-top #top-links{display:none;}
-.navbar-fixed-top #logo{margin-top:2px;}
+.navbar-fixed-top #logo{margin-top:0px;}
 /* Header */
 #header{
 	padding:9px 0;
 }
 /* logo */
 #logo {
-	margin: 26px 9px 0px 9px;
+	margin: 23px 9px 0px 9px;
 }
 /* search */
 #search {
