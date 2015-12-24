@@ -408,14 +408,14 @@ public function supplier_form2(){
 					 	    'customer_group_id' => $this->config->get('config_customer_group_id'),
 							'firstname'         => $name[0], 
 							'lastname'          => (isset($name[1])?$name[1]:''),
-							'email'             => isset($user_info['email']),
-							'telephone'         => isset($user_info['number']),
-							'fax'               => isset($user_info['number_2']),
-							'newsletter'        => '1',
-							'password'          => '12345678',
-							'status'            => '1',
-							'approved'          => '1',
-							'safe'              => '1'
+							'email'             =>  $data['email'],
+							'telephone'         =>  $data['number'],
+							'fax'               =>  '1',
+							'newsletter'        =>  '1',
+							'password'          =>  '12345678',
+							'status'            =>  '1',
+							'approved'          =>  '1',
+							'safe'              =>  '1'
 			 	          );
 			 	
  			 	$data2['address'][] = array (
@@ -429,7 +429,7 @@ public function supplier_form2(){
 							    'postcode'     => $data['postcode'],
 							 	'country_id'   => $data['country_id'],
 							 	'zone_id'      => $data['zone_id'],
-							 	'default'      => ''
+							 	'default'      => '1'
 			                );
 			 					 
 			 	$this->model_sale_customer->editCustomer($customer['customer_id'], $data2);
