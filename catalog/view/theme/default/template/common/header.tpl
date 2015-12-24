@@ -33,12 +33,12 @@
 <script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css?v=2" rel="stylesheet" type="text/css" />
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700" rel="stylesheet" type="text/css" />
-<link href="catalog/view/theme/default/stylesheet/stylesheet.css?v=2" rel="stylesheet">
+<link href="catalog/view/theme/default/stylesheet/stylesheet.css?v=3" rel="stylesheet">
 <script src="catalog/view/javascript/comboproducts.js" type="text/javascript"></script>
 <?php foreach ($styles as $style) { ?>
 <link href="<?php echo $style['href']; ?>" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
-<script src="catalog/view/javascript/common.js?v=2" type="text/javascript"></script>
+<script src="catalog/view/javascript/common.js?v=3" type="text/javascript"></script>
 <?php foreach ($scripts as $script) { ?>
 <script src="<?php echo $script; ?>" type="text/javascript"></script>
 <?php } ?>
@@ -70,7 +70,8 @@ type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
 </nav -->
 <div class="background">
 </div>
-
+<div class="background-b">
+</div>
 <header>
 	<div class="container-fluid">
 		<div class="container">
