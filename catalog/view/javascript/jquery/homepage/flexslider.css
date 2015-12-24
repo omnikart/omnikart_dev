@@ -278,7 +278,7 @@ html[xmlns] .flexslider .slides {
 
 .flex-control-nav li {
   background: #333;
-	border-right: 2px solid #333;
+	border-left: 2px solid #333;
 	border-bottom: 2px solid #333;
   color: #fff;
   cursor: pointer;
@@ -290,17 +290,17 @@ html[xmlns] .flexslider .slides {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   font-size:14px;
+  font-weight:700;
 }
 
 .flex-control-nav li:last-child {
-   border: none;
    border-bottom: 2px solid #333;
+   border-right: 2px solid #333;
 }
 
 .flex-control-nav .flex-active {
-  background: #ccc;
+  background: #fff;
   color: #000;
-  border-bottom-color: #666;
 }
 
 /* Minified FlexSlider CSS with Chrome fix */
