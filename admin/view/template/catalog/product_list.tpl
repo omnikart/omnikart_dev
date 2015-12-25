@@ -3,10 +3,12 @@
   <div class="page-header">
     <div class="container-fluid">
       <div class="pull-right"><a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+        <button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-success" onclick="$('#form-product').attr('action', '<?php echo $enable; ?>').submit()"><i class="fa fa-check"></i></button>
+        <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-warning" onclick="$('#form-product').attr('action', '<?php echo $disable; ?>').submit()"><i class="fa fa-ban"></i></button>
         <button type="button" data-toggle="tooltip" title="<?php echo $button_copy; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $copy; ?>').submit()"><i class="fa fa-copy"></i></button>
         <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
-      </div>
-      <div class="pull-right"><a href="<?php echo $add_gp_grouped; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Grouped</a>&nbsp;</div>
+     </div>
+     <div class="pull-right"><a href="<?php echo $add_gp_grouped; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Grouped</a>&nbsp;</div>
       <h1><?php echo $heading_title; ?></h1>
       <ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -80,7 +82,11 @@
                   <?php } ?>
                 </select>
               </div>
-              <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+              <div class="form-group">
+              <label class="control-label" for="input-brand"><?php echo "Brands"; ?></label>
+              <input type="text" name="filter_brand" value="<?php echo $filter_brand; ?>" placeholder="<?php echo "Brand"; ?>" id="input-brand" class="form-control" />
+              </div>
+               <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
             </div>
           </div>
         </div>
@@ -207,7 +213,13 @@ $('#button-filter').on('click', function() {
 	if (filter_status != '*') {
 		url += '&filter_status=' + encodeURIComponent(filter_status);
 	}
+    
+    var filter_brand = $('input[name=\'filter_brand\']').val();
 
+	if (filter_brand) {
+		url += '&filter_brand=' + encodeURIComponent(filter_brand);
+	}
+        
 	location = url;
 });
 //--></script>
@@ -251,5 +263,27 @@ $('input[name=\'filter_model\']').autocomplete({
 		$('input[name=\'filter_model\']').val(item['label']);
 	}
 });
+
+$('input[name=\'filter_brand\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=catalog/manufacturer/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['manufacturer_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'filter_brand\']').val(item['label']);
+	}
+});
+
+ 
 //--></script></div>
 <?php echo $footer; ?>
