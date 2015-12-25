@@ -565,8 +565,8 @@ class ControllerCatalogProduct extends Controller {
 				'brand'      => $result['manufacturer_id'],
 				'edit'       => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url, 'SSL')
 			);
-		}
-
+		} 
+         
 		$data['heading_title'] = $this->language->get('heading_title');
 
 		$data['text_list'] = $this->language->get('text_list');
