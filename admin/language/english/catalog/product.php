@@ -3,6 +3,10 @@
 $_['heading_title']          = 'Products';
 
 // Text
+$_['text_product_enabled']   = 'You have enabled %s products!';
+$_['text_product_disabled']  = 'You have disabled %s products!';
+$_['button_enable']			 = 'Enable';
+$_['button_disable']		 = 'Disable';
 $_['text_success']           = 'Success: You have modified products!';
 $_['text_list']              = 'Product List';
 $_['text_add']               = 'Add Product';
@@ -79,6 +83,7 @@ $_['entry_tag']          	 = 'Product Tags';
 $_['entry_reward']           = 'Reward Points';
 $_['entry_layout']           = 'Layout Override';
 $_['entry_recurring']        = 'Recurring Profile';
+$_['entry_brand']            = 'Brand';
 
 // Help
 $_['help_keyword']           = 'Do not use spaces, instead replace spaces with - and make sure the keyword is globally unique.';
