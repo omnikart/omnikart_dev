@@ -59,6 +59,27 @@ class ModelCatalogProduct extends Model {
 			return $child_data;
 		}
 			
+	public function enableProduct($product_id) {
+		$product_info = $this->getProduct($product_id);
+		
+		if ($product_id) {
+				$this->db->query("UPDATE " . DB_PREFIX . "product SET status = '1' WHERE product_id = '" . (int)$product_id . "'");
+			}
+		
+			$this->cache->delete('product');
+		}
+		
+	public function disableProduct($product_id) {
+		$product_info = $this->getProduct($product_id);
+		
+		if ($product_id) {
+				$this->db->query("UPDATE " . DB_PREFIX . "product SET status = '0' WHERE product_id = '" . (int)$product_id . "'");
+			}
+		
+			$this->cache->delete('product');
+		}
+		
+		
 	public function addProduct($data) {
 		if ($this->user->getGroupId()=='14') $data['status']=2;
 		
@@ -455,7 +476,8 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function getProducts($data = array()) {
-		$sql = "SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT p.*, pd.name as name FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
 		if (!empty($data['filter_gpt'])) {
 			$sql = "SELECT * FROM " . DB_PREFIX . $data['filter_gpt'] . " gpt LEFT JOIN " . DB_PREFIX . "product p ON (gpt.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		}
@@ -489,6 +511,10 @@ class ModelCatalogProduct extends Model {
 			$sql .= " AND p.status = '" . (int)$data['filter_status'] . "'";
 		}
 		
+		if (isset($data['filter_brand']) && !is_null($data['filter_brand'])) {
+			$sql .= " AND m.name LIKE '" .  $this->db->escape($data['filter_brand']) . "%'";
+		}
+		
 		if (isset($data['filter_tax_class']) && !is_null($data['filter_tax_class'])) {
 			$sql .= " AND p.tax_class_id = '" . (int)$data['filter_tax_class'] . "'";
 		}		
@@ -507,6 +533,7 @@ class ModelCatalogProduct extends Model {
 			'p.price',
 			'p.quantity',
 			'p.status',
+			'p.brand',
 			'p.sort_order'
 		);
 
@@ -735,7 +762,9 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function getTotalProducts($data = array()) {
+		 
 		$sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
+
 		if (!empty($data['filter_gpt'])) {
 			$sql = "SELECT COUNT(DISTINCT gpt.product_id) AS total FROM " . DB_PREFIX . $data['filter_gpt'] . " gpt LEFT JOIN " . DB_PREFIX . "product p ON (gpt.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
 		}
@@ -746,7 +775,7 @@ class ModelCatalogProduct extends Model {
 		}
 
 		if (!empty($data['filter_model'])) {
-			$sql .= " AND p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
+			$sql .= " AND p.model LIKE '" . $tgetProductshis->db->escape($data['filter_model']) . "%'";
 		}
 
 		if (isset($data['filter_price']) && !is_null($data['filter_price'])) {
@@ -760,9 +789,10 @@ class ModelCatalogProduct extends Model {
 		if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
 			$sql .= " AND p.status = '" . (int)$data['filter_status'] . "'";
 		}
-
+         
+		 
 		$query = $this->db->query($sql);
-
+		 
 		return $query->row['total'];
 	}
 
