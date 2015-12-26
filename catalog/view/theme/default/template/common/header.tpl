@@ -26,12 +26,12 @@
 <?php if (getNitroPersistence('GoogleJQuery')) { ?>
                 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
             <?php } else { ?>
-<script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js?v=2" type="text/javascript"></script>
+<script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js?v=3" type="text/javascript"></script>
 <?php } ?>
-<script src="catalog/view/javascript/mf/jquery-ui.min.js?v=2" type="text/javascript"></script>
-<link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css?v=2" rel="stylesheet" media="screen" />
+<script src="catalog/view/javascript/mf/jquery-ui.min.js?v=3" type="text/javascript"></script>
+<link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css?v=3" rel="stylesheet" media="screen" />
 <script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-<link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css?v=2" rel="stylesheet" type="text/css" />
+<link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css?v=3" rel="stylesheet" type="text/css" />
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700" rel="stylesheet" type="text/css" />
 <link href="catalog/view/theme/default/stylesheet/stylesheet.css?v=3" rel="stylesheet">
 <script src="catalog/view/javascript/comboproducts.js" type="text/javascript"></script>
