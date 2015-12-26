@@ -282,7 +282,13 @@ class ControllerCheckoutCart extends Controller {
 		$this->load->language('total/combo_products');
 		
 		$json = array();
-
+		
+		$cart_type = 'cart';
+		
+		if (isset($this->request->get['cart'])) {
+			$cart_type = $this->request->get['cart'];
+		}
+		
 		if (isset($this->request->post['product_id'])) {
 			$product_id = (int)$this->request->post['product_id'];
 		} else {
@@ -395,6 +401,11 @@ class ControllerCheckoutCart extends Controller {
 				}
 
 				$json['total'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total));
+				
+				if ($cart_type=='buynow'){
+					$json['redirect'] = str_replace('&amp;', '&', $this->url->link('checkout/checkout', '' ));
+				}
+				
 			} else {
 				$json['redirect'] = str_replace('&amp;', '&', $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']));
 				$json['warning'] = sprintf($this->language->get('text_warning'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));

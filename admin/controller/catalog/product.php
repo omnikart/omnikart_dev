@@ -399,6 +399,12 @@ class ControllerCatalogProduct extends Controller {
 			$filter_model = null;
 		}
 
+		if (isset($this->request->get['filter_category_id'])) {
+			$filter_category_id = $this->request->get['filter_category_id'];
+		} else {
+			$filter_category_id = '';
+		}
+			
 		if (isset($this->request->get['filter_price'])) {
 			$filter_price = $this->request->get['filter_price'];
 		} else {
@@ -511,7 +517,8 @@ class ControllerCatalogProduct extends Controller {
 			'filter_price'	  => $filter_price,
 			'filter_quantity' => $filter_quantity,
 			'filter_status'   => $filter_status,
-		    'filter_brand'    => $filter_brand,
+			'filter_brand'    => $filter_brand,
+			'filter_category_id'    => $filter_category_id,
 			'sort'            => $sort,
 			'order'           => $order,
 			'start'           => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -1735,10 +1742,16 @@ class ControllerCatalogProduct extends Controller {
 				$filter_model = '';
 			}
 			
+			if (isset($this->request->get['filter_category_id'])) {
+				$filter_category_id = $this->request->get['filter_category_id'];
+			} else {
+				$filter_category_id = Null;
+			}
+			
 			if (isset($this->request->get['filter_brand'])) {
 				$filter_brand = $this->request->get['filter_brand'];
 			} else {
-				$filter_brand = '';
+				$filter_brand = Null;
 			}
 
 			if (isset($this->request->get['limit'])) {
@@ -1750,6 +1763,7 @@ class ControllerCatalogProduct extends Controller {
 			$filter_data = array(
 				'filter_gpt' => $filter_gpt,
 				'filter_name'  => $filter_name,
+				'filter_category_id'  => $filter_category_id,
 				'filter_model' => $filter_model,
 				'filter_brand' => $filter_brand,
 				'start'        => 0,

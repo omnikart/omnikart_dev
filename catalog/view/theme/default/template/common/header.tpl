@@ -68,10 +68,10 @@ type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
 
   </div>
 </nav -->
-<div class="background">
+<!-- div class="background">
 </div>
 <div class="background-b">
-</div>
+</div -->
 <header>
 	<div class="container-fluid">
 		<div class="container">

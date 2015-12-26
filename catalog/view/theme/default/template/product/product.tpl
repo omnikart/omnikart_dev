@@ -279,10 +279,10 @@
 		  			</div>
 	  			</div>
 				<div class="col-md-4">
-              		<button type="button" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-info btn-block">Add to Cart</button>
+              		<button type="button" id="button-cart" data-cart="cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-info btn-block">Add to Cart</button>
               	</div>
               	<div class="col-md-4">
-              		<button type="button" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary btn-block"><?php echo $button_cart; ?></button>
+              		<button type="button" id="button-buynow" data-cart="buynow" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary btn-block"><?php echo $button_cart; ?></button>
               	</div>
               </div>
             </div>
@@ -549,9 +549,10 @@ $('#postcode-button').on('click', function() {
 });
 //--></script>
 <script type="text/javascript"><!--
-$('#button-cart').on('click', function() {
+$('#button-cart,#button-buynow').on('click', function() {
+	var data = $(this).data('cart');
 	$.ajax({
-		url: 'index.php?route=checkout/cart/add',
+		url: 'index.php?route=checkout/cart/add&cart='+data,
 		type: 'post',
 		data: $('#product input[type=\'text\'], #product input[type=\'hidden\'], .vendor input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea'),
 		dataType: 'json',
@@ -594,6 +595,9 @@ $('#button-cart').on('click', function() {
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 
 				$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
+				if (json['redirect']) {
+					window.location = json['redirect']; 
+				}
 			}
 		}
 	});

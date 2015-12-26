@@ -341,7 +341,9 @@ class ControllerProductProduct extends Controller {
 			}
 
 			$this->load->model('tool/image');
-
+			
+			$product_info['image'] = ($product_info['image']?$product_info['image']:'no_image.png');
+			
 			if ($product_info['image']) {
 				$data['popup'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));
 			} else {
@@ -653,11 +655,11 @@ class ControllerProductProduct extends Controller {
 				}
 				
 				$gp_child_option_col = false;
-
+				
 				$child_no_image = array(
-					'swap' => $this->model_tool_image->resize('no_image.png', $gp_image_thumb_w, $gp_image_thumb_h),
-					'popup' => ($gp_child_image_col) ? $this->model_tool_image->resize('no_image.png', $gp_image_popup_w, $gp_image_popup_h) : '',
-					'thumb' => ($gp_child_image_col) ? $this->model_tool_image->resize('no_image.png', $gp_image_child_w, $gp_image_child_h) : ''
+					'swap' => $this->model_tool_image->resize($product_info['image'], $gp_image_thumb_w, $gp_image_thumb_h),
+					'popup' => ($gp_child_image_col) ? $this->model_tool_image->resize($product_info['image'], $gp_image_popup_w, $gp_image_popup_h) : '',
+					'thumb' => ($gp_child_image_col) ? $this->model_tool_image->resize($product_info['image'], $gp_image_child_w, $gp_image_child_h) : ''
 				);
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -823,6 +825,14 @@ class ControllerProductProduct extends Controller {
 								$agnames[$key]['name'] = $ag['name'];
 								foreach ($ag['attribute'] as $key2 => $a) {$agnames[$key]['a'][$key2] = $a['name'];} 
 							}
+							/*
+							$curr_vendor = $this->model_account_customerpartner->getProfile($child_info['vendor_id']);
+							$vendors = $this->model_account_customerpartner->getProductVendors($child_info['product_id'],$child_info['vendor_id']);
+								
+							if (!empty($curr_vendor)) {
+								$vlink = $this->url->link('customerpartner/profile','id='.$curr_vendor['customer_id'],'SSL');
+							}
+							*/
 							
 							$data['childs'][$child_info['product_id']] = array(
 								'child_id'   => $child_info['product_id'],
@@ -836,7 +846,10 @@ class ControllerProductProduct extends Controller {
 								'nocart'     => $child_child_nocart,
 								'options'    => $child_options,
 								'discounts'  => $child_discounts,
-								'qty_now'    => $qty_now
+								'qty_now'    => $qty_now,
+								//'curr_vendor'=> $curr_vendor,
+								//'vlink'		 => $vlink,
+								//'vendors'	 => $vendors 	
 							);
 							/*}*/
 						}

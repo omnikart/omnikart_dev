@@ -256,7 +256,8 @@
           </div>
           <?php } ?>
         </div>
-<div class="table-responsive col-sm-12">
+        <div class="col-sm-12">
+<div class="table-responsive col-sm-12 white">
   <table id="gp-table" class="gp-table table table-hover table-stripped">
     <thead>
       <tr>
@@ -275,10 +276,10 @@
         <td rowspan="2"><?php echo $column_gp_price; ?></td>
         <?php } ?>
         <?php if ($column_gp_option) { ?>
-        <td rowspan="2"><?php echo $column_gp_option; ?></td>
+        <td rowspan="2" style="width:300px;"><?php echo $column_gp_option; ?></td>
         <?php } ?>
-        <td rowspan="2"><?php echo $column_gp_qty; ?></td>
-        <td rowspan="2"></td>
+        <td rowspan="2" style="width:120px;"><?php echo $column_gp_qty; ?></td>
+        <td rowspan="2" style="width:120px;"></td>
       </tr>
         <tr>
         <?php if ($agnames) { ?>
@@ -482,7 +483,7 @@
         </td>
         <td class="gp-col-btn">
           <input type="hidden" name="product_id" id="product<?php echo $child_id; ?>" value="<?php echo $child_id; ?>" />
-          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGrouped('<?php echo $child_id; ?>');" class="btn btn-primary btn-lg btn-block"><?php echo $button_cart; ?></button>
+          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGrouped('<?php echo $child_id; ?>');" class="btn btn-primary btn-block"><?php echo $button_cart; ?></button>
         </td>
       </tr>
       <?php } ?>
@@ -574,6 +575,7 @@
             <?php } ?>
           </div>
 
+</div>
 </div>
 <!-- End Grouped Product powered by www.fabiom7.com //-->          
  
@@ -891,7 +893,10 @@ function addGpGrouped(child_id) {
 				
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 				
-				$('#cart > ul').load('index.php?route=common/cart/info ul li');
+				$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
+				if (json['redirect']) {
+					window.location = json['redirect']; 
+				}
 			}
 		}
 	});
