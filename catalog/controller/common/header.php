@@ -246,6 +246,14 @@ class ControllerCommonHeader extends Controller {
 			}
 		}		
 		
+		if (($route=='product/product') || ($route=='product/category') || ($route=='product/search')){
+			$data['facebook'] = true;
+		} elseif (($route=='checkout/cart') || ($route=='checkout/checkout_onepage')){
+			$data['facebook_cart'] = true;
+		} elseif (($route=='checkout/success')){
+			$data['facebook_success'] = true;
+		}
+		
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header.tpl')) {
 			return $this->load->view($this->config->get('config_template') . '/template/common/header.tpl', $data);
 		} else {

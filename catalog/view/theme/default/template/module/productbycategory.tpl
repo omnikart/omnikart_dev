@@ -95,6 +95,7 @@ $('#productbycategory<?php echo $module; ?>').flexslider({
 });
 --></script>
 <?php } else {  ?>
+	<div class="col-sm-12">
 <?php foreach ($products as $product) { ?>
   <div class="product-layout product-grid col-lg-3 col-md-3 col-sm-4 col-xs-6">
       <div class="product-thumb row">
@@ -106,11 +107,11 @@ $('#productbycategory<?php echo $module; ?>').flexslider({
             <?php if ($product['rating']) { ?>
             <div class="rating">
               <?php for ($i = 1; $i <= 5; $i++) { ?>
-              <?php if ($product['rating'] < $i) { ?>
-              <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-              <?php } else { ?>
-              <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
-              <?php } ?>
+								<?php if ($product['rating'] < $i) { ?>
+								<span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
+								<?php } else { ?>
+								<span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
+								<?php } ?>
               <?php } ?>
             </div>
             <?php } ?>
@@ -130,6 +131,7 @@ $('#productbycategory<?php echo $module; ?>').flexslider({
       </div>
     </div>
 <?php } ?>
+</div>
  <?php } ?>
 
 </div>

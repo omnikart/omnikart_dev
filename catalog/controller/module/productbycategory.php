@@ -22,7 +22,7 @@ class ControllerModuleProductbycategory extends Controller {
 
 			$data['categories'][] = array(
 				'name' => $results['name'],
-				'href' => $this->url->link('product/category', 'path=' . $results['category_id'])
+				'href' => $this->url->link('product/category', 'path=' . $results['category_id'].'&utm_source='.$setting['name'].'&utm_medium=header&utm_campaign='.$results['name'])
 			);
 
 			$data['subcategories'] = array();
@@ -32,7 +32,7 @@ class ControllerModuleProductbycategory extends Controller {
 			foreach (array_slice($resultsb,0,5) as $result) {
 				$data['subcategories'][] = array(
 					'name'  => $result['name'] ,
-					'href'  => $this->url->link('product/category', 'path=' . $result['category_id'])
+					'href'  => $this->url->link('product/category', 'path=' . $result['category_id'].'&utm_source='.$setting['name'].'&utm_medium=subheader&utm_campaign='.$result['name'])
 				);
 			}
 			if (isset($this->request->get['filter'])) {
@@ -138,7 +138,7 @@ class ControllerModuleProductbycategory extends Controller {
 						'tax'         => $tax,
 						'rating'      => $rating,
 						'type'		  => $product_info['type'],
-						'href'        => $this->url->link('product/product', 'product_id=' . $product_info['product_id'])
+						'href'        => $this->url->link('product/product', 'product_id=' . $product_info['product_id'].'&utm_source='.$setting['name'].'&utm_medium=product&utm_campaign='.$product_info['name'])
 					);
 				}
 			}

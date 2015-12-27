@@ -612,6 +612,7 @@ class ControllerProductProduct extends Controller {
 					$html .= $this->returnCombo_HTML($getcombo['combo_id']);
 				}
 			}
+			$this->session->data['total'] = $data['price'];
 			if ($getcombos) $html .= '</div>';
 			$data['combo'] = $html;
 			$data['combo_title'] = $this->language->get('text_combo_header');
