@@ -279,9 +279,32 @@ $(document).delegate('#marketinsg-login', 'click', function(e) {
 	}
 
 </style>
+
+
+<script type="text/javascript">
+var google_tag_params = {
+ecomm_prodid: '<?php echo $product_id; ?>',
+ecomm_pagetype: '<?php echo $route; ?>',
+ecomm_totalvalue: '<?php echo $total; ?>',
+};
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 975481156;
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/975481156/?value=0&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+
 <?php
 	require_once DIR_SYSTEM . 'nitro/core/core.php';
 	require_once NITRO_INCLUDE_FOLDER . 'pagecache_widget.php';
 ?>
-            
 </body></html>

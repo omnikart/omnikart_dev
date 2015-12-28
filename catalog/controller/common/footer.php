@@ -47,6 +47,15 @@ class ControllerCommonFooter extends Controller {
 		$data['careers'] = $this->url->link('information/careers', '', 'SSL');
 		$data['search_action'] = $this->url->link('product/json', '', 'SSL');
 		
+		$data['product_id'] = '';
+		$data['route'] = '';
+		$data['total'] = isset($this->session->data['total'])?$this->session->data['total']:'';
+		if (isset($this->request->get['product_id'])){
+			$data['product_id'] = $this->request->get['product_id'];
+		}
+		if (isset($this->request->get['route'])){
+			$data['route'] = $this->request->get['route'];
+		}
 		// Whos Online
 		if ($this->config->get('config_customer_online')) {
 			$this->load->model('tool/online');
