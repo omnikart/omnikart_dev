@@ -485,7 +485,7 @@
         <fieldset>
           <legend><?php echo $text_newsletter; ?></legend>
          <div class="col-sm-6">
-           <div class="form-group">
+           <div class="form-group" >
             <label class="control-label"><?php echo $entry_newsletter; ?></label>
                 <?php if ($newsletter) { ?>
               <label class="radio-inline">
@@ -509,11 +509,11 @@
 					<?php if($marketplace_becomepartnerregistration){ ?>
 
         <fieldset>
+        <div class="col-sm-4">
           <legend><?php echo $text_register_becomePartner; ?></legend>
-         <div class="col-sm-12">
-          <div class="form-group">
-            <label class="control-label"><?php echo $text_register_douwant; ?></label>
-              <?php if ($tobecomepartner) { ?>
+         </div> 
+           <div  class="form-group">
+               <?php if ($tobecomepartner) { ?>
               <label class="radio-inline">
               <input type="radio" name="tobecomepartner" id="send-now-radio" value="1" checked="checked" />
               <?php echo $text_yes; ?></label>
@@ -529,7 +529,8 @@
                 <?php echo $text_no; ?></label>
               <?php } ?>
             </div>
-          </div>
+           
+           
          
          <div class="col-sm-12">
           <div  id="send" class="form-group required">
