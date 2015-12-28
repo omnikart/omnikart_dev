@@ -476,11 +476,16 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function getProducts($data = array()) {
-		$sql = "SELECT p.*, pd.name as name FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT p.*, pd.name AS name, m.name AS brand FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_gpt'])) {
 			$sql = "SELECT * FROM " . DB_PREFIX . $data['filter_gpt'] . " gpt LEFT JOIN " . DB_PREFIX . "product p ON (gpt.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		}
+		
+		if (!empty($data['filter_category_id'])) {
+			$sql = "SELECT DISTINCT (p.product_id), p.*, pd.name AS name, m.name AS brand FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (cp.category_id = p2c.category_id) LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cp.path_id = '" . (int)$data['filter_category_id'] . "'";
+		}
+				
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND (";
 			$implode = array();
@@ -763,12 +768,16 @@ class ModelCatalogProduct extends Model {
 
 	public function getTotalProducts($data = array()) {
 		 
-		$sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
+		$sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_gpt'])) {
 			$sql = "SELECT COUNT(DISTINCT gpt.product_id) AS total FROM " . DB_PREFIX . $data['filter_gpt'] . " gpt LEFT JOIN " . DB_PREFIX . "product p ON (gpt.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
+			$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		}
-		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		
+		if (!empty($data['filter_category_id'])) {
+			$sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (cp.category_id = p2c.category_id) LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cp.path_id = '" . (int)$data['filter_category_id'] . "'";
+		}
 
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -784,6 +793,10 @@ class ModelCatalogProduct extends Model {
 
 		if (isset($data['filter_quantity']) && !is_null($data['filter_quantity'])) {
 			$sql .= " AND p.quantity = '" . (int)$data['filter_quantity'] . "'";
+		}
+
+		if (isset($data['filter_brand']) && !is_null($data['filter_brand'])) {
+			$sql .= " AND m.name LIKE '" .  $this->db->escape($data['filter_brand']) . "%'";
 		}
 
 		if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
