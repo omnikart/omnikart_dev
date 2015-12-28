@@ -616,6 +616,7 @@ class ControllerProductProduct extends Controller {
 			if ($getcombos) $html .= '</div>';
 			$data['combo'] = $html;
 			$data['combo_title'] = $this->language->get('text_combo_header');
+			
 			//
 			if ($is_gp_grouped) {
 				// Clear default data

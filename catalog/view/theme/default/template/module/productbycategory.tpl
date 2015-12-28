@@ -122,6 +122,9 @@ $('#productbycategory<?php echo $module; ?>').flexslider({
               <?php } else { ?>
               <span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
               <?php } ?>
+							<?php if ($product['discount']) { ?>
+								<span style="text-decoration: line-through;color:#aaa;"><?php echo $product['original_price']; ?></span><span class="discount"><span class="text"><?php echo $product['discount']; ?>% Off</span><span class="img"></span></span>
+							<?php } ?>
             </p>
             <?php } ?>
           </div>
