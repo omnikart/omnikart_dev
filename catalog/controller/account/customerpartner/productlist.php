@@ -22,7 +22,7 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
     	 
 		if($customerRights && !array_key_exists('productlist', $customerRights['rights'])) {
 			$this->response->redirect($this->url->link('account/account', '','SSL'));
-			$data['list'] = false;
+			$this->data['list'] = false;
 		}
 		
 		if($customerRights && !array_key_exists('addproduct', $customerRights['rights'])) {
@@ -170,7 +170,7 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		);
 
 		if($sellerId) {
-			$data['customer_id'] = $sellerId;
+			$this->data['customer_id'] = $sellerId;
 		}
 
 		$this->load->model('tool/image');
