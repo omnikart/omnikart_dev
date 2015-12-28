@@ -19,7 +19,7 @@
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
       <h1><?php echo $heading_title; ?></h1>
       <p><?php echo $text_account_already; ?></p>
-      <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" class=" ">
+      <form action="<?php echo $action; ?>"  style="background-color:#E6E6FA" method="post" enctype="multipart/form-data" class=" ">
         <fieldset id="account">
           <legend><?php echo $text_your_details; ?></legend>
           <div class="form-group required" style="display: <?php echo (count($customer_groups) > 1 ? 'block' : 'none'); ?>;">
@@ -545,9 +545,7 @@
           </div>
         </fieldset>
          <script>
-         	 $('#send').hide();
-	         $('#another').hide();
-	         $('input[name=\'tobecomepartner\']').on('click',function () {
+               $('input[name=\'tobecomepartner\']').on('click',function () {
 	        var val = $('input[name=\'tobecomepartner\']:checked').val();
 	         if (val=='1') {
 	           $('#send').show();

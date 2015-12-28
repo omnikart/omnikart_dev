@@ -703,7 +703,10 @@ $('#button-cart').on('click', function() {
 				
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 				
-				$('#cart > ul').load('index.php?route=common/cart/info ul li');
+				$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
+				if (json['redirect']) {
+					window.location = json['redirect']; 
+				}
 			}
 		}
 	});

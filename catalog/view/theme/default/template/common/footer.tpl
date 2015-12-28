@@ -73,12 +73,6 @@
 	</div>
 	</div>
 </footer> 
-<script src='catalog/view/javascript/snowfall.min.js'></script>
- <script type='text/javascript'>     
-    snowFall.snow(document.body);
-    snowFall.snow(document.body, "clear");
-    snowFall.snow(document.body, {flakeCount: 100, image : "image/flake.png", minSize: 5, maxSize:15});
-</script>
 <script type="text/javascript"><!--
 $(document).delegate('#marketinsg-login', 'click', function(e) {
 	e.preventDefault();
