@@ -6,7 +6,10 @@ class ControllerCustomOffers extends Controller
     {
         $this->load->model('setting/setting');
         $this->load->language('custom/offers');
-
+		$this->document->setTitle("Offers Corner | Omnikart.com");
+		$this->document->setDescription("Exciting offers on Industrial Tools, Power Tools, Office Supplies, Machine Tools, Safety Equipments, and Electricals at Omnikart.com");
+		$this->document->setKeywords("Offer on Power Tools, Offer on Hand Tools, Offer on Machine Tools, Offer on Safety, Offer on Office Supplies, Offer on Electricals, Offer on Cleaning Supplies, at Omnikart.com");
+		
         $data['breadcrumbs'] = array();
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
