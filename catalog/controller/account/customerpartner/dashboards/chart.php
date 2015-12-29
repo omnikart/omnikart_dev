@@ -46,13 +46,13 @@ class ControllerAccountCustomerpartnerDashboardsChart extends Controller {
 				foreach ($results as $key => $value) {
 					$json['order']['data'][] = array($key, $value['total']);
 				}
-
+				/*
 				$results = $this->model_customerpartner_dashboard->getTotalCustomersByDay();
 
 				foreach ($results as $key => $value) {
 					$json['customer']['data'][] = array($key, $value['total']);
 				}
-
+				*/
 				for ($i = 0; $i < 24; $i++) {
 					$json['xaxis'][] = array($i, $i);
 				}
@@ -63,13 +63,13 @@ class ControllerAccountCustomerpartnerDashboardsChart extends Controller {
 				foreach ($results as $key => $value) {
 					$json['order']['data'][] = array($key, $value['total']);
 				}
-				
+				/*
 				$results = $this->model_customerpartner_dashboard->getTotalCustomersByWeek();
 
 				foreach ($results as $key => $value) {
 					$json['customer']['data'][] = array($key, $value['total']);
 				}
-
+				*/
 				$date_start = strtotime('-' . date('w') . ' days');
 
 				for ($i = 0; $i < 7; $i++) {
@@ -84,13 +84,13 @@ class ControllerAccountCustomerpartnerDashboardsChart extends Controller {
 				foreach ($results as $key => $value) {
 					$json['order']['data'][] = array($key, $value['total']);
 				}
-
+				/*
 				$results = $this->model_customerpartner_dashboard->getTotalCustomersByMonth();
 
 				foreach ($results as $key => $value) {
 					$json['customer']['data'][] = array($key, $value['total']);
 				}
-
+				*/
 				for ($i = 1; $i <= date('t'); $i++) {
 					$date = date('Y') . '-' . date('m') . '-' . $i;
 
@@ -103,13 +103,13 @@ class ControllerAccountCustomerpartnerDashboardsChart extends Controller {
 				foreach ($results as $key => $value) {
 					$json['order']['data'][] = array($key, $value['total']);
 				}
-
+				/*
 				$results = $this->model_customerpartner_dashboard->getTotalCustomersByYear();
 
 				foreach ($results as $key => $value) {
 					$json['customer']['data'][] = array($key, $value['total']);
 				}
-
+				*/
 				for ($i = 1; $i <= 12; $i++) {
 					$json['xaxis'][] = array($i, date('M', mktime(0, 0, 0, $i)));
 				}

@@ -67,12 +67,12 @@ class ControllerAccountCustomerpartnerDashboard extends Controller {
 		$this->data['sale'] = $this->load->controller('account/customerpartner/dashboards/sale');
 		$this->data['customer'] = $this->load->controller('account/customerpartner/dashboards/customer');
 		// $this->data['seller_sale'] = '';
-		$this->data['map'] = $this->load->controller('account/customerpartner/dashboards/map');
+		//$this->data['map'] = $this->load->controller('account/customerpartner/dashboards/map');
 		$this->data['chart'] = $this->load->controller('account/customerpartner/dashboards/chart');
 		// $this->data['activity'] = $this->load->controller('account/customerpartner/dashboards/activity');
 		$this->data['recent'] = $this->load->controller('account/customerpartner/dashboards/recent');
 
-      	$this->data['column_left'] = $this->load->controller('common/column_left');
+    $this->data['column_left'] = $this->load->controller('common/column_left');
 		$this->data['column_right'] = $this->load->controller('common/column_right');
 		$this->data['content_top'] = $this->load->controller('common/content_top');
 		$this->data['content_bottom'] = $this->load->controller('common/content_bottom');

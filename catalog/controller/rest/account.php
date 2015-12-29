@@ -339,9 +339,13 @@ class ControllerRestAccount extends RestController {
 
         $data['custom_fields'] = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
 
+				
         if(count($data['addresses']) > 0){
-            $json["data"] = $data;
-        }else {
+					$json["data"]["addresses"] = array();
+					foreach ($data['addresses'] as $address) {
+						$json["data"]["addresses"][] = $address;
+					} 
+				} else {
             $json["success"]	= false;
             $json["error"]		= "No address found";
         }
@@ -411,7 +415,7 @@ class ControllerRestAccount extends RestController {
                 }else {
                     $this->listAddress();
                 }
-            } else if ( $_SERVER['REQUEST_METHOD'] === 'POST' ){
+            } elseif ( $_SERVER['REQUEST_METHOD'] === 'POST' ){
                 $requestjson = file_get_contents('php://input');
                 $requestjson = json_decode($requestjson, true);
 
@@ -420,7 +424,7 @@ class ControllerRestAccount extends RestController {
                 } else {
                     $this->sendResponse(array('success' => false));
                 }
-            } else if ( $_SERVER['REQUEST_METHOD'] === 'PUT' ){
+            } elseif ( $_SERVER['REQUEST_METHOD'] === 'PUT' ){
                 $requestjson = file_get_contents('php://input');
                 $requestjson = json_decode($requestjson, true);
 
@@ -430,7 +434,7 @@ class ControllerRestAccount extends RestController {
                 } else {
                     $this->sendResponse(array('success' => false));
                 }
-            } else if ( $_SERVER['REQUEST_METHOD'] === 'DELETE' ){
+            } elseif ( $_SERVER['REQUEST_METHOD'] === 'DELETE' ){
                 if (isset($this->request->get['id']) && ctype_digit($this->request->get['id'])){
                     $this->deleteAddress($this->request->get['id']);
                 }
