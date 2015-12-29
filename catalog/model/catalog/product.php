@@ -740,7 +740,7 @@ class ModelCatalogProduct extends Model {
 				'product_id'       => $query->row['product_id'],
 				'gp_parent_id' 		 => $query->row['gp_parent_id'],				
 				'vendor_id'        => $vendor_id,
-				'id'							 => isset($query->row['id'])?$query->row['id']:'0',
+				'id'			   => isset($query->row['id'])?$query->row['id']:'0',
 				'name'             => $query->row['name'],
 				'description'      => $query->row['description'],
 				'meta_title'       => $query->row['meta_title'],
