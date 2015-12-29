@@ -3,45 +3,44 @@
     <div class="row">
       <?php if ($informations) { ?>
       <div class="col-sm-3">
-        <h5 style="color:white;padding-left:40px;"><?php echo $text_information; ?></h5>
-        <ul>
+        <h5><?php echo $text_information; ?></h5>
+        <ul class="list-group">
           <?php foreach ($informations as $information) { ?>
-          <li><a href="<?php echo $information['href']; ?>"><?php echo $information['title']; ?></a></li>
+          <li class="list-group-item"><a href="<?php echo $information['href']; ?>"><?php echo $information['title']; ?></a></li>
           <?php } ?>
         </ul>
       </div>
       <?php } ?>
       <div class="col-sm-3">
-        <h5 style="color:white;padding-left:40px;"><?php echo $text_service; ?></h5>
-        <ul>
-          <li><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
-          <li><a href="<?php echo $careers; ?>"><?php echo $text_careers; ?></a></li>
-          <li><a href="<?php echo $return; ?>"><?php echo $text_return; ?></a></li>
-          <li><a href="<?php echo $sitemap; ?>"><?php echo $text_sitemap; ?></a></li>
+        <h5><?php echo $text_service; ?></h5>
+        <ul class="list-group">
+          <li class="list-group-item"><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
+          <li class="list-group-item"><a href="<?php echo $careers; ?>"><?php echo $text_careers; ?></a></li>
+          <li class="list-group-item"><a href="<?php echo $return; ?>"><?php echo $text_return; ?></a></li>
+          <li class="list-group-item"><a href="<?php echo $sitemap; ?>"><?php echo $text_sitemap; ?></a></li>
         </ul>
       </div>
       <div class="col-sm-3">
-        <h5 style="color:white;padding-left:40px;"><?php echo $text_extra; ?></h5>
-        <ul>
-          <li><a href="<?php echo $manufacturer; ?>"><?php echo $text_manufacturer; ?></a></li>
-          <li><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
-          <li><a href="<?php echo $affiliate; ?>"><?php echo $text_affiliate; ?></a></li>
-          <li><a href="<?php echo $special; ?>"><?php echo $text_special; ?></a></li>
+        <h5><?php echo $text_extra; ?></h5>
+        <ul class="list-group">
+          <li class="list-group-item"><a href="<?php echo $manufacturer; ?>"><?php echo $text_manufacturer; ?></a></li>
+          <li class="list-group-item"><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
+          <li class="list-group-item"><a href="<?php echo $affiliate; ?>"><?php echo $text_affiliate; ?></a></li>
+          <li class="list-group-item"><a href="<?php echo $special; ?>"><?php echo $text_special; ?></a></li>
         </ul>
       </div>
       <div class="col-sm-3">
-        <h5 style="color:white;padding-left:40px;"><?php echo $text_account; ?></h5>
-        <ul>
-          <li><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
-          <li><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
-          <li><a href="<?php echo $wishlist; ?>"><?php echo $text_wishlist; ?></a></li>
-          <li><a href="<?php echo $newsletter; ?>"><?php echo $text_newsletter; ?></a></li>
+        <h5><?php echo $text_account; ?></h5>
+        <ul class="list-group">
+          <li class="list-group-item"><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
+          <li class="list-group-item"><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
+          <li class="list-group-item"><a href="<?php echo $wishlist; ?>"><?php echo $text_wishlist; ?></a></li>
+          <li class="list-group-item"><a href="<?php echo $newsletter; ?>"><?php echo $text_newsletter; ?></a></li>
         </ul>
       </div>
     </div>
   </div> 
-    <h4 style="text-align: center;color:white;padding-top:30px;">CONNECT WITH US</h4>
-	<div class="container" ><div class="col-sm-2 col-sm-offset-5">
+     <div class="container" ><div class="col-sm-2 col-sm-offset-5">
     <ul class="follow-us clearfix" >
       <li class=" left col-sm-4"><a target="_blank" href="https://www.facebook.com/omnikart"><div id="fb"></div></a></li>
       <li class="left col-sm-4"><a target="_blank" href="https://twitter.com/OMNIKART_COM/"><div id="tw"></div></a></li>
@@ -279,10 +278,7 @@ $(document).delegate('#marketinsg-login', 'click', function(e) {
 			float: left;
 		}
 	}
-footer{
-background-color:black;
-}
-</style>
+ </style>
 
 
 <script type="text/javascript">
