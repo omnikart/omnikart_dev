@@ -529,10 +529,7 @@
                 <?php echo $text_no; ?></label>
               <?php } ?>
             </div>
-           
-           
-         
-         <div class="col-sm-12">
+          <div class="col-sm-12">
           <div  id="send" class="form-group required">
             <label class="col-sm-2 control-label" for="input-shop"><?php echo $text_shop_name; ?></label>
                <div class="input-group"> 
