@@ -2,7 +2,8 @@
 class ControllerCommonFooter extends Controller {
 	public function index() {
 		$this->load->language('common/footer');
-
+		$data['entry_text'] = "text";
+		
 		$data['text_footer'] = $this->language->get('text_footer');
 
 		if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
