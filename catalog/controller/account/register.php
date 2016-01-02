@@ -6,7 +6,7 @@ class ControllerAccountRegister extends Controller {
 		if ($this->customer->isLogged()) {
 			$this->response->redirect($this->url->link('account/account', '', 'SSL'));
 		}
-
+        
 		$this->load->language('account/register');
 
 		$this->document->setTitle($this->language->get('heading_title'));
