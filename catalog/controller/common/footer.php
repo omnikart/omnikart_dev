@@ -2,9 +2,9 @@
 class ControllerCommonFooter extends Controller {
 	public function index() {
 		$this->load->language('common/footer');
-
-		$data['text_information'] = $this->language->get('text_information');
+        $data['text_information'] = $this->language->get('text_information');
 		$data['text_service'] = $this->language->get('text_service');
+		$data['text_entry'] = $this->language->get('text_entry');
 		$data['text_extra'] = $this->language->get('text_extra');
 		$data['text_contact'] = $this->language->get('text_contact');
 		$data['text_return'] = $this->language->get('text_return');

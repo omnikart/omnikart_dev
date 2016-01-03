@@ -1,77 +1,87 @@
-<footer>
+<footer style="background-color:#333;">
   <div class="container">
     <div class="row">
       <?php if ($informations) { ?>
-      <div class="col-sm-3">
+      <div class="col-sm-2">
         <h5><?php echo $text_information; ?></h5>
-        <ul class="list-group">
+        <ul>
           <?php foreach ($informations as $information) { ?>
-          <li class="list-group-item"><a href="<?php echo $information['href']; ?>"><?php echo $information['title']; ?></a></li>
+          <li><a href="<?php echo $information['href']; ?>"><?php echo $information['title']; ?></a></li>
           <?php } ?>
         </ul>
       </div>
       <?php } ?>
-      <div class="col-sm-3">
+      <div class="col-sm-2">
         <h5><?php echo $text_service; ?></h5>
-        <ul class="list-group">
-          <li class="list-group-item"><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
-          <li class="list-group-item"><a href="<?php echo $careers; ?>"><?php echo $text_careers; ?></a></li>
-          <li class="list-group-item"><a href="<?php echo $return; ?>"><?php echo $text_return; ?></a></li>
-          <li class="list-group-item"><a href="<?php echo $sitemap; ?>"><?php echo $text_sitemap; ?></a></li>
+        <ul>
+          <li><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
+          <li><a href="<?php echo $careers; ?>"><?php echo $text_careers; ?></a></li>
+          <li><a href="<?php echo $return; ?>"><?php echo $text_return; ?></a></li>
+          <li><a href="<?php echo $sitemap; ?>"><?php echo $text_sitemap; ?></a></li>
         </ul>
       </div>
-      <div class="col-sm-3">
+      <div class="col-sm-2">
         <h5><?php echo $text_extra; ?></h5>
-        <ul class="list-group">
-          <li class="list-group-item"><a href="<?php echo $manufacturer; ?>"><?php echo $text_manufacturer; ?></a></li>
-          <li class="list-group-item"><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
-          <li class="list-group-item"><a href="<?php echo $affiliate; ?>"><?php echo $text_affiliate; ?></a></li>
-          <li class="list-group-item"><a href="<?php echo $special; ?>"><?php echo $text_special; ?></a></li>
+        <ul>
+          <li><a href="<?php echo $manufacturer; ?>"><?php echo $text_manufacturer; ?></a></li>
+          <li><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
+          <li><a href="<?php echo $affiliate; ?>"><?php echo $text_affiliate; ?></a></li>
+          <li><a href="<?php echo $special; ?>"><?php echo $text_special; ?></a></li>
         </ul>
       </div>
-      <div class="col-sm-3">
+      <div class="col-sm-2">
         <h5><?php echo $text_account; ?></h5>
-        <ul class="list-group">
-          <li class="list-group-item"><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
-          <li class="list-group-item"><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
-          <li class="list-group-item"><a href="<?php echo $wishlist; ?>"><?php echo $text_wishlist; ?></a></li>
-          <li class="list-group-item"><a href="<?php echo $newsletter; ?>"><?php echo $text_newsletter; ?></a></li>
+        <ul>
+          <li><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
+          <li><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
+          <li><a href="<?php echo $wishlist; ?>"><?php echo $text_wishlist; ?></a></li>
+          <li><a href="<?php echo $newsletter; ?>"><?php echo $text_newsletter; ?></a></li>
         </ul>
       </div>
-    </div>
-  </div>
-    <div class="container">
-	<a href="index.php?route=account/order"><div class="col-sm-10 col-sm-offset-1">
-		<div class="col-sm-4 col-xs-12 bnotes">
-			<i class="fa fa-refresh"></i>
-			<span>FREE & EASY <br>RETURNS</span>
-		</div>
-		<div class="col-sm-4 col-xs-12 bnotes">
-			<i class="fa fa-map-marker"></i>
-			<span>TRACK YOUR <br> ORDER"</span>
-		</div>
-		<div class="col-sm-4 col-xs-12 bnotes">
-			<i class="fa fa-edit"></i>
-			<span>EDIT YOUR <br> ORDERS</span>
-		</div>
+   <div class="col-sm-4">
+    <div id="text-email">
+			 <div class="input-group">
+			     <input type="text" class="form-control" placeholder="Enter your email address" style="height:45px;width:300px;">
+			    <span class="input-group-btn">
+			     <button style="color: black;height:45px;background-color:white;" class="btn btn-default" type="button"><strong>Subscribe</strong></button>
+			    </span>
+			</div> 
+	    </div>
+	  <ul id="socail">
+		<li><a target="_blank" href="https://www.facebook.com/omnikart"><i style="background:#3b5998;" class="fa fa-facebook"></i></a></li>
+		<li><a target="_blank" href="https://www.facebook.com/omnikart"><i style="background:#007bb6" class="fa fa-linkedin"></i></a></li>
+		<li><a target="_blank" href="https://www.facebook.com/omnikart"><i style="background:#00aced" class="fa fa-twitter"></i></a></li>
+		<li><a target="_blank" href="https://www.facebook.com/omnikart""><i style="background:#dd4b39" class="fa fa-google-plus"></i></a></li>
+	 </ul>
+	   <h4>Follow Us</h4>
+	 </div>
+	     <div id="flip">
+		  <a href="index.php?route=account/order"><div class="col-sm-10 col-sm-offset-1">
+				<div class="col-sm-4 col-xs-12">
+				    <i class="fa fa-refresh" ></i></br> 
+				    <span>FREE & EASY <br>RETURNS</span> 
+			   	</div>
+				<div class="col-sm-4 col-xs-12">
+					<i class="fa fa-map-marker"></i></br> 
+					<span>TRACK YOUR <br> ORDER"</span>
+		 	   	</div>
+				<div class="col-sm-4 col-xs-12">
+					<i class="fa fa-edit"></i></br> 
+					<span>EDIT YOUR <br> ORDERS</span>
+		 	   </div>
 	</div></a>
-  </div>
-	<div class="container"><div class="col-sm-2 col-sm-offset-5">
-    <ul class="follow-us clearfix" >
-      <li class=" left col-sm-4"><a target="_blank" href="https://www.facebook.com/omnikart"><div id="fb"></div></a></li>
-      <li class="left col-sm-4"><a target="_blank" href="https://twitter.com/OMNIKART_COM/"><div id="tw"></div></a></li>
-      <li class="left col-sm-4"><a target="_blank" href="https://plus.google.com/+Omnikartengineering/"><div id="gp"></div></a></li>
-     </ul>
-	</div>  
-	</div>
-	<div class="container">  
-	  <div id="handout-div">
-	  </div>
-  	<div id="powered">
-		<div><?php echo $powered; ?></div>
-		<img src="image/payment methods.png" style="height:30px;">
-	</div>
-	</div>
+   	</div>
+   	</div>
+   	</div>
+  	</div>
+  	</div> 
+	 <div id="handout-div">
+      </div>
+	 	<div id="powered" style="color:#FFF;padding-top:10px;">
+				<div><?php echo "Omnikart Engineering Pvt Ltd"; ?></br>
+					<?php echo "Omnikart Engineering Pvt Ltd © 2015"; ?></div>
+		 			<img src="image/payment.png" style="height:30px;">
+	 			</div>
 </footer> 
 <script type="text/javascript"><!--
 $(document).delegate('#marketinsg-login', 'click', function(e) {
@@ -277,10 +287,9 @@ $(document).delegate('#marketinsg-login', 'click', function(e) {
 			float: left;
 		}
 	}
-
-</style>
-
-
+	
+  </style>
+ 
 <script type="text/javascript">
 var google_tag_params = {
 ecomm_prodid: '<?php echo $product_id; ?>',
