@@ -278,7 +278,6 @@ html[xmlns] .flexslider .slides {
 
 .flex-control-nav li {
   background: #333;
-	border-left: 2px solid #333;
 	border-bottom: 2px solid #333;
   color: #fff;
   cursor: pointer;
@@ -295,7 +294,6 @@ html[xmlns] .flexslider .slides {
 
 .flex-control-nav li:last-child {
    border-bottom: 2px solid #333;
-   border-right: 2px solid #333;
 }
 
 .flex-control-nav .flex-active {

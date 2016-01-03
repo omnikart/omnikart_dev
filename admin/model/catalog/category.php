@@ -259,8 +259,12 @@ class ModelCatalogCategory extends Model {
 			$sql .= " AND cd2.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
 		}
 
-		if (!empty($data['filter_parent'])) {
+		if (isset($data['filter_parent']) && !empty($data['filter_parent'])) {
 			$sql .= " AND c1.parent_id IN (SELECT category_id FROM ".DB_PREFIX ."category_description WHERE name LIKE '". $this->db->escape($data['filter_parent']) . "%') ";
+		}
+
+		if (isset($data['filter_parent_id']) && !empty($data['filter_parent_id'])) {
+			$sql .= " AND c1.parent_id =" . (int)$data['filter_parent_id'] ;
 		}
 		
 		$sql .= " GROUP BY cp.category_id";

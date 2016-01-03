@@ -296,7 +296,6 @@ class ControllerRestAccount extends RestController {
         $this->sendResponse($json);
     }
 
-
     private function deleteAddress($id) {
 
         $json = array('success' => true);

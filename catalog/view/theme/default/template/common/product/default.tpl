@@ -20,7 +20,7 @@
     <?php } ?>
 
     <div class="product-meta">
-        <div class="product-meta-inner">
+        <div>
             <div class="left">
                 <div class="review clearfix">
                     <h3 class="name" itemprop="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h3>
@@ -58,35 +58,10 @@
                     <meta content="<?php // echo $this->currency->getCode(); ?>" itemprop="priceCurrency">
                 </div>
                 <?php } ?>
-
                 <div class="clearfix"></div>
                 <?php if( isset($product['description']) ){ ?>
                 <p class="description" itemprop="description"><?php echo utf8_substr( strip_tags($product['description']),0,220);?>...</p>
                 <?php } ?>
-            </div>
-            <div class="right">
-                <div class="action">
-                    <?php if( !isset($listingConfig['catalog_mode']) || !$listingConfig['catalog_mode']) { ?>
-                    <div class="cart">
-                        <button data-loading-text="Loading..." class="btn btn-outline" type="button" onclick="cart.add('<?php echo $product['product_id']; ?>');">
-                            <i class="fa fa-shopping-cart"></i>
-                            <span><?php echo $olang->get('button_cart'); ?></span>
-                        </button>
-                    </div>
-                    <?php } ?>
-                    <div class="wishlist">
-                        <a onclick="wishlist.addwishlist('<?php echo $product['product_id']; ?>');" title="<?php echo $olang->get('button_wishlist');?>" class="btn btn-outline-inverse" data-toggle="tooltip">
-                            <i class="fa fa-heart"></i>
-                            <span><?php echo $olang->get('button_wishlist'); ?></span>
-                        </a>
-                    </div>
-                    <div class="compare">
-                        <a class="btn btn-outline-inverse" onclick="compare.addcompare('<?php echo $product['product_id']; ?>');" title="<?php echo $olang->get('button_compare'); ?>" data-toggle="tooltip">
-                            <i class="fa fa-refresh"></i>
-                            <span><?php echo $olang->get('button_compare'); ?></span>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

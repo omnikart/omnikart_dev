@@ -44,10 +44,10 @@
 			        <div class="row">
 			          <ul class="nav nav-tabs" role="tablist">
 			            <li <?php if( $selectedid ==0 ) { ?>class="active" <?php } ?>> <a href="<?php echo $link; ?>"> <span class="fa fa-plus"></span> <?php echo $olang->get('button_module_add');?></a></li>
-			            <?php $i=1; foreach( $moduletabs as $key => $module ){ ?>
-			            <li role="presentation" <?php if( $module['module_id']==$selectedid ) {?>class="active"<?php } ?>>
-			              <a href="<?php echo $link; ?>&module_id=<?php echo $module['module_id']?>" aria-controls="bannermodule-<?php echo $key; ?>"  >
-			                <span class="fa fa-pencil"></span> <?php echo $module['name']?>
+			            <?php $i=1; foreach( $moduletabs as $key => $module1 ){ ?>
+			            <li role="presentation" <?php if( $module1['module_id']==$selectedid ) {?>class="active"<?php } ?>>
+			              <a href="<?php echo $link; ?>&module_id=<?php echo $module1['module_id']?>" aria-controls="bannermodule-<?php echo $key; ?>"  >
+			                <span class="fa fa-pencil"></span> <?php echo $module1['name']?>
 			               </a>
 			              </li>
 			            <?php $i++ ;} ?>
@@ -61,8 +61,7 @@
 							<div class="col-sm-12">
 							<div >
 					            <?php $module_row = 1; ?>
-					            <?php foreach ($modules as $module) { ?>
-					             <?php if( $selectedid ){ ?>
+					             <?php if($selectedid) { ?>
 					             <div class="pull-right">
 					                <a href="<?php echo $action;?>&delete=1" class="remove btn btn-danger" ><span><i class="fa fa-remove"></i> Delete This</span></a>
 					              </div>
@@ -122,6 +121,36 @@
 											</td>
 										</tr>
 										<tr>
+											<td colspan="2">
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input type="text" name="product" value="" placeholder="Entry Product" id="input-product" class="form-control" />
+															<div id="product-category" class="well well-sm" style="height: 150px; overflow: auto;">
+																<?php foreach ($module['products'] as $product) { ?>
+																<div id="product-category<?php echo $product['product_id']; ?>"><i class="fa fa-minus-circle"></i> <?php echo $product['name']; ?>
+																	<input type="hidden" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][featured_product][]" value="<?php echo $product['product_id']; ?>" />
+																</div>
+																<?php } ?>
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input type="text" name="category" value="" placeholder="Entry Category" id="input-category" class="form-control" />
+															<div id="category-category" class="well well-sm" style="height: 150px; overflow: auto;">
+																<?php foreach ($module['category'] as $category) { ?>
+																<div id="category-category<?php echo $category['category_id']; ?>"><i class="fa fa-minus-circle"></i> <?php echo $category['name']; ?>
+																	<input type="hidden" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][featured_category][]" value="<?php echo $category['category_id']; ?>" />
+																</div>
+																<?php } ?>
+															</div>
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+										<tr>
 											<td><?php echo $objlang->get( 'entry_icon_image' );?></td>
 											<td class="col-sm-8">
 												<?php $thumb = isset($module['thumb'])?$module['thumb']:$no_image; ?>
@@ -159,12 +188,30 @@
 											</td>
 										</tr>
 										<tr>
-											<td><?php echo $entry_dimension; ?></td>
-											<td class="left"><input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][width]" value="<?php echo isset($module['width'])?$module['width']:'200'; ?>" size="3" /> x
-											<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][height]" value="<?php echo isset($module['height'])?$module['height']:'200'; ?>" size="3"/>
-											<?php if (isset($error_dimension[$module_row])) { ?>
-											<span class="error"><?php echo $error_dimension[$module_row]; ?></span>
-											<?php } ?></td>
+											<td colspan="2">
+											<div class="col-sm-6">
+												<div class="input-group">
+												  	<span class="input-group-addon" id="basic-addon1">Product Width</span>
+													<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][width]" value="<?php echo isset($module['width'])?$module['width']:'200'; ?>" size="3" />
+													<span class="input-group-addon">Height</span>
+													<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][height]" value="<?php echo isset($module['height'])?$module['height']:'200'; ?>" size="3"/>
+													<?php if (isset($error_dimension[$module_row])) { ?>
+													<span class="error"><?php echo $error_dimension[$module_row]; ?></span>
+													<?php } ?>
+												</div>
+											</div>
+											<div class="col-sm-6">
+											  	<div class="input-group">
+												  	<span class="input-group-addon" id="basic-addon1">Category Width</span>
+													<input class="form-control"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][cwidth]" value="<?php echo isset($module['cwidth'])?$module['cwidth']:'200'; ?>"/>
+												  	<span class="input-group-addon">Height</span>
+													<input class="form-control"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][cheight]" value="<?php echo isset($module['cheight'])?$module['cheight']:'200'; ?>"/>
+													<?php if (isset($error_dimension[$module_row])) { ?>
+													<span class="error"><?php echo $error_dimension[$module_row]; ?></span>
+													<?php } ?>
+												</div>
+											</div>
+											</td>
 										</tr>
 										<tr>
 											<td class="left"><?php echo $entry_carousel; ?></td>
@@ -194,7 +241,6 @@
 								</div>
 
 								<?php $module_row++; ?>
-								<?php } ?>
 							</div>
 						</div> <!-- End DIV CONTENT TAB -->
 						</div>
@@ -221,9 +267,60 @@ var module_row = <?php echo $module_row; ?>;
  <script type="text/javascript"><!--
  <?php $module_row = 1; ?>
 $('#module li:first-child a').tab('show');
-<?php foreach ($modules as $module) { ?>
 $('#language<?php echo $module_row; ?> li:first-child a').tab('show');
-<?php $module_row++; ?>
-<?php } ?>
 //--></script>
+<script type="text/javascript"><!--
+	$('input[name=\'product\']').autocomplete({
+		'source': function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_category_id='+$('select[name^=\'pavverticalcategorytabs_module\'][name$=\'[category_id]\']').val(),
+				dataType: 'json',			
+				success: function(json) {
+					response($.map(json, function(item) {
+						return {
+							label: item['name'],
+							value: item['product_id']
+						}
+					}));
+				}
+			});
+		},
+		'select': function(item) {
+			$('input[name=\'product\']').val('');
+			
+			$('#product-category' + item['value']).remove();
+			
+			$('#product-category').append('<div id="product-category' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][featured_product][]" value="' + item['value'] + '" /></div>');	
+		}
+	});
+	$('#product-category').delegate('.fa-minus-circle', 'click', function() {
+		$(this).parent().remove();
+	});
+	$('input[name=\'category\']').autocomplete({
+		'source': function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&limit=15&filter_parent_id='+$('select[name^=\'pavverticalcategorytabs_module\'][name$=\'[category_id]\']').val(),
+				dataType: 'json',			
+				success: function(json) {
+					response($.map(json, function(item) {
+						return {
+							label: item['name'],
+							value: item['category_id']
+						}
+					}));
+				}
+			});
+		},
+		'select': function(item) {
+			$('input[name=\'category\']').val('');
+			
+			$('#category-category' + item['value']).remove();
+			
+			$('#category-category').append('<div id="category-category' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][featured_category][]" value="' + item['value'] + '" /></div>');	
+		}
+	});
+	$('#category-category').delegate('.fa-minus-circle', 'click', function() {
+		$(this).parent().remove();
+	});	
+</script>
 <?php echo $footer; ?>
