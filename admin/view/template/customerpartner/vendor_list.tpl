@@ -50,7 +50,7 @@
 					</div>
 					<form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-attribute1">
 						<div class="table-responsive">
-							<table  class="table table-bordered table-hover"   border="1px solid black";>
+						 	<table  class="table table-bordered table-hover"   border="1px solid black";>
 								<thead>
 									<tr> 
 										<td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>

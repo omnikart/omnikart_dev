@@ -54,7 +54,20 @@
                 <label class="control-label" for="input-model"><?php echo $entry_model; ?></label>
                 <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
               </div>
-            </div>
+               <div class="form-group">
+                <label class="control-label" for="input-tax-class"><?php echo "Tax class"; ?></label>
+                   <select name="tax_class_id" id="input-tax-class" class="form-control">
+                    <option value="0"><?php echo $text_none; ?></option>
+                    <?php foreach ($tax_classes as $tax_class) { ?>
+                    <?php if ($tax_class['tax_class_id'] == $tax_class_id) { ?>
+                    <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
+                    <?php } else { ?>
+                    <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
+                    <?php } ?>
+                    <?php } ?>
+                  </select>
+                </div>
+             </div>
             <div class="col-sm-4">
               <div class="form-group">
                 <label class="control-label" for="input-price"><?php echo $entry_price; ?></label>
@@ -195,7 +208,13 @@ $('#button-filter').on('click', function() {
 	if (filter_model) {
 		url += '&filter_model=' + encodeURIComponent(filter_model);
 	}
+     
+    var tax_class_id = $('select[name=\'tax_class_id\']').val();
 
+	if (tax_class_id != '0') {
+		url += '&tax_class_id=' + encodeURIComponent(tax_class_id);
+	}
+    
 	var filter_price = $('input[name=\'filter_price\']').val();
 
 	if (filter_price) {
