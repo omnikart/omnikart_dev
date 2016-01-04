@@ -423,6 +423,12 @@ class ControllerCatalogProduct extends Controller {
 			$filter_status = null;
 		}
 		
+		if (isset($this->request->get['tax_class_id'])) {
+			$tax_class_id = $this->request->get['tax_class_id'];
+		} else {
+			$tax_class_id = null;
+		}
+		
 		if (isset($this->request->get['filter_brand'])) {
 			$filter_brand = $this->request->get['filter_brand'];
 		} else {
@@ -472,7 +478,11 @@ class ControllerCatalogProduct extends Controller {
 		if (isset($this->request->get['filter_status'])) {
 			$url .= '&filter_status=' . $this->request->get['filter_status'];
 		}
-
+		
+		if (isset($this->request->get['tax_class_id'])) {
+			$url .= '&tax_class_id=' . $this->request->get['tax_class_id'];
+		}
+ 
 		if (isset($this->request->get['filter_brand'])) {
 			$url .= '&filter_brand=' . $this->request->get['filter_brand'];
 		}
@@ -507,7 +517,7 @@ class ControllerCatalogProduct extends Controller {
 		$data['add'] = $this->url->link('catalog/product/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$data['copy'] = $this->url->link('catalog/product/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$data['delete'] = $this->url->link('catalog/product/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-
+        $data['text_none']=$this->language->get('text_none');
 		$data['products'] = array();
 
 		$filter_data = array(
@@ -517,6 +527,7 @@ class ControllerCatalogProduct extends Controller {
 			'filter_price'	  => $filter_price,
 			'filter_quantity' => $filter_quantity,
 			'filter_status'   => $filter_status,
+			'tax_class_id'    => $tax_class_id,
 			'filter_brand'    => $filter_brand,
 			'filter_category_id'    => $filter_category_id,
 			'sort'            => $sort,
@@ -569,7 +580,7 @@ class ControllerCatalogProduct extends Controller {
 				'special'    => $special,
 				'quantity'   => $result['quantity'],
 				'status'     => ($result['status']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-				'brand'      => $result['manufacturer_id'],
+ 				'brand'      => $result['manufacturer_id'],
 				'edit'       => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url, 'SSL')
 			);
 		} 
@@ -652,6 +663,10 @@ class ControllerCatalogProduct extends Controller {
 			$url .= '&filter_status=' . $this->request->get['filter_status'];
 		}
          
+		if (isset($this->request->get['tax_class_id'])) {
+			$url .= '&tax_class_id=' . $this->request->get['tax_class_id'];
+		}
+         
 		if (isset($this->request->get['filter_brand'])) {
 			$url .= '&filter_brand=' . $this->request->get['filter_brand'];
 		}
@@ -671,6 +686,7 @@ class ControllerCatalogProduct extends Controller {
 		$data['sort_price'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
 		$data['sort_quantity'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.quantity' . $url, 'SSL');
 		$data['sort_status'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
+		$data['sort_tax_class_id'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.tax_class_id' . $url, 'SSL');
 		$data['sort_brand'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.brand' . $url, 'SSL');
 		$data['sort_order'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
 
@@ -699,6 +715,10 @@ class ControllerCatalogProduct extends Controller {
 		if (isset($this->request->get['filter_status'])) {
 			$url .= '&filter_status=' . $this->request->get['filter_status'];
 		}
+		
+		if (isset($this->request->get['tax_class_id'])) {
+			$url .= '&tax_class_id=' . $this->request->get['tax_class_id'];
+		}
         
 		if (isset($this->request->get['filter_brand'])) {
 			$url .= '&filter_brand=' . $this->request->get['filter_brand'];
@@ -710,6 +730,17 @@ class ControllerCatalogProduct extends Controller {
 
 		if (isset($this->request->get['order'])) {
 			$url .= '&order=' . $this->request->get['order'];
+		}
+        
+		$this->load->model('localisation/tax_class');
+		$data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+		
+		if (isset($this->request->post['tax_class_id'])) {
+			$data['tax_class_id'] = $this->request->post['tax_class_id'];
+		} elseif (!empty($product_info)) {
+			$data['tax_class_id'] = $product_info['tax_class_id'];
+		} else {
+			$data['tax_class_id'] = 0;
 		}
 
 		$pagination = new Pagination();
@@ -728,6 +759,7 @@ class ControllerCatalogProduct extends Controller {
 		$data['filter_quantity'] = $filter_quantity;
 		$data['filter_brand'] = $filter_brand;
 		$data['filter_status'] = $filter_status;
+		$data['tax_class_id'] = $tax_class_id;
 
 		$data['sort'] = $sort;
 		$data['order'] = $order;
@@ -1022,6 +1054,10 @@ class ControllerCatalogProduct extends Controller {
 
 		if (isset($this->request->get['filter_status'])) {
 			$url .= '&filter_status=' . $this->request->get['filter_status'];
+		}
+		
+		if (isset($this->request->get['tax_class_id'])) {
+			$url .= '&tax_class_id=' . $this->request->get['tax_class_id'];
 		}
         
 		if (isset($this->request->get['filter_brand'])) {
