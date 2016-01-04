@@ -80,7 +80,7 @@
 	 	<div id="powered" style="color:#FFF;padding-top:10px;">
 				<div><?php echo "Omnikart Engineering Pvt Ltd"; ?></br>
 					<?php echo "Omnikart Engineering Pvt Ltd © 2015"; ?></div>
-		 			<img src="image/payment.png" style="height:30px;">
+		 			<img src="image/all-in-one.jpg" style="height:30px;">
 	 			</div>
 </footer> 
 <script type="text/javascript"><!--
