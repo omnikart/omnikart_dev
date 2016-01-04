@@ -520,8 +520,8 @@ class ModelCatalogProduct extends Model {
 			$sql .= " AND m.name LIKE '" .  $this->db->escape($data['filter_brand']) . "%'";
 		}
 		
-		if (isset($data['filter_tax_class']) && !is_null($data['filter_tax_class'])) {
-			$sql .= " AND p.tax_class_id = '" . (int)$data['filter_tax_class'] . "'";
+		if (isset($data['tax_class_id']) && !is_null($data['tax_class_id'])) {
+			$sql .= " AND p.tax_class_id = '" . (int)$data['tax_class_id'] . "'";
 		}		
 		
 		if (isset($data['filter_image']) && !is_null($data['filter_image'])) {
