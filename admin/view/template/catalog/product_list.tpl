@@ -470,7 +470,7 @@ $('input[name=\'filter_brand\']').autocomplete({
 $('input[name=\'filter_supplier\']').autocomplete({
 	'source': function(request, response) {
 		$.ajax({
-		    url: 'index.php?route=customerpartner/partner/autocomplete&token=<?php echo $token; ?>&product_id=<?php echo $product_id; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_view=' +  jQuery('#view_all').val(),
+		    url: 'index.php?route=customerpartner/partner/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
 			dataType: 'json',
 			success: function(json) {
 				response($.map(json, function(item) {
