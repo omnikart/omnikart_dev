@@ -42,17 +42,16 @@
                 <?php if ($product['price']) { ?>
                 <div class="price clearfix" itemtype="http://schema.org/Offer" itemscope itemprop="offers">
                     <?php if (!$product['special']) {  ?>
-                    <span class="special-price"><?php echo $product['price']; ?></span>
-                    <?php if( preg_match( '#(\d+).?(\d+)#',  $product['price'], $p ) ) { ?>
-                    <meta content="<?php echo $p[0]; ?>" itemprop="price">
-                    <?php } ?>
+	                    	<span class="special-price"><?php echo $product['price']; ?></span>
+	                    <?php if( preg_match( '#(\d+).?(\d+)#',  $product['price'], $p ) ) { ?>
+	                    	<meta content="<?php echo $p[0]; ?>" itemprop="price">
+	                    <?php } ?>
                     <?php } else { ?>
-                    <span class="price-new"><?php echo $product['special']; ?></span>
-                    <span class="price-old"><?php echo $product['price']; ?></span>
-                    <?php if( preg_match( '#(\d+).?(\d+)#',  $product['special'], $p ) ) { ?>
-                    <meta content="<?php echo $p[0]; ?>" itemprop="price">
-                    <?php } ?>
-
+	                    <span class="price-new"><?php echo $product['special']; ?></span>
+	                    <span class="price-old"><?php echo $product['price']; ?></span>
+	                    <?php if( preg_match( '#(\d+).?(\d+)#',  $product['special'], $p ) ) { ?>
+	                    <meta content="<?php echo $p[0]; ?>" itemprop="price">
+	                    <?php } ?>
                     <?php } ?>
 
                     <meta content="<?php // echo $this->currency->getCode(); ?>" itemprop="priceCurrency">
@@ -65,4 +64,7 @@
             </div>
         </div>
     </div>
+   	<?php if ($product['discount']) { ?>
+   		<span class="discount"><span class="text"><?php echo $product['discount']; ?>% Off</span><span class="img"></span></span>
+   	<?php } ?>
 </div>

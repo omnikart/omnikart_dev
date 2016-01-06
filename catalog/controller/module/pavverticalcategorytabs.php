@@ -130,11 +130,19 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 			} else {
 				$image = $this->model_tool_image->resize('placeholder.png', $setting['width'], $setting['height']);
 			}
-			
+	
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 				$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+				$original_price  = 0;
+				$discount = 0;				
+				if ($result['price'] < $result['original_price']) {
+					$original_price = $this->currency->format($this->tax->calculate($result['original_price'], $result['tax_class_id'], $this->config->get('config_tax')));
+					$discount = (int)(($result['original_price'] - $result['price'])*100/$result['original_price']);
+				}				
 			} else {
 				$price = false;
+				$original_price  = 0;
+				$discount = 0;
 			}
 			
 			if ((float)$result['special']) {
@@ -167,6 +175,8 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 					'thumb'       => $image,
 					'name'        => $result['name'],
 					'price'       => $price,
+					'original_price' => $original_price,
+					'discount'    => $discount,
 					'special'     => $special,
 					'rating'      => $result['rating'],
 					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id']),
