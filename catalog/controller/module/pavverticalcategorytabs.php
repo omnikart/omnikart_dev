@@ -179,6 +179,8 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 		
 		
 		$this->mdata['module_description'] = isset($setting['description'][$this->config->get('config_language_id')])?$setting['description'][$this->config->get('config_language_id')]:"";
+		$this->mdata['description_status'] = isset($setting['description_status'])?$setting['description_status']:"";
+		
 		$this->mdata['module_description'] = (html_entity_decode($this->mdata['module_description'], ENT_QUOTES, 'UTF-8'));
 		$this->mdata['module'] = $module++;
 

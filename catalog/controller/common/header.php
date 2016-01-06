@@ -223,6 +223,8 @@ class ControllerCommonHeader extends Controller {
 			$layout_id = $this->config->get('config_layout_id');
 		}		
 		
+		$this->session->data['layout_id'] = $layout_id;
+		
 		$this->load->model('extension/module');
 		
 		$data['modules'] = array();

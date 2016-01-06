@@ -304,6 +304,7 @@ class ControllerProductCategory extends Controller {
 							$tax = $this->currency->format($gp_price_min);
 						}
 					}
+					$result['type'] = 2;
 				}
 
 				$data['products'][] = array(

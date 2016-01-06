@@ -36,6 +36,7 @@ function getIgnoredRoutes() {
 		'affiliate/logout',
 		'information/contact',
 		'product/compare',
+		'module/ne/css',
 		'error/not_found'
 	);
 	
@@ -408,7 +409,9 @@ function open_nitro() {
 		if (file_exists(NITRO_PAGECACHE_FOLDER . $_POST['cacheFileToClear'])) {
 			unlink(NITRO_PAGECACHE_FOLDER . $_POST['cacheFileToClear']);
 		}
-
+		if (file_exists(NITRO_PAGECACHE_FOLDER . $_POST['cacheFileToClear'].'.gz')) {
+			unlink(NITRO_PAGECACHE_FOLDER . $_POST['cacheFileToClear'].'.gz');
+		}
 		pageRefresh();
 	}
 

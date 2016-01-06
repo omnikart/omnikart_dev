@@ -3,7 +3,7 @@
     <div class="row">
       <?php if ($informations) { ?>
       <div class="col-sm-2">
-        <h5><?php echo $text_information; ?></h5>
+        <h4><?php echo $text_information; ?></h4>
         <ul>
           <?php foreach ($informations as $information) { ?>
           <li><a href="<?php echo $information['href']; ?>"><?php echo $information['title']; ?></a></li>
@@ -12,7 +12,7 @@
       </div>
       <?php } ?>
       <div class="col-sm-2">
-        <h5><?php echo $text_service; ?></h5>
+        <h4><?php echo $text_service; ?></h4>
         <ul>
           <li><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
           <li><a href="<?php echo $careers; ?>"><?php echo $text_careers; ?></a></li>
@@ -21,7 +21,7 @@
         </ul>
       </div>
       <div class="col-sm-2">
-        <h5><?php echo $text_extra; ?></h5>
+        <h4><?php echo $text_extra; ?></h4>
         <ul>
           <li><a href="<?php echo $manufacturer; ?>"><?php echo $text_manufacturer; ?></a></li>
           <li><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
@@ -30,7 +30,7 @@
         </ul>
       </div>
       <div class="col-sm-2">
-        <h5><?php echo $text_account; ?></h5>
+        <h4><?php echo $text_account; ?></h4>
         <ul>
           <li><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
           <li><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
@@ -38,50 +38,23 @@
           <li><a href="<?php echo $newsletter; ?>"><?php echo $text_newsletter; ?></a></li>
         </ul>
       </div>
-   <div class="col-sm-4">
-    <div id="text-email">
-			 <div class="input-group">
-			     <input type="text" class="form-control" placeholder="Enter your email address" style="height:45px;width:300px;">
-			    <span class="input-group-btn">
-			     <button style="color: black;height:45px;background-color:white;" class="btn btn-default" type="button"><strong>Subscribe</strong></button>
-			    </span>
-			</div> 
-	    </div>
-	  <ul id="socail">
-		<li><a target="_blank" href="https://www.facebook.com/omnikart"><i style="background:#3b5998;" class="fa fa-facebook"></i></a></li>
-		<li><a target="_blank" href="https://www.facebook.com/omnikart"><i style="background:#007bb6" class="fa fa-linkedin"></i></a></li>
-		<li><a target="_blank" href="https://www.facebook.com/omnikart"><i style="background:#00aced" class="fa fa-twitter"></i></a></li>
-		<li><a target="_blank" href="https://www.facebook.com/omnikart""><i style="background:#dd4b39" class="fa fa-google-plus"></i></a></li>
-	 </ul>
-	   <h4>Follow Us</h4>
+		 <div class="col-sm-4">
+					<?php foreach ($modules as $module) { ?>
+						<?php echo $module; ?>
+					<?php } ?>
+					<ul id="socail">
+						<li><a target="_blank" href="https://www.facebook.com/omnikart/"><i style="background:#3b5998;" class="fa fa-facebook"></i></a></li>
+						<li><a target="_blank" href="https://www.facebook.com/omnikart"><i style="background:#007bb6" class="fa fa-linkedin"></i></a></li>
+						<li><a target="_blank" href="https://twitter.com/OMNIKART_COM/"><i style="background:#00aced" class="fa fa-twitter"></i></a></li>
+						<li><a target="_blank" href="https://plus.google.com/+Omnikartengineering/"><i style="background:#dd4b39" class="fa fa-google-plus"></i></a></li>
+				 </ul>
+			</div>
+			<div class="col-sm-12" id="powered" style="color:#FFF;">
+					<div><?php echo $powered; ?></div>
+					<img src="image/payment.png" style="height:30px;">
+			</div>
 	 </div>
-	     <div id="flip">
-		  <a href="index.php?route=account/order"><div class="col-sm-10 col-sm-offset-1">
-				<div class="col-sm-4 col-xs-12">
-				    <i class="fa fa-refresh" ></i></br> 
-				    <span>FREE & EASY <br>RETURNS</span> 
-			   	</div>
-				<div class="col-sm-4 col-xs-12">
-					<i class="fa fa-map-marker"></i></br> 
-					<span>TRACK YOUR <br> ORDER"</span>
-		 	   	</div>
-				<div class="col-sm-4 col-xs-12">
-					<i class="fa fa-edit"></i></br> 
-					<span>EDIT YOUR <br> ORDERS</span>
-		 	   </div>
-	</div></a>
-   	</div>
-   	</div>
-   	</div>
-  	</div>
-  	</div> 
-	 <div id="handout-div">
-      </div>
-	 	<div id="powered" style="color:#FFF;padding-top:10px;">
-				<div><?php echo "Omnikart Engineering Pvt Ltd"; ?></br>
-					<?php echo "Omnikart Engineering Pvt Ltd © 2015"; ?></div>
-		 			<img src="image/all-in-one.jpg" style="height:30px;">
-	 			</div>
+	</div>
 </footer> 
 <script type="text/javascript"><!--
 $(document).delegate('#marketinsg-login', 'click', function(e) {

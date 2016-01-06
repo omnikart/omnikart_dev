@@ -1,5 +1,23 @@
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 400;
+  src: local('ubuntu'), url("../fonts/ubuntu/ubuntu.woff2") format('woff2');
+}
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 700;
+  src: local('ubuntu-bold'), url("../fonts/ubuntu/ubuntu-bold.woff2") format('woff2');
+}
+@font-face {
+  font-family: 'Noto Serif';
+  src: url("../fonts/noto/NotoSerif.woff2") format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
 body {
-	font-family: "Shruti", sans-serif;
+	font-family: "Ubuntu", sans-serif;
 	font-weight: 400;
 	color: #666;
 	font-size: 14px;
@@ -30,28 +48,6 @@ background:#aaa;
 z-index:-1;
 opacity:0.1;
 }
-@font-face {
-  font-family: 'Kelsonb';
-  src: url("../fonts/KelsonBold/kelson_sans_bold-webfont.eot");
-  src: url("../fonts/KelsonBold/kelson_sans_bold-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/KelsonBold/kelson_sans_bold-webfont.woff") format("woff"), url("../fonts/KelsonBold/kelson_sans_bold-webfont.ttf") format("truetype"), url("../fonts/KelsonBold/kelson_sans_bold-webfont.svg#kelson_sans_bold") format("svg");
-  font-weight: 700;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Kelson';
-  src: url("../fonts/KelsonRegular/kelson_sans_regular-webfont.eot");
-  src: url("../fonts/KelsonRegular/kelson_sans_regular-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/KelsonRegular/kelson_sans_regular-webfont.woff") format("woff"), url("../fonts/KelsonRegular/kelson_sans_regular-webfont.ttf") format("truetype"), url("../fonts/KelsonRegular/kelson_sans_regular-webfont.svg#kelson_sans_regular") format("svg");
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Shruti';
-  src: url("../fonts/ShrutiRegular/shruti-webfont.eot");
-  src: url("../fonts/ShrutiRegular/shruti-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/ShrutiRegular/shruti-webfont.woff") format("woff"), url("../fonts/ShrutiRegular/shruti-webfont.ttf") format("truetype"), url("../fonts/ShrutiRegular/shruti-webfont.svg#shruti") format("svg");
-  font-weight: 400;
-  font-style: normal;
-}
-
 h1, h2, h3, h4, h5, h6 {
 	color: #444;
 }
@@ -132,7 +128,6 @@ background:#fff;
 box-shadow: 0 2px 4px rgba(0,0,0,.2);*/
 }
 header.navbar-fixed-top {
-border-bottom:2px solid #333333;
 background:#fff;
 }
 #top-links li, #top-links a {
@@ -250,7 +245,8 @@ background:#fff;
 
 /* menu */
 #menu-holder{
-	background-color: #333333;
+	background-color: #fff;
+	border-bottom:2px solid #333;
 }
 #menu {
 	/*
@@ -262,7 +258,7 @@ background:#fff;
 	margin-bottom:0px;
 	border:none;*/
 	
-	background-color: #333333;
+	/*background-color: #333333;
 	/*background-color: #f28520;
 	background-image: linear-gradient(to bottom, #f28826, #f17b0e);
 	background-repeat: repeat-x;
@@ -272,21 +268,20 @@ background:#fff;
 	border: none;
 }
 #menu .nav > li > a {
-	color: #fff;
-	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-	padding: 10px 15px 10px 15px;
+	color: #000;
+	/*text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);*/
+	padding: 7px 15px;
 	min-height: 15px;
 	background-color: transparent;
 	font-size:14px;
 	font-weight:700;
-	border-top:3px solid #333333;
+	border-top:3px solid #fff;
+	border-bottom:3px solid #fff;
 }
 #menu .nav > li > a:hover{
-	background-color: rgba(0, 0, 0, 0.1);
 	border-top-color:#e94b42;
 }
 #menu .nav > li > a:hover, #menu .nav > li.open > a {
-	background-color: rgba(0, 0, 0, 0.1);
 }
 #menu .dropdown-menu {
 	padding-bottom: 0;
@@ -431,10 +426,8 @@ footer h5 {
 }
 footer h4 {
 	font-family: 'Open Sans', sans-serif;
-	font-size: 10px;
 	font-weight: bold;
 	color:white;
-	padding-left: 174px;
 }
 footer .list-group a,footer .list-group a:hover {border:none;background:none;font-size:14px;}
 
@@ -854,10 +847,6 @@ h2.price {
 .product-thumb .price h4 {
 	color: #e94b42;
 	font-size:18px;
-}
-.product-thumb .price.type-2 h4 {
-	color: #e94b42;
-	font-size:14px;
 }
 .product-thumb .price-new {
 	font-weight: 600;
@@ -1508,9 +1497,9 @@ float: left!important;
 display:block;
 }
 .box-heading .navbar-header > span {
-padding: 10px 25px;
+padding: 6px 25px;
 display: inline-block;
-line-height: 30px;
+line-height: 31px;
 font-size: 20px;
 }
 .box-heading *,.box-heading a{color:#fff;}

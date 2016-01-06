@@ -29,7 +29,7 @@ $productLayout = DIR_TEMPLATE.$objconfig->get('config_template').'/template/comm
 	<div class="col-sm-12 white">
 		<div class="row">
 			<div class="col-sm-12">
-				<nav class="navbar navbar-default box-heading">
+				<nav class="navbar navbar-default box-heading" style="min-height:40px;">
 					<div class="navbar-header">
 						<span><a class="img-banner" href="<?php echo $category_link; ?>"><?php echo $category_name; ?></a></span>
 	                </div>
@@ -41,22 +41,21 @@ $productLayout = DIR_TEMPLATE.$objconfig->get('config_template').'/template/comm
 					</ul>
 				</nav>
 			</div>
-			<div class="col-sm-12">
-			</div>
-			<div class="col-sm-3">
+			<?php echo (($description_status)?'<div class="col-sm-12" style="margin-bottom:10px;">'.$module_description.'</div>':''); ?>					
+			<!-- <div class="col-sm-3">
 				<div class="banner-image hidden-md hidden-sm hidden-xs">
 					<a class="img-banner" href="<?php echo $category_link; ?>">
 						<?php if (!empty($image) ) { ?><img class="img-responsive" src="<?php echo $image;?>" alt="<?php echo $category_name; ?>"/><?php } ?>
 					</a>
 				</div>
-			</div>
-			<div class="col-sm-9">
+			</div>  -->
+			<div class="col-sm-12">
 				<div class="flexslider featured" id="pav<?php echo $module; ?>">
 					<ul class="slides">
-					<?php foreach( array_chunk($products,4) as $productl ) { ?>
+					<?php foreach( array_chunk($products,5) as $productl ) { ?>
 						<li style="margin-right:20px;"><div class="row">
 							<?php foreach($productl as $i => $product ) { ?>
-								<div class="col-xs-3 product-col">
+								<div class="col-xs-20 product-col">
 									<?php require( $productLayout );  ?>
 								</div>
 							<?php } ?>
@@ -87,7 +86,10 @@ $('#pav<?php echo $module; ?>').flexslider({
 <style>
 .products-row .product-col:last-child{border-right:none;}
 .vertical .nav > li {float:left;}
-.vertical .nav > li > a{padding:15px 10px;}
+.vertical .nav > li > a{padding:11px 10px;line-height:21px;}
 .vertical .product-thumb{margin-bottom:0px;}
 .vertical .product-block .img img{width:initial;margin:0px auto;}
+@media screen {
+	.vertical nav.navbar {margin-bottom:10px;}
+}
 </style>

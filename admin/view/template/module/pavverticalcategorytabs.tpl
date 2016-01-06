@@ -84,7 +84,16 @@
 											</div>
 											<?php } ?>
 										</div>
-
+										<select name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][description_status]" class="form-control" style="width:10%;">
+								            <?php if ( isset($module['description_status']) && $module['description_status'] ) { ?>
+								            <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+								            <option value="0"><?php echo $text_disabled; ?></option>
+								            <?php } else { ?>
+								            <option value="1"><?php echo $text_enabled; ?></option>
+								            <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+								            <?php } ?>
+								        </select>
+								         
 									<table class="table">
 										<tr>
 								            <td class="col-sm-2"><?php echo $objlang->get('entry_name'); ?></td>
@@ -161,66 +170,65 @@
 											</td>
 										</tr>
 										<tr>
-											<td><?php echo $objlang->get( 'entry_size_icon' );?></td>
-											<td class="left">
-												<input class="form-control no-width" type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][iwidth]" value="<?php echo isset($module['iwidth'])?$module['iwidth']:'50'; ?>" size="3" /> x
-												<input class="form-control no-width" type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][iheight]" value="<?php echo isset($module['iheight'])?$module['iheight']:'50'; ?>" size="3"/>
-											</td>
-										</tr>
-										<tr>
-											<td><?php echo $banner_position; ?></td>
-											<td class="left">
-												<select class="form-control no-width"name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][banner_position]">
-													<?php if($module['banner_position']) { ?>
-													<option value="1" selected="selected"><?php echo $text_left; ?></option>
-													<option value="0"><?php echo $text_right; ?></option>
-													<?php } else { ?>
-													<option value="1" ><?php echo $text_left; ?></option>
-													<option value="0" selected="selected"><?php echo $text_right; ?></option>
-													<?php } ?>
-												</select>
-											</td>
-										</tr>
-										<tr>
-											<td><?php echo $limit_tabs; ?></td>
-											<td class="left">
-												<input class="form-control no-width" type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][limit_tabs]" value="<?php echo isset($module['limit_tabs'])?$module['limit_tabs']:4;?>" size="3"/>
-											</td>
-										</tr>
-										<tr>
 											<td colspan="2">
-											<div class="col-sm-6">
-												<div class="input-group">
-												  	<span class="input-group-addon" id="basic-addon1">Product Width</span>
-													<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][width]" value="<?php echo isset($module['width'])?$module['width']:'200'; ?>" size="3" />
-													<span class="input-group-addon">Height</span>
-													<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][height]" value="<?php echo isset($module['height'])?$module['height']:'200'; ?>" size="3"/>
-													<?php if (isset($error_dimension[$module_row])) { ?>
-													<span class="error"><?php echo $error_dimension[$module_row]; ?></span>
-													<?php } ?>
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="input-group pull-left">
+													  	<span class="input-group-addon" id="basic-addon1">Dimension (W x H) and Resize Icon Category</span>
+														<input class="form-control no-width" type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][iwidth]" value="<?php echo isset($module['iwidth'])?$module['iwidth']:'50'; ?>" size="3" />
+														<span class="input-group-addon" id="basic-addon1">x</span>
+														<input class="form-control no-width" type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][iheight]" value="<?php echo isset($module['iheight'])?$module['iheight']:'50'; ?>" size="3"/>
+													</div>
+													<div class="input-group pull-left">
+													  	<span class="input-group-addon" id="basic-addon1">Banner Position</span>
+														<select class="form-control no-width"name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][banner_position]">
+															<?php if($module['banner_position']) { ?>
+															<option value="1" selected="selected"><?php echo $text_left; ?></option>
+															<option value="0"><?php echo $text_right; ?></option>
+															<?php } else { ?>
+															<option value="1" ><?php echo $text_left; ?></option>
+															<option value="0" selected="selected"><?php echo $text_right; ?></option>
+															<?php } ?>
+														</select>
+													</div>
+												  	<div class="input-group pull-left">
+													  	<span class="input-group-addon" id="basic-addon1">Category Width</span>
+														<input class="form-control"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][cwidth]" value="<?php echo isset($module['cwidth'])?$module['cwidth']:'200'; ?>"/>
+													  	<span class="input-group-addon">Height</span>
+														<input class="form-control"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][cheight]" value="<?php echo isset($module['cheight'])?$module['cheight']:'200'; ?>"/>
+														<?php if (isset($error_dimension[$module_row])) { ?>
+														<span class="error"><?php echo $error_dimension[$module_row]; ?></span>
+														<?php } ?>
+													</div>													
 												</div>
-											</div>
-											<div class="col-sm-6">
-											  	<div class="input-group">
-												  	<span class="input-group-addon" id="basic-addon1">Category Width</span>
-													<input class="form-control"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][cwidth]" value="<?php echo isset($module['cwidth'])?$module['cwidth']:'200'; ?>"/>
-												  	<span class="input-group-addon">Height</span>
-													<input class="form-control"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][cheight]" value="<?php echo isset($module['cheight'])?$module['cheight']:'200'; ?>"/>
-													<?php if (isset($error_dimension[$module_row])) { ?>
-													<span class="error"><?php echo $error_dimension[$module_row]; ?></span>
-													<?php } ?>
+												<div class="col-sm-6">
+													<div class="input-group pull-left">
+													  	<span class="input-group-addon" id="basic-addon1">Limit Category tabs</span>
+														<input class="form-control no-width" type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][limit_tabs]" value="<?php echo isset($module['limit_tabs'])?$module['limit_tabs']:4;?>" size="3"/>
+													</div>
+													<div class="input-group pull-left">
+													  	<span class="input-group-addon" id="basic-addon1">Product Width</span>
+														<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][width]" value="<?php echo isset($module['width'])?$module['width']:'200'; ?>" size="3" />
+														<span class="input-group-addon">Height</span>
+														<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][height]" value="<?php echo isset($module['height'])?$module['height']:'200'; ?>" size="3"/>
+														<?php if (isset($error_dimension[$module_row])) { ?>
+														<span class="error"><?php echo $error_dimension[$module_row]; ?></span>
+														<?php } ?>
+													</div>
+													<div class="input-group pull-left">
+													 	<span class="input-group-addon" id="basic-addon1">Max Items - Max Columns - Limit Items In Carousel</span>
+														<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][itemsperpage]" value="<?php echo $module['itemsperpage']; ?>" size="3" />
+													  	<span class="input-group-addon" id="basic-addon1">x</span>
+														<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][cols]" value="<?php echo $module['cols']; ?>" size="3"/>
+													  	<span class="input-group-addon" id="basic-addon1">x</span>
+														<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][limit]" value="<?php echo $module['limit']; ?>" size="3"/>
+														<?php if (isset($error_carousel[$module_row])) { ?>
+														<span class="error"><?php echo $error_carousel[$module_row]; ?></span>
+														<?php } ?>
+													</div>												
 												</div>
 											</div>
 											</td>
-										</tr>
-										<tr>
-											<td class="left"><?php echo $entry_carousel; ?></td>
-											<td class="left"><input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][itemsperpage]" value="<?php echo $module['itemsperpage']; ?>" size="3" /> x
-											<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][cols]" value="<?php echo $module['cols']; ?>" size="3"/> x
-											<input class="form-control no-width"type="text" name="pavverticalcategorytabs_module[<?php echo $module_row; ?>][limit]" value="<?php echo $module['limit']; ?>" size="3"/>
-											<?php if (isset($error_carousel[$module_row])) { ?>
-											<span class="error"><?php echo $error_carousel[$module_row]; ?></span>
-											<?php } ?></td>
 										</tr>
 										<tr>
 											<td><?php echo $tab_position; ?></td>
