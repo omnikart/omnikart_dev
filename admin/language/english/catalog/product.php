@@ -3,6 +3,9 @@
 $_['heading_title']          = 'Products';
 
 // Text
+$_['text_tax_class']           = 'You have changed %s products!';
+$_['button_tax_1']			= 'tax_1';
+$_['button_tax_2']			= 'tax_2';
 $_['text_product_enabled']   = 'You have enabled %s products!';
 $_['text_product_disabled']  = 'You have disabled %s products!';
 $_['button_enable']			 = 'Enable';
@@ -30,6 +33,7 @@ $_['column_action']          = 'Action';
 
 // Entry
 $_['entry_name']             = 'Product Name';
+$_['entry_supplier']         = 'Supplier';
 $_['entry_description']      = 'Description';
 $_['entry_meta_title'] 	     = 'Meta Tag Title';
 $_['entry_meta_keyword'] 	 = 'Meta Tag Keywords';
