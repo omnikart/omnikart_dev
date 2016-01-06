@@ -13,7 +13,14 @@ class ModelLocalisationTaxClass extends Model {
 
 		$this->cache->delete('tax_class');
 	}
-
+	
+	public function update1($data = array()){
+		if ($data){
+			$selected = implode(',',$data['selected']);
+			$this->db->query("UPDATE `" . DB_PREFIX . "tax_class` SET `" . $this->db->escape($data['action']) . "`='". (int)$data['action_value'] ."' WHERE tax_class_id IN (". $selected .")");
+		}
+	}
+    
 	public function editTaxClass($tax_class_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "tax_class SET title = '" . $this->db->escape($data['title']) . "', description = '" . $this->db->escape($data['description']) . "', date_modified = NOW() WHERE tax_class_id = '" . (int)$tax_class_id . "'");
 
