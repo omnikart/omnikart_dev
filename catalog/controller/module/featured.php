@@ -84,10 +84,11 @@ class ControllerModuleFeatured extends Controller {
 						}
 
 						if ($gp_price_min && $gp_price_max) {
-							$price = $this->language->get('text_gp_price_min') . $this->currency->format($this->tax->calculate($gp_price_min, $product_info['tax_class_id'], $this->config->get('config_tax'))) . $this->language->get('text_gp_price_max') . $this->currency->format($this->tax->calculate($gp_price_max, $product_info['tax_class_id'], $this->config->get('config_tax')));
+							$price = $this->currency->format($this->tax->calculate($gp_price_min, $product_info['tax_class_id'], $this->config->get('config_tax'))) . '-' . $this->currency->format($this->tax->calculate($gp_price_max, $product_info['tax_class_id'], $this->config->get('config_tax')));
 						} else {
 							$price = $this->language->get('text_gp_price_start') . $this->currency->format($this->tax->calculate($gp_price_min, $product_info['tax_class_id'], $this->config->get('config_tax')));
 						}
+						$result['type'] = 2;
 					}
 					$data['products'][] = array(
 						'product_id'  => $product_info['product_id'],

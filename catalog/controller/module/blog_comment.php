@@ -81,7 +81,7 @@ class ControllerModuleBlogComment extends Controller {
 			$data['comment_status'] = $post_info['comment_status'];
 		}
 		
-		$data['login'] = $this->user->isLogged();
+		$data['login'] = $this->customer->isLogged();
 		$data['login_url'] = $this->url->link('account/login','','SSL');
 		
 		// Pagination

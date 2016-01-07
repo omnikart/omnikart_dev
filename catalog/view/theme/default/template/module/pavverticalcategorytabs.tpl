@@ -24,63 +24,72 @@ if( !is_file($productLayout) ){
 }
 $productLayout = DIR_TEMPLATE.$objconfig->get('config_template').'/template/common/product/'.$listingConfig['product_layout'].'.tpl';
 ?>
-<div class="box pav-verticalcategorytabs clearfix <?php echo $prefix_class; ?>">
-	<div class="box-wapper clearfix">
-		<div class="tab-nav tabs-x tabs-<?php echo $tab_position;?>">
-			<?php if($banner_position == 1){ ?>
+<div class="row">
+<div class="col-sm-12 vertical clearfix <?php echo $prefix_class; ?>">
+	<div class="col-sm-12 white">
+		<div class="row">
+			<div class="col-sm-12">
+				<nav class="navbar navbar-default box-heading" style="min-height:40px;">
+					<div class="navbar-header">
+						<span><a class="img-banner" href="<?php echo $category_link; ?>"><?php echo $category_name; ?></a></span>
+	                </div>
+					<ul class="nav pull-right" id="pav-categorytabs<?php echo $id;?>" role="tablist">
+						<?php foreach ($tabs as $key=>$tab): ?>
+							<li><a href="<?php echo $tab['href']; ?>"><?php echo $tab['name']; ?></a></li>
+						<?php endforeach; ?>
+							<li><a href="<?php echo $category_link; ?>">More...</a></li>
+					</ul>
+				</nav>
+			</div>
+			<?php echo (($description_status)?'<div class="col-sm-12" style="margin-bottom:10px;">'.$module_description.'</div>':''); ?>					
+			<!-- <div class="col-sm-3">
 				<div class="banner-image hidden-md hidden-sm hidden-xs">
 					<a class="img-banner" href="<?php echo $category_link; ?>">
 						<?php if (!empty($image) ) { ?><img class="img-responsive" src="<?php echo $image;?>" alt="<?php echo $category_name; ?>"/><?php } ?>
 					</a>
 				</div>
-			<?php }?>
-			<?php if(count($tabs) > 1) { $hidden = "hidden-sm"; } ?>
-			<ul class="nav nav-tabs " id="pav-categorytabs<?php echo $id;?>" role="tablist">
-                <div class="nav-header box-heading">
-                    <span><?php echo $category_name; ?></span>
-                    <?php if( !empty($module_description) ) { ?>
-                    <?php } ?>
-                </div><!-- end div.box-heading -->
-				<?php foreach ($tabs as $key=>$tab): ?>
-					<li><a href="#tab<?php echo $id."-cat".$key;?>" role="tab" data-toggle="tab"><?php echo $tab['name']; ?></a></li>
-				<?php endforeach; ?>
-			</ul>
-			<?php if($banner_position == 0){ ?>
-				<div class="banner-image hidden-md hidden-sm hidden-xs">
-					<a class="img-banner" href="<?php echo $category_link; ?>" >
-						<?php if (!empty($image) ) { ?><img class="img-responsive" src="<?php echo $image;?>" alt="<?php echo $category_name; ?>"/><?php } ?>
-					</a>
+			</div>  -->
+			<div class="col-sm-12">
+				<div class="flexslider featured" id="pav<?php echo $module; ?>">
+					<ul class="slides">
+					<?php foreach( array_chunk($products,5) as $productl ) { ?>
+						<li style="margin-right:20px;"><div class="row">
+							<?php foreach($productl as $i => $product ) { ?>
+								<div class="col-xs-20 product-col">
+									<?php require( $productLayout );  ?>
+								</div>
+							<?php } ?>
+							</div>
+						</li>
+					<?php } //endforeach; ?>
+					</ul>
 				</div>
-			<?php }?>
-		</div><!-- end div.tab-nav -->
-
-		<div class="tab-content">
-            <?php $i=0; foreach ($tabs as $key=>$tab) { $i++;?>
-                <?php
-                    if(empty($tab['products'])) {continue; }
-                    $products = $tab['products'];
-                    $active = ($i==1)?"active":'';
-                ?>
-				<div class="tab-pane <?php echo $active;?> " id="tab<?php echo $id."-cat".$key;?>">
-						 	<div class="row products-row last"><?php //start box-product?>
-							<?php foreach( $products as $i => $product ) { ?>
-									<div class="col-lg-<?php echo $span;?> col-md-<?php echo $span;?> col-sm-<?php echo $span;?> col-xs-12 product-col">
-										<?php require( $productLayout );  ?>
-									</div>
-							<?php } //endforeach; ?>
-							</div><?php //end box-product?>
-				</div><!-- end div.tab-panel-->
-			<?php } ?>
-		</div><!-- end div.tab-content -->
-
-	</div><!-- end div.box-wapper -->
-</div><!-- end div.box -->
-
+			</div>
+		</div>	
+	</div><!-- end div.box -->
+</div>
+</div>
 <script>
-$(function() {
-	$('#pav-categorytabs<?php echo $id;?> a:first').tab('show');
-});
+$('#pav<?php echo $module; ?>').flexslider({
+	  animation: "slide",
+	  controlNav: false,
+	  directionNav: true,
+	  itemWidth: 25,
+	  nextText: "",
+	  prevText: "",
+    itemMargin: -1,
+    minItems: 1, // use function to pull in initial value
+    maxItems: 1,
+	  useCSS: false /* Chrome fix*/
+	});
 </script>
 <style>
 .products-row .product-col:last-child{border-right:none;}
+.vertical .nav > li {float:left;}
+.vertical .nav > li > a{padding:11px 10px;line-height:21px;}
+.vertical .product-thumb{margin-bottom:0px;}
+.vertical .product-block .img img{width:initial;margin:0px auto;}
+@media screen {
+	.vertical nav.navbar {margin-bottom:10px;}
+}
 </style>

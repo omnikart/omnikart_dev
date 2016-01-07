@@ -53,7 +53,5 @@ class Sms {
 		
 		$output=curl_exec($ch);
 		curl_close($ch);
-		echo serialize($output);
-		
 	}
 }

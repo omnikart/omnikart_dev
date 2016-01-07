@@ -1,9 +1,9 @@
 <?php
 
-                if (!function_exists('generateNameOfCacheFile')) {
-                    require_once DIR_SYSTEM . 'nitro/core/core.php';
-                    require_once NITRO_INCLUDE_FOLDER . 'pagecache_top.php';
-                }
+if (!function_exists('generateNameOfCacheFile')) {
+		require_once DIR_SYSTEM . 'nitro/core/core.php';
+		require_once NITRO_INCLUDE_FOLDER . 'pagecache_top.php';
+}
             
 final class Action {
 	private $file;

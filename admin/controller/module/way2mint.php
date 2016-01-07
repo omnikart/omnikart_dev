@@ -35,6 +35,7 @@ class ControllerModuleWay2mint extends Controller {
 		$fields = array('way2mint_cus_tpl','way2mint_cus_param','way2mint_cus_from',
 				'way2mint_mp_tpl','way2mint_mp_param','way2mint_mp_from',
 				'way2mint_admin_tpl','way2mint_admin_param','way2mint_admin_from',
+				'way2mint_otp_tpl','way2mint_otp_param','way2mint_otp_from',
 				'way2mint_username','way2mint_password'		
 		);
 		

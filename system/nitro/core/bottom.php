@@ -56,7 +56,7 @@ function writeToCacheFile() {
 
         file_put_contents($old_cachefile, '');
     }
-
+	
 	$headers = getSpecialHeaders();
 	
 	if (!empty($headers)) {

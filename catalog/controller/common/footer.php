@@ -80,6 +80,15 @@ class ControllerCommonFooter extends Controller {
 
 			$this->model_tool_online->whosonline($ip, $this->customer->getId(), $url, $referer);
 		}
+		$this->load->model('extension/module');
+		$data['modules'] = array();
+		$modules = $this->model_extension_module->getModulesByCode('ne');
+		
+		foreach ($modules as $module) {
+				$data['modules'][] = $this->load->controller('module/' . $module['code'], unserialize($module['setting']));
+		}
+		
+		
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/footer.tpl')) {
 			return $this->load->view($this->config->get('config_template') . '/template/common/footer.tpl', $data);
