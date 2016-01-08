@@ -231,7 +231,7 @@ class ModelCustomerpartnerDashboard extends Model {
 			);
 		}
 		
-		$query = $this->db->query("SELECT COUNT(*) AS total, c2o.date_added FROM `" . DB_PREFIX . "order_product` op LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (op.product_id = c2o.product_id AND op.order_id = c2o.order_id) LEFT JOIN `".DB_PREFIX ."order` o ON (op.order_id = o.order_id) WHERE c2o.customer_id='".$this->customer->getId()."' AND order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "' AND YEAR(c2o.date_added) = YEAR(NOW()) GROUP BY MONTH(c2o.date_added)");
+		$query = $this->db->query("SELECT COUNT(*) AS total, c2o.date_added FROM `" . DB_PREFIX . "order_product` op LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (op.product_id = c2o.product_id AND op.order_id = c2o.order_id) LEFT JOIN `".DB_PREFIX ."order` o ON (op.order_id = o.order_id) WHERE c2o.customer_id='".$this->customer->getId()."' AND order_status_id = '" . (int)$this->config->get('config_complete_status') . "' AND YEAR(c2o.date_added) = YEAR(NOW()) GROUP BY MONTH(c2o.date_added)");
 
 		foreach ($query->rows as $result) {
 			$order_data[date('n', strtotime($result['date_added']))] = array(

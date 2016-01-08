@@ -15,6 +15,9 @@ class Response {
 
 	public function setCompression($level) {
 		$this->level = $level;
+
+                if (isNitroEnabled() && getNitroPersistence('PageCache.Enabled')) { $this->level = 0; }
+            
 	}
 
 	public function setOutput($output) {
@@ -70,6 +73,10 @@ class Response {
 			}
 
 			echo $output;
+
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                require_once NITRO_INCLUDE_FOLDER . 'pagecache_bottom.php';
+            
 		}
 	}
 }

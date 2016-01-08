@@ -85,7 +85,7 @@ class ControllerSaleEnquiry extends Controller {
 			
 			$json['query'] = array();
 			
-			if ($result['revision_products']){
+			if (isset($result['revision_products'])){
 				$revision_products = $result['revision_products']; 
 				$revision_data = $result['revision_data'];
 				
@@ -114,7 +114,7 @@ class ControllerSaleEnquiry extends Controller {
 				}
 				
 
-				foreach (unserialize($result1['query']) as $product){
+				foreach (unserialize($initial_query['query']) as $product){
 					$json['query'][] = array(
 						'name'=>$product['name'],
 						'quantity'=>$product['quantity'],

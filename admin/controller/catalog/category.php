@@ -617,13 +617,30 @@ class ControllerCatalogCategory extends Controller {
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/category');
-
+			
+			if (isset($this->request->get['filter_parent_id'])) 
+				$filter_parent_id = $this->request->get['filter_parent_id'];
+			else 
+				$filter_parent_id = '';
+			
+			if (isset($this->request->get['filter_parent']))
+				$filter_parent = $this->request->get['filter_parent'];
+			else 
+				$filter_parent = '';
+		
+			if (isset($this->request->get['limit']))
+				$limit = $this->request->get['limit'];
+			else
+				$limit = 5;
+				
 			$filter_data = array(
 				'filter_name' => $this->request->get['filter_name'],
 				'sort'        => 'name',
 				'order'       => 'ASC',
+				'filter_parent' => $filter_parent,
+				'filter_parent_id' => $filter_parent_id,
 				'start'       => 0,
-				'limit'       => 5
+				'limit'       => $limit
 			);
 
 			$results = $this->model_catalog_category->getCategories($filter_data);

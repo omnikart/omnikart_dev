@@ -17,7 +17,20 @@ class ControllerCommonSeoUrl extends Controller {
 
 			foreach ($parts as $part) {
 				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE keyword = '" . $this->db->escape($part) . "'");
-
+				$mfilterConfig = $this->config->get( 'mega_filter_seo' );
+				
+				if( ! empty( $mfilterConfig['enabled'] ) && ! $query->num_rows ) {
+					$mfilter_query = $this->db->query( "SELECT * FROM `" . DB_PREFIX . "mfilter_url_alias` WHERE `alias` = '" . $this->db->escape( $part ) . "'");
+				
+					if( $mfilter_query->num_rows ) {
+						if( ! isset( $this->request->get['mfp'] ) ) {
+							$this->request->get['mfp'] = $mfilter_query->row['mfp'];
+						}
+						$this->request->get['mfp_seo_alias'] = $part;
+				
+						continue;
+					}
+				}				
 				if ($query->num_rows) {
 					$url = explode('=', $query->row['query']);
 
@@ -44,6 +57,15 @@ class ControllerCommonSeoUrl extends Controller {
 					if ($query->row['query'] && $url[0] != 'information_id' && $url[0] != 'manufacturer_id' && $url[0] != 'category_id' && $url[0] != 'product_id') {
 						$this->request->get['route'] = $query->row['query'];
 					}
+
+                }elseif($this->config->get('marketplace_useseo') AND $this->request->get['_route_']=='Marketplace-Collection'){                  
+                    $this->request->get['route'] =  'customerpartner/profile/collection';
+                }elseif ($this->config->get('marketplace_useseo') AND is_array($this->config->get('marketplace_SefUrlsvalue')) AND in_array($this->request->get['_route_'],$this->config->get('marketplace_SefUrlsvalue'))) { 
+                    $sefKey = array_search($this->request->get['_route_'],$this->config->get('marketplace_SefUrlsvalue'));
+                    $wkSefUrlspath = $this->config->get('marketplace_SefUrlspath');
+                    if(isset($wkSefUrlspath[$sefKey]))
+                        $this->request->get['route'] =  $wkSefUrlspath[$sefKey]; 
+            
 				} else {
 					$this->request->get['route'] = 'error/not_found';
 
@@ -88,6 +110,18 @@ class ControllerCommonSeoUrl extends Controller {
 
 						unset($data[$key]);
 					}
+    
+                }elseif($this->config->get('marketplace_useseo') AND $data['route'] == 'customerpartner/profile/collection'){
+                    $url .= '/Marketplace-Collection' ;
+                    unset($data[$key]);        
+                } elseif ($this->config->get('marketplace_useseo') AND is_array($this->config->get('marketplace_SefUrlspath')) AND in_array($data['route'],$this->config->get('marketplace_SefUrlspath'))) { 
+                    $sefKey = array_search($data['route'],$this->config->get('marketplace_SefUrlspath'));
+                    $wkSefUrlsvalue = $this->config->get('marketplace_SefUrlsvalue');
+                    if(isset($wkSefUrlsvalue[$sefKey])){
+                        $url .=  '/'.$wkSefUrlsvalue[$sefKey];       
+                        unset($data[$key]);
+                    }         
+            
 				} elseif ($key == 'path') {
 					$categories = explode('_', $value);
 

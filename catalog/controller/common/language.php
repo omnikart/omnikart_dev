@@ -55,6 +55,9 @@ class ControllerCommonLanguage extends Controller {
 	public function language() {
 		if (isset($this->request->post['code'])) {
 			$this->session->data['language'] = $this->request->post['code'];
+
+                $this->session->data['NitroSwitchLanguage'] = true;
+            
 		}
 
 		if (isset($this->request->post['redirect'])) {

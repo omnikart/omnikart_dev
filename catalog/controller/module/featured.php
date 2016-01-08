@@ -1,6 +1,7 @@
 <?php
 class ControllerModuleFeatured extends Controller {
 	public function index($setting) {
+		$this->load->language('product/gp_grouped');
 		static $module = 0;
 		
 		$this->load->language('module/featured');
@@ -69,7 +70,26 @@ class ControllerModuleFeatured extends Controller {
 					} else {
 						$rating = false;
 					}
+					if ($price && $is_gp = $this->model_catalog_product->getGroupedProductGrouped($product_info['product_id'])) {
+						$gp_price_min = $is_gp['gp_price_min'];
+						$gp_price_max = $is_gp['gp_price_max'];
 
+						if ($gp_price_min[0] == '#') {
+							$child_info = $this->model_catalog_product->getProduct(substr($gp_price_min,1));
+							$gp_price_min = $child_info['special'] ? $child_info['special'] : $child_info['price'];
+						}
+						if ($gp_price_max[0] == '#') {
+							$child_info = $this->model_catalog_product->getProduct(substr($gp_price_max,1));
+							$gp_price_max = $child_info['special'] ? $child_info['special'] : $child_info['price'];
+						}
+
+						if ($gp_price_min && $gp_price_max) {
+							$price = $this->currency->format($this->tax->calculate($gp_price_min, $product_info['tax_class_id'], $this->config->get('config_tax'))) . '-' . $this->currency->format($this->tax->calculate($gp_price_max, $product_info['tax_class_id'], $this->config->get('config_tax')));
+						} else {
+							$price = $this->language->get('text_gp_price_start') . $this->currency->format($this->tax->calculate($gp_price_min, $product_info['tax_class_id'], $this->config->get('config_tax')));
+						}
+						$result['type'] = 2;
+					}
 					$data['products'][] = array(
 						'product_id'  => $product_info['product_id'],
 						'thumb'       => $image,
@@ -77,11 +97,12 @@ class ControllerModuleFeatured extends Controller {
 						'description' => utf8_substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
 						'price'       => $price,
 						'original_price' => $original_price,
-						'discount' => $discount,
+						'discount'    => $discount,
 						'minimum'     => $product_info['minimum'] > 0 ? $product_info['minimum'] : 1,
 						'special'     => $special,
 						'tax'         => $tax,
 						'rating'      => $rating,
+						'type'		  => $product_info['type'],
 						'href'        => $this->url->link('product/product', 'product_id=' . $product_info['product_id'])
 					);
 				}

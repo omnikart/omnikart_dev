@@ -264,7 +264,26 @@ class ModelAccountOrder extends Model {
 	}
 	
 	public function getOrder($order_id) {
-		$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0'");
+		
+        /*
+        To get company orders not individuals for sub users
+        */
+        if($this->config->get('marketplace_status')) {
+           $this->load->model('account/customerpartner');
+           $sellerId = $this->model_account_customerpartner->isSubUser($this->customer->getId());
+           if($sellerId) {
+                $sellerId = $sellerId;
+           } else {
+                $sellerId = $this->customer->getId();
+           }
+           $order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$sellerId . "' AND order_status_id > '0'");
+        } else {
+            $order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0'");
+        }
+        /*
+        end here
+        */
+    
 
 		if ($order_query->num_rows) {
 			$country_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'");
@@ -373,7 +392,26 @@ class ModelAccountOrder extends Model {
 			$limit = 1;
 		}
 
-		$query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
+		
+        /*
+        To get company orders not individuals for sub users
+        */
+        if($this->config->get('marketplace_status')) {
+           $this->load->model('account/customerpartner');
+           $sellerId = $this->model_account_customerpartner->isSubUser($this->customer->getId());
+           if($sellerId) {
+                $sellerId = $sellerId;
+           } else {
+                $sellerId = $this->customer->getId();
+           }
+           $query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$sellerId . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
+        } else {
+            $query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
+        }
+        /*
+        end here
+        */
+    
 
 		return $query->rows;
 	}
@@ -384,6 +422,17 @@ class ModelAccountOrder extends Model {
 		return $query->row;
 	}
 
+
+          public function getProductimage($product_id) {
+    $query = $this->db->query("SELECT image FROM `" . DB_PREFIX . "product` WHERE product_id = '".$product_id."'");
+    return $query->row['image'];
+  }
+  public function getOrderstatusid($order_id) {
+    $query = $this->db->query("SELECT order_status_id FROM " . DB_PREFIX . "order WHERE order_id = '" . (int)$order_id . "'");
+
+    return $query->row['order_status_id'];
+  }
+  
 	public function getOrderProducts($order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
 
@@ -415,7 +464,26 @@ class ModelAccountOrder extends Model {
 	}
 
 	public function getTotalOrders() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "'");
+		
+        /*
+        To get company orders not individuals for sub users
+        */
+        if($this->config->get('marketplace_status')) {
+           $this->load->model('account/customerpartner');
+           $sellerId = $this->model_account_customerpartner->isSubUser($this->customer->getId());
+           if($sellerId) {
+                $sellerId = $sellerId;
+           } else {
+                $sellerId = $this->customer->getId();
+           }
+           $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int)$sellerId . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "'");
+        } else {
+            $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "'");
+        }
+        /*
+        end here
+        */
+    
 
 		return $query->row['total'];
 	}

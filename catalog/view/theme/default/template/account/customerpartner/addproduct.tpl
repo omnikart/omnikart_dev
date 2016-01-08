@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <?php if($chkIsPartner){ ?>
 <div class="container">
   <ul class="breadcrumb">
@@ -1484,4 +1484,4 @@ $('#option a:first').tab('show');
 </div>  <!--container-->
 <?php } ?>
 <?php } ?>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

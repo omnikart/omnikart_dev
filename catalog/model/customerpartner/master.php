@@ -5,6 +5,11 @@ class ModelCustomerpartnerMaster extends Model {
 		return $this->db->query("SELECT c2p.customer_id as id FROM " . DB_PREFIX . "customerpartner_to_product c2p LEFT JOIN ".DB_PREFIX."product p ON(c2p.product_id = p.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id) WHERE c2p.product_id = '".(int)$productid."' AND p.status = 1 AND p2s.store_id = '".$this->config->get('config_store_id')."' AND c2p.quantity > 0 ORDER BY c2p.sort_order, c2p.price ASC LIMIT 1")->row;
 	}	
 	
+	public function addsuppliercomment(){
+		$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_history VALUES ('','".$data['ab']."')");
+		return true;
+		
+	}
 	public function addsupplierquery($data = array()) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_requests VALUES ('','".$data['user_info']."','".$data['categories']."','". $data['manufacturers']."','".$data['trade']."')");
 		return true;
@@ -22,7 +27,7 @@ class ModelCustomerpartnerMaster extends Model {
 	}
 
 	public function getOldPartner(){		
-		return $this->db->query("SELECT *,co.name as country FROM " . DB_PREFIX . "customerpartner_to_customer c2c LEFT JOIN ".DB_PREFIX ."customer c ON (c2c.customer_id = c.customer_id) LEFT JOIN ".DB_PREFIX ."country co ON (c2c.country = co.iso_code_2) WHERE is_partner = 1 AND c.status = '1' ORDER BY c2c.customer_id ASC LIMIT 4")->rows;	
+		return $this->db->query("SELECT *, (SELECT COUNT(id) AS total FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE c2p.customer_id = c2c.customer_id) AS total, co.name as country FROM " . DB_PREFIX . "customerpartner_to_customer c2c LEFT JOIN ".DB_PREFIX ."customer c ON (c2c.customer_id = c.customer_id) LEFT JOIN ".DB_PREFIX ."country co ON (c2c.country = co.iso_code_2) WHERE is_partner = 1 AND c.status = '1' ORDER BY total DESC, c2c.customer_id ASC LIMIT 4")->rows;	
 	}
 
 	public function getProfile($customerid){

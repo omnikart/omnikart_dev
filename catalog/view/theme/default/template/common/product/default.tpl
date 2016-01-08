@@ -1,7 +1,5 @@
 <?php $olang = $this->registry->get('language');  $ourl = $this->registry->get('url');   ?>
 <div class="product-block item-default clearfix" itemtype="http://schema.org/Product" itemscope>
-
-
     <?php if ($product['thumb']) {    ?>
         <?php if( $product['special'] ) {   ?>
         <span class="product-label ribbon"><span class="product-label-special"><?php echo $olang->get( 'text_sale' ); ?></span></span>
@@ -22,12 +20,12 @@
     <?php } ?>
 
     <div class="product-meta">
-        <div class="product-meta-inner">
+        <div>
             <div class="left">
                 <div class="review clearfix">
                     <h3 class="name" itemprop="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h3>
 
-                    <?php if ( isset($product['rating']) ) { ?>
+                    <?php /*if ( isset($product['rating']) ) { ?>
                     <div class="rating">
                         <?php for ($is = 1; $is <= 5; $is++) { ?>
                         <?php if ($product['rating'] < $is) { ?>
@@ -38,58 +36,35 @@
                         <?php } ?>
                         <?php } ?>
                     </div>
-                    <?php } ?>
+                    <?php } */?>
                 </div>
 
                 <?php if ($product['price']) { ?>
                 <div class="price clearfix" itemtype="http://schema.org/Offer" itemscope itemprop="offers">
                     <?php if (!$product['special']) {  ?>
-                    <span class="special-price"><?php echo $product['price']; ?></span>
-                    <?php if( preg_match( '#(\d+).?(\d+)#',  $product['price'], $p ) ) { ?>
-                    <meta content="<?php echo $p[0]; ?>" itemprop="price">
-                    <?php } ?>
+	                    	<span class="special-price"><?php echo $product['price']; ?></span>
+	                    <?php if( preg_match( '#(\d+).?(\d+)#',  $product['price'], $p ) ) { ?>
+	                    	<meta content="<?php echo $p[0]; ?>" itemprop="price">
+	                    <?php } ?>
                     <?php } else { ?>
-                    <span class="price-new"><?php echo $product['special']; ?></span>
-                    <span class="price-old"><?php echo $product['price']; ?></span>
-                    <?php if( preg_match( '#(\d+).?(\d+)#',  $product['special'], $p ) ) { ?>
-                    <meta content="<?php echo $p[0]; ?>" itemprop="price">
-                    <?php } ?>
-
+	                    <span class="price-new"><?php echo $product['special']; ?></span>
+	                    <span class="price-old"><?php echo $product['price']; ?></span>
+	                    <?php if( preg_match( '#(\d+).?(\d+)#',  $product['special'], $p ) ) { ?>
+	                    <meta content="<?php echo $p[0]; ?>" itemprop="price">
+	                    <?php } ?>
                     <?php } ?>
 
                     <meta content="<?php // echo $this->currency->getCode(); ?>" itemprop="priceCurrency">
                 </div>
                 <?php } ?>
-
                 <div class="clearfix"></div>
                 <?php if( isset($product['description']) ){ ?>
                 <p class="description" itemprop="description"><?php echo utf8_substr( strip_tags($product['description']),0,220);?>...</p>
                 <?php } ?>
             </div>
-            <div class="right">
-                <div class="action">
-                    <?php if( !isset($listingConfig['catalog_mode']) || !$listingConfig['catalog_mode']) { ?>
-                    <div class="cart">
-                        <button data-loading-text="Loading..." class="btn btn-outline" type="button" onclick="cart.addcart('<?php echo $product['product_id']; ?>');">
-                            <i class="fa fa-shopping-cart"></i>
-                            <span><?php echo $olang->get('button_cart'); ?></span>
-                        </button>
-                    </div>
-                    <?php } ?>
-                    <div class="wishlist">
-                        <a onclick="wishlist.addwishlist('<?php echo $product['product_id']; ?>');" title="<?php echo $olang->get('button_wishlist');?>" class="btn btn-outline-inverse" data-toggle="tooltip">
-                            <i class="fa fa-heart"></i>
-                            <span><?php echo $olang->get('button_wishlist'); ?></span>
-                        </a>
-                    </div>
-                    <div class="compare">
-                        <a class="btn btn-outline-inverse" onclick="compare.addcompare('<?php echo $product['product_id']; ?>');" title="<?php echo $olang->get('button_compare'); ?>" data-toggle="tooltip">
-                            <i class="fa fa-refresh"></i>
-                            <span><?php echo $olang->get('button_compare'); ?></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
+   	<?php if ($product['discount']) { ?>
+   		<span class="discount"><span class="text"><?php echo $product['discount']; ?>% Off</span><span class="img"></span></span>
+   	<?php } ?>
 </div>

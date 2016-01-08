@@ -28,6 +28,9 @@
           <ul class="nav nav-tabs">
             <li class="active"><a href="#tab-general" data-toggle="tab"><?php echo $tab_general; ?></a></li>
             <li><a href="#tab-data" data-toggle="tab"><?php echo $tab_data; ?></a></li>
+						<?php if (isset($is_gp) && $is_gp == 'grouped') { ?>
+						<li><a href="#tab-gp" data-toggle="tab"><?php echo $tab_gp_data; ?></a></li>
+						<?php } ?>            
             <li><a href="#tab-links" data-toggle="tab"><?php echo $tab_links; ?></a></li>
             <li><a href="#tab-attribute" data-toggle="tab"><?php echo $tab_attribute; ?></a></li>
             <li><a href="#tab-option" data-toggle="tab"><?php echo $tab_option; ?></a></li>
@@ -95,6 +98,147 @@
                 <?php } ?>
               </div>
             </div>
+
+						<?php if (isset($is_gp) && $is_gp == 'grouped') { ?>
+						<input type="hidden" name="is_gp" value="grouped" />
+						
+						<div class="tab-pane" id="tab-gp">
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for=""><?php echo $entry_gp_template; ?></label>
+								<div class="col-sm-10">
+									<select type="text" name="gp_template" class="form-control">
+										<?php foreach ($gp_templates as $value) { ?>
+										<?php if ($value['template'] == $gp_template) { ?>
+										<option value="<?php echo $value['template']; ?>" selected="selected"><?php echo $value['file']; ?></option>
+										<?php } else { ?>
+										<option value="<?php echo $value['template']; ?>"><?php echo $value['file']; ?></option>
+										<?php } ?>
+										<?php } ?>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for=""><span data-toggle="tooltip" title="<?php echo $help_gp_price_mask; ?>"><?php echo $entry_gp_price_mask; ?></span></label>
+								<div class="col-sm-10"><div class="row">
+									<div class="col-sm-6"><div class="input-group">
+										<span class="input-group-addon"><?php echo $text_gp_min; ?></span>
+										<input type="text" name="gp_price_min" value="<?php echo $gp_price_min; ?>" title="" class="form-control" />
+									</div></div>
+									<div class="col-sm-6"><div class="input-group">
+										<span class="input-group-addon"><?php echo $text_gp_max; ?></span>
+										<input type="text" name="gp_price_max" value="<?php echo $gp_price_max; ?>" class="form-control" />
+									</div></div>
+								</div></div>
+							</div>
+							<div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr class="info">
+										<td class="text-left text-nowrap"><?php echo $column_gp_child_id; ?></td>
+										<td class="text-left text-nowrap"><?php echo $column_gp_child_name; ?></td>
+										<td class="text-left text-nowrap"><?php echo $column_gp_child_model; ?></td>
+										<td class="text-left text-nowrap"><?php echo $column_gp_child_price; ?></td>
+										<td class="text-left text-nowrap" style="width:1px;"><?php echo $column_gp_child_sort_order; ?></td>
+										<td class="text-left text-nowrap"></td>
+									</tr>
+								</thead>
+								<tbody id="gp-rows">
+									<?php foreach ($gps as $child) { ?>
+									<tr id="gp-row-child-<?php echo $child['child_id']; ?>">
+										<td class="text-left"><?php echo $child['child_id']; ?></td>
+										<td class="text-left"><a title="edit" onclick="window.open('<?php echo $child['href']; ?>','','width=1200,height=500,top=99');"><?php echo $child['name']; ?></a></td>
+										<td class="text-left"><?php echo $child['model']; ?></td>
+										<td class="text-left">
+											<?php if ((float)$child['special']) { ?>
+											<span style="text-decoration:line-through"><?php echo $child['price']; ?></span><br /> <?php echo $child['special']; ?>
+											<?php } else { ?>
+											<?php echo $child['price']; ?>
+											<?php } ?></td>
+										<td class="text-left"><input type="text" name="gp_child[<?php echo $child['child_id']; ?>][child_sort_order]" value="<?php echo $child['child_sort_order']; ?>" class="form-control" /></td>
+										<td class="text-left"><button type="button" onclick="$(this).tooltip('destroy');$('#gp-row-child-<?php echo $child['child_id']; ?>').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
+									</tr>
+									<?php } ?>
+								</tbody>
+								<tfoot>
+									<tr>
+										<td class="text-left"></td>
+										<td class="text-left"><input type="text" onkeyup="gpAddChild($(this), 'name');" value="" class="form-control" /></td>
+										<td class="text-left"><input type="text" onkeyup="gpAddChild($(this), 'model');" value="" class="form-control" /></td>
+										<td class="text-left"></td>
+										<td class="text-left"></td>
+										<td class="text-left"></td>
+									</tr>
+								</tfoot>
+							</table>
+							</div>
+						</div>
+				<script type="text/javascript"><!--
+				function gpAddChild(theInput, theFilter) {
+					theInput.autocomplete({
+						'source': function(request, response) {
+							$.ajax({
+								url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_' + theFilter + '=' +  encodeURIComponent(request),
+								dataType: 'json',			
+								success: function(json) {
+									response($.map(json, function(item) {
+										return {
+											label: (theFilter == 'name') ? item['name'] : item['model'],
+											value: item['product_id'],
+											name: item['name'],
+											model: item['model'],
+											price: item['price']
+										}
+									}));
+								}
+							});
+						},
+						'select': function(item) {
+							theInput.val('');
+							$('#gp-row-child-' + item['value']).remove();
+
+							html  = '<tr id="gp-row-child-' + item['value'] + '">';
+							html += '  <td class="text-left">' + item['value'] + '</td>';
+							html += '  <td class="text-left">' + item['name'] + '</td>';
+							html += '  <td class="text-left">' + item['model'] + '</td>';
+							html += '  <td class="text-left">' + item['price'] + '</td>';
+							html += '  <td class="text-left">';
+							html += '    <input type="text" name="gp_child[' + item['value'] + '][child_sort_order]" value="" class="form-control" />';
+							html += '  </td>';
+							html += '  <td class="text-left">';
+							html += '    <button type="button" onclick="$(this).tooltip(\'destroy\');$(\'#gp-row-child-' + item['value'] + '\').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button>';
+							html += '  </td>';
+							html += '</tr>';
+
+							$('#gp-rows').append(html);
+						}
+					});
+				}
+				//--></script>
+				<script type="text/javascript"><!--
+				$(document).ready(function() {
+					// Remove from GP common
+					$('#form-group-gp-parent-id').remove();
+
+					// Replace/Remove default
+					$('label[for="input-tax-class"]').wrapInner('<span data-toggle="tooltip" title="GP Price Mask. No taxes override."></span>');
+					$('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
+					
+					$('#input-price, #input-quantity, #input-minimum, #input-subtract, #input-stock-status, input[name="shipping"]').attr('title', 'GP - Useless').css('background', '#ccc');
+					$('label[for="input-download"]').parent('div').remove();
+					$('a[href="#tab-option"]').parent('li').remove();
+					$('#tab-option').remove();
+					$('a[href="#tab-recurring"]').parent('li').remove();
+					$('#tab-recurring').remove();
+					$('a[href="#tab-discount"]').parent('li').remove();
+					$('#tab-discount').remove();
+					$('a[href="#tab-special"]').parent('li').remove();
+					$('#tab-special').remove();
+					$('a[href="#tab-reward"]').parent('li').remove();
+					//$('#tab-reward').remove();
+				});
+				//--></script>
+						<?php } ?>
+            
             <div class="tab-pane" id="tab-data">
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-image"><?php echo $entry_image; ?></label>
@@ -329,6 +473,40 @@
               </div>
             </div>
             <div class="tab-pane" id="tab-links">
+								<div class="form-group" id="form-group-gp-parent-id">
+									<label class="col-sm-2 control-label" for="input-gp-parent"><span data-toggle="tooltip" title="<?php echo $help_gp_parent; ?>"><?php echo $entry_gp_parent; ?></span></label>
+									<div class="col-sm-10">
+										<input type="text" name="gp_parent" value="<?php echo $gp_parent ?>" placeholder="<?php echo $entry_gp_parent; ?>" id="input-gp-parent" class="form-control" />
+										<input type="hidden" name="gp_parent_id" value="<?php echo $gp_parent_id; ?>" />
+									</div>
+								</div>
+								<script type="text/javascript"><!--
+								$('input[name=\'gp_parent\']').autocomplete({
+									'source': function(request, response) {
+										$.ajax({
+											url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+											dataType: 'json',
+											success: function(json) {
+												json.unshift({
+													product_id: 0,
+													name: '<?php echo $text_none; ?>'
+												});
+												
+												response($.map(json, function(item) {
+													return {
+														label: item['name'],
+														value: item['product_id']
+													}
+												}));
+											}
+										});
+									},
+									'select': function(item) {
+										$('input[name=\'gp_parent\']').val(item['label']);
+										$('input[name=\'gp_parent_id\']').val(item['value']);
+									}	
+								});
+								//--></script>
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-manufacturer"><span data-toggle="tooltip" title="<?php echo $help_manufacturer; ?>"><?php echo $entry_manufacturer; ?></span></label>
                 <div class="col-sm-10">

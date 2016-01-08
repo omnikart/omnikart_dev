@@ -25,7 +25,7 @@ class ControllerRestLogin extends RestController {
 		
 		$json = array('success' => true);
 		
-		if ( $_SERVER['REQUEST_METHOD'] === 'POST' ){
+		if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
 			
 			$requestjson = file_get_contents('php://input');
 		
@@ -35,10 +35,10 @@ class ControllerRestLogin extends RestController {
 
 			$this->language->load('checkout/checkout');
 				
-			if ($this->customer->isLogged()) {
+			/* if ($this->customer->isLogged()) {
 				$json['error']		= "User already is logged";			
 				$json['success']	= false;			
-			}	
+			} */	
 			
 			if ($json['success']) {
 				if (!$this->customer->login($post['email'], $post['password'])) {

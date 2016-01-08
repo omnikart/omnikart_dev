@@ -5,9 +5,9 @@
 			  <?php foreach ($banners as $banner) { ?>
 			  <li>
 			    <?php if ($banner['link']) { ?>
-			    <a href="<?php echo $banner['link']; ?>" ><img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" /></a>
+			    <a href="<?php echo $banner['link']; ?>" ><img src="<?php echo $banner['image']; ?>" alt="<?php echo implode(',',$banner['title']); ?>" class="img-responsive" /></a>
 			    <?php } else { ?>
-			    <img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" />
+			    <img src="<?php echo $banner['image']; ?>" alt="<?php echo implode(',',$banner['title']); ?>" class="img-responsive" />
 			    <?php } ?>
 			  </li>
 			  <?php } ?>			
@@ -16,7 +16,7 @@
 		<div class="flexslider-controls">
 		  <ol class="flex-control-nav">
 	  		  <?php foreach ($banners as $banner) { ?>
-			    <li><?php echo $banner['title']; ?></li>
+			    <li><?php echo $banner['title'][0]; ?><br/><?php echo (isset($banner['title'][1])?$banner['title'][1]:''); ?></li>
 			  <?php } ?>
 		  </ol>
 		</div>

@@ -26,7 +26,6 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 
-
 			$action = isset($this->request->post["action"]) ? $this->request->post["action"] : "";
 			unset($this->request->post['pavverticalcategorytabs_module']['action']);
 
@@ -91,7 +90,8 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 		$this->mdata['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->mdata['modules'] = array();
-
+		$this->mdata['module'] = array();
+		
 
 		// Get Setting Status
 		if (isset($this->request->post['pavverticalcategorytabs_status'])) {
@@ -132,9 +132,9 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 			$this->mdata['action'] = $this->url->link('module/pavverticalcategorytabs', 'token=' . $this->session->data['token'], 'SSL');
 		}
 
-		$modules = array( 0=> $module_info );
+		$module = $module_info ;
 
-		$moduletabs = $this->model_extension_module->getModulesByCode( 'pavverticalcategorytabs' );
+		$moduletabs = $this->model_extension_module->getModulesByCode('pavverticalcategorytabs');
 	 	$this->mdata['link'] = $this->url->link('module/pavverticalcategorytabs', 'token=' . $this->session->data['token'] . '', 'SSL');
  		//$this->mdata['modules'] = $modules;
 
@@ -148,13 +148,43 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 
 		$this->mdata['toolimg'] = $this->model_tool_image;
 		$this->mdata['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);
-
-		foreach ($modules as &$module) {
-			$module['thumb'] = $this->model_tool_image->resize($module['image'], 120, 120);
-			$module['products'] = $this->_getProductSetting($module);
+		$module['thumb'] = $this->model_tool_image->resize($module['image'], 120, 120);
+		
+		$this->load->model('catalog/product');
+		$module['products'] = array();
+		// Get List Product
+		if (isset($module['featured_product'])) {
+			$products = $module['featured_product'];
+		} else {
+			$products = array();
 		}
-
-		$this->mdata['modules'] = $modules;
+		foreach ($products as $product_id) {
+			$product_info = $this->model_catalog_product->getProduct($product_id);
+			if ($product_info) {
+				$module['products'][] = array(
+						'product_id' => $product_info['product_id'],
+						'name'       => $product_info['name']
+				);
+			}
+		}
+		$this->load->model('catalog/category');
+		$module['category'] = array();
+		if (isset($module['featured_category'])) {
+			$category = $module['featured_category'];
+		} else {
+			$category = array();
+		}
+		foreach ($category as $category_id) {
+			$category_info = $this->model_catalog_category->getCategory($category_id);
+			if ($category_info) {
+				$module['category'][] = array(
+						'category_id' => $category_info['category_id'],
+						'name'       => $category_info['name']
+				);
+			}
+		}
+		
+		$this->mdata['module'] = $module;
 
 		// Set template
 		$template = 'module/pavverticalcategorytabs.tpl';
@@ -183,22 +213,7 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 
 	public function _getProductSetting($module){
 		$this->load->model('catalog/product');
-		$setting = array();
-		// Get List Product
-		if (isset($module['featured_product'])) {
-			$products = $module['featured_product'];
-		} else {
-			$products = array();
-		}
-		foreach ($products as $product_id) {
-			$product_info = $this->model_catalog_product->getProduct($product_id);
-			if ($product_info) {
-				$setting[] = array(
-					'product_id' => $product_info['product_id'],
-					'name'       => $product_info['name']
-				);
-			}
-		}
+
 		return $setting;
 	}
 

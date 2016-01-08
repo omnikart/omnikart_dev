@@ -193,7 +193,14 @@ class ControllerRestAccount extends RestController {
 		if (!$this->customer->isLogged()) {
 			$json["error"] = "User is not logged in";
 			$json["success"] = false;
-		}else {
+		} else {
+			
+			$customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($this->customer->getEmail())) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($post['old_password']) . "'))))) OR password = '" . $this->db->escape(md5($post['old_password'])) . "') AND status = '1' AND approved = '1'");
+			
+			if (!$customer_query->num_rows) {
+				$json["error"]['old_password'] = "Old password incorrect";
+			}
+			
 			if ((utf8_strlen($post['password']) < 4) || (utf8_strlen($post['password']) > 20)) {
 				$json["error"]['password'] = $this->language->get('error_password');
 			}
@@ -216,7 +223,7 @@ class ControllerRestAccount extends RestController {
 				);
 
 				$this->model_account_activity->addActivity('password', $activity_data);			
-			}else {
+			} else {
 				$json["success"] = false;
 			}
 		}
@@ -289,7 +296,6 @@ class ControllerRestAccount extends RestController {
         $this->sendResponse($json);
     }
 
-
     private function deleteAddress($id) {
 
         $json = array('success' => true);
@@ -332,9 +338,13 @@ class ControllerRestAccount extends RestController {
 
         $data['custom_fields'] = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
 
+				
         if(count($data['addresses']) > 0){
-            $json["data"] = $data;
-        }else {
+					$json["data"]["addresses"] = array();
+					foreach ($data['addresses'] as $address) {
+						$json["data"]["addresses"][] = $address;
+					} 
+				} else {
             $json["success"]	= false;
             $json["error"]		= "No address found";
         }
@@ -404,7 +414,7 @@ class ControllerRestAccount extends RestController {
                 }else {
                     $this->listAddress();
                 }
-            } else if ( $_SERVER['REQUEST_METHOD'] === 'POST' ){
+            } elseif ( $_SERVER['REQUEST_METHOD'] === 'POST' ){
                 $requestjson = file_get_contents('php://input');
                 $requestjson = json_decode($requestjson, true);
 
@@ -413,7 +423,7 @@ class ControllerRestAccount extends RestController {
                 } else {
                     $this->sendResponse(array('success' => false));
                 }
-            } else if ( $_SERVER['REQUEST_METHOD'] === 'PUT' ){
+            } elseif ( $_SERVER['REQUEST_METHOD'] === 'PUT' ){
                 $requestjson = file_get_contents('php://input');
                 $requestjson = json_decode($requestjson, true);
 
@@ -423,7 +433,7 @@ class ControllerRestAccount extends RestController {
                 } else {
                     $this->sendResponse(array('success' => false));
                 }
-            } else if ( $_SERVER['REQUEST_METHOD'] === 'DELETE' ){
+            } elseif ( $_SERVER['REQUEST_METHOD'] === 'DELETE' ){
                 if (isset($this->request->get['id']) && ctype_digit($this->request->get['id'])){
                     $this->deleteAddress($this->request->get['id']);
                 }

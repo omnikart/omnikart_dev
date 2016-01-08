@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <div id="home-bgd"></div>
 <div class="grid"></div>
 <div class="container">
@@ -13,4 +13,4 @@
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?><?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>
 </div>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

@@ -5,6 +5,60 @@ class ControllerCheckoutCheckoutOnepage extends Controller {
     public function index($render_content = false) {
     
     $this->load->model('checkout/checkout_onepage');
+
+    /*
+    To check customer has access to order or not
+    */
+    if($this->config->get('marketplace_status')) {
+        $this->load->model('account/customerpartner');
+        $this->load->language('customerpartner/orderReview');
+				
+        $customerRights = $this->model_account_customerpartner->getCustomerGroupRights($this->customer->getGroupId());
+
+        $approvedDetails = $this->model_account_customerpartner->getApprovedProducts($this->customer->getId());
+        $approveProducts = unserialize($approvedDetails['approve_cart']);
+
+				$total = $this->cart->getTotal();
+				
+				$limit =  $this->model_account_customerpartner->getUser();
+				
+			 if($customerRights && !array_key_exists('make-order', $customerRights['rights'])) {
+            $this->session->data['forReview'] = true;
+            $currentCart = $this->session->data['cart'];
+            if($approveProducts) {
+                foreach ($currentCart as $key => $value) {
+                    if(!array_key_exists($key, $approveProducts)) {
+                        $this->session->data['warning'] = $this->language->get('warning_reviewtoadmin');
+                        $this->response->redirect($this->url->link('account/customerpartner/orderReview','', 'SSL'));
+                    }
+                }
+            } else if(!$approveProducts) {
+                $this->session->data['warning'] = " Warning: You are not allowed to place order without permission, please send your order for review to your administrator!";
+                $this->response->redirect($this->url->link('account/customerpartner/orderReview','', 'SSL'));
+            }
+        }
+				if($limit && ($limit['p_limit'] < $total)) {
+				
+						$this->session->data['forReview'] = true;
+            $currentCart = $this->session->data['cart'];
+            if($approveProducts) {
+                foreach ($currentCart as $key => $value) {
+                    if(!array_key_exists($key, $approveProducts)) {
+                        $this->session->data['warning'] = $this->language->get('warning_reviewtoadmin');
+                        $this->response->redirect($this->url->link('account/customerpartner/orderReview','', 'SSL'));
+                    }
+                }
+            } else if(!$approveProducts) {
+                $this->session->data['warning'] = " Warning: You have crossed the purchase limit, please send your order for review to your administrator!";
+                $this->response->redirect($this->url->link('account/customerpartner/orderReview','', 'SSL'));
+            }
+				}
+        
+    }
+    /*
+    end here
+    */
+    
 		
 				if ($this->config->get('config_secure') == '1' && !(isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1')))) {
 						$urls = $this->url->link('checkout/checkout_onepage', '', true);

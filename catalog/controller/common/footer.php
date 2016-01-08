@@ -2,9 +2,9 @@
 class ControllerCommonFooter extends Controller {
 	public function index() {
 		$this->load->language('common/footer');
-
-		$data['text_information'] = $this->language->get('text_information');
+        $data['text_information'] = $this->language->get('text_information');
 		$data['text_service'] = $this->language->get('text_service');
+		$data['text_entry'] = $this->language->get('text_entry');
 		$data['text_extra'] = $this->language->get('text_extra');
 		$data['text_contact'] = $this->language->get('text_contact');
 		$data['text_return'] = $this->language->get('text_return');
@@ -45,7 +45,17 @@ class ControllerCommonFooter extends Controller {
 		$data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
 		$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));
 		$data['careers'] = $this->url->link('information/careers', '', 'SSL');
+		$data['search_action'] = $this->url->link('product/json', '', 'SSL');
 		
+		$data['product_id'] = '';
+		$data['route'] = '';
+		$data['total'] = isset($this->session->data['total'])?$this->session->data['total']:'';
+		if (isset($this->request->get['product_id'])){
+			$data['product_id'] = $this->request->get['product_id'];
+		}
+		if (isset($this->request->get['route'])){
+			$data['route'] = $this->request->get['route'];
+		}
 		// Whos Online
 		if ($this->config->get('config_customer_online')) {
 			$this->load->model('tool/online');
@@ -70,6 +80,15 @@ class ControllerCommonFooter extends Controller {
 
 			$this->model_tool_online->whosonline($ip, $this->customer->getId(), $url, $referer);
 		}
+		$this->load->model('extension/module');
+		$data['modules'] = array();
+		$modules = $this->model_extension_module->getModulesByCode('ne');
+		
+		foreach ($modules as $module) {
+				$data['modules'][] = $this->load->controller('module/' . $module['code'], unserialize($module['setting']));
+		}
+		
+		
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/footer.tpl')) {
 			return $this->load->view($this->config->get('config_template') . '/template/common/footer.tpl', $data);

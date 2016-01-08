@@ -1,0 +1,24 @@
+<?php
+$_['required']			= "The %s field is required.";
+$_['isset']				= "The %s field must have a value.";
+$_['valid_email']		= "The %s field must contain a valid email address.";
+$_['valid_emails']		= "The %s field must contain all valid email addresses.";
+$_['valid_url']			= "The %s field must contain a valid URL.";
+$_['valid_ip']			= "The %s field must contain a valid IP.";
+$_['min_length']			= "The %s field must be at least %s characters in length.";
+$_['max_length']			= "The %s field can not exceed %s characters in length.";
+$_['exact_length']		= "The %s field must be exactly %s characters in length.";
+$_['alpha']				= "The %s field may only contain alphabetical characters.";
+$_['alpha_numeric']		= "The %s field may only contain alpha-numeric characters.";
+$_['alpha_dash']			= "The %s field may only contain alpha-numeric characters, underscores, and dashes.";
+$_['numeric']			= "The %s field must contain only numbers.";
+$_['is_numeric']			= "The %s field must contain only numeric characters.";
+$_['integer']			= "The %s field must contain an integer.";
+$_['regex_match']		= "The %s field is not in the correct format.";
+$_['matches']			= "The %s field does not match the %s field.";
+$_['is_unique'] 			= "The %s field must contain a unique value.";
+$_['is_natural']			= "The %s field must contain only positive numbers.";
+$_['is_natural_no_zero']	= "The %s field must contain a number greater than zero.";
+$_['decimal']			= "The %s field must contain a decimal number.";
+$_['less_than']			= "The %s field must contain a number less than %s.";
+$_['greater_than']		= "The %s field must contain a number greater than %s.";

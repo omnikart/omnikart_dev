@@ -56,13 +56,13 @@
 		      			</thead>
 		      			<tbody>
 							<?php foreach ($output['content'] as $template) { ?>
-								<td class="text-center" style="width: 1px;"><input onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" type="checkbox"></td>
+								<tr><td class="text-center" style="width: 1px;"><input onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" type="checkbox"></td>
 		      					<td><?php echo $template['id']; ?></td>
 		      					<td><?php echo $template['user_id']; ?></td>
 		      					<td><?php echo $template['template_name']; ?></td>
 		      					<td><textarea rows="5" style="width:100%;"><?php echo $template['content']; ?></textarea></td>
 		      					<td><?php echo $template['language']; ?></td>
-		      					<td><?php echo ($template['status'])?'Enabled':'Disabled'; ?></td>
+		      					<td><?php echo ($template['status'])?'Enabled':'Disabled'; ?></td></tr>
 		      				<?php } ?>			
 		      			</tbody>
 					</table>
@@ -138,7 +138,26 @@
 		      						</div>
 	      					</div></td>			      					
 		      				<tr>
-		      				
+		      				<tr>
+		      					<td>OTP Sms</td>
+		      					<td><div class="well well-sm">
+			      					<?php foreach ($output['content'] as $template) { ?>
+			      						<div class="checkbox">
+			      							<label><input name="way2mint_otp_tpl" value="<?php echo $template['template_name']; ?>" type="radio" <?php echo ($template['template_name']==$way2mint_admin_tpl)?'checked':''; ?>><?php echo $template['template_name']; ?> (<?php echo $template['language']; ?>)</label>
+			      						</div>
+			      					<?php } ?>
+		      					</div></td>
+		      					<td><div class="well well-sm">
+		      						<div class="checkbox">
+		      							<label>Param: <input name="way2mint_otp_param" value="<?php echo $way2mint_admin_param; ?>" type="text"></label>
+		      						</div>
+		      					</div></td>
+		      					<td><div class="well well-sm">
+		      						<div class="checkbox">
+		      							<label>From: <input name="way2mint_otp_from" value="<?php echo $way2mint_admin_from; ?>" type="text"></label>
+		      						</div>
+	      					</div></td>			      					
+		      				</tr>		      				
 		      			</tbody>
 					</table>
 		        </div>

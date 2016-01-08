@@ -22,7 +22,7 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
     	 
 		if($customerRights && !array_key_exists('productlist', $customerRights['rights'])) {
 			$this->response->redirect($this->url->link('account/account', '','SSL'));
-			$data['list'] = false;
+			$this->data['list'] = false;
 		}
 		
 		if($customerRights && !array_key_exists('addproduct', $customerRights['rights'])) {
@@ -170,7 +170,7 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		);
 
 		if($sellerId) {
-			$data['customer_id'] = $sellerId;
+			$this->data['customer_id'] = $sellerId;
 		}
 
 		$this->load->model('tool/image');
@@ -334,7 +334,9 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		$pagination->url = $this->url->link('account/customerpartner/productlist', '' . $url . '&page={page}', 'SSL');
 
 		$this->data['pagination'] = $pagination->render();
-		$this->data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($product_total - 10)) ? $product_total : ((($page - 1) * 10) + 10), $product_total, ceil($product_total / 10));
+		
+		$limit = $this->config->get('config_product_limit');
+		$this->data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
 
 		$this->data['filter_name'] = $filter_name;
 		$this->data['filter_model'] = $filter_model;
@@ -367,10 +369,15 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 	
 
       	$this->load->model('localisation/stock_status');
-      	
       	$this->data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses();
+
+      	$this->load->model('localisation/weight_class');
+      	$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses();
+
+      	$this->load->model('localisation/length_class');
+      	$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses();
       	
-		$this->data['mp_ap'] = $this->config->get('marketplace_selleraddproduct');
+      	$this->data['mp_ap'] = $this->config->get('marketplace_selleraddproduct');
 		
 		$this->data['column_left'] = $this->load->controller('common/column_left');
 		$this->data['column_right'] = $this->load->controller('common/column_right');
@@ -498,6 +505,10 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		$this->index();
 	}
 
+	public function excelport(){
+		
+	}
+	
 	public function updateProduct(){
 		$json = array();
 		$this->load->model('account/customerpartner');

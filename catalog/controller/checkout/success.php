@@ -4,7 +4,38 @@ class ControllerCheckoutSuccess extends Controller {
 		$this->load->language('checkout/success');
 
 		if (isset($this->session->data['order_id'])) {
+			/*balastic ads */
+			if (isset($this->session->data['utm_source'])=='BallisticAds'){
+				$this->load->model('checkout/order');
+				$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+				$url=' http://ballisticads.com/co.php?coid=Omnikart&comment=';
+				$json = array('transaction-id'=>$this->session->data['order_id']);
+				foreach ($this->cart->getProducts() as $product) {
+					$json['product-name-'.$product['product_id']] = $product['name'];
+					$json['price-'.$product['product_id']] = $product['total'];
+				}
+				$url .= urlencode(json_encode($json));
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, 'http://www.example.com');
+				curl_setopt($ch, CURLOPT_HEADER, 1);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				$data = curl_exec();
+				curl_close($ch);
+			}
+			
 			$this->cart->clear();
+				
+			/*
+            To close previous review
+            */
+            if($this->config->get('marketplace_status')) {
+               $this->load->model('account/customerpartner');
+               $this->model_account_customerpartner->closePreviousReview($this->customer->getId(),$this->session->data['order_id']);
+            }
+            /*
+            end here
+            */
+    
 
 			// Add to activity log
 			$this->load->model('account/activity');
@@ -72,6 +103,24 @@ class ControllerCheckoutSuccess extends Controller {
 			$data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact'));
 		}
 
+		$data['google_conversion'] = '<!-- Google Code for omnikart Conversion Page --><script type="text/javascript">
+			/* <![CDATA[ */
+			var google_conversion_id = 975481156;
+			var google_conversion_language = "en";
+			var google_conversion_format = "3";
+			var google_conversion_color = "ffffff";
+			var google_conversion_label = "XHE8CMqLiVwQxNKS0QM";
+			var google_remarketing_only = false;
+			/* ]]> */
+			</script>
+			<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+			</script>
+			<noscript>
+			<div style="display:inline;">
+			<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/975481156/?label=XHE8CMqLiVwQxNKS0QM&amp;guid=ON&amp;script=0"/>
+			</div>
+			</noscript>';
+		
 		$data['button_continue'] = $this->language->get('button_continue');
 
 		$data['continue'] = $this->url->link('common/home');

@@ -16,7 +16,6 @@ class ControllerCommonSearch extends Controller {
 		$this->load->model('catalog/product');
 
 		/* Search autocomplete */
-		$data['search_action'] = $this->url->link('product/json', '', 'SSL');
 		$data['button_cart'] = $this->language->get('button_cart');
 		/* end search autocomplete */
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/search.tpl')) {

@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <div class="container">
   <ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -18,9 +18,9 @@
         <?php if ($column_left && $column_right) { ?>
         <?php $class = 'col-sm-6'; ?>
         <?php } elseif ($column_left || $column_right) { ?>
-        <?php $class = 'col-sm-6'; ?>
+        <?php $class = 'col-sm-4'; ?>
         <?php } else { ?>
-        <?php $class = 'col-sm-8'; ?>
+        <?php $class = 'col-sm-4'; ?>
         <?php } ?>
         <div class="<?php echo $class; ?>">
           <?php if ($thumb || $images) { ?>
@@ -35,147 +35,82 @@
             <?php } ?>
           </ul>
           <?php } ?>
-          <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab-description" data-toggle="tab"><?php echo $tab_description; ?></a></li>
-            <?php if ($attribute_groups) { ?>
-            <li><a href="#tab-specification" data-toggle="tab"><?php echo $tab_attribute; ?></a></li>
-            <?php } ?>
-            <?php if ($review_status) { ?>
-            <li><a href="#tab-review" data-toggle="tab"><?php echo $tab_review; ?></a></li>
-            <?php } ?>
-          </ul>
-          <div class="tab-content">
-            <div class="tab-pane active" id="tab-description"><?php echo $description; ?></div>
-            <?php if ($attribute_groups) { ?>
-            <div class="tab-pane" id="tab-specification">
-              <table class="table table-bordered">
-                <?php foreach ($attribute_groups as $attribute_group) { ?>
-                <thead>
-                  <tr>
-                    <td colspan="2"><strong><?php echo $attribute_group['name']; ?></strong></td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php foreach ($attribute_group['attribute'] as $attribute) { ?>
-                  <tr>
-                    <td><?php echo $attribute['name']; ?></td>
-                    <td><?php echo $attribute['text']; ?></td>
-                  </tr>
-                  <?php } ?>
-                </tbody>
-                <?php } ?>
-              </table>
-            </div>
-            <?php } ?>
-            <?php if ($review_status) { ?>
-            <div class="tab-pane" id="tab-review">
-              <form class="form-horizontal" id="form-review">
-                <div id="review"></div>
-                <h2><?php echo $text_write; ?></h2>
-                <?php if ($review_guest) { ?>
-                <div class="form-group required">
-                  <div class="col-sm-12">
-                    <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
-                    <input type="text" name="name" value="" id="input-name" class="form-control" />
-                  </div>
-                </div>
-                <div class="form-group required">
-                  <div class="col-sm-12">
-                    <label class="control-label" for="input-review"><?php echo $entry_review; ?></label>
-                    <textarea name="text" rows="5" id="input-review" class="form-control"></textarea>
-                    <div class="help-block"><?php echo $text_note; ?></div>
-                  </div>
-                </div>
-                <div class="form-group required">
-                  <div class="col-sm-12">
-                    <label class="control-label"><?php echo $entry_rating; ?></label>
-                    &nbsp;&nbsp;&nbsp; <?php echo $entry_bad; ?>&nbsp;
-                    <input type="radio" name="rating" value="1" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="2" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="3" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="4" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="5" />
-                    &nbsp;<?php echo $entry_good; ?></div>
-                </div>
-                <?php if ($site_key) { ?>
-                  <div class="form-group">
-                    <div class="col-sm-12">
-                      <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>"></div>
-                    </div>
-                  </div>
-                <?php } ?>
-                <div class="buttons clearfix">
-                  <div class="pull-right">
-                    <button type="button" id="button-review" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><?php echo $button_continue; ?></button>
-                  </div>
-                </div>
-                <?php } else { ?>
-                <?php echo $text_login; ?>
-                <?php } ?>
-              </form>
-            </div>
-            <?php } ?>
-          </div>
+          <?php if ($review_status) { ?>
+	          <div class="rating">
+	            <p>
+	              <?php for ($i = 1; $i <= 5; $i++) { ?>
+	              <?php if ($rating < $i) { ?>
+	              <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
+	              <?php } else { ?>
+	              <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
+	              <?php } ?>
+	              <?php } ?>
+	              <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); return false;"><?php echo $reviews; ?></a> / <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); return false;"><?php echo $text_write; ?></a></p>
+	            <hr>
+	            <!-- AddThis Button BEGIN -->
+	            <div class="addthis_toolbox addthis_default_style"><a class="addthis_button_facebook_like" fb:like:layout="button_count"></a> <a class="addthis_button_tweet"></a> <a class="addthis_button_pinterest_pinit"></a> <a class="addthis_counter addthis_pill_style"></a></div>
+	            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-515eeaf54693130e"></script>
+	            <!-- AddThis Button END -->
+	          </div>
+          <?php } ?>
         </div>
         <?php if ($column_left && $column_right) { ?>
         <?php $class = 'col-sm-6'; ?>
         <?php } elseif ($column_left || $column_right) { ?>
         <?php $class = 'col-sm-6'; ?>
         <?php } else { ?>
-        <?php $class = 'col-sm-4'; ?>
+        <?php $class = 'col-sm-8'; ?>
         <?php } ?>
         <div class="<?php echo $class; ?>">
-          <div class="btn-group">
-            <button type="button" data-toggle="tooltip" class="btn btn-default" title="<?php echo $button_wishlist; ?>" onclick="wishlist.add('<?php echo $product_id; ?>');"><i class="fa fa-heart"></i></button>
-            <button type="button" data-toggle="tooltip" class="btn btn-default" title="<?php echo $button_compare; ?>" onclick="compare.add('<?php echo $product_id; ?>');"><i class="fa fa-exchange"></i></button>
-          </div>
-          <h1><?php echo $heading_title; ?></h1>
-          <ul class="list-unstyled">
-            <?php if ($manufacturer) { ?>
-            <li><?php echo $text_manufacturer; ?> <a href="<?php echo $manufacturers; ?>"><?php echo $manufacturer; ?></a></li>
-            <?php } ?>
-            <li><?php echo $text_model; ?> <?php echo $model; ?></li>
-            <?php if ($reward) { ?>
-            <li><?php echo $text_reward; ?> <?php echo $reward; ?></li>
-            <?php } ?>
-            <li><?php echo $text_stock; ?> <?php echo $stock; ?></li>
-          </ul>
-          <?php if ($price) { ?>
-          <ul class="list-unstyled">
-            <?php if (!$special) { ?>
-            <li>
-              <?php if ($discount) { ?>
-              	<span style="text-decoration: line-through;"><?php echo $original_price; ?></span><span style="padding:1px;background:#ddd;border-radius:2px;"><?php echo $discount; ?>% Off</span>
-              <?php } ?>
-              <h2><?php echo $price; ?></h2>
-            
-            </li>
-            <?php } else { ?>
-            <li><span style="text-decoration: line-through;"><?php echo $price; ?></span></li>
-            <li>
-              <h2><?php echo $special; ?></h2>
-            </li>
-            <?php } ?>
-            <?php if ($tax) { ?>
-            <li><?php echo $text_tax; ?> <?php echo $tax; ?></li>
-            <?php } ?>
-            <?php if ($points) { ?>
-            <li><?php echo $text_points; ?> <?php echo $points; ?></li>
-            <?php } ?>
-            <?php if ($discounts) { ?>
-            <li>
-              <hr>
-            </li>
-            <?php foreach ($discounts as $discount) { ?>
-            <li><?php echo $discount['quantity']; ?><?php echo $text_discount; ?><?php echo $discount['price']; ?></li>
-            <?php } ?>
-            <?php } ?>
-          </ul>
-          <?php } ?>
+          <div class="white">
+          <div class="col-sm-8">
+              <h1 class="nmt"><?php echo $heading_title; ?></h1>
+              <p></p>
+              <div >
+              <span class="label label-primary" style="line-height:32px;font-size:14px;"><?php echo $text_stock; ?> <?php echo $stock; ?></span>
+	              <div class="btn-group">
+	            	<button type="button" data-toggle="tooltip" class="btn btn-default" title="<?php echo $button_wishlist; ?>" onclick="wishlist.add('<?php echo $product_id; ?>');"><i class="fa fa-heart"></i></button>
+	            	<button type="button" data-toggle="tooltip" class="btn btn-default" title="<?php echo $button_compare; ?>" onclick="compare.add('<?php echo $product_id; ?>');"><i class="fa fa-exchange"></i></button>
+	          	  </div>
+	          </div>
+	          <p></p>
+	          <?php if ($price) { ?>
+	          <ul class="list-unstyled">
+	            <?php if (!$special) { ?>
+	            <li>
+	              
+	              <h2><?php echo $price; ?>
+	              	<small>
+		              <?php if ($discount) { ?>
+		              	<font color="#d9534f"><s><?php echo $original_price; ?></s></font></span><span class="label label-success"><?php echo $discount; ?>% Off</span>
+		              <?php } ?>
+					</small>
+				  </h2>
+	            
+	            </li>
+	            <?php } else { ?>
+	            <li><span style="text-decoration: line-through;"><?php echo $price; ?></span></li>
+	            <li>
+	              <h2><?php echo $special; ?></h2>
+	            </li>
+	            <?php } ?>
+	            <?php if ($tax) { ?>
+	            <li><?php echo $text_tax; ?> <?php echo $tax; ?></li>
+	            <?php } ?>
+	            <?php if ($points) { ?>
+	            <li><?php echo $text_points; ?> <?php echo $points; ?></li>
+	            <?php } ?>
+	            <?php if ($discounts) { ?>
+	            <li>
+	              <hr>
+	            </li>
+	            <?php foreach ($discounts as $discount) { ?>
+	            <li><?php echo $discount['quantity']; ?><?php echo $text_discount; ?><?php echo $discount['price']; ?></li>
+	            <?php } ?>
+	            <?php } ?>
+	          </ul>
+	          <?php } ?>
+          
           <div id="product">
             <?php if ($options) { ?>
             <hr>
@@ -314,111 +249,213 @@
               <div class="help-block" id="recurring-description"></div>
             </div>
             <?php } ?>
+            <div class="row">
+	  			<div class="col-md-12">
+		  			<div class="input-group" id="postcode">
+		  				<span class="input-group-addon"><i class="fa fa-map-marker"></i> Delivery at</span>
+		  				<input type="text" class="form-control" placeholder="Zip Code" name="postcode" style="min-width:70px;" aria-describedby="postcode">
+		  			    <span class="input-group-btn">
+		        			<button class="btn btn-default" id="postcode-button" type="button">Check</button>
+		      			</span>
+					</div>
+		  			<div class="hidden" id="postcode-result">
+
+					</div>
+				</div>
+			</div>
             <div class="form-group">
-              <label class="control-label" for="input-quantity"><?php echo $entry_qty; ?></label>
-              <input type="text" name="quantity" value="<?php echo $minimum; ?>" size="2" id="input-quantity" class="form-control" />
-              <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
+            <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
 			<input type="hidden" name="products[]" value="<?php echo $product_id; ?>"/>
               <br />
-              <button type="button" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary btn-lg btn-block"><?php echo $button_cart; ?></button>
+              <div class="row">
+                <div class="col-md-4">
+		            <div class="input-group">
+		            	<span class="input-group-addon" id="sizing-addon2">
+		            		<label class="control-label" for="input-quantity">
+		            			<?php echo $entry_qty; ?>
+		            		</label>
+		            	</span>
+		                <input type="text" name="quantity" value="<?php echo $minimum; ?>" size="2" id="input-quantity" class="form-control" />
+		  			</div>
+	  			</div>
+				<div class="col-md-4">
+              		<button type="button" id="button-cart" data-cart="cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-info btn-block">Add to Cart</button>
+              	</div>
+              	<div class="col-md-4">
+              		<button type="button" id="button-buynow" data-cart="buynow" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary btn-block"><?php echo $button_cart; ?></button>
+              	</div>
+              </div>
             </div>
             <?php if ($minimum > 1) { ?>
             <div class="alert alert-info"><i class="fa fa-info-circle"></i> <?php echo $text_minimum; ?></div>
             <?php } ?>
           </div>
-          <?php if ($curr_vendor) {  ?>
-    		<div class = "vendor">
-    			Sold by:<br />
-				<a href="<?php echo $vlink; ?>"><?php echo $curr_vendor['companyname']; ?></a>
-				<input type="hidden" name="vendor_id" value="<?php echo $curr_vendor['customer_id']; ?>">
-    		</div>      	
-          <?php } ?>
-          <?php if ($vendors) {  ?>
-          	Also available with: <br />
-          	<?php foreach($vendors as $vendor) {  ?>
-          		<a href="<?php echo $vendor['link']; ?>"><?php echo $vendor['companyname']; ?> at <?php echo $vendor['price']; ?></a>
-          	<?php } ?>
-          <?php } ?>
-          <?php if ($review_status) { ?>
-          <div class="rating">
-            <p>
-              <?php for ($i = 1; $i <= 5; $i++) { ?>
-              <?php if ($rating < $i) { ?>
-              <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
-              <?php } else { ?>
-              <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
-              <?php } ?>
-              <?php } ?>
-              <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); return false;"><?php echo $reviews; ?></a> / <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); return false;"><?php echo $text_write; ?></a></p>
-            <hr>
-            <!-- AddThis Button BEGIN -->
-            <div class="addthis_toolbox addthis_default_style"><a class="addthis_button_facebook_like" fb:like:layout="button_count"></a> <a class="addthis_button_tweet"></a> <a class="addthis_button_pinterest_pinit"></a> <a class="addthis_counter addthis_pill_style"></a></div>
-            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-515eeaf54693130e"></script>
-            <!-- AddThis Button END -->
-          </div>
-          <?php } ?>
-        </div>
+          
+
+  		</div>
+  		
+  		<div class="col-sm-4">
+  			<div class="well">
+			  <ul class="list-unstyled">
+	            <?php if ($manufacturer) { ?>
+	            <li><h4><i class="fa fa-industry"></i> <?php echo $text_manufacturer; ?> <a href="<?php echo $manufacturers; ?>"><?php echo $manufacturer; ?></a></h4></li>
+	            <?php } ?>
+	            <li><h4><i class="fa fa-barcode"></i> <?php echo $text_model; ?> <?php echo $model; ?></li></h4>
+	            <?php if ($reward) { ?>
+	            <li><h4><i class="fa fa-trophy"></i> <?php echo $text_reward; ?> <?php echo $reward; ?></li></h4>
+	            <?php } ?>
+	          </ul>
+  			  
+			  <?php if ($curr_vendor) {  ?>
+	    		<div class = "vendor">
+	    			<h4><i class="fa fa-user"></i> Sold by: <a href="<?php echo $vlink; ?>"><?php echo $curr_vendor['companyname']; ?></a>
+	    			</h4>
+					<input type="hidden" name="vendor_id" value="<?php echo $curr_vendor['customer_id']; ?>">
+	    		</div>      	
+	          <?php } ?>
+	          <?php if ($vendors) {  ?>
+				<button type="button" id="view-vendors" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-default btn-block"  data-toggle="modal" data-target="#supplier-list">View other suppliers</button>
+	          <?php } ?>
+  			</div>
+  		</div>
+  		<div class="clearfix"></div>
+  		</div>
       </div>
-      <?php if ($products) { ?>
-      <h3><?php echo $text_related; ?></h3>
-      <div class="row">
-        <?php $i = 0; ?>
-        <?php foreach ($products as $product) { ?>
-        <?php if ($column_left && $column_right) { ?>
-        <?php $class = 'col-lg-6 col-md-6 col-sm-12 col-xs-12'; ?>
-        <?php } elseif ($column_left || $column_right) { ?>
-        <?php $class = 'col-lg-4 col-md-4 col-sm-6 col-xs-12'; ?>
-        <?php } else { ?>
-        <?php $class = 'col-lg-3 col-md-3 col-sm-6 col-xs-12'; ?>
-        <?php } ?>
-        <div class="<?php echo $class; ?>">
-          <div class="product-thumb transition">
-            <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a></div>
-            <div class="caption">
-              <h4><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4>
-              <p><?php echo $product['description']; ?></p>
-              <?php if ($product['rating']) { ?>
-              <div class="rating">
-                <?php for ($i = 1; $i <= 5; $i++) { ?>
-                <?php if ($product['rating'] < $i) { ?>
-                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
+      	<div class="col-sm-12">
+      		<div class="panel panel-default">
+			  <div class="panel-heading"><h3 class="nmt"><?php echo $tab_description; ?></h3></div>
+			  <div class="panel-body">
+	      		<?php echo $description; ?>
+			  </div>
+			</div>
+			<?php if ($attribute_groups) { ?>
+       		<div class="panel panel-default">
+			  <div class="panel-heading"><h3 class="nmt"><?php echo $tab_attribute; ?></h3></div>
+			  <div class="panel-body">
+				<?php if ($attribute_groups) { ?>
+	            <div class="tab-pane" id="tab-specification">
+	              <table class="table table-bordered">
+	                <?php foreach ($attribute_groups as $attribute_group) { ?>
+	                <thead>
+	                  <tr>
+	                    <td colspan="2"><strong><?php echo $attribute_group['name']; ?></strong></td>
+	                  </tr>
+	                </thead>
+	                <tbody>
+	                  <?php foreach ($attribute_group['attribute'] as $attribute) { ?>
+	                  <tr>
+	                    <td><?php echo $attribute['name']; ?></td>
+	                    <td><?php echo $attribute['text']; ?></td>
+	                  </tr>
+	                  <?php } ?>
+	                </tbody>
+	                <?php } ?>
+	              </table>
+	            </div>
+	            <?php } ?>
+			  </div>
+			</div>
+			<?php } ?>
+			<?php if ($combo) { ?>
+			<div class="panel panel-default">
+			  <div class="panel-heading"><h3 class="nmt"><?php echo $combo_title; ?></h3></div>
+			  <div class="panel-body">
+			      <?php echo $combo; ?>
+			  </div>
+			</div>		
+			<?php }?>
+			
+			<?php if ($review_status) { ?>
+			<div class="panel panel-default">
+			  <div class="panel-heading"><h3 class="nmt"><?php echo $tab_review; ?></h3></div>
+			  <div class="panel-body">
+              <form class="form-horizontal" id="form-review">
+                <div id="review"></div>
+                <h2><?php echo $text_write; ?></h2>
+                <?php if ($review_guest) { ?>
+                <div class="form-group required">
+                  <div class="col-sm-12">
+                    <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
+                    <input type="text" name="name" value="" id="input-name" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group required">
+                  <div class="col-sm-12">
+                    <label class="control-label" for="input-review"><?php echo $entry_review; ?></label>
+                    <textarea name="text" rows="5" id="input-review" class="form-control"></textarea>
+                    <div class="help-block"><?php echo $text_note; ?></div>
+                  </div>
+                </div>
+                <div class="form-group required">
+                  <div class="col-sm-12">
+                    <label class="control-label"><?php echo $entry_rating; ?></label>
+                    &nbsp;&nbsp;&nbsp; <?php echo $entry_bad; ?>&nbsp;
+                    <input type="radio" name="rating" value="1" />
+                    &nbsp;
+                    <input type="radio" name="rating" value="2" />
+                    &nbsp;
+                    <input type="radio" name="rating" value="3" />
+                    &nbsp;
+                    <input type="radio" name="rating" value="4" />
+                    &nbsp;
+                    <input type="radio" name="rating" value="5" />
+                    &nbsp;<?php echo $entry_good; ?></div>
+                </div>
+                <?php if ($site_key) { ?>
+                  <div class="form-group">
+                    <div class="col-sm-12">
+                      <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>"></div>
+                    </div>
+                  </div>
+                <?php } ?>
+                <div class="buttons clearfix">
+                  <div class="pull-right">
+                    <button type="button" id="button-review" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><?php echo $button_continue; ?></button>
+                  </div>
+                </div>
                 <?php } else { ?>
-                <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
+                <?php echo $text_login; ?>
                 <?php } ?>
-                <?php } ?>
-              </div>
-              <?php } ?>
-              <?php if ($product['price']) { ?>
-              <p class="price">
-                <?php if (!$product['special']) { ?>
-                <?php echo $product['price']; ?>
-                <?php } else { ?>
-                <span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
-                <?php } ?>
-                <?php if ($product['tax']) { ?>
-                <span class="price-tax"><?php echo $text_tax; ?> <?php echo $product['tax']; ?></span>
-                <?php } ?>
-              </p>
-              <?php } ?>
+              </form>
             </div>
-            <div class="button-group">
-              <button type="button" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><span class="hidden-xs hidden-sm hidden-md"><?php echo $button_cart; ?></span> <i class="fa fa-shopping-cart"></i></button>
-              <button type="button" data-toggle="tooltip" title="<?php echo $button_wishlist; ?>" onclick="wishlist.add('<?php echo $product['product_id']; ?>');"><i class="fa fa-heart"></i></button>
-              <button type="button" data-toggle="tooltip" title="<?php echo $button_compare; ?>" onclick="compare.add('<?php echo $product['product_id']; ?>');"><i class="fa fa-exchange"></i></button>
             </div>
-          </div>
-        </div>
-        <?php if (($column_left && $column_right) && ($i % 2 == 0)) { ?>
-        <div class="clearfix visible-md visible-sm"></div>
-        <?php } elseif (($column_left || $column_right) && ($i % 3 == 0)) { ?>
-        <div class="clearfix visible-md"></div>
-        <?php } elseif ($i % 4 == 0) { ?>
-        <div class="clearfix visible-md"></div>
-        <?php } ?>
-        <?php $i++; ?>
-        <?php } ?>
-      </div>
-      <?php } ?>
+            <?php } ?>
+
+
+	      <?php if ($products) { ?>
+			<div class="panel panel-default">
+			  <div class="panel-heading"><h3 class="nmt"><?php echo $text_related; ?></h3></div> 
+			  <div class="panel-body">
+				  <div class="row">
+			        <?php $i = 0; ?>
+			        <?php foreach ($products as $product) { ?>
+			        <?php if ($column_left && $column_right) { ?>
+			        <?php $class = 'col-lg-6 col-md-6 col-sm-12 col-xs-12'; ?>
+			        <?php } elseif ($column_left || $column_right) { ?>
+			        <?php $class = 'col-lg-4 col-md-4 col-sm-6 col-xs-12'; ?>
+			        <?php } else { ?>
+			        <?php $class = 'col-lg-20 col-md-3 col-sm-6 col-xs-12'; ?>
+			        <?php } ?>
+			        <div class="<?php echo $class; ?>">
+			          <div class="product-thumb transition">
+						<?php require(DIR_TEMPLATE.'default/template/common/product/product.tpl'); ?>
+			          </div>
+			        </div>
+			        <?php if (($column_left && $column_right) && ($i % 2 == 0)) { ?>
+			        <div class="clearfix visible-md visible-sm"></div>
+			        <?php } elseif (($column_left || $column_right) && ($i % 3 == 0)) { ?>
+			        <div class="clearfix visible-md"></div>
+			        <?php } elseif ($i % 4 == 0) { ?>
+			        <div class="clearfix visible-md"></div>
+			        <?php } ?>
+			        <?php $i++; ?>
+			        <?php } ?>
+			      </div>
+			    </div>
+			  </div>
+		      <?php } ?>
+		  </div>
+      </div>      
       <?php if ($tags) { ?>
       <p><?php echo $text_tags; ?>
         <?php for ($i = 0; $i < count($tags); $i++) { ?>
@@ -432,6 +469,22 @@
       <?php } ?>
       <?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="supplier-list" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header">
+    		<h4>Also sold by</h4>
+    	</div>
+    	<div class="modal-body">
+			<?php if ($vendors) {  ?>
+				<?php foreach($vendors as $vendor) {  ?>
+					<h4><a href="<?php echo $vendor['link']; ?>"><?php echo $vendor['companyname']; ?> at <?php echo $vendor['price']; ?></a></h4>
+				<?php } ?>
+			<?php } ?>
+		</div>
+    </div>
+  </div>
 </div>
 <script type="text/javascript"><!--
 $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
@@ -454,9 +507,52 @@ $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 });
 //--></script>
 <script type="text/javascript"><!--
-$('#button-cart').on('click', function() {
+$('#postcode-button').on('click', function() {
 	$.ajax({
-		url: 'index.php?route=checkout/cart/add',
+		url: 'index.php?route=checkout/servicecheck',
+		type: 'post',
+		data: $('#product input[name=\'postcode\']'),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#postcode-button').button('loading');
+		},
+		complete: function() {
+			$('#postcode-button').button('reset');
+		},
+		success: function(json) {
+			$('.alert, .text-danger').remove();
+			$('.form-group').removeClass('has-error');
+
+			if (json['error']) {
+  				html  = '<div class="alert alert-error" style="nmt">';
+  				html +=	'<span class="msg">'+json['error']['text']+'</span>';
+  				html +=	'<button type="button" class="close" onclick="$(\'#postcode\').removeClass(\'hidden\');$(\'#postcode-result\').addClass(\'hidden\');">×</button>';
+  				html +=	'</div>';
+				
+				$('#postcode-result').html(html);
+				$('#postcode').addClass('hidden');
+				$('#postcode-result').removeClass('hidden');
+			}
+
+			if (json['success']) {
+  				html  = '<div class="alert alert-info" style="nmt">';
+  				html +=	'<span class="msg">'+json['success']['text']+'</span>';
+  				html +=	'<button type="button" class="close" onclick="$(\'#postcode\').removeClass(\'hidden\');$(\'#postcode-result\').addClass(\'hidden\');">×</button>';
+  				html +=	'</div>';
+				
+				$('#postcode-result').html(html);
+				$('#postcode').addClass('hidden');
+				$('#postcode-result').removeClass('hidden');
+			}
+		}
+	});
+});
+//--></script>
+<script type="text/javascript"><!--
+$('#button-cart,#button-buynow').on('click', function() {
+	var data = $(this).data('cart');
+	$.ajax({
+		url: 'index.php?route=checkout/cart/add&cart='+data,
 		type: 'post',
 		data: $('#product input[type=\'text\'], #product input[type=\'hidden\'], .vendor input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea'),
 		dataType: 'json',
@@ -494,11 +590,14 @@ $('#button-cart').on('click', function() {
 			if (json['success']) {
 				$('.breadcrumb').after('<div class="alert alert-success">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 
-				$('#cart > button').html('<i class="fa fa-shopping-cart"></i> ' + json['total']);
+				$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i>' + json['total'] + '</span>');
 
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 
-				$('#cart > ul').load('index.php?route=common/cart/info ul li');
+				$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
+				if (json['redirect']) {
+					window.location = json['redirect']; 
+				}
 			}
 		}
 	});
@@ -569,6 +668,12 @@ $('button[id^=\'button-upload\']').on('click', function() {
 		}
 	}, 500);
 });
+
+$('#postcode-button').on('click',function(){
+	
+	
+});
+
 //--></script>
 <script type="text/javascript"><!--
 $('#review').delegate('.pagination a', 'click', function(e) {
@@ -623,4 +728,4 @@ $(document).ready(function() {
 	});
 });
 //--></script>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

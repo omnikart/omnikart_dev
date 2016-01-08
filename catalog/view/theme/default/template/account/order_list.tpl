@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <div class="container">
   <ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -26,6 +26,9 @@
               <td class="text-right"><?php echo $column_product; ?></td>
               <td class="text-left"><?php echo $column_customer; ?></td>
               <td class="text-right"><?php echo $column_total; ?></td>
+
+       <td class="text-right">Tax Invoice(PDF)</td>
+      
               <td></td>
             </tr>
           </thead>
@@ -38,6 +41,13 @@
               <td class="text-right"><?php echo $order['products']; ?></td>
               <td class="text-left"><?php echo $order['name']; ?></td>
               <td class="text-right"><?php echo $order['total']; ?></td>
+
+        <?php if(in_array($order['order_status_id'],$pdforders_order_status_customer)) { ?>
+         <td class="text-right"><a href="<?php echo $order['pdf']; ?>" target="_blank" data-toggle="tooltip" title="Download Tax Invoice(PDF)" class="btn btn-info"><i class="fa fa-file-pdf-o"></i></a></td>
+        <?php } else { ?>
+         <td class="text-right"><a disabled data-toggle="tooltip" title="PDF not available" class="btn btn-info"><i class="fa fa-file-pdf-o"></i></a></td>
+        <?php } ?>
+  
               <td class="text-right"><a href="<?php echo $order['href']; ?>" data-toggle="tooltip" title="<?php echo $button_view; ?>" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
             </tr>
             <?php } ?>
@@ -54,4 +64,4 @@
       <?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>
 </div>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

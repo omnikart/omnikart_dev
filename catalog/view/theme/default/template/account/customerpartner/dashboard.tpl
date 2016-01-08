@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <div class="container">
   <ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -35,8 +35,8 @@
 			  <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $customer; ?></div>
 			</div>
 			<div class="row">
-			  <div class="col-lg-6 col-md-12 col-sx-12 col-sm-12"><?php echo $map; ?></div>
-			  <div class="col-lg-6 col-md-12 col-sx-12 col-sm-12"><?php echo $chart; ?></div>
+			  <!-- <div class="col-lg-6 col-md-12 col-sx-12 col-sm-12"><?php //echo $map; ?></div> -->
+			  <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12"><?php echo $chart; ?></div>
 			</div>
 			<div class="row">
 			  <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12"> <?php echo $recent; ?> </div>
@@ -51,4 +51,4 @@
   </div>  <!--content-->
 <?php echo $column_right; ?></div>   <!--row-->
 </div>  <!--container-->
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

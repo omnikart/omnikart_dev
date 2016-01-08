@@ -375,6 +375,12 @@ class ModelSaleOrder extends Model {
 		return $query->row['total'];
 	}
 
+
+          public function getProductimage($product_id) {
+    $query = $this->db->query("SELECT image FROM `" . DB_PREFIX . "product` WHERE product_id = '".$product_id."'");
+    return $query->row['image'];
+  }
+  
 	public function createInvoiceNo($order_id) {
 		$order_info = $this->getOrder($order_id);
 

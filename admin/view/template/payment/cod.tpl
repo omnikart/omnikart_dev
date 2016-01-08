@@ -61,6 +61,16 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-postcode-payment">Postcode</label>
+            <div class="col-sm-10">
+              <select name="cod_postcode_payment" id="input-postcode-payment" class="form-control">
+                <option value="*" <?php echo (($cod_postcode_payment=='*')?'selected="selected"':''); ?>>All Postcodes</option>
+                <option value="0" <?php echo (($cod_postcode_payment=='0')?'selected="selected"':''); ?>>Postcode payment is 0</option>
+                <option value="1" <?php echo (($cod_postcode_payment=='1')?'selected="selected"':''); ?>>Postcode payment is 1</option>
+              </select>
+            </div>
+          </div>          
+          <div class="form-group">
             <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
             <div class="col-sm-10">
               <select name="cod_status" id="input-status" class="form-control">

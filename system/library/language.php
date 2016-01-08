@@ -18,13 +18,13 @@ class Language {
 		$file = DIR_LANGUAGE . $this->default . '/' . $filename . '.php';
 
 		if (file_exists($file)) {
-			require($file);
+			require(modification($file));
 		}
 
 		$file = DIR_LANGUAGE . $this->directory . '/' . $filename . '.php';
 
 		if (file_exists($file)) {
-			require($file);
+			require(modification($file));
 		}
 
 		$this->data = array_merge($this->data, $_);

@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header; ?><div id="columns">
 <style type="text/css">
   .imgoption{
     display: block;
@@ -375,4 +375,4 @@ $(function(){
   $('.bgcolorpicker').colorpicker({'format':'hex'});
 });
 </script>
-<?php echo $footer; ?>
+</div><?php echo $footer; ?>

@@ -1,5 +1,15 @@
 <?php
 class ModelToolImage extends Model {
+
+                private function cdn_rewrite($host_url, $new_image) {
+                    require_once(DIR_SYSTEM . 'nitro/core/core.php');
+                    require_once(DIR_SYSTEM . 'nitro/core/cdn.php');
+                    
+                    $nitro_result = nitroCDNResolve($new_image, $host_url);
+
+                    return $nitro_result;
+                }
+            
 	public function resize($filename, $width, $height) {
 		if (!is_file(DIR_IMAGE . $filename)) {
 			return;
@@ -31,12 +41,34 @@ class ModelToolImage extends Model {
 				$image->save(DIR_IMAGE . $new_image);
 			} else {
 				copy(DIR_IMAGE . $old_image, DIR_IMAGE . $new_image);
+
+                require_once DIR_SYSTEM . 'nitro/core/core.php';
+                include NITRO_INCLUDE_FOLDER . 'smush_on_demand.php';
+            
 			}
 		}
 
 		if ($this->request->server['HTTPS']) {
+
+                $default_link = $this->config->get('config_ssl').'image/'.$new_image;
+                $cdn_link = $this->cdn_rewrite($this->config->get('config_ssl'), 'image/'.$new_image);
+                if ($default_link == $cdn_link) {
+                    return $this->config->get('config_ssl') . (isset($seoUrlImage) ? $seoUrlImage : 'image/' . $new_image);
+                } else {
+                    return $cdn_link;
+                }
+            
 			return $this->config->get('config_ssl') . 'image/' . $new_image;
 		} else {
+
+                $default_link = $this->config->get('config_url').'image/'.$new_image;
+                $cdn_link = $this->cdn_rewrite($this->config->get('config_url'), 'image/'.$new_image);
+                if ($default_link == $cdn_link) {
+                    return $this->config->get('config_url') . (isset($seoUrlImage) ? $seoUrlImage : 'image/' . $new_image);
+                } else {
+                    return $cdn_link;
+                }
+            
 			return $this->config->get('config_url') . 'image/' . $new_image;
 		}
 	}

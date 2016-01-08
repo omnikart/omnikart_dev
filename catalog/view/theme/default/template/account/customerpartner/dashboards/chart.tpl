@@ -50,8 +50,8 @@ $('#range a').on('click', function(e) {
 				}
 			}
 			
-			$.plot('#chart-sale', [json['order'], json['customer']], option);	
-					
+			/*$.plot('#chart-sale', [json['order'], json['customer']], option);	*/
+			$.plot('#chart-sale', [json['order']], option);
 			$('#chart-sale').bind('plothover', function(event, pos, item) {
 				$('.tooltip').remove();
 			  

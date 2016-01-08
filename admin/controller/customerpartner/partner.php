@@ -855,7 +855,7 @@ class ControllerCustomerpartnerPartner extends Controller {
 		$this->load->model('customerpartner/transaction');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->user->hasPermission('modify', 'customerpartner/partner')){		 
-			$this->model_customerpartner_transaction->addTransaction($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount']);
+			$this->model_customerpartner_transaction->addTransaction(array('customer_id' => $this->request->get['customer_id'], 'details' => $this->request->post['description'], 'amount' => $this->request->post['amount']));
 
 			$this->data['success'] = $this->language->get('text_success');
 		} else {
