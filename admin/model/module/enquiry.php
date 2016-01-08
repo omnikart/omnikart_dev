@@ -50,14 +50,11 @@ class ModelModuleEnquiry extends Model {
 		) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
 		
 		$this->db->query("CREATE TABLE IF NOT EXISTS `".DB_PREFIX ."enquiry_terms` (
-				`revision_id` int(11) NOT NULL,
-				`term_price` text,
-				`packing_forwarding` text,
-				`octroi` text,
-				`payment_method` text,
-				`payment_terms` text,
-				PRIMARY KEY (`revision_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
+		  `revision_id` int(11) NOT NULL,
+		  `term` varchar(128) COLLATE utf8_bin NOT NULL,
+		  `value` text COLLATE utf8_bin NOT NULL,
+		  `sort_order` int(11) NOT NULL
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin");
 		
 	}
 	 public function getEnquiries($data = array()){ // renamed from getEnquiry to getEnquiries
