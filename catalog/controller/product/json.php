@@ -27,18 +27,23 @@ class ControllerProductJson extends Controller {
 			} else {
 				$image = $this->model_tool_image->resize ( 'placeholder.png', 40, 40 );
 			} */
-			if (!isset($data ['products'] [$result['product_id']])) {
-				$data ['products'] [$result['product_id']] = array();
-				$names = strtolower($result['pname']);
-				$pos = strpos($result['pname'].' ', ' ',strpos($names, $search)+strlen($search));
-				$data ['products'] [$result['product_id']]['name'] = substr($result['pname'],0,$pos);
-				$data ['products'] [$result['product_id']]['href'] = $this->url->link ( 'product/search', 'search='.$data ['products'] [$result['product_id']]['name']);
+		
+			$names = strtolower($result['pname']);
+			$pos = strpos($result['pname'].' ', ' ',strpos($names, $search)+strlen($search));
+			$sname = substr($result['pname'],0,$pos);
+					
+			if (!isset($data ['products'] [base64_encode($sname)])) {
+				$data ['products'] [base64_encode($sname)] = array();
+				$data ['products'] [base64_encode($sname)]['name'] = $sname;
+				$data ['products'] [base64_encode($sname)]['href'] = $this->url->link ( 'product/search', 'search='.$data ['products'] [base64_encode($sname)]['name']);
 			}
-			$data ['products'] [$result['product_id']] ['categories'][] = array (
-					'category_id' => $result ['category_id'],
-					'name' => $result ['name'],
-					'href' => $this->url->link ( 'product/category', 'path=' . $result ['category_id'].'&mfp=search['.$result['pname'].']') 
-			);
+			if (!isset($data ['products'] [base64_encode($sname)] ['categories'][base64_encode($result ['name'])])) {
+				$data ['products'] [base64_encode($sname)] ['categories'][base64_encode($result ['name'])] = array (
+						'category_id' => $result ['category_id'],
+						'name' => $result ['name'],
+						'href' => $this->url->link ( 'product/category', 'path=' . $result ['category_id'].'&mfp=search['.$result['pname'].']') 
+				);
+			}
 		}
 		header ( 'Content-Type: application/json' );
 		header ( 'Content-Type: text/html; charset=utf-8' );
