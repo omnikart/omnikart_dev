@@ -106,7 +106,7 @@ class ControllerProductJson extends Controller {
 				'p.date_added' 
 		);
 		
-		$sql .= " ORDER BY p.sort_order ASC, LCASE(pd.name) ASC LIMIT 0,15";
+		$sql .= " ORDER BY p.sort_order ASC, LCASE(pd.name) ASC LIMIT 0,7";
 		
 		$query = $this->db->query ( $sql );
 		
