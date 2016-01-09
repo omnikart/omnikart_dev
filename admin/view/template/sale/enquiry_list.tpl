@@ -420,7 +420,7 @@
 		   </div>
 	   </div>
       <div align="center">
-        <button type="button" class="btn btn-default" ><i class="fa fa-2x fa-paper-plane"></i></button>
+        <a target="_blank" href="" id="pdf_link" type="button" class="btn btn-default" ><i class="fa fa-2x fa-paper-plane"></i></a>
         <button id="button-form-update" data-toggle="tooltip" title="Update Seleted Queries" class="btn btn-info"><i class="fa fa-2x fa-save"></i></button>
       </div>
     </div>
@@ -476,7 +476,7 @@ $('.get-quote').on('click', function(){
 				
 				$('#myModal select[name=\'address\']').val(json['address_id']);
 				$('#myModal select[name=\'address\']').trigger('change');
-				
+				$('#pdf_link').attr('href',json.pdf_link);
 				
 				$('#myModal').modal({
 					show: 'true'
