@@ -94,7 +94,7 @@ $(document).delegate('#marketinsg-login', 'click', function(e) {
 	$('.search-autocomplete').keyup(function(event) {
 		/* Act on the event */
 		$('.result-search-autocomplete  ul').css({"overflow" : "hidden"});
-		var search = $('input[name=search]').val();
+		var search = $('input[name=search]').val().trim().toLowerCase();
 		$.ajax({
 		  method: "GET",
 		  url: "<?php echo $search_action; ?>",
@@ -105,29 +105,20 @@ $(document).delegate('#marketinsg-login', 'click', function(e) {
 			{
 				var count = 0
 				$.each(JSON.parse(result), function( index, value ) {
-				  	
+				  	var first = 0
 				  	html += '<li>';
-				  	html += '<a href="'+value.href.replace('amp;', '')+'">';
 				  	html += '<div class="row">';
-				  	html += '<div class="col-md-3 row-result-search-autocomplete-image">';
-				  	html += '<img class="result-search-autocomplete-image" src="'+value.thumb+'">';
-				  	html += '</div>';
-				  	html += '<div class="col-md-6 result-info">';
-				  	html += '<h4>'+value.name+'</h4>';
-				  	/*if(value.special == false)
-				  	{
-				  		html += '<h5>'+value.price+' <i></i></h5>';
-				  	}else{
-				  		html += '<h5>'+value.special+' <i>'+value.price+'</i></h5>';
-				  	}
-				  	*/
-				  	html += '</div>';
-				  	html += '<div style="text-align:right" class="col-md-3 result-button">';
-				  	html += '<button type="button" class="btn tagdattruoc">Buy Now</button>';
-				  	//html += '<h6>Xem them</h6>';
+				  	html += '<div class="col-sm-12">';
+				  	html += '<div class="col-sm-12">';
+				  	html += '<ul>';
+					html += '<li><a href="'+value.href.replace('amp;', '')+'">'+value.name+'</a></li>';
+					$.each(value.categories, function( index2, value2 ) {
+						html += '<li class="search-cat"><a href="'+value2.href.replace('amp;', '')+'">'+value2.name+'</a></li>';
+					});
+					html += '</ul>';
 				  	html += '</div>';
 				  	html += '</div>';
-				  	html += '</a>';
+				  	html += '</div>';
 				  	html += '</li>';
 				  	count++;
 				});
@@ -232,6 +223,9 @@ $(document).delegate('#marketinsg-login', 'click', function(e) {
 {
 	color: #FFF;
 }
+.search-cat{padding-left:15px;}
+.search-cat a:before{content:'in ';}
+
 .tagdattruoc {
   background: #3498db;
   border: 1px solid #0679c6;

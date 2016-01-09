@@ -7,6 +7,21 @@ class ControllerProductProduct extends Controller {
 		$this->load->language('product/gp_grouped');
 		$this->load->model('checkout/combo_products');
 		$this->load->language('total/combo_products');
+		$this->load->model('catalog/category');
+		$this->load->model('catalog/product');
+		
+		if (isset($this->request->get['vendor_id'])) {
+			$vendor_id = $this->request->get['vendor_id'];
+		} else {
+			$vendor_id = 0;
+		}
+		
+		if (isset($this->request->get['product_id'])) {
+			$product_id = (int)$this->request->get['product_id'];
+		} else {
+			$product_id = 0;
+		}		
+		$getCategories = $this->model_catalog_product->getCategories($product_id);
 		
 		$data['breadcrumbs'] = array();
 
@@ -14,62 +29,61 @@ class ControllerProductProduct extends Controller {
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/home')
 		);
-
-		$this->load->model('catalog/category');
-
+		$url = '';
+		if (isset($this->request->get['sort'])) 	$url .= '&sort=' . $this->request->get['sort'];
+		if (isset($this->request->get['order']))	$url .= '&order=' . $this->request->get['order'];
+		if (isset($this->request->get['page']))		$url .= '&page=' . $this->request->get['page'];
+		if (isset($this->request->get['limit'])) 	$url .= '&limit=' . $this->request->get['limit'];
+		
+		$category_id = 0;
+		
 		if (isset($this->request->get['path'])) {
 			$path = '';
-
 			$parts = explode('_', (string)$this->request->get['path']);
-
 			$category_id = (int)array_pop($parts);
-
+		}  
+		
+		if (!in_array($category_id,$getCategories)) {
+			$getCategories = array_shift($getCategories);
+			$categoryPath = $this->model_catalog_category->getCategoryPath($getCategories['category_id']);
+			foreach($categoryPath as $path) {
+				$category_info = $this->model_catalog_category->getCategory($path['path_id']);
+				$data['breadcrumbs'][] = array(
+						'text' => $category_info['name'],
+						'href' => $this->url->link('product/category', 'path=' . $category_info['category_id'] . $url)
+				);
+				unset($category_info);
+			}
+		} else {
 			foreach ($parts as $path_id) {
 				if (!$path) {
 					$path = $path_id;
 				} else {
 					$path .= '_' . $path_id;
 				}
-
+			
 				$category_info = $this->model_catalog_category->getCategory($path_id);
-
+			
 				if ($category_info) {
 					$data['breadcrumbs'][] = array(
-						'text' => $category_info['name'],
-						'href' => $this->url->link('product/category', 'path=' . $path)
+							'text' => $category_info['name'],
+							'href' => $this->url->link('product/category', 'path=' . $path)
 					);
 				}
 			}
-
 			// Set the last category breadcrumb
 			$category_info = $this->model_catalog_category->getCategory($category_id);
-
+			
 			if ($category_info) {
-				$url = '';
 
-				if (isset($this->request->get['sort'])) {
-					$url .= '&sort=' . $this->request->get['sort'];
-				}
-
-				if (isset($this->request->get['order'])) {
-					$url .= '&order=' . $this->request->get['order'];
-				}
-
-				if (isset($this->request->get['page'])) {
-					$url .= '&page=' . $this->request->get['page'];
-				}
-
-				if (isset($this->request->get['limit'])) {
-					$url .= '&limit=' . $this->request->get['limit'];
-				}
-
+			
 				$data['breadcrumbs'][] = array(
-					'text' => $category_info['name'],
-					'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url)
+						'text' => $category_info['name'],
+						'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url)
 				);
 			}
 		}
-
+		
 		$this->load->model('catalog/manufacturer');
 
 		if (isset($this->request->get['manufacturer_id'])) {
@@ -151,19 +165,8 @@ class ControllerProductProduct extends Controller {
 			);
 		}
 
-		if (isset($this->request->get['vendor_id'])) {
-			$vendor_id = $this->request->get['vendor_id'];
-		} else {
-			$vendor_id = 0;
-		}
 
-		if (isset($this->request->get['product_id'])) {
-			$product_id = (int)$this->request->get['product_id'];
-		} else {
-			$product_id = 0;
-		}
 
-		$this->load->model('catalog/product');
 
 		$product_info = $this->model_catalog_product->getProduct($product_id,$vendor_id);
 
