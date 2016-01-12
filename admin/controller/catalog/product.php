@@ -65,6 +65,10 @@ class ControllerCatalogProduct extends Controller {
 			if (isset($this->request->get['page'])) {
 				$url .= '&page=' . $this->request->get['page'];
 			}
+			
+			if (isset($this->request->get['selected[]'])) {
+				$url .= '&selected[]=' . $this->request->get['selected[]'];
+			}
 
 			$this->response->redirect($this->url->link('catalog/product', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -131,6 +135,36 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->getForm();
 	}
+	
+	
+	public function deleteattributes() {
+		$this->load->language('catalog/attribute');
+		
+		$this->document->setTitle($this->language->get('heading_title'));
+		
+		$this->load->model('catalog/attribute');
+		
+		if (isset($this->request->post['selected'])) {
+			foreach ($this->request->post['selected'] as $attribute_id) {
+				$this->model_catalog_attribute->deleteAttribute($attribute_id);
+			}
+		
+			$this->session->data['success'] = $this->language->get('text_success');
+		
+			$url = '';
+		}
+
+		if (isset($this->request->get['selected[]'])) {
+			$url .= '&selected[]=' . $this->request->get['selected[]'];
+		}
+		
+			$url="";
+		 $data['token'] = $this->session->data['token'];
+		 
+		 $this->response->redirect($this->url->link('catalog/action', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+		
+		
+	}
 
 	public function delete() {
 		$this->load->language('catalog/product');
@@ -143,7 +177,7 @@ class ControllerCatalogProduct extends Controller {
 			foreach ($this->request->post['selected'] as $product_id) {
 				$this->model_catalog_product->deleteProduct($product_id);
 			}
-
+              
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			$url = '';
@@ -195,6 +229,7 @@ class ControllerCatalogProduct extends Controller {
 	}
 	
 	public function getproductUpdates() {
+	 
 		$this->load->language('catalog/product');
 	    $this->load->model('catalog/product');
 	    $this->load->model('catalog/attribute');
@@ -205,6 +240,7 @@ class ControllerCatalogProduct extends Controller {
 	    $products = array();
 	    if (isset($this->request->post['selected']) && is_array($this->request->post['selected'])) {
 	    	foreach ($this->request->post['selected'] as $product_id) {
+	    	 	$product = $this->model_catalog_product->getProduct($product_id);
 	    		$product_attributes = $this->model_catalog_product->getProductAttributes($product_id);
 	    		foreach ($product_attributes as $key => $product_attribute) {
 	    			$attribute_info = $this->model_catalog_attribute->getAttribute($product_attribute['attribute_id']);
@@ -216,26 +252,31 @@ class ControllerCatalogProduct extends Controller {
 	    			    						'product_attribute_description' => $product_attribute['product_attribute_description']
 	    				);
 	    			}
-	    			
+	    			$products[$product_id]['name'] = $product['name'];
  	    			$attributenames = array();
  	    			$key3 = $attribute_info['attribute_group_id'];
-	    			if (!isset($agnames[$key3]['a'])) 
-	    				$agnames[$key3]['a'] = array();
-                        if (!isset($agnames[$key3]['name'])) 
-	    				$agnames[$key3]['name'] = $attribute_group;
-	    			    $agnames[$key3]['a'][$key] = array(
+	    			if (!isset($agnames[$key3]['a'])) $agnames[$key3]['a'] = array();
+	    			
+                    if (!isset($agnames[$key3]['name'])) 
+                    	$agnames[$key3]['name'] = $attribute_group[$this->config->get('config_language_id')]['name'];
+    					$agnames[$key3]['a'][$product_attribute['attribute_id']] = array(
     			    	'attribute_id'                  => $product_attribute['attribute_id'],
     			    	'name'                          => $attribute_info['name'],
     			    	'product_attribute_description' => $product_attribute['product_attribute_description']
     				);
+                    
 	    		}
 	    	}
 		}
+		 $data['token'] = $this->session->data['token'];
 		 $data['agnames'] = $agnames;
-		 $this->response->setOutput($this->load->view('catalog/action.tpl',$data));
-	}
-	
-   public function copy() {
+		 $data['products'] = $products;
+		 $url="";
+		 $data['delete'] = $this->url->link('catalog/product/deleteattributes', 'token=' . $this->session->data['token'] . $url, 'SSL');
+	 	 $this->response->setOutput($this->load->view('catalog/action.tpl',$data));
+		 
+ 	 }
+	 public function copy() {
 		$this->load->language('catalog/product');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -1202,8 +1243,10 @@ class ControllerCatalogProduct extends Controller {
 
 		if (!isset($this->request->get['product_id'])) {
 			$data['action'] = $this->url->link('catalog/product/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$data['action_stay'] = $this->url->link('catalog/product/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		} else {
 			$data['action'] = $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $this->request->get['product_id'] . $url, 'SSL');
+			$data['action_stay'] = $this->url->link('catalog/product/updateStay', 'token=' . $this->session->data['token'] . '&product_id=' . $this->request->get['product_id'] . $url, 'SSL');
 		}
 
 		$data['cancel'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -1865,7 +1908,9 @@ class ControllerCatalogProduct extends Controller {
 
 		return !$this->error;
 	}
-
+     
+	 
+		
 	public function autocomplete() {
 		if (isset($this->request->get['filter_gpt'])) {
 			$filter_gpt = $this->request->get['filter_gpt'];
