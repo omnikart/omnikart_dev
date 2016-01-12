@@ -67,4 +67,9 @@ class ModelCatalogCategory extends Model {
 		return $query->row['total'];
 	}
 	
+	public function getCategoryPath($category_id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category_path WHERE category_id = '".(int)$category_id."'");
+	
+		return $query->rows;
+	}
 }

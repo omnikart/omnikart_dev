@@ -198,13 +198,17 @@
                     <?php } else { ?>
                     <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span>
                     <?php } ?></td>
-                  <td class="text-left"><?php echo $product['name']; ?></td>
-                  <td class="text-left"><?php echo $product['model']; ?></td>
+                  <td class="text-left"> <input type="text" name="product_name" value="<?php echo $product['name']; ?>" placeholder="product_name" id="product_name" class="form-control" />
+                         </td>
+                  <td class="text-left"><input type="text" name="product_model" value="<?php echo $product['model']; ?>" placeholder="product_model" id="product_model" class="form-control" />
+                  </td>
                   <td class="text-right"><?php if ($product['special']) { ?>
-                    <span style="text-decoration: line-through;"><?php echo $product['price']; ?></span><br/>
-                    <div class="text-danger"><?php echo $product['special']; ?></div>
+                    <span style="text-decoration: line-through;"><input type="text" name="product_price" value="<?php echo $product['price']; ?>" placeholder="product_price" id="product_price" class="form-control" />
+                  </span><br/>
+                    <div class="text-danger"><input type="text" name="product_price" value="<?php echo $product['special']; ?>" placeholder="product_price" id="product_price" class="form-control" />
+                    </div>
                     <?php } else { ?>
-                    <?php echo $product['price']; ?>
+                    <input type="text" name="product_price" value="<?php echo $product['price']; ?>" placeholder="product_price" id="product_price" class="form-control" />
                     <?php } ?></td>
                   <td class="text-right"><?php if ($product['quantity'] <= 0) { ?>
                     <span class="label label-warning"><?php echo $product['quantity']; ?></span>
@@ -213,7 +217,8 @@
                     <?php } else { ?>
                     <span class="label label-success"><?php echo $product['quantity']; ?></span>
                     <?php } ?></td>
-                  <td class="text-left"><?php echo $product['status']; ?></td>
+                  <td class="text-left"><input type="text" name="product_status" value="<?php echo $product['status']; ?>" placeholder="product_status" id="product_status" class="form-control" />
+                  </td>
                   <td class="text-right"><a href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                 </tr>
                 <?php } ?>

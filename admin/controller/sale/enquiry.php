@@ -64,7 +64,15 @@ class ControllerSaleEnquiry extends Controller {
 			$enquiry_id=$this->request->get['enquiry_id'];
 		} else 
 			$enquiry_id=null;
-	
+		
+		$type = 'json';
+		
+		if(isset($this->request->get['type']))
+		{
+			$type=$this->request->get['type'];
+		}
+		
+						
 		if($enquiry_id){
 			$customer_id = 0;
 			$json['addresses'] = array();
@@ -125,12 +133,19 @@ class ControllerSaleEnquiry extends Controller {
 			}
 								
 			
-			
+			$json['pdf_link'] = $this->url->link("sale/enquiry/getEnquiry&token=".$this->session->data['token']."&enquiry_id=".$this->request->get['enquiry_id']."&type=pdf",'','SSL');
 			$json['id'] = $initial_query['id'];
 			$json['user_info']=unserialize($initial_query['user_info']);
 			
 		}
-		$this->response->setOutput(json_encode($json));
+		
+		if ('json' == $type){
+			$this->response->setOutput(json_encode($json));
+		} else {
+			$this->response->setOutput($this->load->view('sale/enquiry_form.tpl', $json));
+		}
+		
+		
 	}
 	protected function getList() {
 		
@@ -242,7 +257,7 @@ class ControllerSaleEnquiry extends Controller {
 
 		$filter_data = array(
 			'filter_order_id'      => $filter_order_id,
-			'filter_customer'	   	 => $filter_customer,
+			'filter_customer'	   => $filter_customer,
 			'filter_order_status'  => $filter_order_status,
 			'filter_total'         => $filter_total,
 			'filter_date_added'    => $filter_date_added,
