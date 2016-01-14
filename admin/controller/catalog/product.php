@@ -136,37 +136,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->getForm();
 	}
 	
-	
-	public function deleteattributes() {
-		$this->load->language('catalog/attribute');
-		
-		$this->document->setTitle($this->language->get('heading_title'));
-		
-		$this->load->model('catalog/attribute');
-		
-		if (isset($this->request->post['selected'])) {
-			foreach ($this->request->post['selected'] as $attribute_id) {
-				$this->model_catalog_attribute->deleteAttribute($attribute_id);
-			}
-		
-			$this->session->data['success'] = $this->language->get('text_success');
-		
-			$url = '';
-		}
-
-		if (isset($this->request->get['selected[]'])) {
-			$url .= '&selected[]=' . $this->request->get['selected[]'];
-		}
-		
-			$url="";
-		 $data['token'] = $this->session->data['token'];
-		 
-		 $this->response->redirect($this->url->link('catalog/action', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-		
-		
-	}
-
-	public function delete() {
+ 	public function delete() {
 		$this->load->language('catalog/product');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -229,13 +199,13 @@ class ControllerCatalogProduct extends Controller {
 	}
 	
 	public function getproductUpdates() {
-	 
 		$this->load->language('catalog/product');
 	    $this->load->model('catalog/product');
 	    $this->load->model('catalog/attribute');
 	    $this->load->model('catalog/attribute_group');
 	    $data=array();
 	    $attributenames = array();
+	    $data['language_ids'] = array();
 	    $agnames = array();
 	    $products = array();
 	    if (isset($this->request->post['selected']) && is_array($this->request->post['selected'])) {
@@ -251,6 +221,10 @@ class ControllerCatalogProduct extends Controller {
 	    			    						'name'                          => $attribute_info['name'],
 	    			    						'product_attribute_description' => $product_attribute['product_attribute_description']
 	    				);
+	    				if (empty($data['language_ids']) && !empty($product_attribute['product_attribute_description'])) {
+	    				foreach ($product_attribute['product_attribute_description'] as $language_id => $product_attribute_description)
+	    					$data['language_ids'][] = $language_id;	
+	    				}
 	    			}
 	    			$products[$product_id]['name'] = $product['name'];
  	    			$attributenames = array();
@@ -264,19 +238,32 @@ class ControllerCatalogProduct extends Controller {
     			    	'name'                          => $attribute_info['name'],
     			    	'product_attribute_description' => $product_attribute['product_attribute_description']
     				);
-                    
-	    		}
+                 }
 	    	}
 		}
 		 $data['token'] = $this->session->data['token'];
 		 $data['agnames'] = $agnames;
 		 $data['products'] = $products;
 		 $url="";
-		 $data['delete'] = $this->url->link('catalog/product/deleteattributes', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		 $data['productUpdates'] = $this->url->link('catalog/product/productUpdates&token=' . $this->session->data['token'] , '', 'SSL');
 	 	 $this->response->setOutput($this->load->view('catalog/action.tpl',$data));
-		 
  	 }
-	 public function copy() {
+
+ 	 public function productUpdates(){
+ 	 	if (isset($this->request->post)) {
+ 	  	 	$this->load->model('catalog/product');
+ 	  	 	
+ 	  	 	if (isset($this->request->post['product'])) {
+				foreach ($this->request->post['product'] as $product_id => $product) {
+	 	  	 		$this->model_catalog_product->productAttributeUpdates($product_id, $product);
+				}
+ 	  	 	} elseif (isset($this->request->post['selected'])) {
+ 	  	 		$this->model_catalog_product->productTaxclassUpdates($this->request->post);
+ 	  	 	}
+ 	  	 }
+  	 }
+ 	 
+ 	 public function copy() {
 		$this->load->language('catalog/product');
 
 		$this->document->setTitle($this->language->get('heading_title'));
