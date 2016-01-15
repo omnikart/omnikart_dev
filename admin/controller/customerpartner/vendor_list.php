@@ -97,8 +97,8 @@
 	  		3 =>'Dealer/Stockist',
 	  		4 =>'Importer',
 	  		5 =>'Reseller'
-	  		);
-	  		
+	  		); 
+	  	 	
 	  	 	 $data['enquiries'][] = array(
 				 			  'user_info'     =>  unserialize($result['user_info']),
 				 			  'manufacturers' =>  $manufacturers,
