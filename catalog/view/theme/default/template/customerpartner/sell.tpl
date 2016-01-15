@@ -5,9 +5,10 @@
 	<form id="supplier_form" class="col-sm-12 collapse">
 	<div class="row">
 		<div class="col-sm-12">
-			<h2 class="text-info text-center">Seller Registration Form</h2>
+ 			<h2 class="text-info text-center">Seller Registration Form</h2>
 		</div>
-		<div class="col-sm-4">
+			<div class="form-group required text-center"><label class="control-label">Required</label></div>
+		 <div class="col-sm-4">
 			<div class="form-group required">
 				<label class="control-label" for="name-of-person" >Name of the Contact Person</label>
 				<input name="name" class="form-control" placeholder="" type="text" id="name-of-person"/> 
@@ -16,8 +17,9 @@
 				<label class="control-label" for="phone-number">Mobile Number</label>
 				<input name="number" class="form-control" placeholder="" type="text" id="phone-number" /> 
 			</div>
-		</div>
-		<div class="col-sm-4">
+		 </div>
+		 
+		 <div class="col-sm-4">
 			<div class="form-group required">
 				<label class="control-label" for="company-name">Company Name</label>
         		<input name="company" class="form-control" placeholder="" type="text" id="company-name"/> 
@@ -109,7 +111,7 @@
 		</div>
 		<div class="col-sm-12">
 			<div class="text-center">
-	        	<button type="button" class="btn btn-primary btn-lg" id="submit">Register</button>
+	        	<button type="button" class="btn btn-primary btn-lg" onclick="validateForm();" id="submit">Register</button>
 	      	</div>
       	</div>
 	</div>
@@ -288,9 +290,7 @@ $('.seller-thumb').bind({'mouseenter' : seller_display,'mouseleave':seller_hide 
         success: function(json) {
             $('.text-danger').remove();
             if (json['success']){
-		        html ='<div class="alert alert-success"><i class="fa fa-check-circle"></i>Successfully send your query to Omnikart. We\'ll get back to you soon<button  type="button" class="close" data-dismiss="alert">&times;</button></div>';
-	        	$('#avc').prepend(html);
-	        	/*$('#supplier_form').reset();*/
+		        alert("Successfully send your query to Omnikart. We will get back to you soon");
             } else {
                 if (json['company_name']) {
                     $($('#company-name').parent()).append('<div class="text-danger">'+json['company_name']+'</div>');
@@ -317,4 +317,25 @@ $('.seller-thumb').bind({'mouseenter' : seller_display,'mouseleave':seller_hide 
   });
 </script>
 
+<script>
+function validateForm() {
+				    var x = document.forms["supplier_form"]["email"].value;
+				    var atpos = x.indexOf("@");
+				    var dotpos = x.lastIndexOf(".");
+				    if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+			        alert("Not a valid e-mail address");
+			        return false;
+    					} 
+		    else {
+			 		var mob = /^[1-9]{1}[0-9]{9}$/;
+					var txtMobile = document.getElementById("phone-number");
+					if (mob.test(txtMobile.value) == false) {
+				    alert("Please enter valid mobile number.");
+				    txtMobile.focus();
+				    return false;
+					}
+					return true;
+				    } 
+          		}
+</script>
 </div><?php echo $footer; ?>
