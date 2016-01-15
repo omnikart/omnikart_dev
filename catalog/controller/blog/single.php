@@ -36,12 +36,7 @@ class ControllerBlogSingle extends Controller {
 			$this->document->addScript('catalog/view/theme/'.$this->config->get('config_template').'/js/blogScript.js');
 		}
 
-		$data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('blog/home')
-		);
 
 		$this->load->model('tool/image');
 
@@ -99,6 +94,18 @@ class ControllerBlogSingle extends Controller {
 			if($post) {
 				
 				$pid = $post['ID'];
+				
+				$data['breadcrumbs'] = array();
+				
+				$data['breadcrumbs'][] = array(
+						'text' => $this->language->get('text_home'),
+						'href' => $this->url->link('common/home')
+				);
+				
+				$data['breadcrumbs'][] = array(
+						'text' => 'Blog',
+						'href' => $this->url->link('blog/home')
+				);
 				
 				$data['breadcrumbs'][] = array(
 					'text' => ucfirst(words_limit($post['title'],2,'...')),

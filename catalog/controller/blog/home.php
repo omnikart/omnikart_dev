@@ -26,12 +26,23 @@ class ControllerBlogHome extends Controller {
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/js/blogScript.js')) {
 			$this->document->addScript('catalog/view/theme/'.$this->config->get('config_template').'/js/blogScript.js');
 		}
-		// Breadcrumb
-		$data['breadcrumbs'] = array();
 
 		$this->load->model('blog/post');
 		$this->load->model('tool/image');
-
+		
+		// Breadcrumb
+		$data['breadcrumbs'] = array();
+		
+		$data['breadcrumbs'][] = array(
+				'text' => $this->language->get('text_home'),
+				'href' => $this->url->link('common/home')
+		);
+		
+		$data['breadcrumbs'][] = array(
+				'text' => 'Blog',
+				'href' => ''
+		);
+		
 		$logo_size = $blog_config['logo_image_size'];
 		$size = explode('x', $logo_size);
 		$logo_width = isset($size[0]) ? $size[0] : 100;
@@ -114,6 +125,7 @@ class ControllerBlogHome extends Controller {
 					'date_added' => $post['date_added'],
 					'title' => $post['title'],
 					'content' => words_limit(html_entity_decode($post['content']),$blog_config['word_limit_in_post'],'...'),
+	        		'excerpt' => words_limit(html_entity_decode($post['excerpt']),$blog_config['word_limit_in_post'],'...'),
 					'post_author' => $post['post_author'],
 					'comment_count' => $post['comment_count'],
 					'view' => $post['view'],

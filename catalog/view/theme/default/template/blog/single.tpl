@@ -16,19 +16,31 @@
     <?php $class = 'col-sm-12'; ?>
     <?php } ?>
 		<div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
-			<div class="col-sm-12 white">
-				<h2><i class="fa fa-pencil"></i>&nbsp;&nbsp;<?php echo ucfirst($post['title']); ?></h2>
-				<?php $time = strtotime($post['date_added']); ?>
+			<div class="col-sm-12 white" style="padding: 50px">
+				<div class="media-body">
+    						<h2 class="media-heading"><?php echo ucfirst($post['title']); ?></h2>
+    						<h4>
+								<span>
+									By&nbsp;&nbsp;&nbsp;<?php echo author($post['post_author'],'firstname').' '.author($post['post_author'],'lastname'); ?>
+								</span>
+								&nbsp;&nbsp;
+								<?php $time=strtotime($post['date_added']);?>
+								<span><?php echo month_name(date('m',$time)); ?>&nbsp;<?php echo date('d',$time); ?>,&nbsp;<?php echo date('Y',$time); ?></span>
+								&nbsp;&nbsp;
+								<span><i class="fa fa-comment"></i> <?php echo $post['comment_count']; ?></span>
+								&nbsp;&nbsp;
+								<span><?php echo sprintf($text_view,$post['view']); ?></span>
+							</h4>
+    						<h4>
+    							<div>
+									<strong><?php echo $text_tag; ?></strong>
+									<?php foreach ($post['tag'] as $tag) { ?>
+										<a href="<?php echo $tag['link']; ?>"><?php echo $tag['tag']; ?></a>
+									<?php } ?>
+								</div>
+							</h4>
+  						</div>
 				<div>
-					<span><?php echo date('d',$time); ?>, <?php echo month_name(date('m',$time)); ?>, <?php echo date('Y',$time); ?></span>
-					<span><?php echo date('h',$time); ?>:<?php echo date('i',$time); ?>:<?php echo date('s',$time); ?></span>
-				</div>
-				<div>
-					<div>
-						<span><?php echo $text_author; ?><?php echo author($post['post_author'],'username'); ?></span>
-						<span><?php echo $text_comment; ?><?php echo $post['comment_count']; ?></span>
-						<span><?php echo sprintf($text_view,$post['view']); ?></span>
-					</div>
 
 					<div>
 						<div>
