@@ -300,7 +300,7 @@ var google_remarketing_only = true;
 							outDelay:100,
 							containerID: 'ToTop',
 							containerHoverID: 'ToTopHover',
-							scrollSpeed: 500,
+							scrollSpeed: 50,
 							easingType: 'linear'
 							};
 							var settings = $.extend(defaults, options);
