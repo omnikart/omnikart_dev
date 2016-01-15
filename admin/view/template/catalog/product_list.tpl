@@ -107,28 +107,28 @@
             </div>
           </div>
         </div>
-        <!-- Action -->
- 	     	<div class="well">
-        			<div class="row">
-		        		   <div class="col-sm-4">
-				        		    <button type="button" class="btn btn-primary" value="get_attributes" data-toggle="modal" data-target="#get_attributes">Get Attributes</button>
-				         	</div>
-                   <div class="col-sm-4">
-			        	<select id="getTaxClass" name="tax_class_id"  class="form-control">
-			                    <option value="0"><?php echo $text_none; ?></option>
-			                    <?php foreach ($tax_classes as $tax_class) { ?>
-			                    <?php if ($tax_class['tax_class_id'] == $tax_class_id) { ?>
-			                    <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
-			                    <?php } else { ?>
-			                    <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
-			                    <?php } ?>
-			                    <?php } ?>
-                  		</select>
+    <!-- Action -->
+     	<div class="well">
+			<div class="row">
+    		   <div class="col-sm-4">
+        		    <button type="button" class="btn btn-primary" value="get_attributes" data-toggle="modal" data-target="#get_attributes">Get Attributes</button>
+         	   </div>
+               <div class="col-sm-4">
+		        	<select id="getTaxClass" name="tax_class_id"  class="form-control">
+	                    <option value="0"><?php echo $text_none; ?></option>
+	                    <?php foreach ($tax_classes as $tax_class) { ?>
+	                    <?php if ($tax_class['tax_class_id'] == $tax_class_id) { ?>
+	                    <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
+	                    <?php } else { ?>
+	                    <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
+	                    <?php } ?>
+	                    <?php } ?>
+      				</select>
 			      	</div>
-			      	 <div class="col-sm-4">
-						<a class="btn btn-default pull-left" id="update" >Action</a>
-					</div>
-		      	</div>
+			      		 <div class="col-sm-4">
+							<a class="btn btn-default" id="update" >Action</a>
+					     </div>
+		      		</div>
 	       	</div>
         <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-product">
           <div class="table-responsive">
@@ -210,27 +210,27 @@
           </div>
         </form>
          
-   <!--get attributes-->
-      <div class="modal fade" id="get_attributes" role="dialog">
-              <div class="modal-dialog modal-lg">
-           		  <div class="modal-content">
-                	   <div class="modal-header"></div>
-               		 		 <div class="modal-body"></div>
-                         <div class="modal-footer">
-                          <div class="pull-right">
-	  <button id="productUpdates"  onclick="productUpdates();" class="btn btn-primary"><i class="fa fa-save"></i></button>
-						</div>	
-                         </div>
-                        </div>
-                   </div>
-              </div> 
-        <div class="row">
-          <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
-          <div class="col-sm-6 text-right"><?php echo $results; ?></div>
-        </div>
-      </div>
-    </div>
-  </div>
+ <!--get attributes-->
+  <div class="modal fade" id="get_attributes" role="dialog">
+      <div class="modal-dialog modal-lg">
+   		  <div class="modal-content">
+	   		  <div class="modal-header"></div>
+   		 		 <div class="modal-body"></div>
+                     <div class="modal-footer">
+                     <div class="pull-right">
+	  						<button id="productUpdates"  onclick="productUpdates();" class="btn btn-primary"><i class="fa fa-save"></i></button>
+			 		 </div>	
+                 </div>
+         	  </div>
+           </div>
+        </div> 
+		        <div class="row">
+		          <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
+		          <div class="col-sm-6 text-right"><?php echo $results; ?></div>
+		        </div>
+	      </div>
+	    </div>
+	  </div>
   
  
 <script type="text/javascript">
@@ -243,12 +243,10 @@ $('#get_attributes').on('show.bs.modal', function (event) {
 		data: $('input[name^=\'selected\']:checked'),
 		success: function(data) {
 		     modal.find('.modal-body').html(data);
-		     
-		 } 
+		  } 
 	});
 });
-</script>
-
+</script>	
 
 <script type="text/javascript">
 $('#update').on('click',function () {
@@ -264,8 +262,7 @@ $('#update').on('click',function () {
 });
 </script>
 
-  
-  <script type="text/javascript"><!--
+   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
 	var url = 'index.php?route=catalog/product&token=<?php echo $token; ?>';
 
