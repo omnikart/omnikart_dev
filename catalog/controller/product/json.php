@@ -119,7 +119,7 @@ class ControllerProductJson extends Controller {
 	public function getEnquiryProducts($data = array()) {
 		
 		if (! empty ( $data ['filter_name'] )) {
-			$sql = "SELECT p.product_id, p.type, pd.name FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . ( int ) $this->config->get ( 'config_language_id' ) . "' AND p.status = '1' AND p.type <> '0' AND p.date_available <= NOW() AND p2s.store_id = '" . ( int ) $this->config->get ( 'config_store_id' ) . "'";
+			$sql = "SELECT p.product_id, p.type, gpg.gp_template, pd.name FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "gp_grouped gpg ON (gpg.product_id=p.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . ( int ) $this->config->get ( 'config_language_id' ) . "' AND p.status = '1' AND p.type <> '0' AND p.date_available <= NOW() AND p2s.store_id = '" . ( int ) $this->config->get ( 'config_store_id' ) . "'";
 				
 			$sql .= " AND (";
 				
@@ -160,6 +160,11 @@ class ControllerProductJson extends Controller {
 			$products = array();
 			
 			foreach ($query->rows as $product) {
+				
+				if ($product['gp_template']) {
+					$product['type'] = 2;
+				}
+				
 				$products[] = array(
 					'name' => $product['name'],
 					'cname' => $product['name'],
