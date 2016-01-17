@@ -1484,9 +1484,14 @@ class ModelAccountCustomerpartner extends Model {
 			$query2 = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry_term et WHERE et.enquiry_id='" . $enquiry_id['enquiry_id'] . "'");
 			
 			foreach ($query2->rows as $term) {
+				if ($term['term_type']=='payment') {
+					$term_query = $query = $this->db->query("SELECT name FROM ".DB_PREFIX."payment_term WHERE payment_term_id='".(int)$term['term_value']."'");
+					$term['term_value'] = $term_query->row['name']; 
+				}
+				
 				$enquiry['terms'][] = array(
-						'type' => $term['term_type'],
-						'value' => $term['term_value']
+					'type' => $term['term_type'],
+					'value' => $term['term_value']
 				);
 			}
 			

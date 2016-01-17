@@ -38,23 +38,25 @@
 				<?php } ?>
 			</tbody>
 		</table>
+		<hr />
+		<h4>Payment Terms and User Details</h4>
 		<div class="col-sm-12" id="collapsePayment">
 			<div class="form-group required">
-				<label class="col-sm-3 control-label">Payment Terms :</label>
-				<div class="col-sm-3">
+				<label class="col-sm-2 control-label">Payment Terms :</label>
+				<div class="col-sm-2">
 					<select class="form-control" name="payment_terms">
 					<option value="0" selected>- Select Payment Terms -</option>
-					<option value="1">COD</option>
+					<?php foreach ($payment_terms as $term) { ?>
+					<option value="<?php echo $term['payment_term_id']?>"><?php echo $term['name']; ?></option>
+					<?php } ?>
 					</select>
 				</div>
-				<label class="col-sm-3 control-label">Postcode :</label>
-				<div class="col-sm-3">
+				<label class="col-sm-2 control-label">Postcode :</label>
+				<div class="col-sm-2">
 					<input type="text" class="form-control" name="postcode" />
 				</div>
-			</div>
-			<div class="form-group required">
-				<label class="col-sm-3 control-label">C-Form available :</label>
-				<div class="col-sm-9">
+				<label class="col-sm-2 control-label">C-Form available :</label>
+				<div class="col-sm-2">
 					<label class="radio-inline"><input type="radio" name="c_form" value="1">Yes</label>
 					<label class="radio-inline"><input type="radio" name="c_form" value="0" checked="checked">No</label>
 				</div>

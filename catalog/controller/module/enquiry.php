@@ -14,6 +14,7 @@ class ControllerModuleEnquiry extends Controller {
 		}
 		
 		$this->load->model('localisation/unit_class');
+
 		$data['unit_classes'] = $this->model_localisation_unit_class->getUnitClasses();
 		$data['autocomplete_products'] = $this->url->link('product/json/enquiry_product','','SSL');
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/enquiry_form.tpl')) {
@@ -223,6 +224,8 @@ class ControllerModuleEnquiry extends Controller {
 		else
 			$enquiries = array();
 		$this->load->model('localisation/unit_class');
+		$this->load->model('module/enquiry');
+		$data['payment_terms'] = $this->model_module_enquiry->getPaymentTerms();
 		foreach ($enquiries as $enquiry => $quantity) {
 			$enq = unserialize(base64_decode($enquiry));
 			$data['enquiries'][] = array(

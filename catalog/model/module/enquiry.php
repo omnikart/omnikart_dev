@@ -85,6 +85,11 @@ class ModelModuleEnquiry extends Model {
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry_term et WHERE et.enquiry_id='" . $enquiry_id . "'");
 		
 		foreach ($query->rows as $term) {
+			if ($term['term_type']=='payment') {
+				$term_query = $query = $this->db->query("SELECT name FROM ".DB_PREFIX."payment_term WHERE payment_term_id='".(int)$term['term_value']."'");
+				$term['term_value'] = $term_query->row['name']; 
+			}
+			
 			$data['terms'][] = array(
 				'type' => $term['term_type'],
 				'value' => $term['term_value']
@@ -109,5 +114,13 @@ class ModelModuleEnquiry extends Model {
 			}
 		}
 		$this->response->setOutput($this->load->view('default/template/module/enquiry_supplier.tpl',$data));
+	}
+	public function getPaymentTerms($data = array()) {
+		if (!$this->cache->get('payment_terms')){
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "payment_term WHERE 1");
+			$this->cache->set('payment_terms',$query->rows);
+			return $query->rows;
+		}
+		return $this->cache->get('payment_terms');
 	}
 }

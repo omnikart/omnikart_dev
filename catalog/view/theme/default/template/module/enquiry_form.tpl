@@ -264,4 +264,7 @@ $('#enquiry_modal').on('click','#view-enquiry',function(){
 });
 $('#enquiry_modal button.btn-decrease').trigger('click');
 $('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
+$('#enquiry_modal').on('show.bs.modal',function (e) {
+	$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
+});
 </script>

@@ -1237,7 +1237,8 @@ class ControllerProductProduct extends Controller {
 		} else {
 			$tcg_customer_price = false;
 		}
-			
+		$gp_child_option_col = false;
+		
 		$tcg_tax = $this->config->get('config_tax');
 			
 		$this->language->load('product/gp_grouped');		
