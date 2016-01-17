@@ -45,7 +45,7 @@ class ControllerPaymentCod extends Controller {
 					$sms->password = $this->config->get('way2mint_password');
 					$sms->setfrom($this->config->get('way2mint_otp_from'));
 					$sms->response_format = 'json';
-					$sms->setto('9967296963');
+					$sms->setto(trim($this->request->get['otp_number']));
 					$sms->template($this->config->get('way2mint_otp_tpl'));
 					$param = explode(',',$this->config->get('way2mint_otp_param'));
 					$params['templateParameters['.$param[0].']'] = $otp;

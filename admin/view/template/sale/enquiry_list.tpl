@@ -90,67 +90,62 @@
         </div>
 				*/
 				?>
-        <form method="post" enctype="multipart/form-data" id="form-enquiry">
-          <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-                  <td class="text-right col-sm-2">Name</td>
-                  <td class="text-left col-sm-2">Contact Number</td>
-                  <td class="text-left">Query Details</td>
-                  <td style="width: 1px;" class="text-left"></td>
-                </tr>
-              </thead>
-              <tbody>
-                <?php if ($enquiries) { ?>
-                <?php foreach ($enquiries as $enquiry) { ?>
-                <tr>
-                  <td class="text-center"><input type="checkbox" name="selected[]" value="<?php echo $enquiry['id']; ?>"></td>
-                  <td class="text-right"><?php echo $enquiry['user_info']['firstname'].' '.$enquiry['user_info']['lastname']; ?></td>
-                  <td class="text-right">
-                  	<?php echo $enquiry['user_info']['phone']; ?> <br />
-                   	<?php echo $enquiry['user_info']['email']; ?> <br />
-                   	<?php echo $enquiry['date']; ?>
-                  </td>
-                  <td>
-                   <table class="table">
-									<tr><td>Product name</td><td>Quantity</td><td>Specifications</td></tr>
-                   <?php foreach ($enquiry['query'] as $query) { ?>
-                   <tr>
-					 <td class="text-left"><?php echo $query['name']; ?></td>
-					 <td class="text-left"><?php echo $query['quantity']; ?></td>
-					 <td class="text-left"><?php echo $query['specification']; ?></td>
-				   </tr>
-			       <?php } ?>
-			       </table>
-			      </td>
-				<td class="text-left">
-				  <div class="row">
-					<select name="query[<?php echo $enquiry['id']; ?>][status]">
-						<option value="1" <?php echo (1==$enquiry['status'])?'selected':''; ?> >Pending</option>
-						<option value="2" <?php echo (2==$enquiry['status'])?'selected':''; ?>>Query Confirmed</option>
-						<option value="3" <?php echo (3==$enquiry['status'])?'selected':''; ?>>Product Suggested</option>
-						<option value="4" <?php echo (4==$enquiry['status'])?'selected':''; ?>>Product Confirmed</option>
-						<option value="5" <?php echo (5==$enquiry['status'])?'selected':''; ?>>Voided</option>						
-					</select>
-				 </div>	
-				 <div class="row" style="margin-right: 8px; margin-top: 5px;" >
-				  <button type="button" id="" class="btn btn-primary pull-right get-quote" ><i class="fa fa-search">Update</i> </button>
-				  <input type="hidden" name="enquiry_id" value="<?php echo $enquiry['id']; ?>" >
-				 </div>
-				</td>									
-                </tr>
-                <?php } ?>
-                <?php } else { ?>
-                <tr>
-                  <td class="text-center" colspan="8"><?php echo $text_no_results; ?></td>
-                </tr>
-                <?php } ?>
-              </tbody>
-            </table>
-          </div>
-        </form>
+      <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-product">
+		<?php if ($enquiries) { ?>
+			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			<?php foreach ($enquiries as $enquiry) { ?>
+				<div class="panel panel-default">
+					<div class="panel-heading"># <?php echo $enquiry['enquiry_id']; ?> &nbsp; <?php echo $enquiry['firstname'].' '.$enquiry['lastname']; ?>
+						<a href="javascript:void();" onclick="quotation('<?php echo $enquiry['enquiry_id']; ?>');" class="pull-right">Reply with Smart Quotation</a> 
+					</div>
+					<div class="panel-body">
+						<p>	Email: <?php echo $enquiry['email']; ?><br />
+						Telephone: <?php echo $enquiry['telephone']; ?><br />
+						Postcode: <?php echo $enquiry['postcode']; ?><br />
+						<?php foreach ($enquiry['terms'] as $term) { ?>
+						<?php echo $term['type']; ?>:<?php echo $term['value']; ?><br />
+						<?php } ?>
+						</p>
+					</div>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<td class="center" style="max-width:100px;">Sr No.</td>
+							<td style="max-width:100px;">Name</td>
+							<td style="width:400px;">Description</td>
+							<td class="center" style="max-width:100px;">Quantity</td>
+							<td class="center" style="max-width:50px;">Unit</td>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($enquiry['enquiries'] as $key=>$enquiry_product) { ?>
+							<tr>
+							<td class="center"><?php echo $key; ?></td>
+							<?php if (isset($enquiry_product['link'])) { ?>
+							<td><a href="<?php echo $enquiry_product['link']; ?>" > <?php echo $enquiry_product['name']; ?> </a></td>
+							<?php } else { ?>
+							<td><?php echo $enquiry_product['name']; ?></td>
+							<?php } ?>
+							<td><?php echo $enquiry_product['description']; ?><br />
+								<?php if (is_array($enquiry_product['filenames'])) { foreach ($enquiry_product['filenames'] as $file) { ?>
+									<a href="<?php echo '../system/upload/queries/'.$file; ?>" target="_Blank"><?php echo substr($file,0,strrpos($file,'.',-1)); ?></a>
+								<?php } } ?>
+							</td>
+							<td class="center"><?php echo $enquiry_product['quantity']; ?></td>
+							<td class="center"><?php echo $enquiry_product['unit_title']; ?></td>
+							</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+				</div>
+			<?php } ?>
+			</div>
+		<?php } else { ?>
+		<tr>
+		<td class="text-center" colspan="10"><?php echo $text_no_results; ?></td>
+		</tr>
+		<?php } ?>
+      </form>
         <div class="row">
           <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
           <div class="col-sm-6 text-right"><?php //echo $results; ?></div>

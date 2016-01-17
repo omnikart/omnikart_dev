@@ -301,6 +301,8 @@
   <?php	}	?>
   <?php echo $column_right; ?></div>
 </div>
+<script type="text/javascript" src="catalog/view/javascript/jquery/editor/jquery-te-1.4.0.min.js"></script>
+<link href="catalog/view/javascript/jquery/editor/jquery-te-1.4.0.css" rel="stylesheet" />
 
 <script type="text/javascript"><!--
 
@@ -313,7 +315,7 @@ $('button[name="delete_img"]').on('click',function(){
   $(this).parent().prevAll('input[type="hidden"]').val(1);
 });
 
-$('#input-shortprofile, #input-companydescription').summernote({height: 300});
+$('#input-shortprofile, #input-companydescription').jqte();
 
 $("#country").change(function() {
  	var scr='image/flags/'+$(this).val().toLowerCase()+'.png';

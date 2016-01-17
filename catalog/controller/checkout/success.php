@@ -16,7 +16,7 @@ class ControllerCheckoutSuccess extends Controller {
 				}
 				$url .= urlencode(json_encode($json));
 				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, 'http://www.example.com');
+				curl_setopt($ch, CURLOPT_URL, $url);
 				curl_setopt($ch, CURLOPT_HEADER, 1);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 				$data = curl_exec();

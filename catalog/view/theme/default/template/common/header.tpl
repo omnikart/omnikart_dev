@@ -154,6 +154,7 @@ src="https://www.facebook.com/tr?id=1399996446990885&ev=PageView&noscript=1"
 													<li><a href="<?php echo $mp_orderhistory; ?>"><?php echo $text_orderhistory; ?></a></li>
 													<li><a href="<?php echo $mp_transaction; ?>"><?php echo $text_transaction; ?></a></li>
 													<li><a href="<?php echo $mp_productlist; ?>"><?php echo $text_productlist; ?></a></li>
+													<li><a href="<?php echo $mp_enquiry; ?>"><?php echo $text_enquiry; ?></a></li>													
 													<li><a href="<?php echo $mp_download; ?>"><?php echo $text_download; ?></a></li>
 													<li><a href="<?php echo $mp_add_shipping_mod; ?>"><?php echo $text_wkshipping; ?></a></li>
 												</div>

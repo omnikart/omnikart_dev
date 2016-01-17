@@ -57,6 +57,28 @@
 	</div>
 </footer> 
 <script type="text/javascript"><!--
+function addmodal(var_id,var_class) {
+		$('#'+var_id).remove();
+		html  = '<div id="'+var_id+'" class="modal tabindex="-1"  '+var_class+'" role="dialog" aria-labelledby="'+var_id+'">';
+		html += '  <div class="modal-dialog">';
+		html += '    <div class="modal-content">';
+		html += '      <div class="modal-header">';
+		html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+		html += '        <h4 class="modal-title"></h4>';
+		html += '      </div>';
+		html += '      <div class="modal-body"></div>';
+		html += '      <div class="modal-footer"></div>';
+		html += '    </div>';
+		html += '  </div>';
+		html += '</div>';
+		$('body').append(html);
+		return $('#'+var_id);
+}
+
+--></script>
+
+
+<script type="text/javascript"><!--
 $(document).delegate('#marketinsg-login', 'click', function(e) {
 	e.preventDefault();
 
