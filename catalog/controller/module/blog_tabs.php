@@ -49,53 +49,18 @@ class ControllerModuleBlogTabs extends Controller {
 
 		foreach ($data['recent_posts'] as $key => $post) {
 			if (!empty($post['post_thumb']) && is_file(DIR_IMAGE . $post['post_thumb'])) {
-				$data['thumbnail_recent'][] = $this->model_tool_image->resize($post['post_thumb'], $thumb_width_recent, $thumb_height_recent);
+				$data['recent_posts'][$key]['thumb'] = $this->model_tool_image->resize($post['post_thumb'], 150, 150);
 			} else {
-				$data['thumbnail_recent'][] = $this->model_tool_image->resize('no_image.png', $thumb_width_recent, $thumb_height_recent);
+				$data['recent_posts'][$key]['thumb'] = $this->model_tool_image->resize('no_image.png', $thumb_width_recent, $thumb_height_recent);
 			}
-
-			if($settings['thumbnail_type_recent'] == 'slide') {
-				if(isset($post['images']) && count($post['images']) > 0) {
-					$images = array();
-		            foreach ($post['images'] as $key => $image) {
-				        switch ($image['meta_key']) {
-			            case 'image':
-			              $data['post_images_recent'][$post['ID']][] = $this->model_tool_image->resize($image['meta_value'], $thumb_width_recent, $thumb_height_recent);
-			              break;
-			            
-			            default:
-			              //...
-			              break;
-			        	} 
-			    	}
-			    }
-	        }
 		}
 
 		foreach ($data['popular_posts'] as $key => $post) {
 			if (!empty($post['post_thumb']) && is_file(DIR_IMAGE . $post['post_thumb'])) {
-				$thumb = $this->model_tool_image->resize($post['post_thumb'], 150, 150);
+				$data['popular_posts'][$key]['thumb'] = $this->model_tool_image->resize($post['post_thumb'], 150, 150);
 			} else {
-				$thumb = $this->model_tool_image->resize('no_image.png', 150, 150);
+				$data['popular_posts'][$key]['thumb'] = $this->model_tool_image->resize('no_image.png', 150, 150);
 			}
-			
-			if($settings['thumbnail_type_popular'] == 'slide') {
-				if(isset($post['images']) && count($post['images']) > 0) {
-					$images = array();
-		            foreach ($post['images'] as $key => $image) {
-				        switch ($image['meta_key']) {
-				            case 'image':
-				              $data['post_images_popular'][$post['ID']][] = $this->model_tool_image->resize($image['meta_value'], 100, 100);
-				              break;
-				            
-				            default:
-				              //...
-				              break;
-			        	} 
-			    	}
-			    }
-	        }
-	    $data['popular_posts'][$key]['thumb'] = $thumb;
 		}
 
 		if (isset($this->request->get['path'])) {

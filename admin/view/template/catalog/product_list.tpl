@@ -107,94 +107,31 @@
             </div>
           </div>
         </div>
-        <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-product">
-   
- <!-- Action -->
-  <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-product">
-        	<div class="well">
-        			<div class="row">
-		        		   <div class="col-sm-4">
-				        		   <select name="quickedit" id="quickedit" class="form-control">
-				        		   <option value="*"></option>
-				        		   <option value="tax_class" data-toggle="collapse" data-target="#taxclass">Tax class</option>
-				        		   <option value="attributes" data-toggle="modal" data-target="#attributeModal">Attributes</option>
-				        		   <option value="get_attributes" data-toggle="modal" data-target="#get_attributes">Get Attributes</option>
-				        		   </select>
-		                   </div>
-          <div class="modal fade" id="attributeModal" role="dialog">
-              <div class="modal-dialog">
-           		  <div class="modal-content">
-                	   <div class="modal-header"></div>
-               		 		 <div class="modal-body">
-                					<div class="table-responsive">
-                						<table id="attribute" class="table table-striped table-bordered table-hover">
-                 				   		<thead>
-                    					<tr>
-                    				      <td class="text-left"><?php echo "Attribute"; ?></td>
-					                      <td class="text-left"><?php echo "Text"; ?></td>
-					                      <td></td>
-                				  	   </tr>
-              				     	  </thead>
-                    	          	<tbody>
-				                    <?php $attribute_row = 0; ?>
-				                    <?php foreach ($product_attributes as $product_attribute) { ?>
-				                    <tr id="attribute-row<?php echo $attribute_row; ?>">
-				                        <td class="text-left" style="width: 40%;"><input type="text" name="product_attribute[<?php echo $attribute_row; ?>][name]" value="<?php echo $product_attribute['name']; ?>" placeholder="<?php echo $entry_attribute; ?>" class="form-control" />
-				                      		  <input type="hidden" name="product_attribute[<?php echo $attribute_row; ?>][attribute_id]" value="<?php echo $product_attribute['attribute_id']; ?>" /></td>
-				                        <td class="text-left"><?php foreach ($languages as $language) { ?>
-				                       		 <div class="input-group"><span class="input-group-addon"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></span>
-				                          		<textarea name="product_attribute[<?php echo $attribute_row; ?>][product_attribute_description][<?php echo $language['language_id']; ?>][text]" rows="5" placeholder="<?php echo $entry_text; ?>" class="form-control"><?php echo isset($product_attribute['product_attribute_description'][$language['language_id']]) ? $product_attribute['product_attribute_description'][$language['language_id']]['text'] : ''; ?></textarea>
-				                        	 </div>
-				                        <?php } ?></td>
-				                      	<td class="text-left"><button type="button" onclick="$('#attribute-row<?php echo $attribute_row; ?>').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
-			                	   </tr>
-			               				 <?php $attribute_row++; ?>
-			               				 <?php } ?>
-			                     </tbody>
-			              		 <tfoot>
-                 	 			 <tr>
-			                      <td colspan="2"></td>
-			                      <td class="text-left"><button type="button" onclick="addAttribute();" data-toggle="tooltip" title="<?php echo $button_attribute_add; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
-				                  </tr>
-			                  </tfoot>
-			                </table>
-			              <button type="submit" form="form-product" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary pull-right"><i class="fa fa-save"></i></button>
- 		         	 </div>
-		         </div>
-		      </div>
-		  </div>
-     </div>
-     <!--get attributes-->
-      <div class="modal fade" id="get_attributes" role="dialog">
-              <div class="modal-dialog">
-           		  <div class="modal-content">
-                	   <div class="modal-header"></div>
-               		 		 <div class="modal-body"></div>
-                         <div class="modal-footer"></div>
-                        </div>
-                   </div>
-              </div>                  		
-              <div class="collapse" id="taxclass">
-                  <div class="col-sm-4">
-			        	<select name="tax_class_id" id="input-tax-class" class="form-control">
-			                    <option value="0"><?php echo $text_none; ?></option>
-			                    <?php foreach ($tax_classes as $tax_class) { ?>
-			                    <?php if ($tax_class['tax_class_id'] == $tax_class_id) { ?>
-			                    <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
-			                    <?php } else { ?>
-			                    <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
-			                    <?php } ?>
-			                    <?php } ?>
-                  		</select>
-			      		</div>
-			      		</div>
-      	             
-					<div class="col-sm-4">
-						<button type="submit" class="btn btn-primary pull-right" form="form-product" formaction="<?php echo $update; ?>" id="update" formmethod="post">Action</button>
-					</div>
-		      	</div>
+    <!-- Action -->
+     	<div class="well">
+			<div class="row">
+    		   <div class="col-sm-4">
+        		    <button type="button" class="btn btn-primary" value="get_attributes" data-toggle="modal" data-target="#get_attributes">Get Attributes</button>
+         	   </div>
+               <div class="col-sm-4">
+		        	<select id="getTaxClass" name="tax_class_id"  class="form-control">
+	                    <option value="0"><?php echo $text_none; ?></option>
+	                    <?php foreach ($tax_classes as $tax_class) { ?>
+	                    <?php if ($tax_class['tax_class_id'] == $tax_class_id) { ?>
+	                    <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
+	                    <?php } else { ?>
+	                    <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
+	                    <?php } ?>
+	                    <?php } ?>
+      				</select>
+			      	</div>
+			      		 <div class="col-sm-4">
+							<a class="btn btn-default" id="update" >Action</a>
+					     </div>
+		      		</div>
 	       	</div>
-	    <div class="table-responsive">
+        <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-product">
+          <div class="table-responsive">
             <table class="table table-bordered table-hover">
               <thead>
                 <tr>
@@ -242,17 +179,15 @@
                     <?php } else { ?>
                     <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span>
                     <?php } ?></td>
-                  <td class="text-left"> <input type="text" name="product_name" value="<?php echo $product['name']; ?>" placeholder="product_name" id="product_name" class="form-control" />
-                         </td>
-                  <td class="text-left"><input type="text" name="product_model" value="<?php echo $product['model']; ?>" placeholder="product_model" id="product_model" class="form-control" />
-                  </td>
+                  <td class="text-left"><?php echo $product['name']; ?></td>
+                  <td class="text-left"><?php echo $product['model']; ?></td>
                   <td class="text-right"><?php if ($product['special']) { ?>
                     <span style="text-decoration: line-through;"><input type="text" name="product_price" value="<?php echo $product['price']; ?>" placeholder="product_price" id="product_price" class="form-control" />
                   </span><br/>
                     <div class="text-danger"><input type="text" name="product_price" value="<?php echo $product['special']; ?>" placeholder="product_price" id="product_price" class="form-control" />
                     </div>
                     <?php } else { ?>
-                    <input type="text" name="product_price" value="<?php echo $product['price']; ?>" placeholder="product_price" id="product_price" class="form-control" />
+                    <?php echo $product['price']; ?>
                     <?php } ?></td>
                   <td class="text-right"><?php if ($product['quantity'] <= 0) { ?>
                     <span class="label label-warning"><?php echo $product['quantity']; ?></span>
@@ -261,8 +196,7 @@
                     <?php } else { ?>
                     <span class="label label-success"><?php echo $product['quantity']; ?></span>
                     <?php } ?></td>
-                  <td class="text-left"><input type="text" name="product_status" value="<?php echo $product['status']; ?>" placeholder="product_status" id="product_status" class="form-control" />
-                  </td>
+                  <td class="text-left"><?php echo $product['status']; ?></td>
                   <td class="text-right"><a href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                 </tr>
                 <?php } ?>
@@ -275,66 +209,32 @@
             </table>
           </div>
         </form>
-        <div class="row">
-          <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
-          <div class="col-sm-6 text-right"><?php echo $results; ?></div>
-        </div>
-      </div>
-    </div>
-  </div>
+         
+ <!--get attributes-->
+  <div class="modal fade" id="get_attributes" role="dialog">
+      <div class="modal-dialog modal-lg">
+   		  <div class="modal-content">
+	   		  <div class="modal-header"></div>
+   		 		 <div class="modal-body"></div>
+                     <div class="modal-footer">
+                     <div class="pull-right">
+	  						<button id="productUpdates"  onclick="productUpdates();" class="btn btn-primary"><i class="fa fa-save"></i></button>
+			 		 </div>	
+                 </div>
+         	  </div>
+           </div>
+        </div> 
+		        <div class="row">
+		          <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
+		          <div class="col-sm-6 text-right"><?php echo $results; ?></div>
+		        </div>
+	      </div>
+	    </div>
+	  </div>
   
-    <script type="text/javascript"><!--
-     var attribute_row = <?php echo $attribute_row; ?>;
-
-   function addAttribute() {
-    html  = '<tr id="attribute-row' + attribute_row + '">';
-	html += '  <td class="text-left" style="width: 20%;"><input type="text" name="product_attribute[' + attribute_row + '][name]" value="" placeholder="<?php echo $entry_attribute; ?>" class="form-control" /><input type="hidden" name="product_attribute[' + attribute_row + '][attribute_id]" value="" /></td>';
-	html += '  <td class="text-left">';
-	<?php foreach ($languages as $language) { ?>
-	html += '<div class="input-group"><span class="input-group-addon"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></span><textarea name="product_attribute[' + attribute_row + '][product_attribute_description][<?php echo $language['language_id']; ?>][text]" rows="5" placeholder="<?php echo $entry_text; ?>" class="form-control"></textarea></div>';
-    <?php } ?>
-	html += '  </td>';
-	html += '  <td class="text-left"><button type="button" onclick="$(\'#attribute-row' + attribute_row + '\').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
-    html += '</tr>';
-	
-	$('#attribute tbody').append(html);
-	
-	attributeautocomplete(attribute_row);
-	
-	attribute_row++;
-}
-
-  function attributeautocomplete(attribute_row) {
-	$('input[name=\'product_attribute[' + attribute_row + '][name]\']').autocomplete({
-		'source': function(request, response) {
-			$.ajax({
-				url: 'index.php?route=catalog/attribute/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
-				dataType: 'json',			
-				success: function(json) {
-					response($.map(json, function(item) {
-						return {
-							category: item.attribute_group,
-							label: item.name,
-							value: item.attribute_id
-						}
-					}));
-				}
-			});
-		},
-		'select': function(item) {
-			$('input[name=\'product_attribute[' + attribute_row + '][name]\']').val(item['label']);
-			$('input[name=\'product_attribute[' + attribute_row + '][attribute_id]\']').val(item['value']);
-		}
-	});
-}
-
-$('#attribute tbody tr').each(function(index, element) {
-	attributeautocomplete(index);
-});
-//--></script> 
-
+ 
 <script type="text/javascript">
-$('#form-product').on('show.bs.modal', function (event) {
+$('#get_attributes').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget); // Button that triggered the modal
   var modal = $('#get_attributes');
   	$.ajax({
@@ -343,13 +243,26 @@ $('#form-product').on('show.bs.modal', function (event) {
 		data: $('input[name^=\'selected\']:checked'),
 		success: function(data) {
 		     modal.find('.modal-body').html(data);
-		     
-		 } 
+		  } 
+	});
+});
+</script>	
+
+<script type="text/javascript">
+$('#update').on('click',function () {
+   	$.ajax({
+		url: 'index.php?route=catalog/product/productUpdates&token=<?php echo $token; ?>',
+		type: 'post',
+		data: $('select#getTaxClass,input[name^=\'selected\']:checked'),
+		dataType: 'json',
+		success: function(data) {
+			
+		}
 	});
 });
 </script>
-  
-  <script type="text/javascript"><!--
+
+   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
 	var url = 'index.php?route=catalog/product&token=<?php echo $token; ?>';
 
@@ -490,7 +403,5 @@ $('input[name=\'filter_supplier\']').autocomplete({
 	'select': function(item) {
 		$('input[name=\'filter_supplier\']').val(item['value']);
 	}
-});
-
-//--></script></div>
+});//--></script></div>
 <?php echo $footer; ?>

@@ -305,4 +305,50 @@ var google_remarketing_only = true;
 	require_once DIR_SYSTEM . 'nitro/core/core.php';
 	require_once NITRO_INCLUDE_FOLDER . 'pagecache_widget.php';
 ?>
+
+<style type="text/css">
+		#ToTop {display: none;text-decoration: none;position: fixed;bottom: 240px;right: 20px;overflow: hidden;width: 51px;height: 51px;border: none;text-indent: -999px;background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAMAAAANf8AYAAAAn1BMVEVHR0dHR0dGRkZERERHR0dHR0dHR0dDQ0NDQ0NHR0dFRUVCQkJHR0dHR0dHR0dHR0dHR0dHR0dHR0cAAABkZGS+vr5NTU2fn5/X19fFxcVra2vCwsLl5eVKSkrn5+dLS0uqqqp8fHy9vb1ISEhQUFBGRkbMzMyZmZnS0tJdXV1UVFRERETJyclOTk5bW1vq6upJSUllZWX////u7u5HR0esulOUAAAAFHRSTlMemqHMbBZK4OR2sO9XkD0Ri0agAGQsLyYAAAF9SURBVHjardbXcoJQFIVhpVcppndjLIFg4LDf/9ky2dGELQuFIf+FIxefwBlPmcyH908mSlxN9/NV7uuam0Q9jBXa1MwOrTMm8KidF5wws5Rw6azLGA515RjQmDGdKjbbZjKl000nx8YUBCPzyMR0vlgag/pkNM3M6WWcWcOk1K/0zwTUt+DXeATa3ZfUyjsYC5LP+gMga29CTGqEwh8T2ZhAZEdsEkw6UMLGxWR9Bx/PZaNh8kjvCGlsdEhKIoh0Nn4HOaC1QD6bXJAr8duMLqlRzmYlzMWeNBE1WoH7lDf1LZMDeqiv2/fxSfZGolJe+3DccHLctEFGY+MOMi6bZJBJxP+6V3YE5s9CfbfbKPVaUKaU2hZi/qB5uiwWqig22yx7eaKKv4p5iteDShGpiuhZZZXiS7AezANkvj9a9wnk+oaNfJ+0tY6iZ8PrKGccmc224jGQxujcFzJFtNyPtTDxiP1n6D43fD8dv2+fPx8MP4eMP++MP1fhxpsvsOKLcC9wW/YAAAAASUVORK5CYII=) no-repeat left top;}
+		#ToTop:hover{cursor:pointer;}
+				</style>
+					<script type="text/javascript">
+				/* toTop jQuery */
+				jQuery(document).ready(function(){$().UItoTop({easingType:'easeOutQuint'});});
+				(function($){
+					$.fn.UItoTop = function(options) {
+						var defaults = {
+							text: 'To Top',
+							min: 200,
+							inDelay:200,
+							outDelay:100,
+							containerID: 'ToTop',
+							containerHoverID: 'ToTopHover',
+							scrollSpeed: 50,
+							easingType: 'linear'
+							};
+							var settings = $.extend(defaults, options);
+							var containerIDhash = '#' + settings.containerID;
+							var containerHoverIDHash = '#'+settings.containerHoverID;
+							$('body').append('<span id="'+settings.containerID+'">'+settings.text+'</span>');
+							$(containerIDhash).hide().click(function(event){
+								$('html, body').animate({scrollTop: 0}, settings.scrollSpeed);
+								event.preventDefault();
+							})
+							.prepend('<span id="'+settings.containerHoverID+'"></span>')
+									
+							$(window).scroll(function() {
+								var sd = $(window).scrollTop();
+								if(typeof document.body.style.maxHeight === "undefined") {
+									$(containerIDhash).css({
+										'position': 'absolute',
+										'top': $(window).scrollTop() + $(window).height() - 50
+									});
+								}
+								if ( sd > settings.min ) 
+									$(containerIDhash).fadeIn(settings.inDelay);
+								else 
+									$(containerIDhash).fadeOut(settings.Outdelay);
+							});
+					};
+				})(jQuery);
+		</script>
 </body></html>

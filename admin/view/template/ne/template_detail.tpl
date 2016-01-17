@@ -356,6 +356,7 @@
                 height:'500'
             });
         <?php } ?>
+        CKEDITOR.scriptLoader.load(CKEDITOR.getUrl('../plugins/imagemap/jquery.simplemodal.1.4.2.min.js'));
     //--></script>
     <script type="text/javascript"><!--
         $(function(){
