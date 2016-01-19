@@ -126,7 +126,7 @@
       				</select>
 			      	</div>
 			      		 <div class="col-sm-4">
-							<a class="btn btn-default" id="update" >Action</a>
+							<a class="btn btn-default"  id="update" >Action</a>
 					     </div>
 		      		</div>
 	       	</div>
@@ -259,6 +259,10 @@ $('#update').on('click',function () {
 			
 		}
 	});
+});
+
+$('#productUpdates').on('click',function(){
+	 alert("successfully modified");
 });
 </script>
 
