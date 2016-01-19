@@ -9,5 +9,6 @@ $_['text_seller']     	      = 'Seller ';
 $_['text_total_products']     = 'Total Products ';
 $_['text_long_time_seller']   = 'Long Time Sellers';
 $_['text_latest_product']     = 'Latest Products';
+$_['error_number']            = 'Enter number between 0 to 10';
 
 ?>
