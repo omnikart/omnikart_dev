@@ -13,60 +13,62 @@ class ControllerModuleEnquiry extends Controller {
 			$data['logged'] = true;
 		}
 		
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/enquiry.tpl')) {
-			return $this->load->view($this->config->get('config_template') . '/template/module/enquiry.tpl', $data);
+		$this->load->model('localisation/unit_class');
+
+		$data['unit_classes'] = $this->model_localisation_unit_class->getUnitClasses();
+		$data['autocomplete_products'] = $this->url->link('product/json/enquiry_product','','SSL');
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/enquiry_form.tpl')) {
+			return $this->load->view($this->config->get('config_template') . '/template/module/enquiry_form.tpl', $data);
 		} else {
-			return $this->load->view('default/template/module/enquiry.tpl', $data);
+			return $this->load->view('default/template/module/enquiry_form.tpl', $data);
 		}
 	}
 	
-	public function submit(){
+	public function submit() {
 		$json = array();
 		
-		$fields = array("firstname","lastname","phone");
-		
-		if ($this->request->server['REQUEST_METHOD'] == 'POST'){		
-			foreach ($fields as $field){
-				if (isset($this->request->post[$field])){
-					if (empty($this->request->post[$field])){
-						$json[$field] = ucfirst($field)." field cannot be empty";
-					}
-				} else {
-						$json['error'] = "Incomplete Date Received";
-				}
-			}
-			if (isset($this->request->post['product'])){
-				if (empty($this->request->post['product'])){
-					$json['productall'] = "Please fill product information";
-				} else {
-					if (empty($this->request->post['product'][0]['name'])) {
-						$json['product'] = "Please fill product name";
-					}
-					if (empty($this->request->post['product'][0]['quantity'])) {
-						$json['quantity'] = "Please fill product quantity required";
-					}
-				}
-			}
-			if (!$json) {
-				$userdata = array("firstname" => $this->request->post['firstname'],
-						"lastname" => $this->request->post['lastname'],
-						"phone" => $this->request->post['phone'],
-						"email" => $this->request->post['email']);
+		if ($this->request->server['REQUEST_METHOD'] == 'POST'){
+			
+			if (!$this->customer->isLogged())
+				$json['logged'] = false;
+			
+			$data = $this->request->post;
+			
+			if (!isset($data['payment_terms']))
+				$json['payment_terms'] = 'Please select payment terms...!';
+			
+			if (!isset($data['postcode']))
+				$json['postcode'] = 'Please enter postcode...!';
+			
+			if (!isset($data['c_form']))
+				$json['c_form'] = 'Please check whether you can provide C-Form...!';
+					
+			if (!$json && isset($this->session->data['enquiry'])) { 
+				$data['enquiries'] = array();
+				$data['payment_terms'] = $data['payment_terms'];
+				$data['postcode'] = $data['postcode'];
+				$data['c_form'] = $data['c_form'];
+				$enquiries = $this->session->data['enquiry'];
 				
-				$file = isset($this->request->post['filename'])?$this->request->post['filename']:'';
-				
-				$data = array("user_info" => serialize($userdata),
-						"query" => serialize($this->request->post['product']),
-						"file" => $file
+				foreach ($enquiries as $enquiry => $quantity) {
+					$enq = unserialize(base64_decode($enquiry)); 
+					$data['enquiries'][] = array(
+						'name'=>$enq['name'],
+						'product_id'=>$enq['product_id'],
+						'category_id'=>$enq['category_id'],
+						'quantity'=>$quantity,
+						'description'=>$enq['description'],
+						'unit_class'=>$enq['unit_class'],
+						'filenames'=>$enq['filenames']
 					);
-				
+				}
+	
 				$this->load->model('module/enquiry');
 				$this->model_module_enquiry->addenquiry($data);
+				unset($this->session->data['enquiry']);
 				$json['success'] = "Successfully send your query to Omnikart. We'll get back to you soon. :)";
 			}
-			
 		}
-		
 		echo json_encode($json);
 	}
 
@@ -153,5 +155,94 @@ class ControllerModuleEnquiry extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 	
+	public function addProduct(){
+		$json = array();
+		if ($this->request->server['REQUEST_METHOD'] == 'POST'){
+			if (isset($this->request->post)) {
+				if (isset($this->request->post['name'])) {
+					$data = $this->request->post;
+					$enquiry = array();
+					
+					if (isset($data['name']) && $data['name']) $enquiry['name'] = $data['name'];
+					else $json['name'] = 'Please enter the valid enquiry';
+					
+					if (!$json) {
+						if (isset($data['product_id'])) $enquiry['product_id'] = $data['product_id']; 
+						else $enquiry['product_id'] = 0;
+						
+						if (isset($data['category_id'])) $enquiry['category_id'] = $data['category_id'];
+						else $enquiry['category_id'] = 0;
+						
+						if (isset($data['unit_class'])) $enquiry['unit_class'] = $data['unit_class'];
+						else $enquiry['unit_class'] = 1;
+						
+						if (isset($data['description'])) $enquiry['description'] = $data['description'];
+						else $enquiry['description'] = '';
+						
+						if (isset($data['filenames'])) $enquiry['filenames'] = $data['filenames'];
+						else $enquiry['filenames'] = array();
+						
+						$key = base64_encode(serialize($enquiry));
+						
+						if (isset($data['quantity'])) $quantity = $data['quantity'];
+						else $quantity = 1;
+						
+						if ((int)$quantity && ((int)$quantity > 0)) {
+							if (!isset($this->session->data['enquiry'][$key])) {
+								$this->session->data['enquiry'][$key] = (int)$quantity;
+							} else {
+								$this->session->data['enquiry'][$key] += (int)$quantity;
+							}
+						}
+						$json['success'] = 'Product added successfully';
+						$json['number'] = count($this->session->data['enquiry']);
+					}
+				}
+			}
+			$this->response->setOutput(json_encode($json));
+		} elseif ($this->request->server['REQUEST_METHOD'] == 'GET'){
+			if (isset($this->session->data['enquiry'])) {
+				$this->response->setOutput(count($this->session->data['enquiry']));
+			} else {
+				$this->response->setOutput(" 0 ");
+			}
+			
+		}
+	}
+	public function test() {
+		if (isset($this->request->get['enquiry_id'])) {
+			$this->load->model('module/enquiry');
+			$this->model_module_enquiry->renderEnquiry($this->request->get['enquiry_id']);
+		}
+	}
 	
+	public function getEnquiry() {
+		$data = array();
+		$data['enquiries'] = array();
+		if (isset($this->session->data['enquiry']))
+			$enquiries = $this->session->data['enquiry'];
+		else
+			$enquiries = array();
+		$this->load->model('localisation/unit_class');
+		$this->load->model('module/enquiry');
+		$data['payment_terms'] = $this->model_module_enquiry->getPaymentTerms();
+		foreach ($enquiries as $enquiry => $quantity) {
+			$enq = unserialize(base64_decode($enquiry));
+			$data['enquiries'][] = array(
+				'name'=>$enq['name'],
+				'product_id'=>$enq['product_id'],
+				'category_id'=>$enq['category_id'],
+				'quantity'=>$quantity,
+				'description'=>$enq['description'],
+				'unit_class'=>$this->model_localisation_unit_class->getUnitClass($enq['unit_class']),
+				'filenames'=>$enq['filenames']
+			);
+		}
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/enquiry_products.tpl')) {
+			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/module/enquiry_products.tpl', $data));
+		} else {
+			$this->response->setOutput($this->load->view('default/template/module/enquiry_products.tpl', $data));
+		}
+		
+	}
 }

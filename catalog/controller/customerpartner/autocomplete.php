@@ -124,7 +124,7 @@ class ControllerCustomerpartnerAutocomplete extends Controller {
 			if (isset($this->request->get['limit'])) {
 				$limit = $this->request->get['limit'];	
 			} else {
-				$limit = 20;	
+				$limit = 10;	
 			}
 
 			$data = array(

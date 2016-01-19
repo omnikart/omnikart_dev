@@ -108,7 +108,7 @@ class ControllerModuleEnquiry extends Controller {
 	public function install(){
 		$this->load->model('module/enquiry');
 		$this->model_module_enquiry->install();
-		$this->response->redirect($this->url->link('module/enquiry', 'token=' . $this->session->data['token'], 'SSL'));
+		//$this->response->redirect($this->url->link('module/enquiry', 'token=' . $this->session->data['token'], 'SSL'));
 	}
 	private function validate(){
 		if (!$this->user->hasPermission('modify', 'module/enquiry')) {
@@ -119,5 +119,21 @@ class ControllerModuleEnquiry extends Controller {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 		return !$this->error;
+	}
+
+
+	public function converttabletoinnodb(){
+		$sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+        WHERE TABLE_SCHEMA = '".DB_DATABASE."'
+        AND ENGINE = 'MyISAM'";
+		
+		$rs = $this->db->query($sql);
+		
+		foreach($rs->rows as $row)
+		{
+			$tbl = $row['TABLE_NAME'];
+			$sql = "ALTER TABLE `$tbl` ENGINE=INNODB";
+			$this->db->query($sql);
+		}
 	}
 }

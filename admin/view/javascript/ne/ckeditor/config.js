@@ -9,5 +9,5 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.uiColor = '#AADC6E';
 	config.filebrowserBrowseUrl = 'index.php?route=common/filemanager/ckeditor&token=' + getURLVar('token');
 	config.filebrowserImageBrowseUrl = 'index.php?route=common/filemanager/ckeditor&token=' + getURLVar('token');
-	config.allowedContent = true;
+	config.allowedContent = true; // to allow all
 };

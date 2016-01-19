@@ -89,7 +89,9 @@ class ControllerCommonHeader extends Controller {
 		$data['text_orderhistory'] = $this->language->get('text_orderhistory');
 		$data['text_becomePartner'] = $this->language->get('text_becomePartner');
 		$data['text_download'] = $this->language->get('text_download');
-		$data['text_transaction'] = $this->language->get('text_transaction'); 
+		$data['text_transaction'] = $this->language->get('text_transaction');
+		$data['text_enquiry'] = "Enquiries";
+		
 		$data['t_db'] = "Dashboard";
 		$data['t_so'] = "Schedule Order";
 
@@ -104,6 +106,8 @@ class ControllerCommonHeader extends Controller {
 		$data['mp_profile'] = $this->url->link('account/customerpartner/profile','','SSL');      
 		$data['mp_want_partner'] = $this->url->link('account/customerpartner/become_partner','','SSL'); 
 		$data['mp_transaction'] = $this->url->link('account/customerpartner/transaction','','SSL'); 
+		$data['mp_enquiry'] = $this->url->link('account/customerpartner/enquiry','','SSL');
+		
 		$data['b_db'] = $this->url->link('account/cd','','SSL');
 		$data['b_so'] = $this->url->link('checkout/orderlater','','SSL');
 

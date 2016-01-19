@@ -20,7 +20,8 @@ class ControllerProductProduct extends Controller {
 			$product_id = (int)$this->request->get['product_id'];
 		} else {
 			$product_id = 0;
-		}		
+		}
+		
 		$getCategories = $this->model_catalog_product->getCategories($product_id);
 		
 		$data['breadcrumbs'] = array();
@@ -686,11 +687,7 @@ class ControllerProductProduct extends Controller {
 						$data['gp_child_info'][$field] = $this->language->get('text_gp_child_' . $field);
 					}
 				}
-				/*$set = true;
-				$filter = array();
-				if (isset($this->request->get['attribute'])) {
-					$filter = $this->request->get['attribute'];
-				}*/
+
 				$gp_child_attributes = $this->config->get('gp_grouped_child_attribute');
 				$attributenames = array();
 				$agnames = array();
@@ -1209,4 +1206,199 @@ class ControllerProductProduct extends Controller {
 		}
 		return true;
 	}
+
+	public function getGpProducts(){
+		$data = array();
+		$this->load->language('product/product');
+		$this->load->language('product/gp_grouped');
+		$this->load->model('checkout/combo_products');
+		$this->load->language('total/combo_products');
+		$this->load->model('catalog/category');
+		$this->load->model('catalog/product');
+		
+		if (isset($this->request->get['product_id'])) {
+			$product_id = (int)$this->request->get['product_id'];
+		} else {
+			$product_id = 0;
+		}
+		$gp_child_attributes = $this->config->get('gp_grouped_child_attribute');
+		$attributenames = array();
+		$agnames = array();
+		$data['childs'] = array();
+		
+		if ($is_gp_grouped = $this->model_catalog_product->getGroupedProductGrouped($this->request->get['product_id'])) {
+			$data['template'] = $template = $this->config->get('config_template');
+			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/gp_grouped_' . $is_gp_grouped['gp_template'] . '.css');
+		}
+		
+		$product_grouped = $this->model_catalog_product->getGroupedProductGroupedChilds($product_id);
+		if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+			$tcg_customer_price = true;
+		} else {
+			$tcg_customer_price = false;
+		}
+		$gp_child_option_col = false;
+		
+		$tcg_tax = $this->config->get('config_tax');
+			
+		$this->language->load('product/gp_grouped');		
+		foreach ($product_grouped as $child) {
+
+			
+			$child_info = $this->model_catalog_product->getProduct($child['child_id']);
+		
+			if ($child_info) {
+				if ($child_info['quantity'] <= 0) {
+					$child_info['stock'] = $child_info['stock_status'];
+				} elseif ($this->config->get('config_stock_display')) {
+					$child_info['stock'] = $child_info['quantity'];
+				} else {
+					$child_info['stock'] = $this->language->get('text_instock');
+				}
+		
+				if ($tcg_customer_price) {
+					$child_price = $this->currency->format($this->tax->calculate($child_info['price'], $child_info['tax_class_id'], $tcg_tax));
+				} else {
+					$child_price = false;
+				}
+		
+				if ((float)$child_info['special']) {
+					$child_special = $this->currency->format($this->tax->calculate($child_info['special'], $child_info['tax_class_id'], $tcg_tax));
+				} else {
+					$child_special = false;
+				}
+		
+				if ($tcg_tax) {
+					$child_tax = $this->currency->format((float)$child_info['special'] ? $child_info['special'] : $child_info['price']);
+				} else {
+					$child_tax = false;
+				}
+		
+				$child_discounts = array();
+		
+				foreach ($this->model_catalog_product->getProductDiscounts($child_info['product_id']) as $discount) {
+					$child_discounts[] = array(
+							'quantity' => $discount['quantity'],
+							'price'    => $this->currency->format($this->tax->calculate($discount['price'], $child_info['tax_class_id'], $tcg_tax))
+					);
+				}
+		
+				// Disable button cart
+				if ($this->config->get('gp_grouped_child_nocart') && !$this->config->get('config_stock_checkout') && $child_info['quantity'] <= 0) {
+					$child_child_nocart = true;
+				} else {
+					$child_child_nocart = false;
+				}
+		
+				if ($gp_child_attributes) {
+					$child_attributes = $this->model_catalog_product->getProductAttributes($child_info['product_id']);
+				} else {
+					$child_attributes = array();
+				}
+		
+				$child_options = array();
+		
+				foreach ($this->model_catalog_product->getProductOptions($child['child_id']) as $option) {
+					$gp_child_option_col = true;
+		
+					$product_option_value_data = array();
+		
+					foreach ($option['product_option_value'] as $option_value) {
+						if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
+							if ($tcg_customer_price && (float)$option_value['price']) {
+								$child_option_price = $this->currency->format($this->tax->calculate($option_value['price'], $child_info['tax_class_id'], $tcg_tax ? 'P' : false));
+							} else {
+								$child_option_price = false;
+							}
+		
+							$product_option_value_data[] = array(
+									'product_option_value_id' => $option_value['product_option_value_id'],
+									'option_value_id'         => $option_value['option_value_id'],
+									'name'                    => $option_value['name'],
+									'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+									'price'                   => $child_option_price,
+									'price_prefix'            => $option_value['price_prefix']
+							);
+						}
+					}
+		
+					$child_options[] = array(
+							'product_option_id'    => $option['product_option_id'],
+							'product_option_value' => $product_option_value_data,
+							'option_id'            => $option['option_id'],
+							'name'                 => $option['name'],
+							'type'                 => $option['type'],
+							'value'                => $option['value'],
+							'required'             => $option['required']
+					);
+				}
+		
+				$qty_now = '';
+				foreach ($this->cart->getProducts() as $gp_cart) {
+					if ($child['child_id'] == $gp_cart['product_id']) {
+						$qty_now = $gp_cart['quantity'];
+					}
+				}
+		
+				foreach ($child_attributes as $key => $ag){
+					$attributenames = array();
+					if (!isset($agnames[$key]['a'])) $agnames[$key]['a'] = array();
+					$agnames[$key]['name'] = $ag['name'];
+					foreach ($ag['attribute'] as $key2 => $a) {$agnames[$key]['a'][$key2] = $a['name'];}
+				}
+				/*
+				 $curr_vendor = $this->model_account_customerpartner->getProfile($child_info['vendor_id']);
+				 $vendors = $this->model_account_customerpartner->getProductVendors($child_info['product_id'],$child_info['vendor_id']);
+		
+				 if (!empty($curr_vendor)) {
+				 $vlink = $this->url->link('customerpartner/profile','id='.$curr_vendor['customer_id'],'SSL');
+				 }
+				 */
+					
+				$data['childs'][$child_info['product_id']] = array(
+						'child_id'   => $child_info['product_id'],
+						'info'       => $child_info,
+						'name'       => $child_info['name'],
+						'attributes' => $child_attributes,
+						'price'      => $child_price,
+						'special'    => $child_special,
+						'tax'        => $child_tax,
+						'nocart'     => $child_child_nocart,
+						'options'    => $child_options,
+						'discounts'  => $child_discounts,
+						'qty_now'    => $qty_now,
+						//'curr_vendor'=> $curr_vendor,
+						//'vlink'		 => $vlink,
+						//'vendors'	 => $vendors
+				);
+				/*}*/
+			}
+		}
+		// Column
+		// $data['attributenames'] = $attributenames; edit for filtering
+		$data['agnames'] = $agnames;
+		$data['column_gp_name'] = $this->language->get('column_gp_name');
+		$data['column_gp_price'] = $tcg_customer_price ? $this->language->get('column_gp_price') : false;
+		$data['column_gp_option'] = $gp_child_option_col ? $this->language->get('column_gp_option') : false;
+		$data['column_gp_qty'] = $this->language->get('column_gp_qty');
+		$template = $this->config->get('config_template');
+		if (file_exists(DIR_TEMPLATE . $template . '/template/product/gp_grouped_' . $is_gp_grouped['gp_template'] . '.tpl')) {
+			$this->response->setOutput($this->load->view($template . '/template/product/gp_grouped_enquiry_' . $is_gp_grouped['gp_template'] . '.tpl', $data));
+		} else {
+			$this->response->setOutput($this->load->view('default/template/product/gp_grouped_enquiry_' . $is_gp_grouped['gp_template'] . '.tpl', $data));
+		}
+	}
+	
+	public function getdescription() {
+		$product_id = $this->request->get['product_id'];
+		$this->load->model('catalog/product');
+		$attributes = $this->model_catalog_product->getProductAttributes($product_id);
+		$output = '';
+		foreach ($attributes as $ag) {
+			foreach ($ag['attribute'] as $a) {
+				$output .= $a['name'] . '-' . $a['text']."\n";
+			}
+		}
+		$this->response->setOutput($output);
+	} 
 }

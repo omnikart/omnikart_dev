@@ -155,7 +155,7 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		$this->data['insert'] = $this->url->link('account/customerpartner/addproduct', '' , 'SSL');
 		// $this->data['copy'] = $this->url->link('account/customerpartner/productlist/copy', '' . $url, 'SSL');	
 		$this->data['delete'] = $this->url->link('account/customerpartner/productlist/delete', '' . $url, 'SSL');
-
+		$limit = 200;
 		$data = array(
 			'filter_name'	  => $filter_name, 
 			'filter_model'	  => $filter_model,
@@ -164,8 +164,8 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 			'filter_status'   => $filter_status,
 			'sort'            => $sort,
 			'order'           => $order,
-			'start'           => ($page - 1) * $this->config->get('config_product_limit'),
-			'limit'           => $this->config->get('config_product_limit'),
+			'start'           => ($page - 1) * $limit,
+			'limit'           => $limit,
 			'customer_id'			=> $sellerId
 		);
 
@@ -329,13 +329,13 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		$pagination = new Pagination();
 		$pagination->total = $product_total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_product_limit');
+		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = $this->url->link('account/customerpartner/productlist', '' . $url . '&page={page}', 'SSL');
 
 		$this->data['pagination'] = $pagination->render();
 		
-		$limit = $this->config->get('config_product_limit');
+		$limit = $limit;
 		$this->data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
 
 		$this->data['filter_name'] = $filter_name;

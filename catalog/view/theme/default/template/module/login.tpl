@@ -4,6 +4,8 @@
 <input id="marketinsg-password" type="password" name="password" value="" class="form-control" /><br />
 <a href="<?php echo $forgotten; ?>"><?php echo $text_forgotten; ?></a><br /><br />
 <a class="btn btn-primary" id="button-login"><span><?php echo $text_login; ?></span></a>
+
+
 <script type="text/javascript"><!--
 $('#button-login').on('click', function() {
 	$.ajax({

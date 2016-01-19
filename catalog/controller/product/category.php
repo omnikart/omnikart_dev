@@ -835,5 +835,18 @@ class ControllerProductCategory extends Controller {
 		}
 		return true;	
 	} 
+
+	public function getdescription() {
+		$product_id = $this->request->get['product_id'];
+		$this->load->model('catalog/category');
+		$attributes = $this->model_catalog_product->getProductAttributes($product_id);
+		$output = '';
+		foreach ($attributes as $ag) {
+			foreach ($ag['attribute'] as $a) {
+				$output .= $a['name'] . '-' . $a['text']."\n";
+			}
+		}
+		$this->response->setOutput($output);
+	}
 }
 

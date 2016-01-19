@@ -401,18 +401,28 @@ class ModelAccountCustomerpartner extends Model {
 			$sql .= " LEFT JOIN " . DB_PREFIX ."product_to_category p2c ON (p.product_id = p2c.product_id)";
 		}
 
-		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
+		$sql .= " WHERE p.status<>0 AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
 
 		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {		
 			$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
 		}
 
-		if (isset($data['filter_name']) AND !empty($data['filter_name'])) {
-			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+		if (isset($data['filter_name']) && !empty($data['filter_name'])) {
+			$sql .= " AND ((";
+			$implode = array();
+			$words = explode(' ', trim(preg_replace('/\s+/', ' ', $data['filter_name'])));
+				
+			foreach ($words as $word) {
+				$implode[] = "pd.name LIKE '%" . $this->db->escape($word) . "%'";
+			}
+			if ($implode) {
+				$sql .= " " . implode(" AND ", $implode) . " ";
+			}
+			$sql .= ") OR p.model LIKE '" . $this->db->escape($data['filter_name']) . "%')";
 		}
-
+		
 		if (isset($data['filter_model']) AND !empty($data['filter_model'])) {
-			$sql .= " AND p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
+			$sql .= " OR p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
 		}
 
 		if (isset($data['filter_price']) AND !empty($data['filter_price'])) {
@@ -428,7 +438,7 @@ class ModelAccountCustomerpartner extends Model {
 		}
 
 		if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-			$sql .= " AND p.status = '" . (int)$data['filter_status'] . "'";
+			$sql .= " AND c2p.status = '" . (int)$data['filter_status'] . "'";
 		}
 
 		if(!isset($data['customer_id']) || !$data['customer_id'])
@@ -542,16 +552,25 @@ class ModelAccountCustomerpartner extends Model {
 			$sql .= " LEFT JOIN " . DB_PREFIX ."product_to_category p2c ON (p.product_id = p2c.product_id)";
 		}
 
-		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
+		$sql .= " WHERE p.status<>0 AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
 
 		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {		
 			$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
 		}
 
-		if (isset($data['filter_name']) AND !empty($data['filter_name'])) {
-			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+		if (isset($data['filter_name']) && !empty($data['filter_name'])) {
+			$sql .= " AND ((";
+			$implode = array();
+			$words = explode(' ', trim(preg_replace('/\s+/', ' ', $data['filter_name'])));
+				
+			foreach ($words as $word) {
+				$implode[] = "pd.name LIKE '%" . $this->db->escape($word) . "%'";
+			}
+			if ($implode) {
+				$sql .= " " . implode(" AND ", $implode) . " ";
+			}
+			$sql .= ") OR p.model LIKE '" . $this->db->escape($data['filter_name']) . "%')";
 		}
-
 		if (isset($data['filter_model']) AND !empty($data['filter_model'])) {
 			$sql .= " AND p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
 		}
@@ -685,14 +704,14 @@ class ModelAccountCustomerpartner extends Model {
 		/* product table */
 		$sql = "INSERT INTO `" . DB_PREFIX . "product` SET ";
 		$sql = $this->productQuery($sql,$data);
-		$sql .= " date_added = NOW(), edit = '1' ";
+		$sql .= " date_added = NOW()";
 		$this->db->query($sql);
 		$product_id = $this->db->getLastId();
 		
 		/* customerpartner product table */
 		$sql = "INSERT INTO `" . DB_PREFIX . "customerpartner_to_product` SET product_id = '".(int)$product_id."', customer_id = '".(int)$sellerId."', ";
 		$sql = $this->cpproductQuery($sql,$data);
-		$sql .= " date_added = NOW(), date_modified = NOW()";
+		$sql .= " date_added = NOW(), date_modified = NOW(), edit = '1'";
 		$this->db->query($sql);
 		$cp_product_id = $this->db->getLastId();
 		
@@ -778,11 +797,12 @@ class ModelAccountCustomerpartner extends Model {
 		$product_id = $this->request->get['product_id'];
 		
 		$this->load->model('tool/nitro');
-    $this->model_tool_nitro->clearProductCache($product_id);
-		
-		if (array_key_exists('addproduct', $customerRights['rights']) && ($this->getProductEditAccess($product_id, $sellerId))){
+    	$this->model_tool_nitro->clearProductCache($product_id);
+		$customerRights = $this->customer->getRights();
+    	if (array_key_exists('addproduct', $customerRights['rights']) && ($this->getProductEditAccess($product_id, $sellerId))){
 			$add = true; 
 		}
+		$cp_product_id = $this->getProductCPId($product_id,$sellerId);
 		
 		if ($add) {
 			$files = $this->request->files;
@@ -814,7 +834,7 @@ class ModelAccountCustomerpartner extends Model {
 
 			/* Product table */
 			$sql = "UPDATE `" . DB_PREFIX . "product` SET ";
-			$sql = $this->productQuery($sql,$data,true);
+			$sql = $this->productQuery($sql,$data);
 			$sql .= " date_modified = NOW() WHERE product_id = '".(int)$product_id."'";
 			$this->db->query($sql);
 			
@@ -843,15 +863,14 @@ class ModelAccountCustomerpartner extends Model {
 			}
 
 			/* Product description, attributes, and options table */		
-			$this->productAddUpdate($product_id,$data);
+			$this->productAddUpdate($product_id,$data,$sellerId,$cp_product_id);
 		}
 		
 		/* customerpartner product table */
 		$sql = "UPDATE `" . DB_PREFIX . "customerpartner_to_product` SET ";
 		$sql = $this->cpproductQuery($sql,$data);
-		$sql .= " date_modified = NOW() WHERE product_id = '".(int)$product_id."', customer_id = '".(int)$sellerId."' AND edit = '1'";
+		$sql .= " date_modified = NOW() WHERE product_id = '".(int)$product_id."' AND customer_id = '".(int)$sellerId."' AND edit = '1'";
 		$this->db->query($sql);
-		$cp_product_id = $this->getProductCPId($product_id,$sellerId);
 		
 		/* Supplier Discount */
 		$this->db->query("DELETE FROM " . DB_PREFIX . "cp_product_discount WHERE id = '" . (int)$cp_product_id . "'");
@@ -890,7 +909,7 @@ class ModelAccountCustomerpartner extends Model {
 			}
 		}
 	}
-	public function productQuery($sql,$data,$value){
+	public function productQuery($sql,$data){
 		$implode = array();
 		$mp_allowproductcolumn = $this->config->get('marketplace_allowedproductcolumn');
 		$fields = array('model','upc','ean','jan','isbn','mpn','location','subtract','manufacturer_id','points','sort_order','tax_class_id','sku','price','quantity','minimum','stock_status_id','date_available','shipping','weight','weight_class_id','length','width','height','length_class_id','status');
@@ -939,9 +958,7 @@ class ModelAccountCustomerpartner extends Model {
 	}	
 	/*needtocheck*/
 	public function productAddUpdate($product_id,$data,$seller_id=0,$cp_product_id){
-		
 		if (!$seller_id) $seller_id = $this->getuserseller();
-
 		/* Product Description Table*/
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_description WHERE product_id = '" . (int)$product_id . "'");
 		if(isset($data['product_description'])){
@@ -1423,8 +1440,97 @@ class ModelAccountCustomerpartner extends Model {
 		return $this->db->query("SELECT * FROM ".DB_PREFIX ."country")->rows;
 	}		
 
+	public function getEnquiries($data) {
+		$enquiries = array();
+		$sql = "SELECT e2s.enquiry_id FROM ".DB_PREFIX ."enquiry_to_supplier e2s LEFT JOIN ".DB_PREFIX."enquiry e ON (e.enquiry_id=e2s.enquiry_id) LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e2s.supplier_id='" . $data['customer_id'] . "'";
+		if (isset($data['filter_name']) && $data['filter_name']){
+			$sql .= " AND  (";
+			$implode = array();
+			foreach (explode(' ',$data['filter_name']) as $name) {
+				$implode[] = "(c.firstname LIKE '%".$name."%' OR c.lastname LIKE '%".$name."%' OR c.email LIKE '%".$name."%')";
+			}
+			$sql .= implode(' AND ',$implode).") ";
+		}
+		if (isset($data['start']) || isset($data['limit'])) {
+			if ($data['start'] < 0) {
+				$data['start'] = 0;
+			}
+		
+			if ($data['limit'] < 1) {
+				$data['limit'] = 20;
+			}
+		
+			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+		}
+		
+		
+		$query = $this->db->query($sql);
 
-
+		foreach ($query->rows as $enquiry_id) {
+			$enquiry = array();
+			$query2 = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry e LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . $enquiry_id['enquiry_id'] . "'");
+			$enquiry['customer_id'] = $query2->row['customer_id'];
+			$enquiry['postcode'] = $query2->row['postcode'];
+			$enquiry['status'] = $query2->row['status'];
+			$enquiry['date_added'] = $query2->row['date_added'];
+			$enquiry['firstname'] = $query2->row['firstname'];
+			$enquiry['lastname'] = $query2->row['lastname'];
+			$enquiry['email'] = $query2->row['email'];
+			$enquiry['telephone'] = $query2->row['telephone'];
+			$enquiry['enquiry_id'] = $enquiry_id['enquiry_id'];
+				
+			$enquiry['terms'] = array();
+			
+			$query2 = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry_term et WHERE et.enquiry_id='" . $enquiry_id['enquiry_id'] . "'");
+			
+			foreach ($query2->rows as $term) {
+				if ($term['term_type']=='payment') {
+					$term_query = $query = $this->db->query("SELECT name FROM ".DB_PREFIX."payment_term WHERE payment_term_id='".(int)$term['term_value']."'");
+					$term['term_value'] = $term_query->row['name']; 
+				}
+				
+				$enquiry['terms'][] = array(
+					'type' => $term['term_type'],
+					'value' => $term['term_value']
+				);
+			}
+			
+			
+			$query2 = $this->db->query("SELECT ep.*,epd.name AS name, epd.files AS files, epd.description AS description, ucd.title AS unit_title, uc.value AS unit_value FROM ".DB_PREFIX."enquiry_product ep LEFT JOIN ".DB_PREFIX."enquiry_product_description epd ON (epd.enquiry_product_id=ep.enquiry_product_id) LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = ep.unit_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) WHERE ep.enquiry_id='" . $enquiry_id['enquiry_id'] . "' LIMIT 0,5");
+			
+			if ($query2->num_rows) {
+				foreach ($query2->rows as $key=>$enquiry_product) {
+					if ($enquiry_product['product_id'])
+						$enquiry['enquiries'][$key]['link'] = $this->url->link('product/product','product_id='.$enquiry_product['product_id'],'SSL');
+					if ($enquiry_product['category_id'])
+						$enquiry['enquiries'][$key]['link'] = $this->url->link('product/category','category_id='.$enquiry_product['product_id'],'SSL');
+						
+						$enquiry['enquiries'][$key]['name'] = $enquiry_product['name'];
+						$enquiry['enquiries'][$key]['description'] = $enquiry_product['description'];
+						$enquiry['enquiries'][$key]['quantity'] = $enquiry_product['quantity'];
+						$enquiry['enquiries'][$key]['unit_title'] = $enquiry_product['unit_title'];
+						$enquiry['enquiries'][$key]['filenames'] = unserialize($enquiry_product['files']);
+				}
+			}
+			
+			$enquiries[$enquiry_id['enquiry_id']] = $enquiry;
+		}
+		
+		return $enquiries; 
+	}
+	public function getEnquiriesTotal($data) {
+		$sql = "SELECT count(*) AS total FROM ".DB_PREFIX ."enquiry_to_supplier e2s LEFT JOIN ".DB_PREFIX."enquiry e ON (e.enquiry_id=e2s.enquiry_id) LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e2s.supplier_id='" . $data['customer_id'] . "'";
+		if (isset($data['filter_name']) && $data['filter_name']){
+			$sql .= " AND  (";
+			$implode = array();
+			foreach (explode(' ',$data['filter_name']) as $name) {
+				$implode[] = "(c.firstname LIKE '%".$name."%' OR c.lastname LIKE '%".$name."%' OR c.email LIKE '%".$name."%')";
+			}
+			$sql .= implode(' AND ',$implode).") ";
+		}
+		$query = $this->db->query($sql);
+		return $query->row['total'];
+	}
 
 
 	// Order

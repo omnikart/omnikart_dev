@@ -26,19 +26,19 @@
 <?php if (getNitroPersistence('GoogleJQuery')) { ?>
                 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
             <?php } else { ?>
-<script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js?v=5" type="text/javascript"></script>
+<script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js?v=7" type="text/javascript"></script>
 <?php } ?>
-<script src="catalog/view/javascript/mf/jquery-ui.min.js?v=5" type="text/javascript"></script>
-<link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css?v=5" rel="stylesheet" media="screen" />
+<script src="catalog/view/javascript/mf/jquery-ui.min.js?v=7" type="text/javascript"></script>
+<link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css?v=7" rel="stylesheet" media="screen" />
 <script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-<link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css?v=5" rel="stylesheet" type="text/css" />
+<link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css?v=7" rel="stylesheet" type="text/css" />
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700" rel="stylesheet" type="text/css" />
-<link href="catalog/view/theme/default/stylesheet/stylesheet.css?v=5" rel="stylesheet">
+<link href="catalog/view/theme/default/stylesheet/stylesheet.css?v=7" rel="stylesheet">
 <script src="catalog/view/javascript/comboproducts.js" type="text/javascript"></script>
 <?php foreach ($styles as $style) { ?>
 <link href="<?php echo $style['href']; ?>" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
-<script src="catalog/view/javascript/common.js?v=5" type="text/javascript"></script>
+<script src="catalog/view/javascript/common.js?v=7" type="text/javascript"></script>
 <?php foreach ($scripts as $script) { ?>
 <script src="<?php echo $script; ?>" type="text/javascript"></script>
 <?php } ?>
@@ -154,6 +154,7 @@ src="https://www.facebook.com/tr?id=1399996446990885&ev=PageView&noscript=1"
 													<li><a href="<?php echo $mp_orderhistory; ?>"><?php echo $text_orderhistory; ?></a></li>
 													<li><a href="<?php echo $mp_transaction; ?>"><?php echo $text_transaction; ?></a></li>
 													<li><a href="<?php echo $mp_productlist; ?>"><?php echo $text_productlist; ?></a></li>
+													<li><a href="<?php echo $mp_enquiry; ?>"><?php echo $text_enquiry; ?></a></li>													
 													<li><a href="<?php echo $mp_download; ?>"><?php echo $text_download; ?></a></li>
 													<li><a href="<?php echo $mp_add_shipping_mod; ?>"><?php echo $text_wkshipping; ?></a></li>
 												</div>
