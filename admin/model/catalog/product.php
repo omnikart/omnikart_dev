@@ -817,7 +817,7 @@ class ModelCatalogProduct extends Model {
 		}
 
 		if (!empty($data['filter_model'])) {
-			$sql .= " AND p.model LIKE '" . $tgetProductshis->db->escape($data['filter_model']) . "%'";
+			$sql .= " AND p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
 		}
 
 		if (isset($data['filter_price']) && !is_null($data['filter_price'])) {

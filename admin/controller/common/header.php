@@ -30,6 +30,8 @@ class ControllerCommonHeader extends Controller {
 		$data['text_approval'] = $this->language->get('text_approval');
 		$data['text_product'] = $this->language->get('text_product');
 		$data['text_stock'] = $this->language->get('text_stock');
+		$data['text_status_2'] = $this->language->get('text_status_2');
+		$data['text_status_3'] = $this->language->get('text_status_3');
 		$data['text_review'] = $this->language->get('text_review');
 		$data['text_affiliate'] = $this->language->get('text_affiliate');
 		$data['text_store'] = $this->language->get('text_store');
@@ -89,11 +91,18 @@ class ControllerCommonHeader extends Controller {
 			$this->load->model('catalog/product');
 
 			$product_total = $this->model_catalog_product->getTotalProducts(array('filter_quantity' => 0));
-
 			$data['product_total'] = $product_total;
-
 			$data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&filter_quantity=0', 'SSL');
 
+			
+			$product_total = $this->model_catalog_product->getTotalProducts(array('filter_status' => '2'));
+			$data['product_total_2'] = $product_total;
+			$data['product_2'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&filter_status=0', 'SSL');
+			
+			$product_total = $this->model_catalog_product->getTotalProducts(array('filter_status' => '3'));
+			$data['product_total_3'] = $product_total;
+			$data['product_3'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&filter_status=0', 'SSL');
+			
 			// Reviews
 			$this->load->model('catalog/review');
 

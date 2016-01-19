@@ -71,7 +71,7 @@ class ControllerAccountCustomerpartnerAddproduct extends Controller {
 			}else{
 				$this->model_account_customerpartner->editProduct($this->request->post,$sellerId);
 			}
-			/*	
+				
 			if(!isset($data['error']))	
 				$this->session->data['success'] = $this->language->get('text_success');
 
@@ -79,7 +79,7 @@ class ControllerAccountCustomerpartnerAddproduct extends Controller {
 				$this->response->redirect($this->url->link('account/customerpartner/addproduct', '', 'SSL'));
 			else if(!isset($data['error']))	
 				$this->response->redirect($this->url->link('account/customerpartner/productlist', '', 'SSL'));
-			*/
+			
 		}		
 
 		$data['text_change_base'] = $this->language->get('text_change_base');

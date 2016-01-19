@@ -2521,9 +2521,6 @@ class ControllerExtensionBlog extends Controller {
 				`setting_value` longtext NOT NULL,
 				PRIMARY KEY (`setting_id`)
 			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;");
-								
-			
-				
 	}
 	protected function validateDelete() {
 		if (!$this->user->hasPermission('modify', 'extension/blog')) {
