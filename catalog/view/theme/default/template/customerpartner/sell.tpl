@@ -92,7 +92,7 @@
 		</div>
 		<div class="col-sm-4">
 			<div class="form-group required">
-				<label class="control-label" for="alt-number">Brands</label>
+				<label class="control-label" for="alt-number">Categories</label>
 				<div class="well well-sm" style="height:150px;overflow:auto">
 					<div class="checkbox">
 						<label>
