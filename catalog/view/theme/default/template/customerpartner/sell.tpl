@@ -12,7 +12,7 @@
 			<div class="form-group required">
 				<label class="control-label" for="name-of-person" >Name of the Contact Person</label>
 				<input name="name" class="form-control" placeholder="" type="text" id="name-of-person"/> 
-			</div>
+			 </div>
 			<div class="form-group required">
 				<label class="control-label" for="phone-number">Mobile Number</label>
 				<input name="number" class="form-control" placeholder="" type="text" id="phone-number" /> 
@@ -42,7 +42,7 @@
 		<div class="col-sm-4">
 			<div class="form-group required">
 				<label class="control-label" for="alt-number">Trade</label>
-				<div class="well well-sm" style="height:150px;overflow:auto">
+				<div class="well well-sm" id="trade" style="height:150px;overflow:auto">
 					<div class="radio">
 						<label>
 							<input type="radio" value="1" name="trade" />OEM/Manufacturer
@@ -292,23 +292,21 @@ $('.seller-thumb').bind({'mouseenter' : seller_display,'mouseleave':seller_hide 
             if (json['success']){
 		        alert("Successfully send your query to Omnikart. We will get back to you soon");
             } else {
-                if (json['company_name']) {
-                    $($('#company-name').parent()).append('<div class="text-danger">'+json['company_name']+'</div>');
+                if (json['company']) {
+                    $($('#company-name').parent()).append('<div class="text-danger">'+json['company']+'</div>');
                 }
-                if (json['name_of_the_contact_person']) {
-                    $($('#name-of-person').parent()).append('<div class="text-danger">'+json['name_of_the_contact_person']+'</div>');
+                if (json['name']) {
+                    $($('#name-of-person').parent()).append('<div class="text-danger">'+json['name']+'</div>');
                 }
-                if (json['phone_number']) {
-                    $($('#phone-number').parent()).append('<div class="text-danger">'+json['phone_number']+'</div>');
+                if (json['number']) {
+                    $($('#phone-number').parent()).append('<div class="text-danger">'+json['number']+'</div>');
                 }
-                if (json['alternate_number']) {
-                    $($('#alt-number').parent()).append('<div class="text-danger">'+json['alternate_number']+'</div>');
+                
+                if (json['email']) {
+                    $($('#email').parent()).append('<div class="text-danger">'+json['email']+'</div>');
                 }
-                if (json['email_id']) {
-                    $($('#email').parent()).append('<div class="text-danger">'+json['email_id']+'</div>');
-                }
-                if (json['product_category']) {
-                    $($('#product_category').parent()).append('<div class="text-danger">'+json['product_category']+'</div>');
+                if (json['trade']) {
+                    $($('#trade').parent()).append('<div class="text-danger">'+json['trade']+'</div>');
                 }
             }
         }
@@ -316,26 +314,4 @@ $('.seller-thumb').bind({'mouseenter' : seller_display,'mouseleave':seller_hide 
       });
   });
 </script>
-
-<script>
-function validateForm() {
-				    var x = document.forms["supplier_form"]["email"].value;
-				    var atpos = x.indexOf("@");
-				    var dotpos = x.lastIndexOf(".");
-				    if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
-			        alert("Not a valid e-mail address");
-			        return false;
-    					} 
-		    else {
-			 		var mob = /^[1-9]{1}[0-9]{9}$/;
-					var txtMobile = document.getElementById("phone-number");
-					if (mob.test(txtMobile.value) == false) {
-				    alert("Please enter valid mobile number.");
-				    txtMobile.focus();
-				    return false;
-					}
-					return true;
-				    } 
-          		}
-</script>
-</div><?php echo $footer; ?>
+ </div><?php echo $footer; ?>
