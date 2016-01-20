@@ -607,9 +607,7 @@
             </div>
         </div>
     </div>
-
     <script type="text/javascript" src="view/javascript/ne/jquery/jquery.form.js"></script>
-    <script type="text/javascript" src="view/javascript/ne/ckeditor/ckeditor.js"></script>
     <script type="text/javascript"><!--
         CKEDITOR.replace('message', {
             height:'500'

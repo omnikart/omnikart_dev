@@ -349,14 +349,12 @@
         </div>
         <p class="text-center small">Newsletter Enhancements OpenCart Module v3.7.2</p>
     </div>
-    <script type="text/javascript" src="view/javascript/ne/ckeditor/ckeditor.js"></script>
     <script type="text/javascript"><!--
         <?php foreach ($languages as $language) { ?>
             CKEDITOR.replace('input-template-body-<?php echo $language['language_id']; ?>', {
                 height:'500'
             });
         <?php } ?>
-        CKEDITOR.scriptLoader.load(CKEDITOR.getUrl('../plugins/imagemap/jquery.simplemodal.1.4.2.min.js'));
     //--></script>
     <script type="text/javascript"><!--
         $(function(){

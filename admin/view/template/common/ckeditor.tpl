@@ -72,24 +72,24 @@ $('a.thumbnail').on('click', function(e) {
 
 $('a.directory').on('click', function(e) {
 	e.preventDefault();
-	
-	window.location = $(this).attr('href');
+	var funcNum = getURLVar('CKEditorFuncNum');
+	window.location = $(this).attr('href')+'&CKEditorFuncNum='+funcNum;
 });
 
 $('.pagination a').on('click', function(e) {
 	e.preventDefault();
-	window.location = $(this).attr('href');
-});
+	var funcNum = getURLVar('CKEditorFuncNum');
+	window.location = $(this).attr('href')+'&CKEditorFuncNum='+funcNum;});
 
 $('#button-parent').on('click', function(e) {
 	e.preventDefault();
-	window.location = $(this).attr('href');
-});
+	var funcNum = getURLVar('CKEditorFuncNum');
+	window.location = $(this).attr('href')+'&CKEditorFuncNum='+funcNum;});
 
 $('#button-refresh').on('click', function(e) {
 	e.preventDefault();
-	window.location = $(this).attr('href');
-});
+	var funcNum = getURLVar('CKEditorFuncNum');
+	window.location = $(this).attr('href')+'&CKEditorFuncNum='+funcNum;});
 
 $('input[name=\'search\']').on('keydown', function(e) {
 	if (e.which == 13) {
@@ -98,8 +98,10 @@ $('input[name=\'search\']').on('keydown', function(e) {
 });
 
 $('#button-search').on('click', function(e) {
-	var url = 'index.php?route=common/filemanager&token=<?php echo $token; ?>&directory=<?php echo $directory; ?>';
-		
+	var funcNum = getURLVar('CKEditorFuncNum');
+	var url = 'index.php?route=common/filemanager&token=<?php echo $token; ?>&directory=<?php echo $directory; ?>&CKEditorFuncNum='+funcNum;
+	
+
 	var filter_name = $('input[name=\'search\']').val();
 	
 	if (filter_name) {

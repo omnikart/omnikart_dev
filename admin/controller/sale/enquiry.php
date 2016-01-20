@@ -144,8 +144,7 @@ class ControllerSaleEnquiry extends Controller {
 		} else {
 			$this->response->setOutput($this->load->view('sale/enquiry_form.tpl', $json));
 		}
-		
-		
+	
 	}
 	protected function getList() {
 		
