@@ -128,7 +128,7 @@
                   <a href="<?php echo $sort_quantity; ?>"><?php echo $column_quantity; ?></a>
                   <?php } ?></td>
 				<td class="text-right" style="min-width:90px" data-toggle="tooltip" data-original-title="Minimum Order Quantity">(MOQ)</td>                  
-                <td class="text-right" style="min-width:100px" data-toggle="tooltip" title="" data-original-title="Status shown when a product is out of stock">Stock Status</td> 
+                <td class="text-right" style="min-width:100px" data-toggle="tooltip" title="" data-original-title="Status shown when a product is out of stock">Availability</td> 
                 <td class="text-left" style="min-width:110px"><?php if ($sort == 'p.status') { ?>
                   <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
                   <?php } else { ?>
