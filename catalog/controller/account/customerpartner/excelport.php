@@ -336,16 +336,5 @@ class ControllerAccountCustomerpartnerExcelport extends Controller {
 			$this->model_module_excelport->cleanTemp();	
 		}
 	}
-	
-	public function install() {
-		
-	}
-	
-	public function uninstall() {
-		$this->load->model('module/excelport');
-		$this->model_module_excelport->deleteSetting('excelport');
-	}
-	
-	
 }
 ?>

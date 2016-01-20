@@ -977,7 +977,8 @@ class ControllerCatalogProduct extends Controller {
 			} else {
 				$gps = array();
 			}
-
+			$this->document->addScript('view/javascript/ne/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js');
+			$this->document->addStyle('view/javascript/ne/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css');
 			$data['gps'] = array();
 
 				foreach ($gps as $child_id => $child) {

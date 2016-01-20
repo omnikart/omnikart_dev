@@ -47,23 +47,24 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 			'product_id' 		=> 1,
 			'name'				=> 2,
 			'model' 			=> 3,
-			'sku'				=> 4,
-			'price'				=> 5,
-			'quantity'			=> 6,
-			'minimum'			=> 7,
-			'stock_status' 		=> 8,
-			'shipping'			=> 9,
-			'date_available'	=> 10,
-			'length'			=> 11,
-			'width'				=> 12,
-			'height'			=> 13,
-			'length_class'		=> 14,
-			'weight'			=> 15,
-			'weight_class'		=> 16,
-			'status'			=> 17,
-			'edit'			=> 18,
-			'viewed' 	=>19,
-			'sort_order'		=> 20
+			'price'				=> 4,
+			'sku'				=> 5,
+			'cprice'			=> 6,
+			'quantity'			=> 7,
+			'minimum'			=> 8,
+			'stock_status' 		=> 9,
+			'shipping'			=> 10,
+			'date_available'	=> 11,
+			'length'			=> 12,
+			'width'				=> 13,
+			'height'			=> 14,
+			'length_class'		=> 15,
+			'weight'			=> 16,
+			'weight_class'		=> 17,
+			'status'			=> 18,
+			'edit'			=> 19,
+			'viewed' 	=>20,
+			'sort_order'		=> 21
 		);
 		
 		$source = array(0,2 + ($progress['importedCount']));
@@ -92,7 +93,7 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 				
 				$product_id = (int)trim($productSheetObj->getCell(PHPExcel_Cell::stringFromColumnIndex($source[0] + $map['product_id']) . ($source[1]))->getValue());
 				
-				$product_price = $productSheetObj->getCell(PHPExcel_Cell::stringFromColumnIndex($source[0] + $map['price']) . ($source[1]))->getValue();
+				$product_price = $productSheetObj->getCell(PHPExcel_Cell::stringFromColumnIndex($source[0] + $map['cprice']) . ($source[1]))->getValue();
 				
 				$product_price = (float)str_replace(array(' ', ','), array('', '.'), $product_price);
 				
@@ -258,23 +259,24 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 			'product_id' 		=> 1,
 			'name'				=> 2,
 			'model' 			=> 3,
-			'sku'				=> 4,
-			'price'				=> 5,
-			'quantity'			=> 6,
-			'minimum'			=> 7,
-			'stock_status' 		=> 8,
-			'shipping'			=> 9,
-			'date_available'	=> 10,
-			'length'			=> 11,
-			'width'				=> 12,
-			'height'			=> 13,
-			'length_class'		=> 14,
-			'weight'			=> 15,
-			'weight_class'		=> 16,
-			'status'			=> 17,
-			'edit'			=> 18,
-			'viewed' 	=>19,
-			'sort_order'		=> 20
+			'price'				=> 4,
+			'sku'				=> 5,
+			'cprice'			=> 6,
+			'quantity'			=> 7,
+			'minimum'			=> 8,
+			'stock_status' 		=> 9,
+			'shipping'			=> 10,
+			'date_available'	=> 11,
+			'length'			=> 12,
+			'width'				=> 13,
+			'height'			=> 14,
+			'length_class'		=> 15,
+			'weight'			=> 16,
+			'weight_class'		=> 17,
+			'status'			=> 18,
+			'edit'			=> 19,
+			'viewed' 	=>20,
+			'sort_order'		=> 21
 		);
 		
 		// Extra fields
@@ -427,11 +429,14 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 				
 				$this->setProgress($progress);
 			}
+			
+			$productSheetObj->getProtection()->setPassword('omnikart');
+				
+			
 			$productSheetObj->protectCells(PHPExcel_Cell::stringFromColumnIndex($target[0] + $generals['id']).'2:'.PHPExcel_Cell::stringFromColumnIndex($target[0] + $generals['model']).$target[1], 'PHP');
 			
 			$productSheetObj->getStyle(PHPExcel_Cell::stringFromColumnIndex($target[0] + $generals['sku']).'2:'.PHPExcel_Cell::stringFromColumnIndex($target[0] + $generals['status']).$target[1], 'PHP')->getProtection()
 ->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-
 			$productSheetObj->getProtection()->setSheet(true);
 			
 			foreach ($dataValidations as $dataValidationIndex => $dataValidation) {
@@ -505,7 +510,7 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 				if ($count){
 					$query = "SELECT count(*) AS count FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN ".DB_PREFIX."customerpartner_to_product cp2p ON (p.product_id = cp2p.product_id) WHERE cp2p.customer_id = " . (int)$sellerId;
 				} else {
-					$query = "SELECT cp2p.id, cp2p.edit, cp2p.viewed, p.sort_order, p.product_id, pd.name AS name, pd.description, pd.meta_title, pd.meta_description, pd.meta_keyword, pd.tag, p.model, cp2p.sku, p.upc, p.ean, p.jan, p.isbn, p.mpn, p.location, cp2p.quantity, IFNULL((SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = cp2p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "'), 'Not in Stock') AS stock_status, p.image, p.manufacturer_id, m.name AS manufacturer, IFNULL((SELECT cppd.price FROM " . DB_PREFIX . "cp_product_discount cppd WHERE (cppd.id = cp2p.id) AND (cppd.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AND (cppd.quantity = '1') AND ((cppd.date_start = '0000-00-00' OR cppd.date_start < NOW()) AND (cppd.date_end = '0000-00-00' OR cppd.date_end > NOW())) ORDER BY cppd.priority ASC, cppd.price ASC LIMIT 1),cp2p.price) AS cprice, p.price, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, p.points, p.tax_class_id, cp2p.date_available, IF((cp2p.weight=0),p.weight,cp2p.weight) AS weight, IF((cp2p.weight_class_id=0),p.weight_class_id,cp2p.weight_class_id) AS weight_class_id, IF((cp2p.length=0),p.length,cp2p.length) AS length, IF((cp2p.width=0),p.width,cp2p.width) AS width, IF((cp2p.height=0),p.height,cp2p.height) AS height, IF((cp2p.length_class_id=0),p.length_class_id,cp2p.length_class_id) AS length_class_id, p.subtract, (SELECT ROUND(AVG(rating)) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, IFNULL((SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id),0) AS reviews, IF((cp2p.minimum=0), p.minimum,cp2p.minimum) AS minimum, p.sort_order, cp2p.status AS status, cp2p.date_added, cp2p.date_modified, cp2p.viewed, cp2p.shipping, cp2p.stock_status_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) LEFT JOIN ".DB_PREFIX."customerpartner_to_product cp2p ON (p.product_id = cp2p.product_id) WHERE cp2p.customer_id = " . (int)$sellerId . " AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY p.product_id ";
+					$query = "SELECT cp2p.id, cp2p.edit, cp2p.viewed, p.sort_order, p.product_id, pd.name AS name, pd.description, pd.meta_title, pd.meta_description, pd.meta_keyword, pd.tag, p.model, cp2p.sku, p.upc, p.ean, p.jan, p.isbn, p.mpn, p.location, cp2p.quantity, IFNULL((SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = cp2p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "'), 'Not in Stock') AS stock_status, p.image, p.manufacturer_id, m.name AS manufacturer, cp2p.price AS cprice, p.price as price, p.points, p.tax_class_id, cp2p.date_available, cp2p.weight AS weight, cp2p.weight_class_id AS weight_class_id, cp2p.length AS length, cp2p.width AS width, cp2p.height AS height, cp2p.length_class_id AS length_class_id, p.subtract, cp2p.minimum AS minimum, p.sort_order, cp2p.status AS status, cp2p.date_added, cp2p.date_modified, cp2p.viewed, cp2p.shipping, cp2p.stock_status_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) LEFT JOIN ".DB_PREFIX."customerpartner_to_product cp2p ON (p.product_id = cp2p.product_id) WHERE cp2p.customer_id = " . (int)$sellerId . " AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY p.product_id ";
 				}
 				return $query;
 	}
