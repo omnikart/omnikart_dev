@@ -101,3 +101,4 @@ $_['text_openbay_order_import']        = 'Order import';
 $_['text_paypal_manage']               = 'PayPal';
 $_['text_paypal_search']               = 'Search';
 $_['text_combo_module']                = 'Combo Products';
+$_['text_payment_terms']               = 'Payment Terms';
