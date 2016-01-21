@@ -235,7 +235,7 @@ class ControllerBlogTag extends Controller {
 						'post_thumbnail' => $post_thumb,
 						'images' => $post_images,
 						'tag' => $tags,
-						'link'			=> $this->url->link('blog/single','pid='.$post['ID'],'SSL'),
+						'link'			=> $this->url->link('blog/single','post_id='.$post['ID'],'SSL'),
 						'comment_count' => $post['comment_count'],
 					);
 			    }

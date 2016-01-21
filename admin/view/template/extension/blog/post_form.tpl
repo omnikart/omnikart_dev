@@ -89,7 +89,7 @@
                                 </tr>
 
                                 <tr>
-                                  <td width="15%" class="text-right"><label for="input-content<?php echo $language['language_id']; ?>" class="control-label"><?php echo $entry_content; ?></label></td>
+                                  <td width="15%" class="text-right"><label for="post-content<?php echo $language['language_id']; ?>" class="control-label"><?php echo $entry_content; ?></label></td>
                                   <td width="85%">
                                     <textarea name="post_description[<?php echo $language['language_id']; ?>][content]" cols="30" rows="10" class="form-control content" id="post-content<?php echo $language['language_id']; ?>" class="form-control"><?php echo isset($post_description[$language['language_id']]['content']) ? $post_description[$language['language_id']]['content'] : ''; ?></textarea>
                                     <?php if (isset($form_error[$language['language_id']]['content'])) { ?>
@@ -99,7 +99,7 @@
                                 </tr>
 
                                 <tr>
-                                  <td width="15%" class="text-right"><label for="input-excerpt<?php echo $language['language_id']; ?>" class="control-label"><?php echo $entry_excerpt; ?></label></td>
+                                  <td width="15%" class="text-right"><label for="post-excerpt<?php echo $language['language_id']; ?>" class="control-label"><?php echo $entry_excerpt; ?></label></td>
                                   <td width="85%">
                                     <textarea name="post_description[<?php echo $language['language_id']; ?>][excerpt]" id="post-excerpt<?php echo $language['language_id']; ?>" cols="30" rows="5" class="form-control excerpt"><?php echo isset($post_description[$language['language_id']]['excerpt']) ? $post_description[$language['language_id']]['excerpt'] : ''; ?></textarea>
                                     <?php if (isset($form_error[$language['language_id']]['excerpt'])) { ?>
@@ -418,20 +418,15 @@
 <!-- #content -->
 
 <script type="text/javascript"><!--
-
   $('.date').datetimepicker({
     pickTime: false
   });
-
-  $('.content').summernote({
-    height: 300
+  CKEDITOR.replace('post-content<?php echo $language['language_id']; ?>', {
+	height:'300'
   });
-
-  $('.excerpt').summernote({
-    height: 150
+  CKEDITOR.replace('post-excerpt<?php echo $language['language_id']; ?>', {
+	height:'300'
   });
-
-
 //--></script>
 
   <script type="text/javascript"><!--

@@ -54,7 +54,11 @@ class ControllerCommonSeoUrl extends Controller {
 						$this->request->get['information_id'] = $url[1];
 					}
 
-					if ($query->row['query'] && $url[0] != 'information_id' && $url[0] != 'manufacturer_id' && $url[0] != 'category_id' && $url[0] != 'product_id') {
+					if ($url[0] == 'post_id') {
+						$this->request->get['post_id'] = $url[1];
+					}
+					
+					if ($query->row['query'] && $url[0] != 'information_id' && $url[0] != 'manufacturer_id' && $url[0] != 'category_id' && $url[0] != 'product_id' && $url[0] != 'post_id') {
 						$this->request->get['route'] = $query->row['query'];
 					}
 
@@ -82,7 +86,11 @@ class ControllerCommonSeoUrl extends Controller {
 					$this->request->get['route'] = 'product/manufacturer/info';
 				} elseif (isset($this->request->get['information_id'])) {
 					$this->request->get['route'] = 'information/information';
-				}
+				} elseif (isset($this->request->get['post_id'])) {
+					$this->request->get['route'] = 'blog/single';
+				} elseif (isset($this->request->get['blog_category_path'])) {
+					$this->request->get['route'] = 'blog/category';
+				} 
 			}
 
 			if (isset($this->request->get['route'])) {
@@ -138,6 +146,14 @@ class ControllerCommonSeoUrl extends Controller {
 					}
 
 					unset($data[$key]);
+				}  elseif ($data['route'] == 'blog/single' && $key == 'post_id') {
+					$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
+					
+					if ($query->num_rows && $query->row['keyword']) {
+						$url .= '/' . $query->row['keyword'];
+					
+						unset($data[$key]);
+					}
 				}
 			}
 		}

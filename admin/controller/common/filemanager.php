@@ -366,7 +366,7 @@ class ControllerCommonFileManager extends Controller {
 			$url .= '&thumb=' . $this->request->get['thumb'];
 		}
 
-		$data['refresh'] = $this->url->link('common/filemanager', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$data['refresh'] = $this->url->link('common/filemanager/ckeditor', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
 		$url = '';
 

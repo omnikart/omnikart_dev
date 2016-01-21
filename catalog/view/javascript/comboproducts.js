@@ -59,7 +59,7 @@ var cart_combo = {
 
 					$('html, body').animate({ scrollTop: 0 }, 'slow');
 
-					$('#cart > ul').load('index.php?route=common/cart/info ul li');
+					$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
 				}
 			}
 		});

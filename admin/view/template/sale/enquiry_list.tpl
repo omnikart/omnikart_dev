@@ -5,7 +5,6 @@
       <div class="pull-right">
         <button type="submit" id="button-delete" form="form-enquiry" formaction="<?php echo $action; ?>" data-toggle="tooltip" title="Delete Seleted Queries" class="btn btn-danger"><i class="fa fa-times"></i></button>
         <button type="submit" id="button-update" form="form-enquiry" formaction="<?php echo $update; ?>" data-toggle="tooltip" title="Update Seleted Queries" class="btn btn-info"><i class="fa fa-save"></i></button>
-        <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a></div>
       <h1><?php echo $heading_title; ?></h1>
       <ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>

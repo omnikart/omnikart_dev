@@ -10,4 +10,5 @@ CKEDITOR.editorConfig = function( config ) {
 	config.filebrowserBrowseUrl = 'index.php?route=common/filemanager/ckeditor&token=' + getURLVar('token');
 	config.filebrowserImageBrowseUrl = 'index.php?route=common/filemanager/ckeditor&token=' + getURLVar('token');
 	config.allowedContent = true; // to allow all
+	config.extraPlugins = 'imagemap';
 };

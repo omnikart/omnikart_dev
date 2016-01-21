@@ -977,7 +977,8 @@ class ControllerCatalogProduct extends Controller {
 			} else {
 				$gps = array();
 			}
-
+			$this->document->addScript('view/javascript/ne/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js');
+			$this->document->addStyle('view/javascript/ne/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css');
 			$data['gps'] = array();
 
 				foreach ($gps as $child_id => $child) {
@@ -1855,7 +1856,7 @@ class ControllerCatalogProduct extends Controller {
 			}
 		}
 
-		if ((utf8_strlen($this->request->post['model']) < 1) || (utf8_strlen($this->request->post['model']) > 64)) {
+		if (utf8_strlen($this->request->post['model']) > 64) {
 			$this->error['model'] = $this->language->get('error_model');
 		}
 

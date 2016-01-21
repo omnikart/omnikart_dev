@@ -232,7 +232,7 @@ class ModelCustomerpartnerMail extends Model {
 			$html = $this->load->view('default/template/customerpartner/mail.tpl', $this->data);
 			if (preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $mail_to) AND preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $mail_from) ) {
 
-				$mail = new Mail($this->config->get('config_mail'));
+				$mail = new Mail();
 				$mail->setTo($mail_to);
 				$mail->setFrom($mail_from);
 				$mail->setSender($this->data['store_name']);

@@ -2033,11 +2033,6 @@ class ModelAccountCustomerpartner extends Model {
 		return $query->row['total'];
 	}
 
-
-	
-
-
-
 	// Autocomplete
 
 	// Manufacturer 

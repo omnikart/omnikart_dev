@@ -68,9 +68,9 @@ class ControllerBlogSingle extends Controller {
 		$data['related_posts'] = array();
 		$data['related_products'] = array();
 
-		if(isset($this->request->get['pid'])) {
+		if(isset($this->request->get['post_id'])) {
 			
-			$post = $this->model_blog_post->getPost(array("p.ID"=>"='".$this->request->get['pid']."'"));
+			$post = $this->model_blog_post->getPost(array("p.ID"=>"='".$this->request->get['post_id']."'"));
 
 			$doc_title = '';
 			if($post['title']) {
@@ -93,7 +93,7 @@ class ControllerBlogSingle extends Controller {
 			
 			if($post) {
 				
-				$pid = $post['ID'];
+				$post_id = $post['ID'];
 				
 				$data['breadcrumbs'] = array();
 				
@@ -109,10 +109,10 @@ class ControllerBlogSingle extends Controller {
 				
 				$data['breadcrumbs'][] = array(
 					'text' => ucfirst(words_limit($post['title'],2,'...')),
-					'href' => $this->url->link('blog/single?pid=' . $post['title'], '', 'SSL')
+					'href' => $this->url->link('blog/single?post_id=' . $post['title'], '', 'SSL')
 				);
 
-				$this->model_blog_post->increaseView($pid);	
+				$this->model_blog_post->increaseView($post_id);	
 
 				$thumb_size = explode('x', $blog_config['related_post_image_size']);
 				$thumb_width  = isset($thumb_size[0]) ? $thumb_size[0] : 200;

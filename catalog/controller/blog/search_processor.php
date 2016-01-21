@@ -230,7 +230,7 @@ class ControllerBlogSearchprocessor extends Controller {
 					'thumb'       => $image,
 					'title'       => $result['title'],
 					'content'     => words_limit(html_entity_decode($result['content']),$blog_config['word_limit_in_post'],'...'),
-					'href'        => $this->url->link('blog/single', 'pid=' . $result['ID'] . $url)
+					'href'        => $this->url->link('blog/single', 'post_id=' . $result['ID'] . $url)
 				);
 			}
 

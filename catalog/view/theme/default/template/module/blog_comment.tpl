@@ -120,7 +120,7 @@
 	$('#submit').on('click', function() {
 	var comment = $('#comment').val();
 	$.ajax({
-		url: "index.php?route=module/blog_comment/submit&pid=<?php echo $_GET['pid']; ?>",
+		url: "index.php?route=module/blog_comment/submit&post_id=<?php echo $_GET['post_id']; ?>",
 		type: 'post',
 		dataType: 'json',
 		data: $('#form').serialize()+'&comment='+comment+'&ajax=1',

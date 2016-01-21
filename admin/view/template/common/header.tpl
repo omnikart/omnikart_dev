@@ -16,6 +16,7 @@
 <link href="view/javascript/bootstrap/opencart/opencart.css" type="text/css" rel="stylesheet" />
 <link href="view/javascript/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
 <link href="view/javascript/summernote/summernote.css" rel="stylesheet" />
+<script type="text/javascript" src="view/javascript/ne/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
 <script src="view/javascript/jquery/datetimepicker/moment.js" type="text/javascript"></script>
 <script src="view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
@@ -63,6 +64,8 @@
         <li class="divider"></li>
         <li class="dropdown-header"><?php echo $text_product; ?></li>
         <li><a href="<?php echo $product; ?>"><span class="label label-danger pull-right"><?php echo $product_total; ?></span><?php echo $text_stock; ?></a></li>
+        <li><a href="<?php echo $product_2; ?>"><span class="label label-danger pull-right"><?php echo $product_total_2; ?></span><?php echo $text_status_2; ?></a></li>
+        <li><a href="<?php echo $product_3; ?>"><span class="label label-danger pull-right"><?php echo $product_total_3; ?></span><?php echo $text_status_3; ?></a></li>
         <li><a href="<?php echo $review; ?>"><span class="label label-danger pull-right"><?php echo $review_total; ?></span><?php echo $text_review; ?></a></li>
         <li class="divider"></li>
         <li class="dropdown-header"><?php echo $text_affiliate; ?></li>

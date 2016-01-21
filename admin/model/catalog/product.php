@@ -199,7 +199,15 @@ class ModelCatalogProduct extends Model {
 		if (isset($data['keyword'])) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
 		}
-		$model = array_values($data['product_category'])[0].$product_id;
+		if (!$data['model']) {
+			if (isset($data['product_category'])) {
+				$model = array_values($data['product_category'])[0].$product_id;
+			} else {
+				$model = '000'.$product_id;
+			}
+		} else {
+			$model = $data['model'];
+		}
 		$this->db->query("UPDATE " . DB_PREFIX . "product SET model = '" . $this->db->escape($model) . "' WHERE product_id = '" . (int)$product_id . "'");
 		if (isset($data['product_recurrings'])) {
 			foreach ($data['product_recurrings'] as $recurring) {
@@ -208,7 +216,7 @@ class ModelCatalogProduct extends Model {
 		}
 		
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "customerpartner_to_product` WHERE product_id = " . (int)$product_id);
-		var_dump($data['vendor']);
+
 		if (isset($data['vendor'])){
 			foreach ($data['vendor'] as $customer_id => $vendor){
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "customerpartner_to_product` SET `product_id` = " . (int)$product_id.", `customer_id`=".(int)$vendor['id'].", `price`=".(int)$vendor['price'].", `quantity`=".(int)$vendor['quantity'].", `sort_order`=".(int)$vendor['sort_order'].";");
@@ -817,7 +825,7 @@ class ModelCatalogProduct extends Model {
 		}
 
 		if (!empty($data['filter_model'])) {
-			$sql .= " AND p.model LIKE '" . $tgetProductshis->db->escape($data['filter_model']) . "%'";
+			$sql .= " AND p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
 		}
 
 		if (isset($data['filter_price']) && !is_null($data['filter_price'])) {

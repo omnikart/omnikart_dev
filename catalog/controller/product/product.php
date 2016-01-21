@@ -49,10 +49,12 @@ class ControllerProductProduct extends Controller {
 			$categoryPath = $this->model_catalog_category->getCategoryPath($getCategories['category_id']);
 			foreach($categoryPath as $path) {
 				$category_info = $this->model_catalog_category->getCategory($path['path_id']);
-				$data['breadcrumbs'][] = array(
-						'text' => $category_info['name'],
-						'href' => $this->url->link('product/category', 'path=' . $category_info['category_id'] . $url)
-				);
+				if ($category_info){
+					$data['breadcrumbs'][] = array(
+							'text' => $category_info['name'],
+							'href' => $this->url->link('product/category', 'path=' . $category_info['category_id'] . $url)
+					);
+				}
 				unset($category_info);
 			}
 		} else {
