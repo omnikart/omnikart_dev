@@ -253,7 +253,7 @@ class ControllerBlogCategory extends Controller {
 						'view' => $post ['view'],
 						'post_thumbnail' => $post_thumb,
 						'image' => $images,
-						'link' => $this->url->link ( 'blog/single', 'pid=' . $post ['ID'], 'SSL' ),
+						'link' => $this->url->link ( 'blog/single', 'post_id=' . $post ['ID'], 'SSL' ),
 						'content' => words_limit ( html_entity_decode ( $post ['content'] ), $blog_config ['word_limit_in_post'], '...' ),
 						'excerpt' => words_limit ( html_entity_decode ( $post ['excerpt'] ), $blog_config ['word_limit_in_post'], '...' ),
 						'tag' => $tags 

@@ -119,7 +119,7 @@
                             </tr>
 
                             <tr>
-                              <td width="15%" class="text-right"><label for="input-content<?php echo $language['language_id']; ?>" class="control-label"><?php echo $entry_description; ?></label></td>
+                              <td width="15%" class="text-right"><label for="post-content<?php echo $language['language_id']; ?>" class="control-label"><?php echo $entry_description; ?></label></td>
                               <td width="85%">
                                 <textarea name="cat_description[<?php echo $language['language_id']; ?>][description]" id="descriptions<?php echo $language['language_id']; ?>" rows="3" class="form-control description"><?php echo isset($cat_description[$language['language_id']]['description']) ? $cat_description[$language['language_id']]['description'] : ''; ?></textarea>
                                 <?php if (isset($form_error['description'])) { ?>
@@ -329,9 +329,9 @@
 <!--== #content ==-->
 
 <script type="text/javascript"><!--
-  $('.description').summernote({
-    height: 200
-  });
+CKEDITOR.replace('descriptions<?php echo $language['language_id']; ?>', {
+	height:'200'
+});
 //--></script>
 
 <script type="text/javascript"><!--

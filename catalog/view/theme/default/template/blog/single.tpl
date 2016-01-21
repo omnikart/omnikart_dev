@@ -98,7 +98,7 @@
 								$inc = 0;
 								foreach ($related_posts as $related_post) { ?>
 										<li class="post-list">
-											<a href="<?php echo HTTP_SERVER; ?>index.php?route=blog/single&amp;pid=<?php echo $post['ID']; ?>">
+											<a href="<?php echo HTTP_SERVER; ?>index.php?route=blog/single&amp;post_id=<?php echo $post['ID']; ?>">
 												<img src="<?php echo $related_post['post_thumbnail']; ?>" alt="">
 												<h2 ><?php echo ucfirst($related_post['title']); ?></h2>
 												<div>

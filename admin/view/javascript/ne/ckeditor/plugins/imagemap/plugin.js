@@ -63,28 +63,29 @@ function initImageMapEditor(editor,selected){
 	
   /*$.modal(*/
   var html = "<div id=\"imagemapmodal\"  class=\"modal fade bs-example-modal-lg\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myLargeModalLabel\">\
-    <div class=\"modal-dialog modal-lg\">\
+    <div class=\"modal-dialog modal-lg\" style=\"width:1000px;\">\
     <div class=\"modal-content\">\
 			<div class=\"row\" id='imageMapModalDiv'>\
 				<div class=\"col-sm-8\">\
 					<div id='imageMapCanvasDiv' style='background: grey; width: 100%; height: 100%; border-right: 1px solid black; float: left; overflow: auto;'>\
 					</div>\
 				</div>\
-				<div class=\"col-sm-4\">\
-					<div style='float: left;'>\
+				<div class=\"col-sm-4 pull-right input-group\">\
 						<div style='height: 200px; border-bottom: 1px solid black; width: 238px;'>\
 							<select style='width: 100%; height: 100%;' size='4' onclick='processingInstance.select($(\"#imageMapAreas\").val())' id='imageMapAreas'>\
 							</select>\
 						</div>\
-						<div style='clear: both;'>\
-							<button onclick='processingInstance.saveToHtml();'>Save HTML</button><br>\
-							<button onclick='processingInstance.removeArea();'>Delete Area</button><br>\
-							<button onclick='processingInstance.addArea(\"\",\"\",\"New\",\"circle\",\"20,20,10\");'>Circle</button>\
-							<button onclick='processingInstance.addArea(\"\",\"\",\"New\",\"rect\",\"20,20,40,40\");'>Box</button>\
-							<button onclick='processingInstance.addArea(\"\",\"\",\"New\",\"poly\",\"\");'>Polygon</button>\
+						<div class=\"input-btn-group\">\
+							<button class=\"btn btn-info \" onclick='processingInstance.saveToHtml();'>Save HTML</button><br>\
+							<button class=\"btn btn-primary\" onclick='processingInstance.removeArea();'>Delete Area</button><br>\
+						</div>\
+						<input placeholder=\"URL\"  class=\"form-control\" type='text' id='imageMapHref' style='width: 190px;' onchange='processingInstance.updateArea();'>\
+						<div class=\"input-btn-group\">\
+							<button class=\"btn btn-primary\" onclick='processingInstance.addArea(\"\",\"\",\"New\",\"circle\",\"20,20,10\");'>Circle</button>\
+							<button class=\"btn btn-primary\" onclick='processingInstance.addArea(\"\",\"\",\"New\",\"rect\",\"20,20,40,40\");'>Box</button>\
+							<button class=\"btn btn-info\" onclick='processingInstance.addArea(\"\",\"\",\"New\",\"poly\",\"\");'>Polygon</button>\
 							<table style='display: none; border: none;' id='imageMapRegionEdit'>\
 								<tr><td colspan=2>\
-								URL: <input type='text' id='imageMapHref' style='width: 190px;' onchange='processingInstance.updateArea();'>\
 								</td></tr><td>\
 								Title: <input type='text' id='imageMapTitle' style='width: 60px;' onkeyup='processingInstance.updateArea();'>\
 								</td><td>\
@@ -92,7 +93,6 @@ function initImageMapEditor(editor,selected){
 								</td></tr>\
 							</table>\
 						</div>\
-					</div>\
 					<div class=\"clearfix\"></div>\
 					<div id='imageMapHidden' style='display:none;'></div>\
 					</div>\

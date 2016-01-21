@@ -109,7 +109,7 @@ class ModelBlogPost extends Model {
 			foreach ($postmeta as $key => $value) {
 				$post[$value['meta_key']][] = $value;
 			}
-			$post['link'] = $this->url->link('blog/single', 'pid='.(int)$post['ID'],'SSL');
+			$post['link'] = $this->url->link('blog/single', 'post_id='.(int)$post['ID'],'SSL');
 			return $post;
 		} else {
 			return array();

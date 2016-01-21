@@ -33,7 +33,7 @@ class ControllerModuleBlogComment extends Controller {
 
 		$data['not_found'] = $this->language->get('not_found');
 
-		$pid = isset($this->request->get['pid']) ? $this->request->get['pid'] : '';
+		$post_id = isset($this->request->get['post_id']) ? $this->request->get['post_id'] : '';
 
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
@@ -43,8 +43,8 @@ class ControllerModuleBlogComment extends Controller {
 
 		$limit = $settings['limit'] ? (int)$settings['limit'] : $this->limit;
 
-		$comments = $this->model_blog_comment->comments(array("bc.comment_post_ID"=>"='".$pid."'", "bc.comment_approve"=>"='publish'"), "bc.comment_ID DESC", ($page - 1) * $limit, $limit);
-		$totla_comment = $this->model_blog_comment->total_comment(array("comment_post_ID" => "='".$pid."'"));
+		$comments = $this->model_blog_comment->comments(array("bc.comment_post_ID"=>"='".$post_id."'", "bc.comment_approve"=>"='publish'"), "bc.comment_ID DESC", ($page - 1) * $limit, $limit);
+		$totla_comment = $this->model_blog_comment->total_comment(array("comment_post_ID" => "='".$post_id."'"));
 
 		$data['comments'] = array();
 
@@ -74,7 +74,7 @@ class ControllerModuleBlogComment extends Controller {
 			}
 		}
 		
-		$post_info = $this->model_blog_post->getPost(array("ID"=>"='".$pid."'"));
+		$post_info = $this->model_blog_post->getPost(array("ID"=>"='".$post_id."'"));
 
 		$data['comment_status'] = '';
 		if(isset($post_info['comment_status'])) {
@@ -89,7 +89,7 @@ class ControllerModuleBlogComment extends Controller {
 		$pagination->total = $totla_comment;
 		$pagination->page = $page;
 		$pagination->limit = $limit;
-		$pagination->url = $this->url->link('blog/single&pid='.$pid,'&page={page}#blog-comment');
+		$pagination->url = $this->url->link('blog/single&post_id='.$post_id,'&page={page}#blog-comment');
 		$data['pagination'] = $pagination->render();
 		$data['results'] = sprintf($this->language->get('text_pagination'), ($totla_comment) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($totla_comment - $limit)) ? $totla_comment : ((($page - 1) * $limit) + $limit), $totla_comment, ceil($totla_comment / $limit));
 
@@ -103,11 +103,11 @@ class ControllerModuleBlogComment extends Controller {
 
 	public function submit() {
 
-		if(!isset($this->request->get['pid'])) {
+		if(!isset($this->request->get['post_id'])) {
 			$this->response->redirect($this->url->link('blog/home'));
 		}
 
-		$pid = $this->request->get['pid'] ? $this->request->get['pid'] : '';
+		$post_id = $this->request->get['post_id'] ? $this->request->get['post_id'] : '';
 
 		$this->load->language('module/blog_comment');
 		$data['heading_title'] = $this->language->get('heading_title');
@@ -136,7 +136,7 @@ class ControllerModuleBlogComment extends Controller {
 				$data['email'] = $this->customer->getEmail();
 				$data['id'] = $this->customer->getId();
 				
-				$this->model_module_blog_comment->addComment($pid, $data, $config);
+				$this->model_module_blog_comment->addComment($post_id, $data, $config);
 				
 				if($this->request->post['ajax']) {
 					$json['success'] = "Your Comment is successfully submitted It may or may not need to admin moderation";
