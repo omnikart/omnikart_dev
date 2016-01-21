@@ -128,40 +128,56 @@ class ModelModuleEnquiry extends Model {
           FOREIGN KEY (`quote_revision_id`) REFERENCES `" . DB_PREFIX . "quote_revision`(`quote_revision_id`) ON UPDATE CASCADE ON DELETE RESTRICT
 		) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
 	}
-	/*
-	public function getEnquiries($data = array()) { // renamed from getEnquiry to getEnquiries
-		$query = $this->db->query ( "SELECT * FROM `" . DB_PREFIX . "enquiry` WHERE status <> '0' ORDER BY date DESC LIMIT " . ( int ) $data ['start'] . "," . ( int ) $data ['limit'] );
-		return $query->rows;
-	}
-	public function getEnquiry($id) { // added New function
-		$returndata = array (
-				'initial_query',
-				'revision_query',
-				'revision_comment',
-				'revision_products' 
-		);
+	
+	public function getEnquiry($enquiry_id) {
+		$data = array();
+		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry e LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . (int)$enquiry_id . "'");
+		$data['customer_id'] = $query->row['customer_id'];
+		$data['postcode'] = $query->row['postcode'];
+		$data['status'] = $query->row['status'];
+		$data['date_added'] = $query->row['date_added'];
+		$data['firstname'] = $query->row['firstname'];
+		$data['lastname'] = $query->row['lastname'];
+		$data['email'] = $query->row['email'];
+		$data['telephone'] = $query->row['telephone'];
 		
-		$query = $this->db->query ( "SELECT * FROM `" . DB_PREFIX . "enquiry` WHERE id = '" . ( int ) $id . "'" );
+		$data['terms'] = array();
 		
-		$returndata ['initial_query'] = $query->row;
+		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry_term et WHERE et.enquiry_id='" . (int)$enquiry_id . "'");
 		
-		$query2 = $this->db->query ( "SELECT * FROM `" . DB_PREFIX . "enquiry_to_user` WHERE id = '" . ( int ) $id . "'" ); // Check is enquiry added to quotation
-		
-		if ($query2->num_rows) {
-			$query3 = $this->db->query ( "SELECT * FROM `" . DB_PREFIX . "enquiry_revisions` WHERE id = '" . ( int ) $id . "' ORDER BY revision_id DESC LIMIT 1" ); // Latest Revision id
-			$query4 = $this->db->query ( "SELECT * FROM `" . DB_PREFIX . "enquiry_products` WHERE revision_id = '" . $query3->row ['revision_id'] . "'" ); // Products Latest
-			$returndata ['revision_query'] = $query2->row;
-			$returndata ['revision_data'] = $query3->row;
-			$returndata ['revision_products'] = $query4->rows;
+		foreach ($query->rows as $term) {
+			if ($term['term_type']=='payment') {
+				$term_query = $query = $this->db->query("SELECT name FROM ".DB_PREFIX."payment_term WHERE payment_term_id='".(int)$term['term_value']."'");
+				$term['term_value'] = $term_query->row['name'];
+			}
+				
+			$data['terms'][] = array(
+						'type' => $term['term_type'],
+						'value' => $term['term_value']
+			);
 		}
 		
-		return $returndata;
+		$data['enquiries'] = array();
+		
+		$query = $this->db->query("SELECT ep.*,epd.name AS name, epd.description AS description, epd.files AS files, ucd.title AS unit_title, uc.value AS unit_value FROM ".DB_PREFIX."enquiry_product ep LEFT JOIN ".DB_PREFIX."enquiry_product_description epd ON (epd.enquiry_product_id=ep.enquiry_product_id) LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = ep.unit_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) WHERE ep.enquiry_id='" . $enquiry_id . "'");
+		if ($query->num_rows) {
+			foreach ($query->rows as $key=>$enquiry) {
+				if ($enquiry['product_id'])
+				$data['enquiries'][$key]['link'] = $this->url->link('product/product','product_id='.(int)$enquiry['product_id'],'SSL');
+				if ($enquiry['category_id'])
+				$data['enquiries'][$key]['link'] = $this->url->link('product/category','category_id='.(int)$enquiry['product_id'],'SSL');
+		
+				$data['enquiries'][$key]['name'] = $enquiry['name'];
+				$data['enquiries'][$key]['description'] = $enquiry['description'];
+				$data['enquiries'][$key]['quantity'] = $enquiry['quantity'];
+				$data['enquiries'][$key]['unit_title'] = $enquiry['unit_title'];
+				$data['enquiries'][$key]['filenames'] = unserialize($enquiry['files']);
+			}
+		}
+		
+		return $data;
 	}
-	public function getTotalEnquiries($data = array()) {
-		$query = $this->db->query ( "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "enquiry` WHERE status <> '0'" );
-		return $query->row ['total'];
-	}
-	*/
+	
 	public function delete($enquiry_id) {
 		$query = $this->db->query ( "UPDATE `" . DB_PREFIX . "enquiry` SET status = '0' WHERE id IN (" . $implode . ")" );
 	}
