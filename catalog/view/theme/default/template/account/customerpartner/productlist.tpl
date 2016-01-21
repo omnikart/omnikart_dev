@@ -40,7 +40,7 @@
 	        		<i class="fa fa-upload"></i> Upload Products</span>
 	        </button>
 	        
-		<button data-toggle="tooltip" class="btn btn-primary" id="updateProducts"  title="Update changes for selected products. Page will not refresh after this."><i class="fa fa-save"></i> Update</button>
+		<button data-toggle="tooltip" class="btn btn-primary" id="updateProducts"  title="Update changes for selected products. Page will not refresh after this."><i class="fa fa-save"></i>  Save Changes</button>
 			<button data-toggle="tooltip" class="btn btn-info" id="disableProducts"  title="Disable Current Changes"><i class="fa fa-times"></i> Disable</button>
 	        <a onclick="$('#form-product').submit();" data-toggle="tooltip" class="btn btn-danger"  title="<?php echo $button_delete; ?>"><i class="fa fa-trash-o"></i> Delete</a>
       	</div> 
