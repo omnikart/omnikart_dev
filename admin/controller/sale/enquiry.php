@@ -57,96 +57,6 @@ class ControllerSaleEnquiry extends Controller {
 		}
 	}
 
-	public function getEnquiry() {
-		$json = array();
-
-		if(isset($this->request->get['enquiry_id'])) {
-			$enquiry_id=$this->request->get['enquiry_id'];
-		} else 
-			$enquiry_id=null;
-		
-		$type = 'json';
-		
-		if(isset($this->request->get['type']))
-		{
-			$type=$this->request->get['type'];
-		}
-		
-						
-		if($enquiry_id){
-			$customer_id = 0;
-			$json['addresses'] = array();
-			$json['address_id'] = '0';
-			$this->load->model('module/enquiry');
-			$this->load->model('sale/customer');
-			
-			$result = $this->model_module_enquiry->getEnquiry($enquiry_id);
-			$initial_query = $result['initial_query'];
-			
-			$json['query'] = array();
-			
-			if (isset($result['revision_products'])){
-				$revision_products = $result['revision_products']; 
-				$revision_data = $result['revision_data'];
-				
-				
-				$customer_id = $result['revision_query']['customer_id'];
-				$json['query'] = $result['revision_products'];
-				foreach ($result['revision_products'] as $product){	
-					$json['query'][] = array(
-						'name'=>$product['name'],
-						'quantity'=>$product['quantity'],
-						'unit'=>$product['unit'],
-						'price'=>$product['price'],
-						'total'=>$product['total'],
-					);
-				}
-				
-				$json['address_id'] = $revision_data['address_id'];
-				
-			} else { // Enquiry not saved to quotation
-				$user_info = unserialize($initial_query['user_info']);// extract user info from serialized data
-				if (isset($user_info['email'])) {
-					if ($this->model_sale_customer->getCustomerByEmail($user_info['email'])){
-						$customer = $this->model_sale_customer->getCustomerByEmail($user_info['email']);
-						$customer_id = $customer['customer_id'];//initialized 
-					}
-				}
-				
-
-				foreach (unserialize($initial_query['query']) as $product){
-					$json['query'][] = array(
-						'name'=>$product['name'],
-						'quantity'=>$product['quantity'],
-						'unit'=>'',
-						'price'=>'',
-						'total'=>'',
-					);
-				}
-			}
-			
-			if ($customer_id){
-				$addresses = $this->model_sale_customer->getAddresses($customer_id);
-				foreach ($addresses as $address){
-					$json['addresses'][] = $address;
-				}
-			}
-								
-			
-			$json['pdf_link'] = $this->url->link("sale/enquiry/getEnquiry&token=".$this->session->data['token']."&enquiry_id=".$this->request->get['enquiry_id']."&type=pdf",'','SSL');
-			$json['id'] = $initial_query['id'];
-			$json['user_info']=unserialize($initial_query['user_info']);
-			
-		}
-		
-		if ('json' == $type){
-			$this->response->setOutput(json_encode($json));
-		} else {
-			$this->response->setOutput($this->load->view('sale/enquiry_form.tpl', $json));
-		}
-		
-		
-	}
 	protected function getList() {
 		
 		if (isset($this->request->get['filter_customer'])) {
@@ -298,9 +208,31 @@ class ControllerSaleEnquiry extends Controller {
 
 		$this->response->setOutput($this->load->view('sale/enquiry_list.tpl', $data));
 	}
+	
 	public function install(){
 		$this->load->model('module/enquiry');
 		$this->model_module_enquiry->install();
+	}
+	
+	public function getEnquiry(){
+		
+		if (isset($this->request->get['enquiry_id']) && (int)$this->request->get['enquiry_id']) {
+			$this->load->model('module/enquiry');
+			$data = $this->model_module_enquiry->getEnquiry($this->request->get['enquiry_id']);
+			$this->load->model('localisation/tax_class');
+			
+			$data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+			$data['text_none'] = "None";
+			if (isset($this->request->post['tax_class_id'])) {
+				$data['tax_class_id'] = $this->request->post['tax_class_id'];
+			} elseif (!empty($product_info)) {
+				$data['tax_class_id'] = $product_info['tax_class_id'];
+			} else {
+				$data['tax_class_id'] = 0;
+			}
+			
+			$this->response->setOutput($this->load->view('sale/enquiry_form.tpl',$data));
+		}
 	}
 
 }
