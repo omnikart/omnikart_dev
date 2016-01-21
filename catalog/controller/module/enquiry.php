@@ -215,7 +215,14 @@ class ControllerModuleEnquiry extends Controller {
 			$this->model_module_enquiry->renderEnquiry($this->request->get['enquiry_id']);
 		}
 	}
-	
+	public function deleteProduct(){
+		if ($this->request->server['REQUEST_METHOD'] == 'POST'){
+			if (isset($this->request->post['key'])) {
+				unset($this->session->data['enquiry'][$this->request->post['key']]);
+				$this->getEnquiry();
+			}
+		}
+	}
 	public function getEnquiry() {
 		$data = array();
 		$data['enquiries'] = array();
@@ -228,7 +235,7 @@ class ControllerModuleEnquiry extends Controller {
 		$data['payment_terms'] = $this->model_module_enquiry->getPaymentTerms();
 		foreach ($enquiries as $enquiry => $quantity) {
 			$enq = unserialize(base64_decode($enquiry));
-			$data['enquiries'][] = array(
+			$data['enquiries'][$enquiry] = array(
 				'name'=>$enq['name'],
 				'product_id'=>$enq['product_id'],
 				'category_id'=>$enq['category_id'],
