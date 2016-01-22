@@ -20,8 +20,8 @@ $_['text_pagination']       = 'Showing %d to %d of %d (%d Pages)';
 $_['text_loading']          = 'Loading...';
 
 // Buttons
-$_['button_add_to_cart'] = 'Add to Cart';
-$_['button_add_to_quote'] = 'Add to Quotation';
+$_['button_add_to_cart']    = '<i class="fa fa-shopping-cart"></i>';
+$_['button_add_to_quote']   = '<i class="fa fa-flip-horizontal fa-file-text-o"></i>';
 $_['button_address_add']    = 'Add Address';
 $_['button_back']           = 'Back';
 $_['button_continue']       = 'Continue';

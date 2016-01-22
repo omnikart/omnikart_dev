@@ -470,9 +470,9 @@
         <td class="gp-col-btn">
           <input type="hidden" name="product_id" id="product<?php echo $child_id; ?>" value="<?php echo $child_id; ?>" />
           <?php if ($child['enabled']) { ?>
-	          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGrouped('<?php echo $child_id; ?>');" class="btn btn-primary btn-block"><?php echo $button_add_to_cart; ?></button>
+	          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGrouped('<?php echo $child_id; ?>');" class="btn btn-default"><?php echo $button_add_to_cart; ?></button>
           <?php } ?>  
-          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGroupedToQuote('<?php echo $child_id; ?>');" class="btn btn-primary btn-block"><?php echo $button_add_to_quote; ?></button>
+          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGroupedToQuote('<?php echo $child_id; ?>');" class="btn btn-default"><?php echo $button_add_to_quote; ?></button>
         
         </td>
       </tr>
@@ -745,6 +745,19 @@ function addGpGroupedToQuote(child_id) {
 		}
 	});
 }
+$('#columns').on('click','#view-enquiry',function(){
+	$.ajax({
+		url : 'index.php?route=module/enquiry/getEnquiry',
+	    dataType: "html",
+	    success : function (data) {
+		    $('#enquiry-products').modal('show');
+		    $('#enquiry-products').remove();
+			$('body').append(data);
+			$('#enquiry-products').modal('show');
+	    }
+	});
+});
+
 //--></script>
 
 

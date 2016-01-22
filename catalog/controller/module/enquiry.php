@@ -152,6 +152,7 @@ class ControllerModuleEnquiry extends Controller {
 		$this->response->setOutput ( json_encode ( $json ) );
 	}
 	public function addProduct() {
+		$this->load->language ( 'module/enquiry' );
 		$json = array ();
 		if ($this->request->server ['REQUEST_METHOD'] == 'POST') {
 			if (isset ( $this->request->post )) {
@@ -241,7 +242,7 @@ class ControllerModuleEnquiry extends Controller {
 							$this->session->data ['enquiry'] [$key] += ( int ) $quantity;
 						}
 					}
-					$json ['success'] = 'Product added successfully to Enquiry Form';
+					$json ['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $enquiry ['product_id']), $enquiry['name']);
 					$json ['number'] = count ( $this->session->data ['enquiry'] );
 				}
 			}
