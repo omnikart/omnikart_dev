@@ -386,7 +386,9 @@ class ControllerProductProduct extends Controller {
 				$data['vendors'][$key]['link'] = $this->url->link('product/product', '&vendor_id='.$vendor['vendor_id'].'&product_id=' . $product_id ,'SSL');
 				$data['vendors'][$key]['price'] = $this->currency->format($this->tax->calculate($vendor['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 			}
-
+			
+			$data['enabled'] = false;
+				
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 				$data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 				$data['original_price']  = 0; // Comparing MRP and Supplier Price //
@@ -398,7 +400,10 @@ class ControllerProductProduct extends Controller {
 			} else {
 				$data['price'] = false;
 			}
-
+			if ($product_info['price']!='0'){
+				$data['enabled'] = true;
+			}
+			
 			if ((float)$product_info['special']) {
 				$data['special'] = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 			} else {
@@ -852,6 +857,7 @@ class ControllerProductProduct extends Controller {
 								'options'    => $child_options,
 								'discounts'  => $child_discounts,
 								'qty_now'    => $qty_now,
+								'enabled'	  => ($child_info['price']!='0'?true:false),
 								//'curr_vendor'=> $curr_vendor,
 								//'vlink'		 => $vlink,
 								//'vendors'	 => $vendors 	

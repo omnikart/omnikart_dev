@@ -74,7 +74,7 @@
 	          	  </div>
 	          </div>
 	          <p></p>
-	          <?php if ($price) { ?>
+	          <?php if ($price && $enabled) { ?>
 	          <ul class="list-unstyled">
 	            <?php if (!$special) { ?>
 	            <li>
@@ -109,7 +109,7 @@
 	            <?php } ?>
 	            <?php } ?>
 	          </ul>
-	          <?php } ?>
+	          <?php } else { echo "<h2><small>Price is not available for this product. Please add it to quotation.</small></h2>"; }?>
           
           <div id="product">
             <?php if ($options) { ?>
@@ -263,11 +263,13 @@
 					</div>
 				</div>
 			</div>
+            
             <div class="form-group">
             <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
 			<input type="hidden" name="products[]" value="<?php echo $product_id; ?>"/>
               <br />
               <div class="row">
+                
                 <div class="col-md-4">
 		            <div class="input-group">
 		            	<span class="input-group-addon" id="sizing-addon2">
@@ -278,14 +280,17 @@
 		                <input type="text" name="quantity" value="<?php echo $minimum; ?>" size="2" id="input-quantity" class="form-control" />
 		  			</div>
 	  			</div>
-				<div class="col-md-4">
-              		<button type="button" id="button-cart" data-cart="cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-info btn-block">Add to Cart</button>
-              	</div>
+				<?php if ($enabled) { ?>
+					<div class="col-md-4">
+	              		<button type="button" id="button-cart" data-cart="cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-info btn-block">Add to Cart</button>
+	              	</div>
+              	<?php } ?>            	
               	<div class="col-md-4">
               		<button type="button" id="button-quote" data-cart="quote" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-info btn-block">Add to Quotation</button>
               	</div>
               </div>
             </div>
+            
             <?php if ($minimum > 1) { ?>
             <div class="alert alert-info"><i class="fa fa-info-circle"></i> <?php echo $text_minimum; ?></div>
             <?php } ?>

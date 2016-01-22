@@ -40,6 +40,14 @@ class ControllerProductCategory extends Controller {
 			$limit = $this->config->get('config_product_limit');
 		}
 
+		if (isset($this->request->get['attributes'])) {
+			$filter_attributes = $this->request->get['attributes'];
+		} else {
+			$filter_attributes = array();
+		}
+		
+		
+		
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -207,7 +215,8 @@ class ControllerProductCategory extends Controller {
 
 			$filter_data = array(
 				'filter_category_id' => $category_id,
-				'filter_sub_category' => true,
+				'filter_sub_category'=> true,
+				'filter_attributes'  => $filter_attributes,
 				'filter_filter'      => $filter,
 				'sort'               => $sort,
 				'order'              => $order,

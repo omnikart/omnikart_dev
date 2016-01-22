@@ -305,12 +305,12 @@
 				<td>
 					<?php echo isset($child['attributes'][$key]['attribute'][$key2]['text'])?$child['attributes'][$key]['attribute'][$key2]['text']:''; ?>
 				</td>
-				
 			<?php } ?>
     	<?php } } ?>
         
         <?php if ($column_gp_price) { ?>
         <td class="gp-col-price">
+          <?php if ($child['enabled']) {?>
           <div class="gp-child-price">
             <?php if (!$child['special']) { ?>
             <?php echo $child['price']; ?>
@@ -324,6 +324,7 @@
           <?php foreach ($child['discounts'] as $discount) { ?>
           <div class="gp-toggle-info gp-child-discount"><?php echo $discount['quantity']; ?><?php echo $text_discount; ?><?php echo $discount['price']; ?></div>
           <?php } ?>
+          <?php } else { echo "Please add it to quotation."; } ?>
         </td>
         <?php } ?>
         <?php if ($column_gp_option) { ?>
@@ -483,7 +484,9 @@
         </td>
         <td class="gp-col-btn">
           <input type="hidden" name="product_id" id="product<?php echo $child_id; ?>" value="<?php echo $child_id; ?>" />
+          <?php if ($child['enabled']) {?>
           <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGrouped('<?php echo $child_id; ?>');" class="btn btn-primary btn-block"><?php echo $button_add_to_cart; ?></button>
+          <?php } ?>
           <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGroupedToQuote('<?php echo $child_id; ?>');" class="btn btn-primary btn-block"><?php echo $button_add_to_quote; ?></button>
         </td>
       </tr>
