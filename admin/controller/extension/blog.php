@@ -3,7 +3,7 @@ class ControllerExtensionBlog extends Controller {
 	
 	private $data = array();
 	private $error = array();
-	private $pid = '';
+	private $post_id = '';
 	private $cid = '';
 	private $comment_id = '';
 
@@ -339,7 +339,7 @@ class ControllerExtensionBlog extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 			$post_id = $this->model_extension_blog_postmodify->createPost($this->request->post);
 			if($post_id) {
-				$post_review_link = '<a target="_blink" href="' . HTTP_CATALOG . 'index.php?route=blog/single&pid=' . $post_id . '">View</a>';
+				$post_review_link = '<a target="_blink" href="' . HTTP_CATALOG . 'index.php?route=blog/single&post_id=' . $post_id . '">View</a>';
 				$this->session->data['success'] = $this->language->get('text_success_create') . '&nbsp;|&nbsp;'.$post_review_link;
 			} else {
 				$this->session->data['error_warning'] = $this->language->get('text_error_create');
@@ -355,7 +355,7 @@ class ControllerExtensionBlog extends Controller {
 	}
 
 	protected function check_post_id() {
-		if(!isset($this->request->get['pid'])) {
+		if(!isset($this->request->get['post_id'])) {
 			$this->response->redirect($this->url->link('extension/blog', 'token=' . $this->session->data['token'], 'SSL'));
 		}
 
@@ -366,7 +366,7 @@ class ControllerExtensionBlog extends Controller {
 
 		$this->check_post_id();
 
-		$this->pid = $this->request->get['pid'];
+		$this->post_id = $this->request->get['post_id'];
 
 		$this->language->load('extension/blog/post_form');
 
@@ -391,7 +391,7 @@ class ControllerExtensionBlog extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title_edit'),
-			'href' => $this->url->link('extension/blog/post_edit', 'token=' . $this->session->data['token'] . '&pid='. $this->pid, 'SSL')
+			'href' => $this->url->link('extension/blog/post_edit', 'token=' . $this->session->data['token'] . '&post_id='. $this->post_id, 'SSL')
 		);
 
 		$url = '';
@@ -424,16 +424,16 @@ class ControllerExtensionBlog extends Controller {
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 
-			$this->model_extension_blog_postmodify->editPost($this->pid, $this->request->post);
+			$this->model_extension_blog_postmodify->editPost($this->post_id, $this->request->post);
 
-			$post_review_link = '<a target="_blink" href="' . HTTP_CATALOG . 'index.php?route=blog/single&pid=' . $this->pid . '">View</a>';
+			$post_review_link = '<a target="_blink" href="' . HTTP_CATALOG . 'index.php?route=blog/single&post_id=' . $this->post_id . '">View</a>';
 			$this->session->data['success'] = $this->language->get('text_success_edit') . '&nbsp;|&nbsp;'.$post_review_link;
 		
 			$this->response->redirect($this->url->link('extension/blog', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
 
-		$this->data['action'] = $this->url->link('extension/blog/post_edit', 'token=' . $this->session->data['token'] . '&pid=' . $this->pid. $url, 'SSL');
-		$this->data['cancel'] = $this->url->link('extension/blog', 'token=' . $this->session->data['token'] . '&pid=' . $this->pid . $url, 'SSL');
+		$this->data['action'] = $this->url->link('extension/blog/post_edit', 'token=' . $this->session->data['token'] . '&post_id=' . $this->post_id. $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/blog', 'token=' . $this->session->data['token'] . '&post_id=' . $this->post_id . $url, 'SSL');
 
 		$this->getForm();
 	}
@@ -442,7 +442,7 @@ class ControllerExtensionBlog extends Controller {
 
 		$this->check_post_id();
 
-		$this->pid = $this->request->get['pid'];
+		$this->post_id = $this->request->get['post_id'];
 
 		$this->language->load('extension/blog/post');
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -474,14 +474,14 @@ class ControllerExtensionBlog extends Controller {
 		}
 
 		$this->load->model('extension/blog/postmodify');
-		if ($this->pid && $this->validateDelete()) {
-			if($this->model_extension_blog_postmodify->deletePost($this->pid)) {
+		if ($this->post_id && $this->validateDelete()) {
+			if($this->model_extension_blog_postmodify->deletePost($this->post_id)) {
 				$this->session->data['success'] = $this->language->get('text_success_delete');
 			} else {
 				$this->session->data['error_warning'] = $this->language->get('text_error_delete');
 			}		
 
-			$this->response->redirect($this->url->link('extension/blog', 'token=' . $this->session->data['token'] . '&pid=' . $this->pid . $url, 'SSL'));
+			$this->response->redirect($this->url->link('extension/blog', 'token=' . $this->session->data['token'] . '&post_id=' . $this->post_id . $url, 'SSL'));
 		}	
 
 		$this->getPostList();
@@ -526,18 +526,18 @@ class ControllerExtensionBlog extends Controller {
 			$inc = 1;
 			foreach ($this->request->post['selected'] as $post_id) {
 				// $this->model_catalog_post->deletepost($post_id);
-				$this->pid = $post_id;
-				if($this->model_extension_blog_postmodify->deletePost($this->pid)) {
+				$this->post_id = $post_id;
+				if($this->model_extension_blog_postmodify->deletePost($this->post_id)) {
 					if($inc == 1) {
-						$success .= $this->pid;
+						$success .= $this->post_id;
 					} else {
-						$success .= ', ' . $this->pid;
+						$success .= ', ' . $this->post_id;
 					}
 				} else {
 					if($inc == 1) {
-						$error .= $this->pid . ' ';
+						$error .= $this->post_id . ' ';
 					} else {
-						$error .= ', ' . $this->pid;
+						$error .= ', ' . $this->post_id;
 					}
 				}	
 				$inc++;
@@ -545,7 +545,7 @@ class ControllerExtensionBlog extends Controller {
 			$this->session->data['success'] = $success;
 			$this->session->data['error_warning'] = $error;
 
-			$this->response->redirect($this->url->link('extension/blog', 'token=' . $this->session->data['token'] . '&pid=' . $this->pid . $url, 'SSL'));
+			$this->response->redirect($this->url->link('extension/blog', 'token=' . $this->session->data['token'] . '&post_id=' . $this->post_id . $url, 'SSL'));
 		}		
 
 		$this->getPostList();
@@ -639,8 +639,8 @@ class ControllerExtensionBlog extends Controller {
 		$this->data['column_left'] = $this->load->controller('common/column_left');
 		$this->data['footer'] = $this->load->controller('common/footer');
 
-		if ($this->pid && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-			$post_info = $this->model_extension_blog_post->getPost($this->pid);
+		if ($this->post_id && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+			$post_info = $this->model_extension_blog_post->getPost($this->post_id);
 		}
 
 		$this->data['token'] = $this->session->data['token'];
@@ -650,8 +650,8 @@ class ControllerExtensionBlog extends Controller {
 
 		if (isset($this->request->post['post_description'])) {
 			$this->data['post_description'] = $this->request->post['post_description'];
-		} elseif ($this->pid) {
-			$this->data['post_description'] = $this->model_extension_blog_post->getPostDescriptions($this->pid);
+		} elseif ($this->post_id) {
+			$this->data['post_description'] = $this->model_extension_blog_post->getPostDescriptions($this->post_id);
 		} else {
 			$this->data['post_description'] = array();
 		}
@@ -660,8 +660,8 @@ class ControllerExtensionBlog extends Controller {
 
 		if (isset($this->request->post['post_category'])) {
 			$categories = $this->request->post['post_category'];
-		} elseif ($this->pid) {
-			$categories = $this->model_extension_blog_post->getPostCategories($this->pid);
+		} elseif ($this->post_id) {
+			$categories = $this->model_extension_blog_post->getPostCategories($this->post_id);
 		} else {
 			$categories = array();
 		}
@@ -682,8 +682,8 @@ class ControllerExtensionBlog extends Controller {
 
 		if (isset($this->request->post['post_filter'])) {
 			$filters = $this->request->post['post_filter'];
-		} elseif ($this->pid) {
-			$filters = $this->model_extension_blog_post->getpostFilters($this->pid);
+		} elseif ($this->post_id) {
+			$filters = $this->model_extension_blog_post->getpostFilters($this->post_id);
 		} else {
 			$filters = array();
 		}
@@ -736,8 +736,8 @@ class ControllerExtensionBlog extends Controller {
 		// Post Layout
 		if (isset($this->request->post['post_layout'])) {
 			$this->data['post_layout'] = $this->request->post['post_layout'];
-		} elseif ($this->pid) {
-			$this->data['post_layout'] = $this->model_extension_blog_post->getPostLayouts($this->pid);
+		} elseif ($this->post_id) {
+			$this->data['post_layout'] = $this->model_extension_blog_post->getPostLayouts($this->post_id);
 		} else {
 			$this->data['post_layout'] = array();
 		}
@@ -752,7 +752,7 @@ class ControllerExtensionBlog extends Controller {
 		if (isset($this->request->post['post_store'])) {
 			$this->data['post_store'] = $this->request->post['post_store'];
 		} elseif (isset($this->request->get['product_id'])) {
-			$this->data['post_store'] = $this->model_extension_blog_post->getPostStores($this->pid);
+			$this->data['post_store'] = $this->model_extension_blog_post->getPostStores($this->post_id);
 		} else {
 			$this->data['post_store'] = array(0);
 		}
@@ -760,8 +760,8 @@ class ControllerExtensionBlog extends Controller {
 		// Related product
 		if (isset($this->request->post['related_product'])) {
 			$products = $this->request->post['related_product'];
-		} elseif (isset($this->pid) && $this->pid) {
-			$products = $this->model_extension_blog_post->productByPostid(array('post_id'=>$this->pid));
+		} elseif (isset($this->post_id) && $this->post_id) {
+			$products = $this->model_extension_blog_post->productByPostid(array('post_id'=>$this->post_id));
 		} else {
 			$products = array();
 		}
@@ -801,8 +801,8 @@ class ControllerExtensionBlog extends Controller {
 
 		if (isset($this->request->post['post_image'])) {
 			$post_images = $this->request->post['post_image'];
-		} elseif ($this->pid) {
-			$post_images = $this->model_extension_blog_post->getPostImages($this->pid,'image');
+		} elseif ($this->post_id) {
+			$post_images = $this->model_extension_blog_post->getPostImages($this->post_id,'image');
 		} else {
 			$post_images = array();
 		}
@@ -858,11 +858,11 @@ class ControllerExtensionBlog extends Controller {
 
 			$url_alias_info = $this->model_catalog_url_alias->getUrlAlias($this->request->post['keyword']);
 
-			if ($url_alias_info && isset($this->request->get['pid']) && $url_alias_info['query'] != 'post_id=' . $this->request->get['pid']) {
+			if ($url_alias_info && isset($this->request->get['post_id']) && $url_alias_info['query'] != 'post_id=' . $this->request->get['post_id']) {
 				$this->data['form_error']['keyword'] = $this->language->get('error_keyword');
 			}
 
-			if ($url_alias_info && !isset($this->request->get['pid'])) {
+			if ($url_alias_info && !isset($this->request->get['post_id'])) {
 				$this->data['form_error']['keyword'] = $this->language->get('error_keyword');
 			}
 		}

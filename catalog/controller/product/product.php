@@ -168,9 +168,6 @@ class ControllerProductProduct extends Controller {
 			);
 		}
 
-
-
-
 		$product_info = $this->model_catalog_product->getProduct($product_id,$vendor_id);
 
 		if ($product_info && $product_info['gp_parent_id']) {

@@ -930,7 +930,7 @@ class ModelCatalogProduct extends Model {
 				}
 			}
 		}
-
+		
 		$query = $this->db->query($sql);
 
 		foreach ($query->rows as $result) {

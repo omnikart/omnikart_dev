@@ -27,6 +27,7 @@
           <li><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
           <li><a href="<?php echo $affiliate; ?>"><?php echo $text_affiliate; ?></a></li>
           <li><a href="<?php echo $special; ?>"><?php echo $text_special; ?></a></li>
+          <li><a href="<?php echo $blog; ?>"><?php echo $text_blog; ?></a></li>
         </ul>
       </div>
       <div class="col-sm-2">

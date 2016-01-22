@@ -109,8 +109,8 @@ class ModelExtensionBlogPost extends Model {
 		return $post_category_data;
 	}
 
-	public function postmeta($pid,$info=false) {
-		$q = "SELECT * FROM " . DB_PREFIX . "blog_postmeta WHERE post_id = '" . (int)$pid . "'";
+	public function postmeta($post_id,$info=false) {
+		$q = "SELECT * FROM " . DB_PREFIX . "blog_postmeta WHERE post_id = '" . (int)$post_id . "'";
 		if($info) {
 			$q .=  " AND meta_key='".$info."'"; 
 		}
