@@ -316,12 +316,16 @@ class ControllerProductProduct extends Controller {
 			$data['entry_good'] = $this->language->get('entry_good');
 			$data['entry_bad'] = $this->language->get('entry_bad');
 
+			$data['button_add_to_cart'] = $this->language->get('button_add_to_cart');
+			$data['button_add_to_quote'] = $this->language->get('button_add_to_quote');
 			$data['button_cart'] = $this->language->get('button_cart');
 			$data['button_wishlist'] = $this->language->get('button_wishlist');
 			$data['button_compare'] = $this->language->get('button_compare');
 			$data['button_upload'] = $this->language->get('button_upload');
 			$data['button_continue'] = $this->language->get('button_continue');
 
+			$data['button_add_to_quotation'] = $this->language->get('button_add_to_quotation');
+			
 			$this->load->model('catalog/review');
 
 			$data['tab_description'] = $this->language->get('tab_description');

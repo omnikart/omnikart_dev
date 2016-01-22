@@ -231,7 +231,7 @@
               <input type="text" name="quantity" value="<?php echo $minimum; ?>" size="2" id="input-quantity" class="form-control" />
               <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
               <br />
-              <button type="button" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary btn-lg btn-block"><?php echo $button_cart; ?></button>
+              <button type="button" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary btn-lg btn-block"><?php echo $button_add_to_cart; ?></button>
             </div>
             <?php if ($minimum > 1) { ?>
             <div class="alert alert-info"><i class="fa fa-info-circle"></i> <?php echo $text_minimum; ?></div>
@@ -483,7 +483,8 @@
         </td>
         <td class="gp-col-btn">
           <input type="hidden" name="product_id" id="product<?php echo $child_id; ?>" value="<?php echo $child_id; ?>" />
-          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGrouped('<?php echo $child_id; ?>');" class="btn btn-primary btn-block"><?php echo $button_cart; ?></button>
+          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGrouped('<?php echo $child_id; ?>');" class="btn btn-primary btn-block"><?php echo $button_add_to_cart; ?></button>
+          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGroupedToQuote('<?php echo $child_id; ?>');" class="btn btn-primary btn-block"><?php echo $button_add_to_quote; ?></button>
         </td>
       </tr>
       <?php } ?>
@@ -902,6 +903,38 @@ function addGpGrouped(child_id) {
 	});
 }
 //--></script>
+
+
+<!-- Start JS - Grouped Product powered by www.fabiom7.com //-->
+<script type="text/javascript"><!--
+function addGpGroupedToQuote(child_id) {
+	if ($('#quantity' + child_id).val() < 1) {
+		$('#quantity' + child_id).val('1');
+	}
+	var data = $(this).data('cart');
+	$.ajax({
+		url: 'index.php?route=module/enquiry/addProduct',
+		type: 'post',
+		data: $('#product' + child_id + ', #quantity' + child_id),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button-quote').button('loading');
+		},
+		complete: function() {
+			$('#button-quote').button('reset');
+		},
+		success: function(json) {
+			if (json['success']) {
+				$('.breadcrumb').after('<div class="alert alert-success">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		}
+	});
+	
+}
+//--></script>
+
+
+
 <script type="text/javascript"><!--
 $('label[for="input-quantity"], #input-quantity, #button-cart').remove();
 

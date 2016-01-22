@@ -282,7 +282,7 @@
               		<button type="button" id="button-cart" data-cart="cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-info btn-block">Add to Cart</button>
               	</div>
               	<div class="col-md-4">
-              		<button type="button" id="button-buynow" data-cart="buynow" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary btn-block"><?php echo $button_cart; ?></button>
+              		<button type="button" id="button-quote" data-cart="quote" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-info btn-block">Add to Quotation</button>
               	</div>
               </div>
             </div>
@@ -549,7 +549,7 @@ $('#postcode-button').on('click', function() {
 });
 //--></script>
 <script type="text/javascript"><!--
-$('#button-cart,#button-buynow').on('click', function() {
+$('#button-cart').on('click', function() {
 	var data = $(this).data('cart');
 	$.ajax({
 		url: 'index.php?route=checkout/cart/add&cart='+data,
@@ -602,6 +602,52 @@ $('#button-cart,#button-buynow').on('click', function() {
 		}
 	});
 });
+
+$('#button-quote').on('click', function() {
+	var data = $(this).data('cart');
+	$.ajax({
+		url: 'index.php?route=module/enquiry/addProduct',
+		type: 'post',
+		data: $('#product input[type=\'text\'], #product input[type=\'hidden\'], .vendor input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea'),
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button-quote').button('loading');
+		},
+		complete: function() {
+			$('#button-quote').button('reset');
+		},
+		success: function(json) {
+			$('.alert, .text-danger').remove();
+			$('.form-group').removeClass('has-error');
+
+			if (json['error']) {
+				if (json['error']['option']) {
+					for (i in json['error']['option']) {
+						var element = $('#input-option' + i.replace('_', '-'));
+
+						if (element.parent().hasClass('input-group')) {
+							element.parent().after('<div class="text-danger">' + json['error']['option'][i] + '</div>');
+						} else {
+							element.after('<div class="text-danger">' + json['error']['option'][i] + '</div>');
+						}
+					}
+				}
+
+				if (json['error']['recurring']) {
+					$('select[name=\'recurring_id\']').after('<div class="text-danger">' + json['error']['recurring'] + '</div>');
+				}
+
+				// Highlight any found errors
+				$('.text-danger').parent().addClass('has-error');
+			}
+			if (json['success']) {
+				$('.breadcrumb').after('<div class="alert alert-success">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			}
+		}
+	});
+});
+
+
 //--></script>
 <script type="text/javascript"><!--
 $('.date').datetimepicker({
