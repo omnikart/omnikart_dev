@@ -7,21 +7,20 @@
       </div>
       <div class="modal-body">
 		<?php if ($enquiries) { ?>
-		<table class="table">
+		<table id="table" class="table">
 			<thead>
 				<tr>
 					<td class="center" style="max-width:80px;">Sr.No.</td>
-					<td style="max-width:100px;" data-tooltip="I’m the tooltip text.">Name
-					</td>
+					<td style="max-width:100px;" data-tooltip="I’m the tooltip text.">Name</td>
 					<td style="min-width:250px;">Description</td>
 					<td class="center" style="max-width:100px;">Quantity</td>
 					<td class="center" style="max-width:70px;">Unit</td>
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($enquiries as $key=>$enquiry) { ?>
+				<?php $count = 1; foreach ($enquiries as $key=>$enquiry) { ?>
 					<tr>
-						<td class="text-center"><?php echo $key; ?></td>
+						<td class="text-center"><?php echo $count; ?></td>
 						<?php if (isset($enquiry['link'])) { ?>
 							<td><a href="<?php echo $enquiry['link']; ?>" > <?php echo $enquiry['name']; ?> </a></td>
 						<?php } else { ?>
@@ -34,8 +33,9 @@
 						</td>
 						<td class="text-center"><?php echo $enquiry['quantity']; ?></td>
 						<td class="text-center"><?php echo $enquiry['unit_class']['title']; ?></td>
+					<td><button id="delete" type="button" onclick="deleteRow('<?php echo $key; ?>')"  class="btn btn-danger delete-enquiry"><i class="fa fa-trash-o"></i></button></td>
 					</tr>
-				<?php } ?>
+				<?php $count++; } ?>
 			</tbody>
 		</table>
 		<hr />
@@ -63,16 +63,33 @@
 			</div>
 		</div>
 		<?php } else { ?>
-		<div class="">
-		  	<h2>No Products</h2>
-		  	<p> Please use quotation form to add to enquiry list. </p>
-		</div>
+			<div class="">
+		  		<h2>No Products</h2>
+		  		<p> Please use quotation form to add to enquiry list. </p>
+			</div>
 		<?php } ?>
-		<div class="clearfix"></div>
-	  </div>
-  	  <div class="modal-footer">
-  	  <button type="button" class="btn btn-default" id="submit-enquiry">Submit Enquiry</button>
-  	  </div>
+				<div class="clearfix"></div>
+	  	</div>
+  	  	<div class="modal-footer">
+  	  		<button type="button" class="btn btn-default" id="submit-enquiry">Submit Enquiry</button>
+  	  	</div>
    	</div>
   </div>
 </div>
+
+<script>
+function deleteRow(key) {
+	$.ajax({
+		url : 'index.php?route=module/enquiry/deleteProduct',
+		type: 'post',
+		data: {'key':key},
+	    dataType: "html",
+	    success : function (data) {
+		    $('.modal').modal('hide');
+		    $('#enquiry-products').remove();
+			$('body').append(data);
+			$('#enquiry-products').modal('show');
+	    }
+	}); 	
+}
+</script>

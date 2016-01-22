@@ -126,7 +126,7 @@
       				</select>
 			      	</div>
 			      		 <div class="col-sm-4">
-							<a class="btn btn-default" id="update" >Action</a>
+							<a class="btn btn-default"  id="update" >Action</a>
 					     </div>
 		      		</div>
 	       	</div>
@@ -260,9 +260,13 @@ $('#update').on('click',function () {
 		}
 	});
 });
+
+$('#productUpdates').on('click',function(){
+	 alert("successfully modified");
+});
 </script>
 
-   <script type="text/javascript"><!--
+<script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
 	var url = 'index.php?route=catalog/product&token=<?php echo $token; ?>';
 

@@ -217,9 +217,12 @@ class ControllerCustomerpartnerSell extends Controller {
 			"categories"=>"Please select applicable category"
 		);
 		
-		if (isset($data)){
-			
-			if (isset($data['company']) && strlen($data['company']) < 5)
+		 if (isset($data)){
+		 	
+		 	if (isset($data['name']) && empty($data['name']))
+		 		$json['name']= $fields['name'];
+		  	
+		 	if (isset($data['company']) && strlen($data['company']) < 5)
 				$json['company']= $fields['company'];
 	
 			if (isset($data['number'] ) && strlen($data['number'] ) <10)
@@ -234,9 +237,9 @@ class ControllerCustomerpartnerSell extends Controller {
 			if (isset($data['categories']) && empty($data['categories']))
 				$json['categories'] = $fields['categories'];
 	
-			if (isset($data['trade']) && empty($data['categories']))
+			if (isset($data['trade']) && empty($data['trade']))
 				$json['trade'] = $fields['trade'];
-	
+														
 			if (!$json) {
 
 				$user_info = array("company" => $data['company'],

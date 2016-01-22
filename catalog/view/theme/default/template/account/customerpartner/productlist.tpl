@@ -40,7 +40,7 @@
 	        		<i class="fa fa-upload"></i> Upload Products</span>
 	        </button>
 	        
-		<button data-toggle="tooltip" class="btn btn-primary" id="updateProducts"  title="Update changes for selected products. Page will not refresh after this."><i class="fa fa-save"></i> Update</button>
+		<button data-toggle="tooltip" class="btn btn-primary" id="updateProducts"  title="Update changes for selected products. Page will not refresh after this."><i class="fa fa-save"></i>  Save Changes</button>
 			<button data-toggle="tooltip" class="btn btn-info" id="disableProducts"  title="Disable Current Changes"><i class="fa fa-times"></i> Disable</button>
 	        <a onclick="$('#form-product').submit();" data-toggle="tooltip" class="btn btn-danger"  title="<?php echo $button_delete; ?>"><i class="fa fa-trash-o"></i> Delete</a>
       	</div> 
@@ -128,7 +128,7 @@
                   <a href="<?php echo $sort_quantity; ?>"><?php echo $column_quantity; ?></a>
                   <?php } ?></td>
 				<td class="text-right" style="min-width:90px" data-toggle="tooltip" data-original-title="Minimum Order Quantity">(MOQ)</td>                  
-                <td class="text-right" style="min-width:100px" data-toggle="tooltip" title="" data-original-title="Status shown when a product is out of stock">Stock Status</td> 
+                <td class="text-right" style="min-width:100px" data-toggle="tooltip" title="" data-original-title="Status shown when a product is out of stock">Availability</td> 
                 <td class="text-left" style="min-width:110px"><?php if ($sort == 'p.status') { ?>
                   <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
                   <?php } else { ?>

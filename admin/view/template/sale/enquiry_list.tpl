@@ -95,7 +95,44 @@
 			<?php foreach ($enquiries as $enquiry) { ?>
 				<div class="panel panel-default">
 					<div class="panel-heading"># <?php echo $enquiry['enquiry_id']; ?> &nbsp; <?php echo $enquiry['firstname'].' '.$enquiry['lastname']; ?>
-						<a href="javascript:void();" onclick="quotation('<?php echo $enquiry['enquiry_id']; ?>');" class="pull-right">Reply with Smart Quotation</a> 
+						<a href=""  data-toggle="modal" data-target="#chatModal" style="margin-left:500px;">Chat with customer</a>
+						<a href="javascript:void();" data-enquiryId="<?php echo $enquiry['enquiry_id']; ?>" class="pull-right" data-toggle="modal" data-target="#enquiryModal">Reply with Smart Quotation</a> 
+					</div>
+					<div id="enquiryModal" class="modal fade" role="dialog">
+  							<div class="modal-dialog modal-lg">
+ 									<div class="modal-content">
+  											<div class="modal-header">
+        										<button type="button" class="close" data-dismiss="modal">&times;</button>
+        									</div>
+  											<div class="modal-body">
+   											<table class="table table-bordered">
+   											<tbody></tbody></table></div>
+											<div class="modal-footer">
+	    									</div>
+	    							</div>
+								</div>
+							</div>
+					<div id="chatModal" class="modal fade" role="dialog">
+  							<div class="modal-dialog modal-lg">
+ 									<div class="modal-content">
+      										<div class="modal-header">
+    											<button type="button" class="close" data-dismiss="modal">&times;</button>
+        									</div>
+  											<div class="modal-body">
+   											<table class="table table-bordered">
+   											<tbody>
+											<div class="form-group required">
+											<label class="control-label col-sm-2" for="comment" >Comment</label>
+											<div class="col-sm-8">
+											<textarea name="comment" rows="5" class="form-control"></textarea>
+											</div> 
+											</div>
+   											</tbody>
+   											</table></div>
+											<div class="modal-footer">
+	    									</div>
+									</div>
+							</div>
 					</div>
 					<div class="panel-body">
 						<p>	Email: <?php echo $enquiry['email']; ?><br />
@@ -396,8 +433,6 @@
 										</br>
 	      </br></br>
 	     </div>
-	   
-	   
 		   <div class="col-sm-4">				 					
 				<b>Omnikart Bank Details				</b>  </br>
 				Bank Name & Branch : HDFC Bank, Powai		  </br>
@@ -597,4 +632,18 @@ $('select[name=\'address\']').on('change', function() {
 	});	
 });
 </script>
+
+<script type="text/javascript">
+$('#enquiryModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var enquiry_id = button.attr('data-enquiryId');
+  var modal = $('#enquiryModal');
+  	$.ajax({
+		url: 'index.php?route=sale/enquiry/getEnquiry&token=<?php echo $token; ?>&enquiry_id='+enquiry_id,
+ 		success: function(data) {
+		     modal.find('.modal-body').html(data);
+		}
+	});
+});
+</script>	
 <?php echo $footer; ?>

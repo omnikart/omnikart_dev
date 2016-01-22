@@ -11,7 +11,7 @@
 	          	<div class="form-group required">
 	          		<label class="col-sm-3 control-label">Product Name :</label>
 	          		<div class="col-sm-9">
-	          			<input type="text" class="form-control" name="name" />
+	          			<input type="text" id="product-name" class="form-control" name="name" />
 	          			<input type="hidden" class="form-control" name="product_id" />
 	          			<input type="hidden" class="form-control" name="category_id" />
 	          		</div>
@@ -20,7 +20,7 @@
 	          		<label class="col-sm-3 control-label">Quantity :</label>
 	          		<div class="col-sm-4">
 	          			<div class="input-group">
-		          			<input type="text" class="form-control" name="quantity" />
+		          			<input type="text" id="quantity" class="form-control" name="quantity" />
 		          			<span class="input-group-btn">
 		            			<button type="button" data-loading-text="Loading..." class="btn btn-primary btn-increase"><i class="fa fa-plus"></i></button>
 		            			<button type="button" data-loading-text="Loading..." class="btn btn-primary btn-decrease"><i class="fa fa-minus"></i></button>
@@ -255,7 +255,7 @@ $('#enquiry_modal').on('click','#view-enquiry',function(){
 		url : 'index.php?route=module/enquiry/getEnquiry',
 	    dataType: "html",
 	    success : function (data) {
-		    $('.modal').modal('hide');
+		    $('#enquiry-products').modal('show');
 		    $('#enquiry-products').remove();
 			$('body').append(data);
 			$('#enquiry-products').modal('show');
@@ -267,4 +267,13 @@ $('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
 $('#enquiry_modal').on('show.bs.modal',function (e) {
 	$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
 });
+
+$('#button-addproduct').attr('disabled',true);
+   $("#product-name").keyup(function(){
+        if($(this).val().length !=0)
+            $('#button-addproduct').attr('disabled', false);            
+        else
+            $('#button-addproduct').attr('disabled',true);
+  });
+
 </script>

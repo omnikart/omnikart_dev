@@ -297,9 +297,31 @@ class ControllerSaleEnquiry extends Controller {
 
 		$this->response->setOutput($this->load->view('sale/enquiry_list.tpl', $data));
 	}
+	
 	public function install(){
 		$this->load->model('module/enquiry');
 		$this->model_module_enquiry->install();
+	}
+	
+	public function getEnquiry(){
+		
+		if (isset($this->request->get['enquiry_id']) && (int)$this->request->get['enquiry_id']) {
+			$this->load->model('module/enquiry');
+			$data = $this->model_module_enquiry->getEnquiry($this->request->get['enquiry_id']);
+			$this->load->model('localisation/tax_class');
+			
+			$data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+			$data['text_none'] = "None";
+			if (isset($this->request->post['tax_class_id'])) {
+				$data['tax_class_id'] = $this->request->post['tax_class_id'];
+			} elseif (!empty($product_info)) {
+				$data['tax_class_id'] = $product_info['tax_class_id'];
+			} else {
+				$data['tax_class_id'] = 0;
+			}
+			
+			$this->response->setOutput($this->load->view('sale/enquiry_form.tpl',$data));
+		}
 	}
 
 }
