@@ -929,7 +929,6 @@ function addGpGroupedToQuote(child_id) {
 			}
 		}
 	});
-	
 }
 //--></script>
 
