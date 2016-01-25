@@ -67,22 +67,8 @@ class ControllerModuleMegaFilter extends Controller {
 	}
 	
 	public function index( $setting ) {
-		/*		
-		if( ! class_exists( 'VQMod' ) ) {
-			$this->_renderWarning( 'Mega Filter PRO to work properly requires an installed VQMod.', true );
-			
-			return;
-		}
-		
-		if( version_compare( VQMod::$_vqversion, '2.5.1', '<' ) ) {
-			$this->_renderWarning( 'Mega Filter PRO to work properly requires VQMod in version 2.5.1 or later.<br />Your version of VQMod is too old. Please upgrade it to the latest version.', true );
-			
-			return;
-		}
-		*/
+
 		if( ! isset( $setting['_idx'] ) ) {
-			/*$this->_renderWarning( 'There is a conflict Mega Filter PRO with your template or other extension - <a href="http://mfp.ocdemo.eu/" target="_blank" style="text-decoration:underline">please find a solution on our forum</a>.' );*/
-			
 			return;
 		}
 		

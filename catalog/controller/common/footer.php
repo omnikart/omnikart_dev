@@ -6,6 +6,7 @@ class ControllerCommonFooter extends Controller {
 		$data['text_service'] = $this->language->get('text_service');
 		$data['text_entry'] = $this->language->get('text_entry');
 		$data['text_extra'] = $this->language->get('text_extra');
+		$data['text_blog'] = "Blog";
 		$data['text_contact'] = $this->language->get('text_contact');
 		$data['text_return'] = $this->language->get('text_return');
 		$data['text_sitemap'] = $this->language->get('text_sitemap');
@@ -46,6 +47,7 @@ class ControllerCommonFooter extends Controller {
 		$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));
 		$data['careers'] = $this->url->link('information/careers', '', 'SSL');
 		$data['search_action'] = $this->url->link('product/json', '', 'SSL');
+		$data['blog'] = $this->url->link('blog/home', '', 'SSL');
 		
 		$data['product_id'] = '';
 		$data['route'] = '';

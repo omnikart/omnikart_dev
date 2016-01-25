@@ -168,9 +168,6 @@ class ControllerProductProduct extends Controller {
 			);
 		}
 
-
-
-
 		$product_info = $this->model_catalog_product->getProduct($product_id,$vendor_id);
 
 		if ($product_info && $product_info['gp_parent_id']) {
@@ -319,12 +316,16 @@ class ControllerProductProduct extends Controller {
 			$data['entry_good'] = $this->language->get('entry_good');
 			$data['entry_bad'] = $this->language->get('entry_bad');
 
+			$data['button_add_to_cart'] = $this->language->get('button_add_to_cart');
+			$data['button_add_to_quote'] = $this->language->get('button_add_to_quote');
 			$data['button_cart'] = $this->language->get('button_cart');
 			$data['button_wishlist'] = $this->language->get('button_wishlist');
 			$data['button_compare'] = $this->language->get('button_compare');
 			$data['button_upload'] = $this->language->get('button_upload');
 			$data['button_continue'] = $this->language->get('button_continue');
 
+			$data['button_add_to_quotation'] = $this->language->get('button_add_to_quotation');
+			
 			$this->load->model('catalog/review');
 
 			$data['tab_description'] = $this->language->get('tab_description');
@@ -385,7 +386,9 @@ class ControllerProductProduct extends Controller {
 				$data['vendors'][$key]['link'] = $this->url->link('product/product', '&vendor_id='.$vendor['vendor_id'].'&product_id=' . $product_id ,'SSL');
 				$data['vendors'][$key]['price'] = $this->currency->format($this->tax->calculate($vendor['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 			}
-
+			
+			$data['enabled'] = false;
+				
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 				$data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 				$data['original_price']  = 0; // Comparing MRP and Supplier Price //
@@ -397,7 +400,10 @@ class ControllerProductProduct extends Controller {
 			} else {
 				$data['price'] = false;
 			}
-
+			if ($product_info['price']!='0'){
+				$data['enabled'] = true;
+			}
+			
 			if ((float)$product_info['special']) {
 				$data['special'] = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 			} else {
@@ -851,6 +857,7 @@ class ControllerProductProduct extends Controller {
 								'options'    => $child_options,
 								'discounts'  => $child_discounts,
 								'qty_now'    => $qty_now,
+								'enabled'	  => ($child_info['price']!='0'?true:false),
 								//'curr_vendor'=> $curr_vendor,
 								//'vlink'		 => $vlink,
 								//'vendors'	 => $vendors 	

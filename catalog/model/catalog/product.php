@@ -810,6 +810,10 @@ class ModelCatalogProduct extends Model {
 		
 		$sql .= " LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (p.product_id = c2p.product_id AND c2p.customer_id = (SELECT c2p4.customer_id FROM " . DB_PREFIX . "customerpartner_to_product c2p4 WHERE (c2p4.product_id=p.product_id AND c2p4.status = '1') ORDER BY c2p4.price ASC, c2p4.sort_order ASC LIMIT 1)) ";
 		
+		if (isset($data['filter_attribute']) && $data['filter_attribute']){
+			$sql .= "  LEFT JOIN " . DB_PREFIX . "product_attribute pa  ON (pa.product_id=p.product_id) ";
+		}
+		
 		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.type <> '0' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
 		
 		if (!empty($data['filter_category_id'])) {
@@ -873,7 +877,19 @@ class ModelCatalogProduct extends Model {
 
 			$sql .= ")";
 		}
-
+		
+		$implode = array();
+		$implode2 = array();
+		
+		if (isset($data['filter_attribute']) && $data['filter_attribute']){
+			foreach ($data['filter_attribute'] as $attribute_id => $attribute) {
+				$implode[] = "'".$attribute_id."'";
+				$implode2[] = $attribute;
+			}
+			$sql .= "  AND pa.attribute_id IN (".implode(',',$implode).") ";
+		}
+		
+		
 		if (!empty($data['filter_manufacturer_id'])) {
 			$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
 		}
@@ -930,7 +946,7 @@ class ModelCatalogProduct extends Model {
 				}
 			}
 		}
-
+		
 		$query = $this->db->query($sql);
 
 		foreach ($query->rows as $result) {

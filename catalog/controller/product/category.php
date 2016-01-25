@@ -40,6 +40,14 @@ class ControllerProductCategory extends Controller {
 			$limit = $this->config->get('config_product_limit');
 		}
 
+		if (isset($this->request->get['attributes'])) {
+			$filter_attributes = $this->request->get['attributes'];
+		} else {
+			$filter_attributes = array();
+		}
+		
+		
+		
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -207,7 +215,8 @@ class ControllerProductCategory extends Controller {
 
 			$filter_data = array(
 				'filter_category_id' => $category_id,
-				'filter_sub_category' => true,
+				'filter_sub_category'=> true,
+				'filter_attributes'  => $filter_attributes,
 				'filter_filter'      => $filter,
 				'sort'               => $sort,
 				'order'              => $order,
@@ -306,17 +315,19 @@ class ControllerProductCategory extends Controller {
 					}
 					$result['type'] = 2;
 				}
-
+				
+				$enabled = true;
+				if ($result['type']!='2' && $result['price']=='0') $enabled = false;
+					
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
 					'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
 					'price'       => $price,
-
 					'original_price' => $original_price,
-					'discount' => $discount,				
-				
+					'discount'    => $discount,				
+					'enabled' 	  => $enabled,
 					'special'     => $special,
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,

@@ -1,5 +1,5 @@
 <div id="cart" class="btn-group btn-block">
-  <button type="button" data-toggle="modal" data-target="#cart_modal" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-block btn-lg dropdown-toggle"><i class="fa fa-shopping-basket"></i> <span id="cart-total"><?php echo $text_items; ?></span></button>
+  <button type="button" data-toggle="modal" data-target="#cart_modal" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-block btn-lg dropdown-toggle"><i class="fa fa-shopping-cart"></i> <span id="cart-total"><?php echo $text_items; ?></span></button>
 </div> 
 <div class="modal fade" id="cart_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-dialog">

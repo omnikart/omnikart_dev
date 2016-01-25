@@ -131,8 +131,8 @@
                       <td class="text-right"><?php echo ucfirst($post['post_status']); ?></td>
                       <td class="text-right">
                         <div class="btn-group">
-                          <a href="<?php echo $post_edit_link; ?>&amp;pid=<?php echo $post['ID']; ?>" class="btn btn-success btn-sm"><span class="fa fa-edit"></span></a>
-                          <a onclick="return confirm('<?php echo $text_confirm; ?>');" href="<?php echo $post_delete_link; ?>&amp;pid=<?php echo $post['ID']; ?>" class="btn btn-danger btn-sm"><span class="fa fa-trash-o"></span></a>
+                          <a href="<?php echo $post_edit_link; ?>&amp;post_id=<?php echo $post['ID']; ?>" class="btn btn-success btn-sm"><span class="fa fa-edit"></span></a>
+                          <a onclick="return confirm('<?php echo $text_confirm; ?>');" href="<?php echo $post_delete_link; ?>&amp;post_id=<?php echo $post['ID']; ?>" class="btn btn-danger btn-sm"><span class="fa fa-trash-o"></span></a>
                         </div>
                       </td>
                     </tr>

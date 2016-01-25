@@ -451,8 +451,7 @@ class MegaFilterCore {
 								$this->_categories[$key][] = $this->_parseArrayToInt( $value );
 							} else {
 								$k = explode( '-', $key );
-
-								if( isset( $k[0] ) && isset( $k[1] ) && 'o' == mb_substr( $k[0], -1, 1, 'utf-8' ) ) {
+								if(isset($k[0]) && isset($k[1]) && 'o' == mb_substr( $k[0], -1, 1, 'utf-8' ) ) {
 									$this->_options[trim( $k[0], 'o').'-'.$k[1]][] = implode( ',', $this->_parseArrayToInt( $value ) );
 								} else if( isset( $k[0] ) && isset( $k[1] ) && 'f' == mb_substr( $k[0], -1, 1, 'utf-8' ) ) {
 									if( self::hasFilters() ) {
