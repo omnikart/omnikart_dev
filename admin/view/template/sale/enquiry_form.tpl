@@ -74,5 +74,9 @@
 				<?php } ?>
 			</tbody>
 		</table>
+		 <div class="btn-group btn-group-md pull-right">
+		  <a href="#" target="_blank">Generate Quotation</a>
+		    <button type="button" class="btn btn-primary">Save Draft</button>
+ 		</div>
   	</div>
 </div>
