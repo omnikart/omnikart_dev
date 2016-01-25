@@ -86,6 +86,7 @@ function deleteRow(key) {
 	    dataType: "html",
 	    success : function (data) {
 		    $('.modal').modal('hide');
+		     $('#enquiry_modal').modal('show');
 		    $('#enquiry-products').remove();
 			$('body').append(data);
 			$('#enquiry-products').modal('show');
