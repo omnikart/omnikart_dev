@@ -309,13 +309,16 @@ class ControllerCheckoutCart extends Controller {
 		
 		$this->load->model('catalog/product');
 
-		$product_info = $this->model_catalog_product->getProduct($product_id,$vendor_id);
-
+		$product_info = $this->model_catalog_product->getProduct($product_id);
+		
 		if ($product_info) {
-			if (isset($this->request->post['quantity']) && ((int)$this->request->post['quantity'] >= $product_info['minimum'])) {
+			
+			$product_vendor = $this->model_catalog_product->getSupplierProduct($product_id,$vendor_id);
+			
+			if (isset($this->request->post['quantity']) && ((int)$this->request->post['quantity'] >= $product_vendor['minimum'])) {
 				$quantity = (int)$this->request->post['quantity'];
 			} else {
-				$quantity = $product_info['minimum'] ? $product_info['minimum'] : 1;
+				$quantity = $product_vendor['minimum'] ? $product_vendor['minimum'] : 1;
 			}
 
 			if (isset($this->request->post['option'])) {

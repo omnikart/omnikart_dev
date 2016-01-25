@@ -160,19 +160,17 @@ class ControllerCommonSeoUrl extends Controller {
 
 		if ($url) {
 			unset($data['route']);
-
 			$query = '';
-
 			if ($data) {
-				foreach ($data as $key => $value) {
+				
+				$query = '?'.http_build_query($data);
+				/*foreach ($data as $key => $value) {
 					$query .= '&' . rawurlencode((string)$key) . '=' . rawurlencode((string)$value);
 				}
-
 				if ($query) {
 					$query = '?' . str_replace('&', '&amp;', trim($query, '&'));
-				}
+				}*/
 			}
-
 			return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . $url . $query;
 		} else {
 			return $link;

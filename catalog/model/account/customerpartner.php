@@ -331,7 +331,7 @@ class ModelAccountCustomerpartner extends Model {
 		return($sql->row);
 	}
 	
-	public function getProduct($product_id,$vendor_id = 0) {
+	public function getProduct($product_id,$vendor_id = 0,$id = 0) {
 
 		if ($vendor_id) $vendor_id = $vendor_id;
 		else $vendor_id = $this->getuserseller();
@@ -392,6 +392,49 @@ class ModelAccountCustomerpartner extends Model {
 			return false;
 		}
 	}
+
+	public function getSupplierProduct($product_id,$vendor_id = 0,$id = 0) {
+
+		if ($vendor_id) $vendor_id = $vendor_id;
+		else $vendor_id = $this->getuserseller();
+
+		$query = $this->db->query("SELECT DISTINCT cp2p.id, cp2p.product_id, cp2p.sku, cp2p.quantity, cp2p.stock_status_id, cp2p.minimum, cp2p.shipping, cp2p.weight, cp2p.length, cp2p.width, cp2p.height, cp2p.length_class_id, cp2p.unit_class_id, cp2p.edit, cp2p.viewed, cp2p.sort_order, cp2p.status, cp2p.date_available, cp2p.weight_class_id, cp2p.length_class_id, cp2p.unit_class_id, cp2p.date_added, cp2p.date_modified, IFNULL((SELECT cppd.price FROM " . DB_PREFIX . "cp_product_discount cppd WHERE (cppd.id = cp2p.id) AND (cppd.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AND (cppd.quantity = '1') AND ((cppd.date_start = '0000-00-00' OR cppd.date_start < NOW()) AND (cppd.date_end = '0000-00-00' OR cppd.date_end > NOW())) ORDER BY cppd.priority ASC, cppd.price ASC LIMIT 1),cp2p.price) AS price, IFNULL((SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = cp2p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "'), 'Not in Stock') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE cp2p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT ucd.unit FROM " . DB_PREFIX . "unit_class_description ucd WHERE cp2p.unit_class_id = ucd.unit_class_id AND ucd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS unit_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE cp2p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class FROM ".DB_PREFIX."customerpartner_to_product cp2p WHERE cp2p.product_id=" . (int)$product_id . " AND cp2p.customer_id=" . (int)$vendor_id ." AND cp2p.date_available <= NOW()");
+		
+		if ($query->num_rows) {
+			return array(
+				'id'       				 => $query->row['id'],//
+				'product_id'       => $query->row['product_id'],//
+				'sku'              => $query->row['sku'],//
+				'price'            => $query->row['price'],//
+				'quantity'         => $query->row['quantity'],//
+				'stock_status_id'  => $query->row['stock_status_id'],
+				'minimum'          => $query->row['minimum'], //
+				'shipping'         => $query->row['shipping'],
+				'date_available'   => $query->row['date_available'], //
+				'weight'           => $query->row['weight'], //
+				'weight_class_id'  => $query->row['weight_class_id'], //
+				'length'           => $query->row['length'], //
+				'width'            => $query->row['width'], //
+				'height'           => $query->row['height'], //
+				'length_class_id'  => $query->row['length_class_id'], //
+				'unit_class_id'    => $query->row['unit_class_id'],
+				'status'           => $query->row['status'],
+				'edit'             => $query->row['edit'],
+				'sort_order'       => $query->row['sort_order'],//
+				'date_added'       => $query->row['date_added'],
+				'date_modified'    => $query->row['date_modified'],
+				'stock_status'     => $query->row['stock_status'],//
+				'weight_class'     => $query->row['weight_class'],//
+				'length_class'     => $query->row['length_class'],//
+				'unit_class'     	 => $query->row['unit_class'],//
+			);
+		} else {
+			return false;
+		}
+	}
+
+
+
 
 	public function getProductsSeller($data = array()) {
 

@@ -33,7 +33,7 @@
 						<?php if ($product['discount']) { ?>
 			      				<span style="text-decoration: line-through;color:#aaa;"><?php echo $product['original_price']; ?></span><span class="discount"><span class="text"><?php echo $product['discount']; ?>% Off</span><span class="img"></span></span>
 	              		<?php } ?>
-			                  <h4><?php echo ($product['enabled']?$product['price']:'Price not Available'); ?></h4>          
+			                  <h4><?php echo $product['price']; ?></h4>          
 	          			<?php } else { ?>
 			          		<span class="price-new"><?php echo $product['special']; ?></span> <span class="price-old"><?php echo $product['price']; ?></span>
 			          <?php } ?>
@@ -49,6 +49,10 @@
 					</div>	
 				</div>
 			  </div>
+			  <?php } elseif ('2'==$product['type']) { ?>
+			  	<div class="cart-button">
+					<a class="btn btn-default btn-block" type="button" href="<?php echo $product['href']; ?>" ><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Browse Products</span></a>
+				</div>
 			  <?php } else { ?>
 			  	<div class="cart-button">
 					<a class="btn btn-default btn-block" type="button" href="<?php echo $product['href']; ?>" ><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Add to Quotation</span></a>

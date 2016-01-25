@@ -85,29 +85,28 @@
         <?php $class = 'col-sm-8'; ?>
         <?php } ?>
         <div class="<?php echo $class; ?>">
-						<div class="white">
-							<div class="col-sm-8">
-								<h1 class="nmt"><?php echo $heading_title; ?></h1>
-								<p></p>
-								<div>
-									<span class="label label-primary"
-										style="line-height: 32px; font-size: 14px;"><?php echo $text_stock; ?> <?php echo $stock; ?></span>
-									<div class="btn-group">
-										<button type="button" data-toggle="tooltip"
-											class="btn btn-default"
-											title="<?php echo $button_wishlist; ?>"
-											onclick="wishlist.add('<?php echo $product_id; ?>');">
-											<i class="fa fa-heart"></i>
-										</button>
-										<button type="button" data-toggle="tooltip"
-											class="btn btn-default"
-											title="<?php echo $button_compare; ?>"
-											onclick="compare.add('<?php echo $product_id; ?>');">
-											<i class="fa fa-exchange"></i>
-										</button>
-									</div>
-								</div>
-								<p></p>
+		<div class="white">
+			<div class="col-sm-8">
+				<h1 class="nmt"><?php echo $heading_title; ?></h1>
+				<p></p>
+				<div>
+					<span class="label label-primary"
+						style="line-height: 32px; font-size: 14px;"><?php echo $text_stock; ?> <?php echo $stock; ?></span>
+					<div class="btn-group">
+						<button type="button" data-toggle="tooltip"
+							class="btn btn-default"
+							title="<?php echo $button_wishlist; ?>"
+							onclick="wishlist.add('<?php echo $product_id; ?>');">
+							<i class="fa fa-heart"></i>
+						</button>
+						<button type="button" data-toggle="tooltip"
+							class="btn btn-default"
+							title="<?php echo $button_compare; ?>"
+							onclick="compare.add('<?php echo $product_id; ?>');">
+							<i class="fa fa-exchange"></i>
+						</button>
+					</div>
+				</div>
 	          <?php if ($price && $enabled) { ?>
 	          <ul class="list-unstyled">
 	            <?php if (!$special) { ?>

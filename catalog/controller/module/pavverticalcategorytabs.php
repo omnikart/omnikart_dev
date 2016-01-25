@@ -120,74 +120,71 @@ class ControllerModulePavverticalcategorytabs extends Controller {
 		
 		foreach($setting['featured_product'] as $product) {
 			$result = $this->model_catalog_product->getProduct($product);
-			if ($result['image']) {
-				$image = $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']);
-				// Image Attribute for product
-				$product_images = $this->model_catalog_product->getProductImages($result['product_id']);
-				if(isset($product_images) && !empty($product_images)) {
-					$thumb2 = $this->model_tool_image->resize($product_images[0]['image'], $setting['width'], $setting['height']);
-				}
-			} else {
-				$image = $this->model_tool_image->resize('placeholder.png', $setting['width'], $setting['height']);
-			}
+			$product_vendor = $this->model_catalog_product->getSupplierProduct($result['product_id'],$result['vendor_id']);
 	
-			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
-				$original_price  = 0;
-				$discount = 0;				
-				if ($result['price'] < $result['original_price']) {
-					$original_price = $this->currency->format($this->tax->calculate($result['original_price'], $result['tax_class_id'], $this->config->get('config_tax')));
-					$discount = (int)(($result['original_price'] - $result['price'])*100/$result['original_price']);
-				}				
-			} else {
-				$price = false;
-				$original_price  = 0;
-				$discount = 0;
+			if ($result['image']) $image = $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']);
+			else $image = $this->model_tool_image->resize('placeholder.png', $setting['width'], $setting['height']);
+			
+			if ((float)$result['special']) $special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+			else $special = false;
+			
+			if ($this->config->get('config_tax')) $tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price']);
+			else $tax = false;
+			
+			if ($this->config->get('config_review_status')) $rating = (int)$result['rating'];
+			else $rating = false;
+			
+			$original_price  = 0;
+			$discount = 0;
+			$price = false;
+			$minimum = 0;
+			$enabled = false;
+			$tax = false;
+			
+			if ($product_vendor){
+				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+					$price = $this->currency->format($this->tax->calculate($product_vendor['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+					if ($product_vendor['price'] < $result['price']) {
+						$original_price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+						$discount = (int)(($result['price'] - $product_vendor['price'])*100/$result['price']);
+					}
+				}
+				$minimum = $product_vendor['minimum'] > 0 ? $product_vendor['minimum'] : 1;
+				$enabled = true;
 			}
 			
-			if ((float)$result['special']) {
-				$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
-			} else {
-				$special = false;
-			}
-			
-			if ($price && $is_gp = $this->model_catalog_product->getGroupedProductGrouped($result['product_id'])) {
+			if ($is_gp = $this->model_catalog_product->getGroupedProductGrouped($result['product_id'])) {
 				$gp_price_min = $is_gp['gp_price_min'];
 				$gp_price_max = $is_gp['gp_price_max'];
-					
-				if ($gp_price_min[0] == '#') {
-					$child_info = $this->model_catalog_product->getProduct(substr($gp_price_min,1));
-					$gp_price_min = $child_info['special'] ? $child_info['special'] : $child_info['price'];
-				}
-				if ($gp_price_max[0] == '#') {
-					$child_info = $this->model_catalog_product->getProduct(substr($gp_price_max,1));
-					$gp_price_max = $child_info['special'] ? $child_info['special'] : $child_info['price'];
-				}
-					
-				if ($gp_price_min && $gp_price_max) {
-					$price = $this->currency->format($this->tax->calculate($gp_price_min, $result['tax_class_id'], $this->config->get('config_tax'))) . '-' . $this->currency->format($this->tax->calculate($gp_price_max, $result['tax_class_id'], $this->config->get('config_tax')));
+				$prices = $this->model_catalog_product->getGroupedProductMinimum($result['product_id']);
+				if ($prices['minimum'] && $prices['maximum']) {
+					$price = $this->currency->format($this->tax->calculate($prices['minimum'], $result['tax_class_id'], $this->config->get('config_tax'))) . ' - ' . $this->currency->format($this->tax->calculate($prices['maximum'], $result['tax_class_id'], $this->config->get('config_tax')));
+					if ($tax) $tax = $this->currency->format($prices['minimum']) . '/' . $this->currency->format($prices['maximum']);
 				} else {
-					$price = $this->language->get('text_gp_price_start') . $this->currency->format($this->tax->calculate($gp_price_min, $result['tax_class_id'], $this->config->get('config_tax')));
+					$price = $this->language->get('text_gp_price_start') . $this->currency->format($this->tax->calculate($prices['minimum'], $result['tax_class_id'], $this->config->get('config_tax')));
+					if ($tax) $tax = $this->currency->format($prices['minimum']);
 				}
+				$result['type'] = 2;
+				$enabled = true;
 			}
-			$products[] = array(
-					'product_id'  => $result['product_id'],
-					'thumb'       => $image,
-					'name'        => $result['name'],
-					'price'       => $price,
-					'original_price' => $original_price,
-					'discount'    => $discount,
-					'special'     => $special,
-					'rating'      => $result['rating'],
-					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id']),
-			);
+			
+			if ($enabled) {
+				$products[] = array(
+						'product_id'  => $result['product_id'],
+						'thumb'       => $image,
+						'name'        => $result['name'],
+						'price'       => $price,
+						'original_price' => $original_price,
+						'discount'    => $discount,
+						'special'     => $special,
+						'rating'      => $result['rating'],
+						'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id']),
+				);
+			}
 		}
 		
 		$this->mdata['products'] = $products;
 
-		
-		
-		
 		$this->mdata['module_description'] = isset($setting['description'][$this->config->get('config_language_id')])?$setting['description'][$this->config->get('config_language_id')]:"";
 		$this->mdata['description_status'] = isset($setting['description_status'])?$setting['description_status']:"";
 		

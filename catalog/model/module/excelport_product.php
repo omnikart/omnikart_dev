@@ -52,19 +52,20 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 			'cprice'			=> 6,
 			'quantity'			=> 7,
 			'minimum'			=> 8,
-			'stock_status' 		=> 9,
-			'shipping'			=> 10,
-			'date_available'	=> 11,
-			'length'			=> 12,
-			'width'				=> 13,
-			'height'			=> 14,
-			'length_class'		=> 15,
-			'weight'			=> 16,
-			'weight_class'		=> 17,
-			'status'			=> 18,
-			'edit'			=> 19,
-			'viewed' 	=>20,
-			'sort_order'		=> 21
+			'unit_class'		=> 9,
+			'stock_status' 		=> 10,
+			'shipping'			=> 11,
+			'date_available'	=> 12,
+			'length'			=> 13,
+			'width'				=> 14,
+			'height'			=> 15,
+			'length_class'		=> 16,
+			'weight'			=> 17,
+			'weight_class'		=> 18,
+			'status'			=> 19,
+			'edit'			=> 20,
+			'viewed' 	=>21,
+			'sort_order'	=> 22
 		);
 		
 		$source = array(0,2 + ($progress['importedCount']));
@@ -77,6 +78,9 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 		
 		$this->load->model('localisation/weight_class');
 		$product_weight_classes = $this->model_localisation_weight_class->getWeightClasses();
+
+		$this->load->model('localisation/unit_class');
+		$product_unit_classes = $this->model_localisation_unit_class->getUnitClasses();
 
 		do {
 			$safe_mode = ini_get('safe_mode'); if ((empty($safe_mode) || strtolower($safe_mode) == 'off' ) && function_exists('set_time_limit') && stripos(ini_get('disable_functions'), 'set_time_limit') === FALSE) set_time_limit(60);
@@ -144,6 +148,16 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 					}
 				}
 				if (!$found) $product_weight_class_id = 0;
+
+				$found = false;
+				foreach ($product_unit_classes as $product_unit_class) {
+					if ($product_unit_class['title'] == $productSheetObj->getCell(PHPExcel_Cell::stringFromColumnIndex($source[0] + $map['unit_class']) . ($source[1]))->getValue()) {
+						$found = true;
+						$product_unit_class_id = $product_unit_class['unit_class_id'];
+						break;
+					}
+				}
+				if (!$found) $product_unit_class_id = 1;
 				
 				$product_status = $productSheetObj->getCell(PHPExcel_Cell::stringFromColumnIndex($source[0] + $map['status']) . ($source[1]))->getValue() == 'Enabled' ? 1 : 0;
 				
@@ -167,6 +181,7 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 					'length_class_id' => $product_length_class_id,
 					'weight' => $product_weight,
 					'weight_class_id' => $product_weight_class_id,
+					'unit_class_id' => $product_unit_class_id,
 					'status' => $product_status,
 					'edit' => '',
 					'viewed' => '',
@@ -250,6 +265,10 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 		$this->load->model('localisation/weight_class');
 		$weightClasses = $this->model_localisation_weight_class->getWeightClasses();
 		
+		$unitClassesStart = array(15,2);
+		$this->load->model('localisation/unit_class');
+		$unitClasses = $this->model_localisation_unit_class->getUnitClasses();
+		
 		$storesStart = array(9,3);
 		$this->load->model('setting/store');
 		$stores = array_merge(array(0 => array('store_id' => 0, 'name' => 'Default', 'url' => NULL, 'ssl' => NULL)),$this->model_setting_store->getStores());
@@ -264,19 +283,20 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 			'cprice'			=> 6,
 			'quantity'			=> 7,
 			'minimum'			=> 8,
-			'stock_status' 		=> 9,
-			'shipping'			=> 10,
-			'date_available'	=> 11,
-			'length'			=> 12,
-			'width'				=> 13,
-			'height'			=> 14,
-			'length_class'		=> 15,
-			'weight'			=> 16,
-			'weight_class'		=> 17,
-			'status'			=> 18,
-			'edit'			=> 19,
-			'viewed' 	=>20,
-			'sort_order'		=> 21
+			'unit_class'		=> 9,
+			'stock_status' 		=> 10,
+			'shipping'			=> 11,
+			'date_available'	=> 12,
+			'length'			=> 13,
+			'width'				=> 14,
+			'height'			=> 15,
+			'length_class'		=> 16,
+			'weight'			=> 17,
+			'weight_class'		=> 18,
+			'status'			=> 19,
+			'edit'			=> 20,
+			'viewed' 	=>21,
+			'sort_order'		=> 22
 		);
 		
 		// Extra fields
@@ -317,12 +337,19 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 			),
 			array(
 				'type' => 'list',
+				'field' => $generals['unit_class'],
+				'data' => array($unitClassesStart[0], $unitClassesStart[1], $unitClassesStart[0], $unitClassesStart[1] + count($weightClasses) - 1),
+				'range' => '',
+				'count' => count($unitClasses)
+			),
+			array(
+				'type' => 'list',
 				'field' => $generals['status'],
 				'data' => array(5,2,5,4),
 				'range' => ''
 			),
 		);
-		
+
 		$target = array(0,2);
 		
 		$this->load->model('localisation/language');
@@ -357,6 +384,10 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 		for ($i = 0; $i < count($weightClasses); $i++) {
 			$metaSheetObj->setCellValueExplicit(PHPExcel_Cell::stringFromColumnIndex($weightClassesStart[0]) . ($weightClassesStart[1] + $i), $weightClasses[$i]['title'], PHPExcel_Cell_DataType::TYPE_STRING);
 		}
+		for ($i = 0; $i < count($unitClasses); $i++) {
+			$metaSheetObj->setCellValueExplicit(PHPExcel_Cell::stringFromColumnIndex($unitClassesStart[0]) . ($unitClassesStart[1] + $i), $unitClasses[$i]['title'], PHPExcel_Cell_DataType::TYPE_STRING);
+		}
+		
 
 		$this->load->model('catalog/product');
 		
@@ -398,6 +429,12 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 				foreach ($weightClasses as $weightClass) {
 					if ($weightClass['weight_class_id'] == $row['weight_class_id']) { $row['weight_class'] = $weightClass['title']; break; }
 				}
+				
+				$row['unit_class'] = !empty($unitClasses[0]['title']) ? $unitClasses[0]['title'] : '';
+				foreach ($unitClasses as $unitClass) {
+					if ($unitClass['unit_class_id'] == $row['unit_class_id']) { $row['unit_class'] = $unitClass['title']; break; }
+				}
+				
 				$row['sort_order'] = empty($row['sort_order']) ? '0' : $row['sort_order'];
 				
 				$row['status'] = empty($row['status']) ? 'Disabled' : (($row['status']=='1')?'Enabled':'Pending Approval');
@@ -510,7 +547,7 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 				if ($count){
 					$query = "SELECT count(*) AS count FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN ".DB_PREFIX."customerpartner_to_product cp2p ON (p.product_id = cp2p.product_id) WHERE cp2p.customer_id = " . (int)$sellerId;
 				} else {
-					$query = "SELECT cp2p.id, cp2p.edit, cp2p.viewed, p.sort_order, p.product_id, pd.name AS name, pd.description, pd.meta_title, pd.meta_description, pd.meta_keyword, pd.tag, p.model, cp2p.sku, p.upc, p.ean, p.jan, p.isbn, p.mpn, p.location, cp2p.quantity, IFNULL((SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = cp2p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "'), 'Not in Stock') AS stock_status, p.image, p.manufacturer_id, m.name AS manufacturer, cp2p.price AS cprice, p.price as price, p.points, p.tax_class_id, cp2p.date_available, cp2p.weight AS weight, cp2p.weight_class_id AS weight_class_id, cp2p.length AS length, cp2p.width AS width, cp2p.height AS height, cp2p.length_class_id AS length_class_id, p.subtract, cp2p.minimum AS minimum, p.sort_order, cp2p.status AS status, cp2p.date_added, cp2p.date_modified, cp2p.viewed, cp2p.shipping, cp2p.stock_status_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) LEFT JOIN ".DB_PREFIX."customerpartner_to_product cp2p ON (p.product_id = cp2p.product_id) WHERE cp2p.customer_id = " . (int)$sellerId . " AND p.status<>0 AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY p.product_id ";
+					$query = "SELECT cp2p.id, cp2p.edit, cp2p.viewed, p.sort_order, p.product_id, pd.name AS name, pd.description, pd.meta_title, pd.meta_description, pd.meta_keyword, pd.tag, p.model, cp2p.sku, p.upc, p.ean, p.jan, p.isbn, p.mpn, p.location, cp2p.quantity, IFNULL((SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = cp2p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "'), 'Not in Stock') AS stock_status, p.image, p.manufacturer_id, m.name AS manufacturer, cp2p.price AS cprice, p.price as price, p.points, p.tax_class_id, cp2p.date_available, cp2p.weight AS weight, cp2p.weight_class_id AS weight_class_id, cp2p.length AS length, cp2p.width AS width, cp2p.height AS height, cp2p.length_class_id AS length_class_id, cp2p.unit_class_id AS unit_class_id, p.subtract, cp2p.minimum AS minimum, p.sort_order, cp2p.status AS status, cp2p.date_added, cp2p.date_modified, cp2p.viewed, cp2p.shipping, cp2p.stock_status_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) LEFT JOIN ".DB_PREFIX."customerpartner_to_product cp2p ON (p.product_id = cp2p.product_id) WHERE cp2p.customer_id = " . (int)$sellerId . " AND p.status<>0 AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY p.product_id ";
 				}
 				return $query;
 	}
@@ -518,7 +555,7 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 	public function editProduct($id, $data, &$languages, $light = false) {
 		$extra_select = '';
 		
-		$generals = array('sku','price','quantity','stock_status_id','shipping','date_available','length','width','height','length_class_id','weight','weight_class_id','status','sort_order');
+		$generals = array('sku','price','quantity','stock_status_id','shipping','date_available','length','width','height','length_class_id','weight','weight_class_id','unit_class_id','status','sort_order');
 		
 		$implode = array();
 		
