@@ -102,6 +102,8 @@
 							var login_modal = addmodal('modal-login','');
 							login_modal.find('.modal-title').html('Please Login to submit enquiry');
 							login_modal.find('.modal-body').html(data);
+							$('#enquiry_modal').modal('show');
+							$('#enquiry-products').modal('show');
 							login_modal.modal('show');
 						}
 					});
@@ -255,7 +257,8 @@ $('#enquiry_modal').on('click','#view-enquiry',function(){
 		url : 'index.php?route=module/enquiry/getEnquiry',
 	    dataType: "html",
 	    success : function (data) {
-		    $('#enquiry-products').modal('show');
+		    $('.modal').modal('hide');
+		    $('#enquiry_modal').modal('show');
 		    $('#enquiry-products').remove();
 			$('body').append(data);
 			$('#enquiry-products').modal('show');
