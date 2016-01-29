@@ -7,28 +7,23 @@ use OpenCloud\CloudMonitoring\Exception;
 
 /**
  * AgentConnection class.
- * 
+ *
  * @extends ReadOnlyResource
  */
-class AgentConnection extends ReadOnlyResource implements ResourceInterface
-{
-
-    public $guid;
-    public $agent_id;
-    public $endpoint;
-    public $process_version;
-    public $bundle_version;
-    public $agent_ip;
-
-    protected static $json_name = false;
-    protected static $json_collection_name = 'values';
-    protected static $url_resource = 'agents';
-    
-    /**
-     * @codeCoverageIgnore
-     */
-    public function baseUrl()
-    {
-    }
-
+class AgentConnection extends ReadOnlyResource implements ResourceInterface {
+	public $guid;
+	public $agent_id;
+	public $endpoint;
+	public $process_version;
+	public $bundle_version;
+	public $agent_ip;
+	protected static $json_name = false;
+	protected static $json_collection_name = 'values';
+	protected static $url_resource = 'agents';
+	
+	/**
+	 * @codeCoverageIgnore
+	 */
+	public function baseUrl() {
+	}
 }

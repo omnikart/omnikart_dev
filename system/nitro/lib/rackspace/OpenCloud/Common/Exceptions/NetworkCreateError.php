@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class NetworkCreateError extends \Exception {}
+class NetworkCreateError extends \Exception {
+}

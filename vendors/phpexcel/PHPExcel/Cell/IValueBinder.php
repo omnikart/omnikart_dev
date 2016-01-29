@@ -25,22 +25,22 @@
  * @version    1.8.0, 2014-03-02
  */
 
-
 /**
  * PHPExcel_Cell_IValueBinder
  *
- * @category   PHPExcel
- * @package    PHPExcel_Cell
- * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @category PHPExcel
+ * @package PHPExcel_Cell
+ * @copyright Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-interface PHPExcel_Cell_IValueBinder
-{
-    /**
-     * Bind value to a cell
-     *
-     * @param  PHPExcel_Cell $cell    Cell to bind value to
-     * @param  mixed $value           Value to bind in cell
-     * @return boolean
-     */
-    public function bindValue(PHPExcel_Cell $cell, $value = NULL);
+interface PHPExcel_Cell_IValueBinder {
+	/**
+	 * Bind value to a cell
+	 *
+	 * @param PHPExcel_Cell $cell
+	 *        	Cell to bind value to
+	 * @param mixed $value
+	 *        	Value to bind in cell
+	 * @return boolean
+	 */
+	public function bindValue(PHPExcel_Cell $cell, $value = NULL);
 }

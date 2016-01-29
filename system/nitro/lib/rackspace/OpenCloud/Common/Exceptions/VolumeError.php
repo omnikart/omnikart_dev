@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class VolumeError extends \Exception {}
+class VolumeError extends \Exception {
+}

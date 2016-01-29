@@ -2,6 +2,5 @@
 
 namespace OpenCloud\CloudMonitoring\Exception;
 
-class AgentException extends CloudMonitoringException
-{
+class AgentException extends CloudMonitoringException {
 }

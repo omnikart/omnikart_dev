@@ -4,8 +4,10 @@
 <br />
 
 <ul class="nav nav-tabs attributes">
-	<li class="active"><a data-toggle="tab" href="#tab-seo-settings"><i class="glyphicon glyphicon-wrench"></i> <?php echo $tab_settings; ?></a></li>
-	<li><a data-toggle="tab" href="#tab-seo-aliases"><i class="glyphicon glyphicon-random"></i> <?php echo $tab_aliases; ?></a></li>
+	<li class="active"><a data-toggle="tab" href="#tab-seo-settings"><i
+			class="glyphicon glyphicon-wrench"></i> <?php echo $tab_settings; ?></a></li>
+	<li><a data-toggle="tab" href="#tab-seo-aliases"><i
+			class="glyphicon glyphicon-random"></i> <?php echo $tab_aliases; ?></a></li>
 </ul>
 <br />
 <div class="tab-content">

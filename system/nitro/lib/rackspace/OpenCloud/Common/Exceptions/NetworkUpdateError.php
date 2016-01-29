@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class NetworkUpdateError extends \Exception {}
+class NetworkUpdateError extends \Exception {
+}

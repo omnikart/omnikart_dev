@@ -4,8 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><?php echo $subject; ?></title>
 </head>
-<body> 
-<div class="content">
+<body>
+	<div class="content">
 	<?php echo html_entity_decode($message, ENT_QUOTES, 'UTF-8'); ?>			
 </div>
 </body>

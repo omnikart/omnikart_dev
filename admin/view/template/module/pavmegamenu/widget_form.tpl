@@ -1,44 +1,45 @@
 
- <?php 
- echo $header; 
-?>
- 
+ <?php
+	echo $header;
+	?>
+
 <div id="content">
 	<?php if( isset($message) ) { ?> 
 	<div class="success"><?php echo $message; ?></div>
 	<?php } ?>
-	<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
+	<form action="<?php echo $action; ?>" method="post"
+		enctype="multipart/form-data" id="form">
 		<table class="form">
-			<input value="<?php echo $id;?>" name="widget[id]" type="hidden"/>
+			<input value="<?php echo $id;?>" name="widget[id]" type="hidden" />
 			 <?php if( !$disabled ){ ?> 
 			<tr>
 				<td><?php echo $olang->get("text_widget_type");?></td>
-				<td>
-					<select name="widget[type]" id="widget_type">
-						<option  value=""><?php echo $olang->get("text_widget_select_one");?></option>	
+				<td><select name="widget[type]" id="widget_type">
+						<option value=""><?php echo $olang->get("text_widget_select_one");?></option>	
 						<?php foreach( $types as $widget => $text ) { ?>
-						<option value="<?php echo $widget; ?>" <?php if( $widget_selected == $widget ) { ?> selected="selected" <?php } ?>><?php echo $text; ?></option>
+						<option value="<?php echo $widget; ?>"
+							<?php if( $widget_selected == $widget ) { ?> selected="selected"
+							<?php } ?>><?php echo $text; ?></option>
 						<?php } ?>
-					</select>
-					<script type="text/javascript">
+					</select> <script type="text/javascript">
 						$('#widget_type').change( function(){
 							location.href = '<?php echo html_entity_decode($action); ?>&wtype='+$(this).val();
 						} );
-					</script>
-				</td>
+					</script></td>
 			</tr>
 			<?php }   ?>
 			<tr>
 				<td><?php echo $olang->get("text_widget_name");?></td>
-				<td>
-					<input type="text" name="widget[name]" value="<?php echo $widget_data['name'];?>">
+				<td><input type="text" name="widget[name]"
+					value="<?php echo $widget_data['name'];?>">
 					 <?php if( $disabled ){ ?> 
-					 <input type="hidden" name="widget[type]" value="<?php echo $widget_data['type'];?>">
+					 <input type="hidden" name="widget[type]"
+					value="<?php echo $widget_data['type'];?>">
 					 <?php } ?>
 				</td>
 			</tr>
 		</table>
-		
+
 		<div>
 			<?php echo $form; ?>
 		</div>

@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class DocumentError extends \Exception {}
+class DocumentError extends \Exception {
+}

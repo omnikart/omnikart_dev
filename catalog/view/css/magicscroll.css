@@ -9,9 +9,13 @@
 
 */
 @import url('themes/magicscroll.core.css');
+
 @import url('themes/magicscroll.slidein.css');
+
 @import url('themes/magicscroll.bounce.css');
 
 @import url('themes/default/magicscroll.default.css');
+
 @import url('themes/default/magicscroll.loader.css');
+
 @import url('themes/default/magicscroll.rounded.css');

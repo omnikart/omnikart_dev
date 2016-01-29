@@ -18,7 +18,8 @@
 						foreach ( $recent_posts as $post ) {
 							?>
 						<div class="media-left">
-							<img class="media-object" src="<?php echo $post['thumb']; ?>" alt="">
+							<img class="media-object" src="<?php echo $post['thumb']; ?>"
+								alt="">
 						</div>
 						<div class="media-body">
 							<h3 class="media-heading">
@@ -49,24 +50,25 @@
 					<div class="col-sm-12">
 						<?php $inc = 0;	foreach ($popular_posts as $post) { ?>
 							<div class="media-left">
-								<img class="media-object" src="<?php echo $post['thumb']; ?>" alt="" />
-							</div>
-							<div class="media-body">
-								<h3 class="media-heading">
-									<a style="color: black" href="<?php echo $post['link']; ?>"><?php echo ucfirst($post['title']); ?></a>
-								</h3>
-								<h5>
-									<span>
+							<img class="media-object" src="<?php echo $post['thumb']; ?>"
+								alt="" />
+						</div>
+						<div class="media-body">
+							<h3 class="media-heading">
+								<a style="color: black" href="<?php echo $post['link']; ?>"><?php echo ucfirst($post['title']); ?></a>
+							</h3>
+							<h5>
+								<span>
 											By&nbsp;&nbsp;&nbsp;<?php echo author($post['post_author'],'firstname').' '.author($post['post_author'],'lastname'); ?>
 											</span>
 											&nbsp;&nbsp;
 											<?php $time=strtotime($post['date_added']);?>
 											<span><?php echo month_name(date('m',$time)); ?>&nbsp;<?php echo date('d',$time); ?>,&nbsp;<?php echo date('Y',$time); ?></span>
-								</h5>
-								<p>
+							</h5>
+							<p>
 	    									<?php echo words_limit(html_entity_decode($post['excerpt']),30,'...'); ?>
 	    								</p>
-							</div>
+						</div>
 						<?php $inc++;	} ?>
 
 					<?php } else { ?>

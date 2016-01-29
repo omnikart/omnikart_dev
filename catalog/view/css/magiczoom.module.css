@@ -1,107 +1,124 @@
-
 /* Contaner with main image and selectors container */
 div.MagicToolboxContainer {
-    text-align: center;
+	text-align: center;
 }
+
 div.MagicToolboxContainer.minWidth {
-    min-width: 250px;
+	min-width: 250px;
 }
 
 /* Main image styles */
-div.MagicToolboxContainer > a {
-    margin: 0 auto;
+div.MagicToolboxContainer>a {
+	margin: 0 auto;
 }
 
 /* Container with selectors */
 div.MagicToolboxSelectorsContainer {
-    clear: both;
+	clear: both;
 }
 
 /* Selectors styles */
-div.MagicToolboxSelectorsContainer > a {
-    display: inline-block;
-    margin: 4px 1px;
+div.MagicToolboxSelectorsContainer>a {
+	display: inline-block;
+	margin: 4px 1px;
 }
 
 /* Contaner with message under Magic Zoom */
 div.MagicToolboxMessage {
-    text-align: center;
+	text-align: center;
 }
 /* styles for templates */
 div.MagicToolboxMainContainer {
-    max-width: 100%;
+	max-width: 100%;
 }
+
 div.MagicToolboxSelectorsContainer img {
-    max-width: 100%;
+	max-width: 100%;
 }
 
 /* selectors on the bottom */
-div.MagicToolboxContainer.selectorsBottom .MagicToolboxSelectorsContainer {
-    padding-top: 5px;
+div.MagicToolboxContainer.selectorsBottom .MagicToolboxSelectorsContainer
+	{
+	padding-top: 5px;
 }
 
 /* selectors on the top */
 div.MagicToolboxContainer.selectorsTop .MagicToolboxSelectorsContainer {
-    padding-bottom: 5px;
+	padding-bottom: 5px;
 }
 
 /* selectors on the left */
 div.MagicToolboxContainer.selectorsLeft {
-    display: inline-table;
-    height: 100%;
+	display: inline-table;
+	height: 100%;
 }
-div.MagicToolboxContainer.selectorsLeft .MagicToolboxMainContainer,
-div.MagicToolboxContainer.selectorsLeft .MagicToolboxSelectorsContainer {
-    display: table-cell;
-    vertical-align: top;
-    height: 100%;
-    padding-right: 5px;
+
+div.MagicToolboxContainer.selectorsLeft .MagicToolboxMainContainer, div.MagicToolboxContainer.selectorsLeft .MagicToolboxSelectorsContainer
+	{
+	display: table-cell;
+	vertical-align: top;
+	height: 100%;
+	padding-right: 5px;
 }
-div.MagicToolboxContainer.selectorsLeft .MagicToolboxSelectorsContainer .MagicScroll {
-    height: 100%;
+
+div.MagicToolboxContainer.selectorsLeft .MagicToolboxSelectorsContainer .MagicScroll
+	{
+	height: 100%;
 }
-div.MagicToolboxContainer.selectorsLeft .MagicToolboxSelectorsContainer a {
-    display: block;
+
+div.MagicToolboxContainer.selectorsLeft .MagicToolboxSelectorsContainer a
+	{
+	display: block;
 }
 /* NOTE: fix for MagicScroll */
-div.MagicToolboxContainer.selectorsLeft .MagicToolboxSelectorsContainer .MagicScroll > a:nth-child(n+2) {
-    display: none;
+div.MagicToolboxContainer.selectorsLeft .MagicToolboxSelectorsContainer .MagicScroll>a:nth-child(n+2)
+	{
+	display: none;
 }
 
 /* selectors on the right */
 div.MagicToolboxContainer.selectorsRight {
-    display: inline-table;
-    height: 100%;
+	display: inline-table;
+	height: 100%;
 }
-div.MagicToolboxContainer.selectorsRight .MagicToolboxMainContainer,
-div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer {
-    display: table-cell;
-    vertical-align: top;
-    height: 100%;
-    padding-left: 5px;
+
+div.MagicToolboxContainer.selectorsRight .MagicToolboxMainContainer, div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer
+	{
+	display: table-cell;
+	vertical-align: top;
+	height: 100%;
+	padding-left: 5px;
 }
-div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer .MagicScroll {
-    height: 100%;
+
+div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer .MagicScroll
+	{
+	height: 100%;
 }
-div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer a {
-    display: block;
+
+div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer a
+	{
+	display: block;
 }
 /* NOTE: fix for MagicScroll */
-div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer .MagicScroll > a:nth-child(n+2) {
-    display: none;
+div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer .MagicScroll>a:nth-child(n+2)
+	{
+	display: none;
 }
 
 /* NOTE: fix for MagicScroll when height of parent elements is not defined */
 div.MagicToolboxContainer.selectorsLeft .MagicToolboxSelectorsContainer,
-div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer {
-    position: relative;
+	div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer
+	{
+	position: relative;
 }
+
 div.MagicToolboxContainer.selectorsLeft .MagicToolboxSelectorsContainer .MagicScroll,
-div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer .MagicScroll {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
+	div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer .MagicScroll
+	{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
 }
 
 /* NOTE: magicscroll makes the image smaller if there is a margin */
@@ -111,23 +128,31 @@ div.MagicToolboxContainer.selectorsRight .MagicToolboxSelectorsContainer .MagicS
 }
 */
 #latest_home {
-    margin: 0px auto;
+	margin: 0px auto;
 }
+
 #bestseller_home {
-    margin: 0px auto;
+	margin: 0px auto;
 }
+
 #special_home {
-    margin: 0px auto;
+	margin: 0px auto;
 }
+
 #featured_home {
-    margin: 0px auto;
+	margin: 0px auto;
 }
 
-
-.product-info .right div.options, .product-info .right .description, .product-info .right .htabs,  .product-info .right .price, .product-info .right .cart, .product-info .right .review{ 
-    overflow:auto; 
+.product-info .right div.options, .product-info .right .description,
+	.product-info .right .htabs, .product-info .right .price, .product-info .right .cart,
+	.product-info .right .review {
+	overflow: auto;
 }
+
 .product-info .right .htabs {
-    overflow-y:hidden;
+	overflow-y: hidden;
 }
-.MagicToolboxContainer { max-width:none !important; }
+
+.MagicToolboxContainer {
+	max-width: none !important;
+}

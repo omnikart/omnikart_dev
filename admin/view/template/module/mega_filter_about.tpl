@@ -13,13 +13,14 @@
 		</tr>
 		<?php if( ! empty( $plus_version ) ) { ?>
 			<tr>
-				<td><?php echo $entry_plus_version; ?></td>
-				<td>
+			<td><?php echo $entry_plus_version; ?></td>
+			<td>
 					<?php echo $plus_version; ?>
 					-
-					<a href="<?php echo $action_rebuild_index; ?>" class="btn btn-xs btn-info"><i class="glyphicon glyphicon-retweet"></i> <?php echo $text_rebuild_index; ?></a>
-				</td>
-			</tr>
+					<a href="<?php echo $action_rebuild_index; ?>"
+				class="btn btn-xs btn-info"><i class="glyphicon glyphicon-retweet"></i> <?php echo $text_rebuild_index; ?></a>
+			</td>
+		</tr>
 		<?php } ?>
 		<tr>
 			<td><?php echo $entry_author; ?></td>
@@ -35,5 +36,5 @@
 		</tr>
 	</tbody>
 </table>
-			
+
 <?php require DIR_TEMPLATE . 'module/' . $_name . '-footer.tpl'; ?>

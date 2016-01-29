@@ -1,2 +1,2 @@
 <?php
-$_['heading_title']    = 'Blank Page';
+$_ ['heading_title'] = 'Blank Page';

@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class CreateUpdateError extends \Exception {}
+class CreateUpdateError extends \Exception {
+}

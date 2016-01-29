@@ -8,8 +8,7 @@ use OAuth2\ResponseInterface;
 /**
  * Interface for all OAuth2 Client Assertion Types
  */
-interface ClientAssertionTypeInterface
-{
-    public function validateRequest(RequestInterface $request, ResponseInterface $response);
-    public function getClientId();
+interface ClientAssertionTypeInterface {
+	public function validateRequest(RequestInterface $request, ResponseInterface $response);
+	public function getClientId();
 }

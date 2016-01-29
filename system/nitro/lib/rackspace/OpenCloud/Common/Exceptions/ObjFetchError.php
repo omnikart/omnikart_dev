@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class ObjFetchError extends \Exception {}
+class ObjFetchError extends \Exception {
+}

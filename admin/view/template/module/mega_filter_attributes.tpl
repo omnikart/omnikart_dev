@@ -2,9 +2,12 @@
 
 <div class="col-xs-2">
 	<ul class="nav nav-tabs tabs-left">
-		<li class="active"><a data-toggle="tab" href="#attribs-list"><i class="glyphicon glyphicon-align-justify"></i> <?php echo $text_list; ?></a></li>
-		<li><a data-toggle="tab" href="#attribs_sort-values"><i class="glyphicon glyphicon-sort-by-attributes"></i> <?php echo $text_sort_values; ?></a></li>
-		<li><a data-toggle="tab" href="#attribs_images"><i class="glyphicon glyphicon glyphicon-picture"></i> <?php echo $text_images; ?></a></li>
+		<li class="active"><a data-toggle="tab" href="#attribs-list"><i
+				class="glyphicon glyphicon-align-justify"></i> <?php echo $text_list; ?></a></li>
+		<li><a data-toggle="tab" href="#attribs_sort-values"><i
+				class="glyphicon glyphicon-sort-by-attributes"></i> <?php echo $text_sort_values; ?></a></li>
+		<li><a data-toggle="tab" href="#attribs_images"><i
+				class="glyphicon glyphicon glyphicon-picture"></i> <?php echo $text_images; ?></a></li>
 	</ul>
 </div>
 
@@ -12,59 +15,61 @@
 	<div class="tab-content">
 		<br />
 		<div class="tab-pane active" id="attribs-list">
-			<?php echo $entry_default_values; ?><br /><br />
-			<?php 
-
-				$_attribsName		= $_name . '_attribs';
-				$_attribsValues		= $attribs;
-
-				require DIR_TEMPLATE . 'module/' . $_name . '-attribs.tpl';
-
+			<?php echo $entry_default_values; ?><br />
+			<br />
+			<?php
+			
+			$_attribsName = $_name . '_attribs';
+			$_attribsValues = $attribs;
+			
+			require DIR_TEMPLATE . 'module/' . $_name . '-attribs.tpl';
+			
 			?>
 		</div>
 		<?php $tmpTypes = array( 'sort-values', 'images' ); ?>
 		<?php foreach( $tmpTypes as $tmpType ) { ?>
 			<div class="tab-pane" id="attribs_<?php echo $tmpType; ?>">
-				<table class="table table-without-thead">
-					<tr>
-						<td class="vertical-middle" width="150">
+			<table class="table table-without-thead">
+				<tr>
+					<td class="vertical-middle" width="150">
 							<?php if( $tmpType == 'images' ) { ?>
 								<i class="glyphicon glyphicon glyphicon-picture"></i> <?php echo $entry_set_images; ?>
 							<?php } else { ?>
 								<i class="glyphicon glyphicon-sort-by-attributes"></i> <?php echo $entry_set_default_sort_for; ?>
 							<?php } ?>
 						</td>
-						<td class="vertical-middle" width="200" height="60">
-							<select id="attrib-language_<?php echo $tmpType; ?>" class="form-control">
+					<td class="vertical-middle" width="200" height="60"><select
+						id="attrib-language_<?php echo $tmpType; ?>" class="form-control">
 								<?php foreach( $languages as $language ) { ?>
 									<option value="<?php echo $language['language_id']; ?>"><?php echo $language['name']; ?></option>
 								<?php } ?>
-							</select>
-						</td>
-						<td class="vertical-middle" width="200" height="60">
-							<select id="attrib-group_<?php echo $tmpType; ?>" class="form-control">
-								<option value=""><?php echo $text_select_group; ?></option>
+							</select></td>
+					<td class="vertical-middle" width="200" height="60"><select
+						id="attrib-group_<?php echo $tmpType; ?>" class="form-control">
+							<option value=""><?php echo $text_select_group; ?></option>
 								<?php foreach( $attribGroups as $group ) { ?>
 									<option value="<?php echo $group['attribute_group_id']; ?>"><?php echo $group['name']; ?></option>
 								<?php } ?>
-							</select>
-						</td>
-						<td class="vertical-middle" width="200">
-							<select id="attrib-item_<?php echo $tmpType; ?>" class="form-control">
-								<option value=""><?php echo $text_select_attribute; ?></option>
-							</select>
-						</td>
-						<td class="vertical-middle">
-							<a href="#" id="save-sort-values_<?php echo $tmpType; ?>" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i> <?php echo $text_save; ?></a>
-							<img src="view/stylesheet/mf/img/loading.gif" id="save-sort-loader_<?php echo $tmpType; ?>" />
-							<a href="#" id="reset-sort-values_<?php echo $tmpType; ?>" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-repeat"></i> <?php echo $text_reset; ?></a>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="5" id="attrib-values-cnt_<?php echo $tmpType; ?>"></td>
-					</tr>
-				</table>
-			</div>
+							</select></td>
+					<td class="vertical-middle" width="200"><select
+						id="attrib-item_<?php echo $tmpType; ?>" class="form-control">
+							<option value=""><?php echo $text_select_attribute; ?></option>
+					</select></td>
+					<td class="vertical-middle"><a href="#"
+						id="save-sort-values_<?php echo $tmpType; ?>"
+						class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i> <?php echo $text_save; ?></a>
+						<img src="view/stylesheet/mf/img/loading.gif"
+						id="save-sort-loader_<?php echo $tmpType; ?>" /> <a href="#"
+						id="reset-sort-values_<?php echo $tmpType; ?>"
+						class="btn btn-danger btn-sm"><i
+							class="glyphicon glyphicon-repeat"></i> <?php echo $text_reset; ?></a>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5" id="attrib-values-cnt_<?php echo $tmpType; ?>"></td>
+				</tr>
+			</table>
+		</div>
 		<?php } ?>
 	</div>
 </div>
@@ -265,6 +270,6 @@
 	
 	initByType( 'sort-values' );
 	initByType( 'images' );
-</script> 
+</script>
 
 <?php require DIR_TEMPLATE . 'module/' . $_name . '-footer.tpl'; ?>

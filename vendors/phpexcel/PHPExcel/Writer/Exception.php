@@ -25,26 +25,25 @@
  * @version	1.8.0, 2014-03-02
  */
 
-
 /**
  * PHPExcel_Writer_Exception
  *
- * @category   PHPExcel
- * @package    PHPExcel_Writer
- * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @category PHPExcel
+ * @package PHPExcel_Writer
+ * @copyright Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 class PHPExcel_Writer_Exception extends PHPExcel_Exception {
 	/**
 	 * Error handler callback
 	 *
-	 * @param mixed $code
-	 * @param mixed $string
-	 * @param mixed $file
-	 * @param mixed $line
-	 * @param mixed $context
+	 * @param mixed $code        	
+	 * @param mixed $string        	
+	 * @param mixed $file        	
+	 * @param mixed $line        	
+	 * @param mixed $context        	
 	 */
 	public static function errorHandlerCallback($code, $string, $file, $line, $context) {
-		$e = new self($string, $code);
+		$e = new self ( $string, $code );
 		$e->line = $line;
 		$e->file = $file;
 		throw $e;

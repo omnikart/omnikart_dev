@@ -4,61 +4,78 @@
 var report_desktop = <?php echo !empty($widget['pagespeed']['desktop']) ? $widget['pagespeed']['desktop'] : 'null'; ?>;
 var report_mobile = <?php echo !empty($widget['pagespeed']['mobile']) ? $widget['pagespeed']['mobile'] : 'null'; ?>;
 </script>
-<table style="width:100%" class="pagespeedMainTable">
-<tr>
-    <td style="width:50%;vertical-align: top;">
-    <div id="g1" class="bigGauge"></div>
-    <div id="g2" class="bigGauge"></div>
-    </td>
-    <td style="width:50%; vertical-align:top;padding-top:5px;">
-    	<h3>Steps you need to take</h3>
-        <table class="table stepsToTake">
-          <tbody>
-            <tr class="<?php echo (!empty($data['Nitro']['PageCache']['Enabled']) && $data['Nitro']['PageCache']['Enabled'] == 'yes') ? 'disabled' : ''; ?>">
-              <td>1</td>
-              <td>Enable Page Caching</td>
-              <td style="width: 100px"><a onclick="$('html, body').animate({ scrollTop: 0 }, 200, function() { $('a[href=#pagecache]').trigger('click'); });" class="btn btn-small btn-default">Setup Now</a></td>
-            </tr>
-            <tr class="<?php echo (!empty($data['Nitro']['BrowserCache']['Enabled']) && $data['Nitro']['BrowserCache']['Enabled'] == 'yes') ? 'disabled' : ''; ?>">
-              <td>2</td>
-              <td>Leverage Browser Caching</td>
-              <td><a onclick="$('html, body').animate({ scrollTop: 0 }, 200, function() { $('a[href=#browsercache]').trigger('click'); });" class="btn btn-small btn-default">Setup Now</a></td>
-            </tr>
-            <tr class="<?php echo (!empty($data['Nitro']['Compress']['Enabled']) && $data['Nitro']['Compress']['Enabled'] == 'yes') ? 'disabled' : ''; ?>">
-              <td>3</td>
-              <td>Enable GZIP Compression</td>
-              <td><a onclick="$('html, body').animate({ scrollTop: 0 }, 200, function() { $('a[href=#compression]').trigger('click'); });" class="btn btn-small btn-default">Setup Now</a></td>
-            </tr>
-            <tr class="<?php echo (!empty($data['Nitro']['Mini']['CSS']) && $data['Nitro']['Mini']['CSS'] == 'yes' && $data['Nitro']['Mini']['JS'] == 'yes') ? 'disabled' : ''; ?>">
-              <td>4</td>
-              <td>Minify CSS and JavaScript</td>
-              <td><a onclick="$('html, body').animate({ scrollTop: 0 }, 200, function() { $('a[href=#minification]').trigger('click'); });" class="btn btn-small btn-default">Setup Now</a></td>
-            </tr>
-            <tr class="<?php echo (!empty($data['Nitro']['Mini']['HTML']) && $data['Nitro']['Mini']['HTML'] == 'yes') ? 'disabled' : ''; ?>">
-              <td>5</td>
-              <td>Minify HTML</td>
-              <td><a onclick="$('html, body').animate({ scrollTop: 0 }, 200, function() { $('a[href=#minification]').trigger('click'); });" class="btn btn-small btn-default">Setup Now</a></td>
-            </tr>
-          </tbody>
-        </table>
-    </td>
-</tr>
+<table style="width: 100%" class="pagespeedMainTable">
+	<tr>
+		<td style="width: 50%; vertical-align: top;">
+			<div id="g1" class="bigGauge"></div>
+			<div id="g2" class="bigGauge"></div>
+		</td>
+		<td style="width: 50%; vertical-align: top; padding-top: 5px;">
+			<h3>Steps you need to take</h3>
+			<table class="table stepsToTake">
+				<tbody>
+					<tr
+						class="<?php echo (!empty($data['Nitro']['PageCache']['Enabled']) && $data['Nitro']['PageCache']['Enabled'] == 'yes') ? 'disabled' : ''; ?>">
+						<td>1</td>
+						<td>Enable Page Caching</td>
+						<td style="width: 100px"><a
+							onclick="$('html, body').animate({ scrollTop: 0 }, 200, function() { $('a[href=#pagecache]').trigger('click'); });"
+							class="btn btn-small btn-default">Setup Now</a></td>
+					</tr>
+					<tr
+						class="<?php echo (!empty($data['Nitro']['BrowserCache']['Enabled']) && $data['Nitro']['BrowserCache']['Enabled'] == 'yes') ? 'disabled' : ''; ?>">
+						<td>2</td>
+						<td>Leverage Browser Caching</td>
+						<td><a
+							onclick="$('html, body').animate({ scrollTop: 0 }, 200, function() { $('a[href=#browsercache]').trigger('click'); });"
+							class="btn btn-small btn-default">Setup Now</a></td>
+					</tr>
+					<tr
+						class="<?php echo (!empty($data['Nitro']['Compress']['Enabled']) && $data['Nitro']['Compress']['Enabled'] == 'yes') ? 'disabled' : ''; ?>">
+						<td>3</td>
+						<td>Enable GZIP Compression</td>
+						<td><a
+							onclick="$('html, body').animate({ scrollTop: 0 }, 200, function() { $('a[href=#compression]').trigger('click'); });"
+							class="btn btn-small btn-default">Setup Now</a></td>
+					</tr>
+					<tr
+						class="<?php echo (!empty($data['Nitro']['Mini']['CSS']) && $data['Nitro']['Mini']['CSS'] == 'yes' && $data['Nitro']['Mini']['JS'] == 'yes') ? 'disabled' : ''; ?>">
+						<td>4</td>
+						<td>Minify CSS and JavaScript</td>
+						<td><a
+							onclick="$('html, body').animate({ scrollTop: 0 }, 200, function() { $('a[href=#minification]').trigger('click'); });"
+							class="btn btn-small btn-default">Setup Now</a></td>
+					</tr>
+					<tr
+						class="<?php echo (!empty($data['Nitro']['Mini']['HTML']) && $data['Nitro']['Mini']['HTML'] == 'yes') ? 'disabled' : ''; ?>">
+						<td>5</td>
+						<td>Minify HTML</td>
+						<td><a
+							onclick="$('html, body').animate({ scrollTop: 0 }, 200, function() { $('a[href=#minification]').trigger('click'); });"
+							class="btn btn-small btn-default">Setup Now</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</tr>
 </table>
 <?php if (!empty($reportp['score']) && $reportp['score'] > 81): ?>
-    <div class="text-greatscore"><span class="label label-success">Great Score</span>&nbsp;&nbsp;<a href="http://www.seochat.com/c/a/search-engine-optimization-help/google-page-speed-score-vs-website-loading-time/" target="_blank">Top-ranking websites</a> in Google have an average score of 80.78 and yours is <strong><?php echo $reportp['score']; ?></strong>!</div>
+<div class="text-greatscore">
+	<span class="label label-success">Great Score</span>&nbsp;&nbsp;<a
+		href="http://www.seochat.com/c/a/search-engine-optimization-help/google-page-speed-score-vs-website-loading-time/"
+		target="_blank">Top-ranking websites</a> in Google have an average
+	score of 80.78 and yours is <strong><?php echo $reportp['score']; ?></strong>!
+</div>
 <?php endif; ?>
 
 
 <ul class="nav nav-pills gaugeFilterUL" param="performers">
-  <li class="active">
-    <a href="javascript:void(0)" param="desktopScore">Desktop</a>
-  </li>
-  <li>
-    <a href="javascript:void(0)" param="mobileScore">Mobile</a>
-  </li>
+	<li class="active"><a href="javascript:void(0)" param="desktopScore">Desktop</a>
+	</li>
+	<li><a href="javascript:void(0)" param="mobileScore">Mobile</a></li>
 </ul>
 <div id="extendedInfo"></div>
-<div class="alert alert-success performersSuccess" style="display:none"></div>
+<div class="alert alert-success performersSuccess" style="display: none"></div>
 
 <script type="text/javascript">
 // This fixes a firefox issue with gauges

@@ -1,24 +1,25 @@
 <?php
-$selectorMaxWidth = (int)self::$options->getValue('selector-max-width');
+$selectorMaxWidth = ( int ) self::$options->getValue ( 'selector-max-width' );
 $dataOptions = '';
-if(!empty($magicscroll)) {
-    $dataOptions .= 'orientation: vertical;';
-    $dataOptions = " data-options=\"{$dataOptions}\"";
+if (! empty ( $magicscroll )) {
+	$dataOptions .= 'orientation: vertical;';
+	$dataOptions = " data-options=\"{$dataOptions}\"";
 }
 ?>
 <!-- Begin magiczoom -->
 <div class="MagicToolboxContainer selectorsLeft minWidth">
 <?php
-if(count($thumbs) > 1) {
-    ?>
+if (count ( $thumbs ) > 1) {
+	?>
     <div class="MagicToolboxSelectorsContainer" style="width: <?php echo $selectorMaxWidth ?>px;">
-        <div id="MagicToolboxSelectors<?php echo $pid ?>" class="<?php echo $magicscroll ?>"<?php echo $dataOptions ?>>
+		<div id="MagicToolboxSelectors<?php echo $pid ?>"
+			class="<?php echo $magicscroll ?>" <?php echo $dataOptions ?>>
         <?php echo join("\n\t", $thumbs); ?>
         </div>
-    </div>
+	</div>
     <?php
-        if(!empty($magicscroll) && !is_numeric(self::$options->getValue('height'))) {
-            ?>
+	if (! empty ( $magicscroll ) && ! is_numeric ( self::$options->getValue ( 'height' ) )) {
+		?>
             <script type="text/javascript">
                 mzOptions = mzOptions || {};
                 mzOptions.onUpdate = function() {
@@ -26,8 +27,8 @@ if(count($thumbs) > 1) {
                 };
             </script>
             <?php
-        }
-        ?>
+	}
+	?>
     <?php
 }
 ?>

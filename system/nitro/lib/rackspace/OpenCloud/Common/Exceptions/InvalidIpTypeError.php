@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class InvalidIpTypeError extends \Exception {}
+class InvalidIpTypeError extends \Exception {
+}

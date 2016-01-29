@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class NetworkDeleteError extends \Exception {}
+class NetworkDeleteError extends \Exception {
+}

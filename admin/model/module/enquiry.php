@@ -96,7 +96,7 @@ class ModelModuleEnquiry extends Model {
 			  PRIMARY KEY (`quote_product_id`),
 			  FOREIGN KEY (`quote_revision_id`) REFERENCES `" . DB_PREFIX . "quote_revision`(`quote_revision_id`) ON UPDATE CASCADE ON DELETE RESTRICT
 		) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
-
+		
 		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "quote_term` (
 		  `quote_term_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
 		  `quote_revision_id` int(11) NOT NULL,
@@ -128,56 +128,54 @@ class ModelModuleEnquiry extends Model {
           FOREIGN KEY (`quote_revision_id`) REFERENCES `" . DB_PREFIX . "quote_revision`(`quote_revision_id`) ON UPDATE CASCADE ON DELETE RESTRICT
 		) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
 	}
-	
 	public function getEnquiry($enquiry_id) {
-		$data = array();
-		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry e LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . (int)$enquiry_id . "'");
-		$data['customer_id'] = $query->row['customer_id'];
-		$data['postcode'] = $query->row['postcode'];
-		$data['status'] = $query->row['status'];
-		$data['date_added'] = $query->row['date_added'];
-		$data['firstname'] = $query->row['firstname'];
-		$data['lastname'] = $query->row['lastname'];
-		$data['email'] = $query->row['email'];
-		$data['telephone'] = $query->row['telephone'];
+		$data = array ();
+		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry e LEFT JOIN " . DB_PREFIX . "customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . ( int ) $enquiry_id . "'" );
+		$data ['customer_id'] = $query->row ['customer_id'];
+		$data ['postcode'] = $query->row ['postcode'];
+		$data ['status'] = $query->row ['status'];
+		$data ['date_added'] = $query->row ['date_added'];
+		$data ['firstname'] = $query->row ['firstname'];
+		$data ['lastname'] = $query->row ['lastname'];
+		$data ['email'] = $query->row ['email'];
+		$data ['telephone'] = $query->row ['telephone'];
 		
-		$data['terms'] = array();
+		$data ['terms'] = array ();
 		
-		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry_term et WHERE et.enquiry_id='" . (int)$enquiry_id . "'");
+		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry_term et WHERE et.enquiry_id='" . ( int ) $enquiry_id . "'" );
 		
-		foreach ($query->rows as $term) {
-			if ($term['term_type']=='payment') {
-				$term_query = $query = $this->db->query("SELECT name FROM ".DB_PREFIX."payment_term WHERE payment_term_id='".(int)$term['term_value']."'");
-				$term['term_value'] = $term_query->row['name'];
+		foreach ( $query->rows as $term ) {
+			if ($term ['term_type'] == 'payment') {
+				$term_query = $query = $this->db->query ( "SELECT name FROM " . DB_PREFIX . "payment_term WHERE payment_term_id='" . ( int ) $term ['term_value'] . "'" );
+				$term ['term_value'] = $term_query->row ['name'];
 			}
-				
-			$data['terms'][] = array(
-						'type' => $term['term_type'],
-						'value' => $term['term_value']
+			
+			$data ['terms'] [] = array (
+					'type' => $term ['term_type'],
+					'value' => $term ['term_value'] 
 			);
 		}
 		
-		$data['enquiries'] = array();
+		$data ['enquiries'] = array ();
 		
-		$query = $this->db->query("SELECT ep.*,epd.name AS name, epd.description AS description, epd.files AS files, ucd.title AS unit_title, uc.value AS unit_value FROM ".DB_PREFIX."enquiry_product ep LEFT JOIN ".DB_PREFIX."enquiry_product_description epd ON (epd.enquiry_product_id=ep.enquiry_product_id) LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = ep.unit_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) WHERE ep.enquiry_id='" . $enquiry_id . "'");
+		$query = $this->db->query ( "SELECT ep.*,epd.name AS name, epd.description AS description, epd.files AS files, ucd.title AS unit_title, uc.value AS unit_value FROM " . DB_PREFIX . "enquiry_product ep LEFT JOIN " . DB_PREFIX . "enquiry_product_description epd ON (epd.enquiry_product_id=ep.enquiry_product_id) LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = ep.unit_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) WHERE ep.enquiry_id='" . $enquiry_id . "'" );
 		if ($query->num_rows) {
-			foreach ($query->rows as $key=>$enquiry) {
-				if ($enquiry['product_id'])
-				$data['enquiries'][$key]['link'] = $this->url->link('product/product','product_id='.(int)$enquiry['product_id'],'SSL');
-				if ($enquiry['category_id'])
-				$data['enquiries'][$key]['link'] = $this->url->link('product/category','category_id='.(int)$enquiry['product_id'],'SSL');
-		
-				$data['enquiries'][$key]['name'] = $enquiry['name'];
-				$data['enquiries'][$key]['description'] = $enquiry['description'];
-				$data['enquiries'][$key]['quantity'] = $enquiry['quantity'];
-				$data['enquiries'][$key]['unit_title'] = $enquiry['unit_title'];
-				$data['enquiries'][$key]['filenames'] = unserialize($enquiry['files']);
+			foreach ( $query->rows as $key => $enquiry ) {
+				if ($enquiry ['product_id'])
+					$data ['enquiries'] [$key] ['link'] = $this->url->link ( 'product/product', 'product_id=' . ( int ) $enquiry ['product_id'], 'SSL' );
+				if ($enquiry ['category_id'])
+					$data ['enquiries'] [$key] ['link'] = $this->url->link ( 'product/category', 'category_id=' . ( int ) $enquiry ['product_id'], 'SSL' );
+				
+				$data ['enquiries'] [$key] ['name'] = $enquiry ['name'];
+				$data ['enquiries'] [$key] ['description'] = $enquiry ['description'];
+				$data ['enquiries'] [$key] ['quantity'] = $enquiry ['quantity'];
+				$data ['enquiries'] [$key] ['unit_title'] = $enquiry ['unit_title'];
+				$data ['enquiries'] [$key] ['filenames'] = unserialize ( $enquiry ['files'] );
 			}
 		}
 		
 		return $data;
 	}
-	
 	public function delete($enquiry_id) {
 		$query = $this->db->query ( "UPDATE `" . DB_PREFIX . "enquiry` SET status = '0' WHERE id IN (" . $implode . ")" );
 	}
@@ -216,95 +214,88 @@ class ModelModuleEnquiry extends Model {
 				$query = $this->db->query ( "UPDATE `" . DB_PREFIX . "enquiry` SET status = '" . ( int ) $select ['status'] . "' WHERE id = '" . ( int ) $key . "'" );
 		}
 	}
-
 	public function getEnquiries($data) {
-		$enquiries = array();
-		$sql = "SELECT e.enquiry_id FROM ".DB_PREFIX."enquiry e LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e.status<>0";
-		if (isset($data['filter_name']) && $data['filter_name']){
+		$enquiries = array ();
+		$sql = "SELECT e.enquiry_id FROM " . DB_PREFIX . "enquiry e LEFT JOIN " . DB_PREFIX . "customer c ON (e.customer_id = c.customer_id) WHERE e.status<>0";
+		if (isset ( $data ['filter_name'] ) && $data ['filter_name']) {
 			$sql .= " AND  (";
-			$implode = array();
-			foreach (explode(' ',$data['filter_name']) as $name) {
-				$implode[] = "(c.firstname LIKE '%".$name."%' OR c.lastname LIKE '%".$name."%' OR c.email LIKE '%".$name."%')";
+			$implode = array ();
+			foreach ( explode ( ' ', $data ['filter_name'] ) as $name ) {
+				$implode [] = "(c.firstname LIKE '%" . $name . "%' OR c.lastname LIKE '%" . $name . "%' OR c.email LIKE '%" . $name . "%')";
 			}
-			$sql .= implode(' AND ',$implode).") ";
+			$sql .= implode ( ' AND ', $implode ) . ") ";
 		}
-		if (isset($data['start']) || isset($data['limit'])) {
-			if ($data['start'] < 0) {
-				$data['start'] = 0;
+		if (isset ( $data ['start'] ) || isset ( $data ['limit'] )) {
+			if ($data ['start'] < 0) {
+				$data ['start'] = 0;
 			}
-	
-			if ($data['limit'] < 1) {
-				$data['limit'] = 20;
+			
+			if ($data ['limit'] < 1) {
+				$data ['limit'] = 20;
 			}
-	
-			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+			
+			$sql .= " LIMIT " . ( int ) $data ['start'] . "," . ( int ) $data ['limit'];
 		}
-	
-	
-		$query = $this->db->query($sql);
-	
-		foreach ($query->rows as $enquiry_id) {
-			$enquiry = array();
-			$query2 = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry e LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . $enquiry_id['enquiry_id'] . "'");
-			$enquiry['customer_id'] = $query2->row['customer_id'];
-			$enquiry['postcode'] = $query2->row['postcode'];
-			$enquiry['status'] = $query2->row['status'];
-			$enquiry['date_added'] = $query2->row['date_added'];
-			$enquiry['firstname'] = $query2->row['firstname'];
-			$enquiry['lastname'] = $query2->row['lastname'];
-			$enquiry['email'] = $query2->row['email'];
-			$enquiry['telephone'] = $query2->row['telephone'];
-			$enquiry['enquiry_id'] = $enquiry_id['enquiry_id'];
-	
-			$enquiry['terms'] = array();
-				
-			$query2 = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry_term et WHERE et.enquiry_id='" . $enquiry_id['enquiry_id'] . "'");
-				
-			foreach ($query2->rows as $term) {
-				$enquiry['terms'][] = array(
-						'type' => $term['term_type'],
-						'value' => $term['term_value']
+		
+		$query = $this->db->query ( $sql );
+		
+		foreach ( $query->rows as $enquiry_id ) {
+			$enquiry = array ();
+			$query2 = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry e LEFT JOIN " . DB_PREFIX . "customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . $enquiry_id ['enquiry_id'] . "'" );
+			$enquiry ['customer_id'] = $query2->row ['customer_id'];
+			$enquiry ['postcode'] = $query2->row ['postcode'];
+			$enquiry ['status'] = $query2->row ['status'];
+			$enquiry ['date_added'] = $query2->row ['date_added'];
+			$enquiry ['firstname'] = $query2->row ['firstname'];
+			$enquiry ['lastname'] = $query2->row ['lastname'];
+			$enquiry ['email'] = $query2->row ['email'];
+			$enquiry ['telephone'] = $query2->row ['telephone'];
+			$enquiry ['enquiry_id'] = $enquiry_id ['enquiry_id'];
+			
+			$enquiry ['terms'] = array ();
+			
+			$query2 = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry_term et WHERE et.enquiry_id='" . $enquiry_id ['enquiry_id'] . "'" );
+			
+			foreach ( $query2->rows as $term ) {
+				$enquiry ['terms'] [] = array (
+						'type' => $term ['term_type'],
+						'value' => $term ['term_value'] 
 				);
 			}
-				
-				
-			$query2 = $this->db->query("SELECT ep.*,epd.name AS name, epd.files AS files, epd.description AS description, ucd.title AS unit_title, uc.value AS unit_value FROM ".DB_PREFIX."enquiry_product ep LEFT JOIN ".DB_PREFIX."enquiry_product_description epd ON (epd.enquiry_product_id=ep.enquiry_product_id) LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = ep.unit_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) WHERE ep.enquiry_id='" . $enquiry_id['enquiry_id'] . "' LIMIT 0,5");
-				
+			
+			$query2 = $this->db->query ( "SELECT ep.*,epd.name AS name, epd.files AS files, epd.description AS description, ucd.title AS unit_title, uc.value AS unit_value FROM " . DB_PREFIX . "enquiry_product ep LEFT JOIN " . DB_PREFIX . "enquiry_product_description epd ON (epd.enquiry_product_id=ep.enquiry_product_id) LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = ep.unit_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) WHERE ep.enquiry_id='" . $enquiry_id ['enquiry_id'] . "' LIMIT 0,5" );
+			
 			if ($query2->num_rows) {
-				foreach ($query2->rows as $key=>$enquiry_product) {
-					if ($enquiry_product['product_id'])
-						$enquiry['enquiries'][$key]['link'] = $this->url->link('product/product','product_id='.$enquiry_product['product_id'],'SSL');
-						if ($enquiry_product['category_id'])
-							$enquiry['enquiries'][$key]['link'] = $this->url->link('product/category','category_id='.$enquiry_product['product_id'],'SSL');
-	
-							$enquiry['enquiries'][$key]['name'] = $enquiry_product['name'];
-							$enquiry['enquiries'][$key]['description'] = $enquiry_product['description'];
-							$enquiry['enquiries'][$key]['quantity'] = $enquiry_product['quantity'];
-							$enquiry['enquiries'][$key]['unit_title'] = $enquiry_product['unit_title'];
-							$enquiry['enquiries'][$key]['filenames'] = unserialize($enquiry_product['files']);
+				foreach ( $query2->rows as $key => $enquiry_product ) {
+					if ($enquiry_product ['product_id'])
+						$enquiry ['enquiries'] [$key] ['link'] = $this->url->link ( 'product/product', 'product_id=' . $enquiry_product ['product_id'], 'SSL' );
+					if ($enquiry_product ['category_id'])
+						$enquiry ['enquiries'] [$key] ['link'] = $this->url->link ( 'product/category', 'category_id=' . $enquiry_product ['product_id'], 'SSL' );
+					
+					$enquiry ['enquiries'] [$key] ['name'] = $enquiry_product ['name'];
+					$enquiry ['enquiries'] [$key] ['description'] = $enquiry_product ['description'];
+					$enquiry ['enquiries'] [$key] ['quantity'] = $enquiry_product ['quantity'];
+					$enquiry ['enquiries'] [$key] ['unit_title'] = $enquiry_product ['unit_title'];
+					$enquiry ['enquiries'] [$key] ['filenames'] = unserialize ( $enquiry_product ['files'] );
 				}
 			}
-				
-			$enquiries[$enquiry_id['enquiry_id']] = $enquiry;
+			
+			$enquiries [$enquiry_id ['enquiry_id']] = $enquiry;
 		}
-	
+		
 		return $enquiries;
 	}
 	public function getTotalEnquiries($data) {
-		$sql = "SELECT count(*) AS total FROM ".DB_PREFIX."enquiry e LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE 1";
-		if (isset($data['filter_name']) && $data['filter_name']){
+		$sql = "SELECT count(*) AS total FROM " . DB_PREFIX . "enquiry e LEFT JOIN " . DB_PREFIX . "customer c ON (e.customer_id = c.customer_id) WHERE 1";
+		if (isset ( $data ['filter_name'] ) && $data ['filter_name']) {
 			$sql .= " AND  (";
-			$implode = array();
-			foreach (explode(' ',$data['filter_name']) as $name) {
-				$implode[] = "(c.firstname LIKE '%".$name."%' OR c.lastname LIKE '%".$name."%' OR c.email LIKE '%".$name."%')";
+			$implode = array ();
+			foreach ( explode ( ' ', $data ['filter_name'] ) as $name ) {
+				$implode [] = "(c.firstname LIKE '%" . $name . "%' OR c.lastname LIKE '%" . $name . "%' OR c.email LIKE '%" . $name . "%')";
 			}
-			$sql .= implode(' AND ',$implode).") ";
+			$sql .= implode ( ' AND ', $implode ) . ") ";
 		}
-		$query = $this->db->query($sql);
-		return $query->row['total'];
+		$query = $this->db->query ( $sql );
+		return $query->row ['total'];
 	}
-	
-	
-
-
 }

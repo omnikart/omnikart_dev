@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class UserUpdateError extends \Exception {}
+class UserUpdateError extends \Exception {
+}

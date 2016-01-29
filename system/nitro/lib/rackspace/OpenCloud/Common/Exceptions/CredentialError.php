@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class CredentialError extends \Exception {}
+class CredentialError extends \Exception {
+}

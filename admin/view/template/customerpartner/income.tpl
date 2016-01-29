@@ -5,8 +5,10 @@
 	<div class="page-header">
 		<div class="container-fluid">
 			<div class="pull-right">
-				<a class="btn btn-danger" href="<?php echo $remove_url; ?>" data-toggle="tooltip" data-original-title="<?php echo $button_reset_filter; ?>">
-					<i class="fa fa-eraser"></i>
+				<a class="btn btn-danger" href="<?php echo $remove_url; ?>"
+					data-toggle="tooltip"
+					data-original-title="<?php echo $button_reset_filter; ?>"> <i
+					class="fa fa-eraser"></i>
 				</a>
 				<!-- <span class="label bg-primary"><?php echo $grand_total_paid; ?></span>
 				<span class="label bg-primary"><?php echo $grand_total_admin; ?></span>
@@ -23,7 +25,8 @@
 	<div class="container-fluid">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-        		<h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $heading_title; ?></h3>
+				<h3 class="panel-title">
+					<i class="fa fa-list"></i> <?php echo $heading_title; ?></h3>
 			</div>
 			<div class="panel-body">
 				<div class="well">
@@ -31,22 +34,28 @@
 						<div class="col-sm-4">
 							<div class="form-group">
 								<label class="control-label"><?php echo $text_seller_name; ?></label>
-								<input type="text" class="form-control" placeholder="<?php echo $text_seller_name ?>" name="filter_seller_name" value="<?php echo $seller_name; ?>" />
+								<input type="text" class="form-control"
+									placeholder="<?php echo $text_seller_name ?>"
+									name="filter_seller_name" value="<?php echo $seller_name; ?>" />
 							</div>
 							<div class="form-group">
 								<label class="control-label"><?php echo $text_seller_amount; ?></label>
 								<div class="input-group">
 									<span class="input-group-addon">
 										<?php echo $text_from; ?>
-									</span>
-									<input type="text" class="form-control" placeholder="<?php echo $text_from; ?>" name="filter_seller_amount_from" value="<?php echo $seller_amount_from; ?>" />
-									<span class="input-group-addon">
+									</span> <input type="text" class="form-control"
+										placeholder="<?php echo $text_from; ?>"
+										name="filter_seller_amount_from"
+										value="<?php echo $seller_amount_from; ?>" /> <span
+										class="input-group-addon">
 										<?php echo $text_to; ?>
-									</span>
-									<input type="text" class="form-control" placeholder="<?php echo $text_to ?>" name="filter_seller_amount_to" value="<?php echo $seller_amount_to; ?>" />
+									</span> <input type="text" class="form-control"
+										placeholder="<?php echo $text_to ?>"
+										name="filter_seller_amount_to"
+										value="<?php echo $seller_amount_to; ?>" />
 								</div>
 							</div>
-							
+
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -54,26 +63,34 @@
 								<div class="input-group">
 									<span class="input-group-addon">
 										<?php echo $text_from; ?>
-									</span>
-									<input type="text" class="form-control" placeholder="<?php echo $text_from; ?>" name="filter_commission_from" value="<?php echo $commission_from; ?>" />
-									<span class="input-group-addon">
+									</span> <input type="text" class="form-control"
+										placeholder="<?php echo $text_from; ?>"
+										name="filter_commission_from"
+										value="<?php echo $commission_from; ?>" /> <span
+										class="input-group-addon">
 										<?php echo $text_to; ?>
-									</span>
-									<input type="text" class="form-control" placeholder="<?php echo $text_to ?>" name="filter_commission_to" value="<?php echo $commission_to; ?>" />
+									</span> <input type="text" class="form-control"
+										placeholder="<?php echo $text_to ?>"
+										name="filter_commission_to"
+										value="<?php echo $commission_to; ?>" />
 								</div>
 							</div>
-							
+
 							<div class="form-group">
 								<label class="control-label"><?php echo $text_admin_amount; ?></label>
 								<div class="input-group">
 									<span class="input-group-addon">
 										<?php echo $text_from; ?>
-									</span>
-									<input type="text" class="form-control" placeholder="<?php echo $text_from; ?>" name="filter_admin_amount_from" value="<?php echo $admin_amount_from; ?>" />
-									<span class="input-group-addon">
+									</span> <input type="text" class="form-control"
+										placeholder="<?php echo $text_from; ?>"
+										name="filter_admin_amount_from"
+										value="<?php echo $admin_amount_from; ?>" /> <span
+										class="input-group-addon">
 										<?php echo $text_to; ?>
-									</span>
-									<input type="text" class="form-control" placeholder="<?php echo $text_to ?>" name="filter_admin_amount_to" value="<?php echo $admin_amount_to; ?>" />
+									</span> <input type="text" class="form-control"
+										placeholder="<?php echo $text_to ?>"
+										name="filter_admin_amount_to"
+										value="<?php echo $admin_amount_to; ?>" />
 								</div>
 							</div>
 							<!-- <div class="form-group">
@@ -98,12 +115,16 @@
 								<div class="input-group">
 									<span class="input-group-addon">
 										<?php echo $text_from; ?>
-									</span>
-									<input type="text" class="form-control" placeholder="<?php echo $text_from; ?>" name="filter_total_amount_from" value="<?php echo $total_amount_from; ?>" />
-									<span class="input-group-addon">
+									</span> <input type="text" class="form-control"
+										placeholder="<?php echo $text_from; ?>"
+										name="filter_total_amount_from"
+										value="<?php echo $total_amount_from; ?>" /> <span
+										class="input-group-addon">
 										<?php echo $text_to; ?>
-									</span>
-									<input type="text" class="form-control" placeholder="<?php echo $text_to ?>" name="filter_total_amount_to" value="<?php echo $total_amount_to; ?>" />
+									</span> <input type="text" class="form-control"
+										placeholder="<?php echo $text_to ?>"
+										name="filter_total_amount_to"
+										value="<?php echo $total_amount_to; ?>" />
 								</div>
 							</div>
 							<div class="form-group">
@@ -111,14 +132,16 @@
 									<?php echo $text_date_added; ?>
 								</label>
 								<div class="input-group datetime">
-									<span class="input-group-addon ">
-										<i class="fa fa-calendar"></i>
-									</span>
-									<input type="text" class="form-control datetimefrom" placeholder="<?php echo $text_from; ?>" name="filter_date_added_from" value="<?php echo $date_added_from; ?>" />
-									<span class="input-group-addon ">
-										<i class="fa fa-calendar"></i>
-									</span>
-									<input type="text" class="form-control datetimeto" placeholder="<?php echo $text_to; ?>" name="filter_date_added_to" value="<?php echo $date_added_to; ?>" />
+									<span class="input-group-addon "> <i class="fa fa-calendar"></i>
+									</span> <input type="text" class="form-control datetimefrom"
+										placeholder="<?php echo $text_from; ?>"
+										name="filter_date_added_from"
+										value="<?php echo $date_added_from; ?>" /> <span
+										class="input-group-addon "> <i class="fa fa-calendar"></i>
+									</span> <input type="text" class="form-control datetimeto"
+										placeholder="<?php echo $text_to; ?>"
+										name="filter_date_added_to"
+										value="<?php echo $date_added_to; ?>" />
 								</div>
 							</div>
 							<!-- <div class="form-group">
@@ -127,7 +150,8 @@
 								</label>
 								<input type="text" class="form-control" placeholder="<?php echo $text_commission ?>" />
 							</div> -->
-							<button class="btn btn-primary pull-right" type="button" onclick="Filter()">
+							<button class="btn btn-primary pull-right" type="button"
+								onclick="Filter()">
 								<i class="fa fa-filter"></i>
 								<?php echo $button_filter; ?>
 							</button>
@@ -138,31 +162,27 @@
 					<table class="table table-bordered table-hover">
 						<thead>
 							<tr>
-								<th class="text-left">
-									<a href="<?php echo $seller_name_url; ?>" class="<?php if(isset($order) && $order == 'c.firstname') echo $sort; ?> ">
+								<th class="text-left"><a href="<?php echo $seller_name_url; ?>"
+									class="<?php if(isset($order) && $order == 'c.firstname') echo $sort; ?> ">
 										<?php echo $text_seller_name; ?>
-									</a>
-								</th>
-								<th class="text-left">
-									<a href="<?php echo $seller_commission_url; ?>" class="<?php if(isset($order) && $order == 'cp2c.commission') echo $sort; ?> ">
+									</a></th>
+								<th class="text-left"><a
+									href="<?php echo $seller_commission_url; ?>"
+									class="<?php if(isset($order) && $order == 'cp2c.commission') echo $sort; ?> ">
 										<?php echo $text_commission; ?>
-									</a>
-								</th>
-								<th class="text-left">
-									<a href="<?php echo $total_url; ?>" class="<?php if(isset($order) && $order == 'total') echo $sort; ?> ">
+									</a></th>
+								<th class="text-left"><a href="<?php echo $total_url; ?>"
+									class="<?php if(isset($order) && $order == 'total') echo $sort; ?> ">
 										<?php echo $text_total_amount; ?>
-									</a>
-								</th>
-								<th class="text-left">
-									<a href="<?php echo $customer_url; ?>" class="<?php if(isset($order) && $order == 'customer') echo $sort; ?> ">
+									</a></th>
+								<th class="text-left"><a href="<?php echo $customer_url; ?>"
+									class="<?php if(isset($order) && $order == 'customer') echo $sort; ?> ">
 										<?php echo $text_seller_amount; ?>
-									</a>
-								</th>
-								<th class="text-left">
-									<a href="<?php echo $admin_url; ?>" class="<?php if(isset($order) && $order == 'admin') echo $sort; ?> ">
+									</a></th>
+								<th class="text-left"><a href="<?php echo $admin_url; ?>"
+									class="<?php if(isset($order) && $order == 'admin') echo $sort; ?> ">
 										<?php echo $text_admin_amount; ?>
-									</a>
-								</th>
+									</a></th>
 								<th class="text-left">
 									<!-- <a > -->
 										<?php echo $text_paid_to_seller; ?>
@@ -178,59 +198,63 @@
 								</th>
 							</tr>
 						</thead>
-						<?php if($income_details) { 
-							foreach ($income_details as $key => $income_detail) { ?>
+						<?php
+						
+if ($income_details) {
+							foreach ( $income_details as $key => $income_detail ) {
+								?>
 							<tr>
-								<td class="text-left">
-									<a href="<?php echo $income_detail['dashborad_url']; ?>" target="_blank" data-toggle="tooltip" data-original-title="<?php echo $income_detail['firstname'].$text_dashboard; ?>" >
+							<td class="text-left"><a
+								href="<?php echo $income_detail['dashborad_url']; ?>"
+								target="_blank" data-toggle="tooltip"
+								data-original-title="<?php echo $income_detail['firstname'].$text_dashboard; ?>">
 										<?php echo  $income_detail['seller_name']; ?>
-									</a>
-								</td>
-								<td class="text-left">
+									</a></td>
+							<td class="text-left">
 									<?php echo $income_detail['commission']; ?>
 								</td>
-								<td class="text-left">
+							<td class="text-left">
 									<?php echo $income_detail['total']; ?>
 								</td>
-								<td class="text-left">
+							<td class="text-left">
 									<?php echo $income_detail['seller_total']; ?>
 								</td>
-								<td class="text-left">
+							<td class="text-left">
 									<?php echo $income_detail['admin_total']; ?>
 								</td>
-								<td class="text-left">
+							<td class="text-left">
 									<?php echo $income_detail['paid_total']; ?>
 								</td>
-								<td class="text-left">
+							<td class="text-left">
 									<?php echo $income_detail['amount_to_pay']; ?>
 								</td>
-								<td class="text-center">
-									<a href="<?php echo $income_detail['pay_link']; ?>" class="btn btn-primary" <?php if($income_detail['button_status']) echo "disabled"; ?> >
+							<td class="text-center"><a
+								href="<?php echo $income_detail['pay_link']; ?>"
+								class="btn btn-primary"
+								<?php if($income_detail['button_status']) echo "disabled"; ?>>
 										<?php echo $income_detail['pay']; ?>
-									</a>
-								</td>
-							</tr>
+									</a></td>
+						</tr>
 						<?php } ?>
 							<tr>
-								<td class="text-center" colspan="2">
-									<b><?php echo $text_grand_total; ?></b>
-								</td>
-								<td>
+							<td class="text-center" colspan="2"><b><?php echo $text_grand_total; ?></b>
+							</td>
+							<td>
 									<?php echo $grand_total; ?>
 								</td>
-								<td>
+							<td>
 									<?php echo $grand_total_seller; ?>
 								</td>
-								<td>
+							<td>
 									<?php echo $grand_total_admin; ?>
 								</td>
-								<td>
+							<td>
 									<?php echo $grand_total_paid; ?>
 								</td>
-								<td>
+							<td>
 									<?php echo $grand_total_rem; ?>
 								</td>
-							</tr>
+						</tr>
 						<?php } else { ?>
 						<tr>
 							<td colspan="8" class="text-center"><?php echo $no_records; ?></td>

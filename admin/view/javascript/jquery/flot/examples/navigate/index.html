@@ -1,33 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Flot Examples: Navigation</title>
-	<link href="../examples.css" rel="stylesheet" type="text/css">
-	<style type="text/css">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Flot Examples: Navigation</title>
+<link href="../examples.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+#placeholder .button {
+	position: absolute;
+	cursor: pointer;
+}
 
-	#placeholder .button {
-		position: absolute;
-		cursor: pointer;
-	}
+#placeholder div.button {
+	font-size: smaller;
+	color: #999;
+	background-color: #eee;
+	padding: 2px;
+}
 
-	#placeholder div.button {
-		font-size: smaller;
-		color: #999;
-		background-color: #eee;
-		padding: 2px;
-	}
-	.message {
-		padding-left: 50px;
-		font-size: smaller;
-	}
-
-	</style>
-	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="../../jquery.js"></script>
-	<script language="javascript" type="text/javascript" src="../../jquery.flot.js"></script>
-	<script language="javascript" type="text/javascript" src="../../jquery.flot.navigate.js"></script>
-	<script type="text/javascript">
+.message {
+	padding-left: 50px;
+	font-size: smaller;
+}
+</style>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
+<script language="javascript" type="text/javascript"
+	src="../../jquery.js"></script>
+<script language="javascript" type="text/javascript"
+	src="../../jquery.flot.js"></script>
+<script language="javascript" type="text/javascript"
+	src="../../jquery.flot.navigate.js"></script>
+<script type="text/javascript">
 
 	$(function() {
 
@@ -139,15 +141,18 @@
 
 		<p class="message"></p>
 
-		<p>With the navigate plugin it is easy to add panning and zooming. Drag to pan, double click to zoom (or use the mouse scrollwheel).</p>
+		<p>With the navigate plugin it is easy to add panning and zooming.
+			Drag to pan, double click to zoom (or use the mouse scrollwheel).</p>
 
-		<p>The plugin fires events (useful for synchronizing several plots) and adds a couple of public methods so you can easily build a little user interface around it, like the little buttons at the top right in the plot.</p>
+		<p>The plugin fires events (useful for synchronizing several
+			plots) and adds a couple of public methods so you can easily build a
+			little user interface around it, like the little buttons at the top
+			right in the plot.</p>
 
 	</div>
 
-	<div id="footer">
-		Copyright &copy; 2007 - 2013 IOLA and Ole Laursen
-	</div>
+	<div id="footer">Copyright &copy; 2007 - 2013 IOLA and Ole
+		Laursen</div>
 
 </body>
 </html>

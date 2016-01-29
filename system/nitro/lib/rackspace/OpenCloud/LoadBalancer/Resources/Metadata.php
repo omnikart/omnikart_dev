@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP OpenCloud library.
  * 
@@ -8,31 +9,23 @@
  * @author    Glen Campbell <glen.campbell@rackspace.com>
  * @author    Jamie Hannaford <jamie.hannaford@rackspace.com>
  */
-
 namespace OpenCloud\LoadBalancer\Resources;
 
 /**
  * Sub-resource to manage Metadata
  */
-class Metadata extends SubResource 
-{
-
-    public $id;
-    public $key;
-    public $value;
-
-    protected static $json_name = 'meta';
-    protected static $json_collection_name = 'metadata';
-    protected static $url_resource = 'metadata';
-
-    protected $createKeys = array(
-        'key', 
-        'value'
-    );
-
-    public function name() 
-    {
-        return $this->key;
-    }
-
+class Metadata extends SubResource {
+	public $id;
+	public $key;
+	public $value;
+	protected static $json_name = 'meta';
+	protected static $json_collection_name = 'metadata';
+	protected static $url_resource = 'metadata';
+	protected $createKeys = array (
+			'key',
+			'value' 
+	);
+	public function name() {
+		return $this->key;
+	}
 }

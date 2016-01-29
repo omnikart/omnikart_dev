@@ -1,87 +1,109 @@
 <?php echo $header; ?><?php echo $column_left; ?>
 <div id="content">
-  <div class="page-header">
-    <div class="container-fluid">
-      <div class="pull-right">
-        <a href="<?php echo $insert; ?>" id="insert" data-toggle="tooltip" title="<?php echo $button_insert; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
-        <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
-      </div>
-      <h1><?php echo $heading_title; ?></h1>
-      <ul class="breadcrumb">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right">
+				<a href="<?php echo $insert; ?>" id="insert" data-toggle="tooltip"
+					title="<?php echo $button_insert; ?>" class="btn btn-primary"><i
+					class="fa fa-plus"></i></a>
+				<button type="button" data-toggle="tooltip"
+					title="<?php echo $button_delete; ?>" class="btn btn-danger"
+					onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;">
+					<i class="fa fa-trash-o"></i>
+				</button>
+			</div>
+			<h1><?php echo $heading_title; ?></h1>
+			<ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
         <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
         <?php } ?>
       </ul>
-    </div>
-  </div>
+		</div>
+	</div>
 
-  <div class="container-fluid">
+	<div class="container-fluid">
     <?php if ($error_warning) { ?>
-    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
+    <div class="alert alert-danger">
+			<i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
       <button type="button" class="close" data-dismiss="alert">&times;</button>
-    </div>
+		</div>
     <?php } ?>
     <?php if ($success) { ?>
-    <div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?>
+    <div class="alert alert-success">
+			<i class="fa fa-check-circle"></i> <?php echo $success; ?>
       <button type="button" class="close" data-dismiss="alert">&times;</button>
-    </div>
+		</div>
     <?php } ?>
 
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $heading_title; ?></h3>
-      </div>
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<i class="fa fa-list"></i> <?php echo $heading_title; ?></h3>
+			</div>
 
-      <div class="panel-body">
-        <div class="well">
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label class="control-label" for="input-seller"><?php echo $column_partner_name; ?></label>
-                <div class='input-group'>
-                    <input type="text" name="filter_seller" value="<?php echo $filter_seller; ?>" placeholder="<?php echo $column_partner_name; ?>" id="input-seller" class="form-control" />                                      
-                    <span class="input-group-addon"><span class="fa fa-angle-double-down"></span>
-                    </span>
-                </div>
-              </div>
+			<div class="panel-body">
+				<div class="well">
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label class="control-label" for="input-seller"><?php echo $column_partner_name; ?></label>
+								<div class='input-group'>
+									<input type="text" name="filter_seller"
+										value="<?php echo $filter_seller; ?>"
+										placeholder="<?php echo $column_partner_name; ?>"
+										id="input-seller" class="form-control" /> <span
+										class="input-group-addon"><span
+										class="fa fa-angle-double-down"></span> </span>
+								</div>
+							</div>
 
-              <div class="form-group">
-                <label class="control-label" for="input-price"><?php echo $column_price; ?></label>
-                <input type="text" name="filter_price" value="<?php echo $filter_price; ?>" placeholder="<?php echo $column_price; ?>" id="input-price" class="form-control" />
-              </div>
-            </div>
+							<div class="form-group">
+								<label class="control-label" for="input-price"><?php echo $column_price; ?></label>
+								<input type="text" name="filter_price"
+									value="<?php echo $filter_price; ?>"
+									placeholder="<?php echo $column_price; ?>" id="input-price"
+									class="form-control" />
+							</div>
+						</div>
 
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label class="control-label" for="input-name"><?php echo $column_name; ?></label>
-                <div class='input-group'>
-                    <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $column_name; ?>" id="input-name" class="form-control" />                    
-                    <span class="input-group-addon"><span class="fa fa-angle-double-down"></span>
-                    </span>
-                </div>
-              </div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label class="control-label" for="input-name"><?php echo $column_name; ?></label>
+								<div class='input-group'>
+									<input type="text" name="filter_name"
+										value="<?php echo $filter_name; ?>"
+										placeholder="<?php echo $column_name; ?>" id="input-name"
+										class="form-control" /> <span class="input-group-addon"><span
+										class="fa fa-angle-double-down"></span> </span>
+								</div>
+							</div>
 
-              <div class="form-group">
-                <label class="control-label" for="input-model"><?php echo $column_model; ?></label>
-                <div class='input-group'>
-                    <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="<?php echo $column_model; ?>" id="input-model" class="form-control" />                                   
-                    <span class="input-group-addon"><span class="fa fa-angle-double-down"></span>
-                    </span>
-                </div>
-              </div>
-            </div>
+							<div class="form-group">
+								<label class="control-label" for="input-model"><?php echo $column_model; ?></label>
+								<div class='input-group'>
+									<input type="text" name="filter_model"
+										value="<?php echo $filter_model; ?>"
+										placeholder="<?php echo $column_model; ?>" id="input-model"
+										class="form-control" /> <span class="input-group-addon"><span
+										class="fa fa-angle-double-down"></span> </span>
+								</div>
+							</div>
+						</div>
 
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label class="control-label" for="input-quantity"><?php echo $column_quantity; ?></label>
-                <input type='text' name="filter_quantity" value="<?php echo $filter_quantity; ?>" placeholder="<?php echo $column_quantity; ?>" id="input-quantity" class="form-control" />
-              </div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label class="control-label" for="input-quantity"><?php echo $column_quantity; ?></label>
+								<input type='text' name="filter_quantity"
+									value="<?php echo $filter_quantity; ?>"
+									placeholder="<?php echo $column_quantity; ?>"
+									id="input-quantity" class="form-control" />
+							</div>
 
-              <div class="form-group">
-                <label class="control-label" for="input-quantity"><?php echo $column_status; ?></label>
+							<div class="form-group">
+								<label class="control-label" for="input-quantity"><?php echo $column_status; ?></label>
 
-                <select name="filter_status" class="form-control">
-                  <option value="*"></option>
+								<select name="filter_status" class="form-control">
+									<option value="*"></option>
                   <?php if ($filter_status) { ?>
                   <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
                   <?php } else { ?>
@@ -93,125 +115,152 @@
                   <option value="0"><?php echo $text_disabled; ?></option>
                   <?php } ?>
                 </select>
-              </div>
+							</div>
 
-              <button type="button" onclick="filter();" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
-            </div>
+							<button type="button" onclick="filter();"
+								class="btn btn-primary pull-right">
+								<i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+						</div>
 
-          </div>
-        </div>
+					</div>
+				</div>
 
-        <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-product">
-          <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-    			        <td class="text-left"><?php if ($sort == 'c.customer_id') { ?>
-                    <a href="<?php echo $sort_seller_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_partner_name; ?></a>
+				<form action="<?php echo $delete; ?>" method="post"
+					enctype="multipart/form-data" id="form-product">
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<td width="1" style="text-align: center;"><input
+										type="checkbox"
+										onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+									<td class="text-left"><?php if ($sort == 'c.customer_id') { ?>
+                    <a href="<?php echo $sort_seller_name; ?>"
+										class="<?php echo strtolower($order); ?>"><?php echo $column_partner_name; ?></a>
                     <?php } else { ?>
                     <a href="<?php echo $sort_seller_name; ?>"><?php echo $column_partner_name; ?></a>
                     <?php } ?></td>
-                  <td class="text-center"><?php echo $column_image; ?></td>
-                  <td class="text-left"><?php if ($sort == 'pd.name') { ?>
-                    <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
+									<td class="text-center"><?php echo $column_image; ?></td>
+									<td class="text-left"><?php if ($sort == 'pd.name') { ?>
+                    <a href="<?php echo $sort_name; ?>"
+										class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
                     <?php } else { ?>
                     <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                     <?php } ?></td>
-                  <td class="text-left"><?php if ($sort == 'p.model') { ?>
-                    <a href="<?php echo $sort_model; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_model; ?></a>
+									<td class="text-left"><?php if ($sort == 'p.model') { ?>
+                    <a href="<?php echo $sort_model; ?>"
+										class="<?php echo strtolower($order); ?>"><?php echo $column_model; ?></a>
                     <?php } else { ?>
                     <a href="<?php echo $sort_model; ?>"><?php echo $column_model; ?></a>
                     <?php } ?></td>
-                  <td class="text-left"><?php if ($sort == 'p.price') { ?>
-                    <a href="<?php echo $sort_price; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_price; ?></a>
+									<td class="text-left"><?php if ($sort == 'p.price') { ?>
+                    <a href="<?php echo $sort_price; ?>"
+										class="<?php echo strtolower($order); ?>"><?php echo $column_price; ?></a>
                     <?php } else { ?>
                     <a href="<?php echo $sort_price; ?>"><?php echo $column_price; ?></a>
                     <?php } ?></td>
-                  <td class="text-right"><?php if ($sort == 'p.quantity') { ?>
-                    <a href="<?php echo $sort_quantity; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_quantity; ?></a>
+									<td class="text-right"><?php if ($sort == 'p.quantity') { ?>
+                    <a href="<?php echo $sort_quantity; ?>"
+										class="<?php echo strtolower($order); ?>"><?php echo $column_quantity; ?></a>
                     <?php } else { ?>
                     <a href="<?php echo $sort_quantity; ?>"><?php echo $column_quantity; ?></a>
                     <?php } ?></td>
-                  <td class="text-left"><?php if ($sort == 'p.product_id') { ?>
-                    <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
+									<td class="text-left"><?php if ($sort == 'p.product_id') { ?>
+                    <a href="<?php echo $sort_status; ?>"
+										class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
                     <?php } else { ?>
                     <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
                     <?php } ?></td>
-                  <td class="text-right"><?php echo $column_action; ?></td>
-                </tr>
-              </thead>
-              <tbody>
+									<td class="text-right"><?php echo $column_action; ?></td>
+								</tr>
+							</thead>
+							<tbody>
                 <?php if ($products) { ?>
                 <?php foreach ($products as $product) { ?>
                 <tr>
-                  <td style="text-align: center;"><?php if ($product['selected']) { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $product['product_id']; ?>" checked="checked" />
+									<td style="text-align: center;"><?php if ($product['selected']) { ?>
+                    <input type="checkbox" name="selected[]"
+										value="<?php echo $product['product_id']; ?>"
+										checked="checked" />
                     <?php } else { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $product['product_id']; ?>" />
+                    <input type="checkbox" name="selected[]"
+										value="<?php echo $product['product_id']; ?>" />
                     <?php } ?></td>
-    			        <td class="text-left">
+									<td class="text-left">
                     <?php if($partners){ ?>
                       <div class="form-group">
-                        <div class="input-group"> 
-                          <span class="input-group-addon" style="width: auto;" data-toggle="tooltip" title="<?php echo $text_seller_info; ?>"><span class="fa fa-user"></span></span>
-                          <select class="form-control partner_change">
-                            <option></option>
+											<div class="input-group">
+												<span class="input-group-addon" style="width: auto;"
+													data-toggle="tooltip"
+													title="<?php echo $text_seller_info; ?>"><span
+													class="fa fa-user"></span></span> <select
+													class="form-control partner_change">
+													<option></option>
                           <?php foreach($partners as $partner){ ?>
                             <?php if($product['customer_id']==$partner['customer_id']){ ?>
-                              <option value="<?php echo $partner['customer_id'] ;?>" selected ><?php echo $partner['name'] ;?></option>
+                              <option
+														value="<?php echo $partner['customer_id'] ;?>" selected><?php echo $partner['name'] ;?></option>
                             <?php }else{ ?>
-                              <option value="<?php echo $partner['customer_id'] ;?>" ><?php echo $partner['name'] ;?></option>
+                              <option
+														value="<?php echo $partner['customer_id'] ;?>"><?php echo $partner['name'] ;?></option>
                             <?php } ?>
                           <?php } ?>
                           </select>
-                        </div>
-                      </div>
+											</div>
+										</div>
                     <?php } ?>
                   </td>
-                  <td class="text-center"><img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>" style="padding: 1px; border: 1px solid #DDDDDD;" /></td>
-                  <td class="text-left"><?php echo $product['name']; ?></td>
-                  <td class="text-left"><?php echo $product['model']; ?></td>
-                  <td class="text-left"><?php if ($product['special']) { ?>
-                    <span style="text-decoration: line-through;"><?php echo $product['price']; ?></span><br/>
-                    <span class="text-danger"><?php echo $product['special']; ?></span>
+									<td class="text-center"><img
+										src="<?php echo $product['image']; ?>"
+										alt="<?php echo $product['name']; ?>"
+										style="padding: 1px; border: 1px solid #DDDDDD;" /></td>
+									<td class="text-left"><?php echo $product['name']; ?></td>
+									<td class="text-left"><?php echo $product['model']; ?></td>
+									<td class="text-left"><?php if ($product['special']) { ?>
+                    <span style="text-decoration: line-through;"><?php echo $product['price']; ?></span><br />
+										<span class="text-danger"><?php echo $product['special']; ?></span>
                     <?php } else { ?>
                     <?php echo $product['price']; ?>
                     <?php } ?></td>
-                  <td class="text-right"><?php if ($product['quantity'] <= 0) { ?>
+									<td class="text-right"><?php if ($product['quantity'] <= 0) { ?>
                     <span class="label label-warning"><?php echo $product['quantity']; ?></span>
                     <?php } elseif ($product['quantity'] <= 5) { ?>
                     <span class="label label-danger"><?php echo $product['quantity']; ?></span>
                     <?php } else { ?>
                     <span class="label label-success"><?php echo $product['quantity']; ?></span>
                     <?php } ?></td>
-                  <td class="text-left">
-                    <a data-toggle="tooltip" title="<?php echo $text_approve; ?>" class="btn btn-success cp-pro-status" <?php echo $product['status'] ? "disabled" : ""; ?> cp-pro-id="<?php echo $product['product_id']?>"><i class="fa fa-thumbs-o-up"></i></a>
-                  </td>
-                  <td class="text-right">
+									<td class="text-left"><a data-toggle="tooltip"
+										title="<?php echo $text_approve; ?>"
+										class="btn btn-success cp-pro-status"
+										<?php echo $product['status'] ? "disabled" : ""; ?>
+										cp-pro-id="<?php echo $product['product_id']?>"><i
+											class="fa fa-thumbs-o-up"></i></a></td>
+									<td class="text-right">
                     <?php	foreach ($product['action'] as $action) { ?>
-                      <a href="<?php echo $action['href']; ?>" data-toggle="tooltip" title="<?php echo $action['text']; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+                      <a href="<?php echo $action['href']; ?>"
+										data-toggle="tooltip" title="<?php echo $action['text']; ?>"
+										class="btn btn-primary"><i class="fa fa-pencil"></i></a>
                     <?php } ?>
                   </td>
-                </tr>
+								</tr>
                 <?php } ?>
                 <?php } else { ?>
                 <tr>
-                  <td class="text-center" colspan="9"><?php echo $text_no_results; ?></td>
-                </tr>
+									<td class="text-center" colspan="9"><?php echo $text_no_results; ?></td>
+								</tr>
                 <?php } ?>
               </tbody>
-        </table>
-        </div>
-      </form>       
-         
-    <div class="row">
-      <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
-      <div class="col-sm-6 text-right"><?php echo $results; ?></div>
-    </div>
-  </div>
-</div>
-<script type="text/javascript"><!--
+						</table>
+					</div>
+				</form>
+
+				<div class="row">
+					<div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
+					<div class="col-sm-6 text-right"><?php echo $results; ?></div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript"><!--
 function filter() {
 	url = 'index.php?route=customerpartner/product&token=<?php echo $token; ?>';
 	
@@ -253,15 +302,15 @@ function filter() {
 
 	location = url;
 }
-//--></script> 
-<script type="text/javascript"><!--
+//--></script>
+		<script type="text/javascript"><!--
 $('#form input').keydown(function(e) {
 	if (e.keyCode == 13) {
 		filter();
 	}
 });
-//--></script> 
-<script type="text/javascript"><!--
+//--></script>
+		<script type="text/javascript"><!--
 $('input[name=\'filter_name\']').autocomplete({
 	delay: 0,
 	source: function(request, response) {
@@ -370,7 +419,7 @@ $('.partner_change').on('change',function(){
 });
 
 //--></script>
-<script><!--//
+		<script><!--//
 (function($wk_jq){
 	$wk_jq('.cp-pro-status').click(function(){
 		if(confirm("<?php echo $text_confirm_approve; ?>")){

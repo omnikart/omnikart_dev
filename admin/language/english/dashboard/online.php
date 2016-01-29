@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title'] = 'People Online';
+$_ ['heading_title'] = 'People Online';
 
 // Text
-$_['text_view']     = 'View more...';
+$_ ['text_view'] = 'View more...';

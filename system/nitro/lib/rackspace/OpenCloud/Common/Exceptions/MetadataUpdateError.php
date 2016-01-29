@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class MetadataUpdateError extends \Exception {}
+class MetadataUpdateError extends \Exception {
+}

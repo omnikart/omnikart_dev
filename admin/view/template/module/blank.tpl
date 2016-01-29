@@ -1,74 +1,89 @@
 <?php echo $header; ?><?php echo $column_left; ?>
 <div id="content">
-  <div class="page-header">
-    <div class="container-fluid">
-      <div class="pull-right">
-        <button type="submit" form="form-blank" data-toggle="tooltip" title="Save" class="btn btn-primary"><i class="fa fa-save"></i></button>
-        <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="Cancel" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
-      <h1>Blank Space</h1>
-      <ul class="breadcrumb">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right">
+				<button type="submit" form="form-blank" data-toggle="tooltip"
+					title="Save" class="btn btn-primary">
+					<i class="fa fa-save"></i>
+				</button>
+				<a href="<?php echo $cancel; ?>" data-toggle="tooltip"
+					title="Cancel" class="btn btn-default"><i class="fa fa-reply"></i></a>
+			</div>
+			<h1>Blank Space</h1>
+			<ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
         <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
         <?php } ?>
       </ul>
-    </div>
-  </div>
-  <div class="container-fluid">
+		</div>
+	</div>
+	<div class="container-fluid">
     <?php if ($error_warning) { ?>
-    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
+    <div class="alert alert-danger">
+			<i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
       <button type="button" class="close" data-dismiss="alert">&times;</button>
-    </div>
+		</div>
     <?php } ?>
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-pencil"></i> Edit</h3>
-      </div>
-      <div class="panel-body">
-        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-blank" class="form-horizontal">
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-name">Name</label>
-            <div class="col-sm-10">
-              <input type="text" name="name" value="<?php echo $name; ?>" placeholder="Name" id="input-name" class="form-control" />
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<i class="fa fa-pencil"></i> Edit
+				</h3>
+			</div>
+			<div class="panel-body">
+				<form action="<?php echo $action; ?>" method="post"
+					enctype="multipart/form-data" id="form-blank"
+					class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-name">Name</label>
+						<div class="col-sm-10">
+							<input type="text" name="name" value="<?php echo $name; ?>"
+								placeholder="Name" id="input-name" class="form-control" />
               <?php if ($error_name) { ?>
               <div class="text-danger"><?php echo $error_name; ?></div>
               <?php } ?>
             </div>
-          </div>        
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-width">Width</label>
-            <div class="col-sm-10">
-              <input type="text" name="width" value="<?php echo $width; ?>" placeholder="<?php echo $entry_width; ?>" id="input-width" class="form-control" />
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-width">Width</label>
+						<div class="col-sm-10">
+							<input type="text" name="width" value="<?php echo $width; ?>"
+								placeholder="<?php echo $entry_width; ?>" id="input-width"
+								class="form-control" />
               <?php if ($error_width) { ?>
               <div class="text-danger"><?php echo $error_width; ?></div>
               <?php } ?>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-height">Height</label>
-            <div class="col-sm-10">
-              <input type="text" name="height" value="<?php echo $height; ?>" placeholder="<?php echo $entry_height; ?>" id="input-height" class="form-control" />
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-height">Height</label>
+						<div class="col-sm-10">
+							<input type="text" name="height" value="<?php echo $height; ?>"
+								placeholder="<?php echo $entry_height; ?>" id="input-height"
+								class="form-control" />
               <?php if ($error_height) { ?>
               <div class="text-danger"><?php echo $error_height; ?></div>
               <?php } ?>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-status">Status</label>
-            <div class="col-sm-10">
-              <select name="status" id="input-status" class="form-control">
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="input-status">Status</label>
+						<div class="col-sm-10">
+							<select name="status" id="input-status" class="form-control">
                 <?php if ($status) { ?>
                 <option value="1" selected="selected">Disabled</option>
-                <option value="0">Enabled</option>
+								<option value="0">Enabled</option>
                 <?php } else { ?>
                 <option value="1">Enabled</option>
-                <option value="0" selected="selected">Disabled</option>
+								<option value="0" selected="selected">Disabled</option>
                 <?php } ?>
               </select>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
 <?php echo $footer; ?>

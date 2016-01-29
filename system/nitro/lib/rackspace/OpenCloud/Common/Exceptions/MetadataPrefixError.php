@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class MetadataPrefixError extends \Exception {}
+class MetadataPrefixError extends \Exception {
+}

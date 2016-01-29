@@ -1,17 +1,18 @@
 <form method="post" enctype="multipart/form-data" id="form-attribute">
-<div class="table-responsive">
-     <table  class="table table-bordered table-hover"   border="1px solid black";>
-		 <thead>
-	 		<tr>
-	 		<th></th> 
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover"
+			border="1px solid black";>
+			<thead>
+				<tr>
+					<th></th> 
 	 		<?php if ($agnames) { ?>
         				<?php foreach($agnames as $key =>$ag) { ?>
 							<th colspan="<?php echo count($ag['a'] ); ?>" class="text-center"><?php echo $ag['name'] ;?></th>
 			 			<?php } ?>
         		  <?php } ?>
 			      </tr>
-			      <tr>
-			      <th>Product Name </th>
+				<tr>
+					<th>Product Name</th>
 			         <?php if ($agnames) { ?>
 			          	<?php foreach($agnames as $ag) { ?>
     	      		 	 <?php foreach($ag['a'] as $key => $a) {  ?>
@@ -20,22 +21,30 @@
         		  	<?php } ?>
         		  <?php } ?>	
                  </tr>
-			 	</thead>
-			 <tbody>
+			</thead>
+			<tbody>
 				 <?php foreach($products as $product_id => $product) { ?>
 					<tr>
-					  <td><?php echo $product['name']?> <input type="hidden" name="product[<?php echo $product_id; ?>][product_id]" value="<?php echo $product_id; ?>" /> </td>
+					<td><?php echo $product['name']?> <input type="hidden"
+						name="product[<?php echo $product_id; ?>][product_id]"
+						value="<?php echo $product_id; ?>" /></td>
 						 <?php if ($product['attributes']) { ?>
 							<?php foreach($agnames as $ag) { ?>
     	      					<?php foreach($ag['a'] as $a) {  ?>
-    		  						 <td> <input type="hidden" name="product[<?php echo $product_id?>][product_attribute][<?php echo $a['attribute_id']; ?>][attribute_id]" value="<?php echo $a['attribute_id']; ?>" />
+    		  						 <td><input type="hidden"
+						name="product[<?php echo $product_id?>][product_attribute][<?php echo $a['attribute_id']; ?>][attribute_id]"
+						value="<?php echo $a['attribute_id']; ?>" />
     		  						 		<?php if (isset($product['attributes'][$a['attribute_id']]['product_attribute_description'])) { ?>
     		  						 		<?php foreach ($product['attributes'][$a['attribute_id']]['product_attribute_description'] as $key => $desc) { ?>
-    		  						 		 <input type="text" name="product[<?php echo $product_id?>][product_attribute][<?php echo $a['attribute_id']; ?>][product_attribute_description][<?php echo $key; ?>][text]" value="<?php echo $desc['text']?>"/>
+    		  						 		 <input type="text"
+						name="product[<?php echo $product_id?>][product_attribute][<?php echo $a['attribute_id']; ?>][product_attribute_description][<?php echo $key; ?>][text]"
+						value="<?php echo $desc['text']?>" />
     		  						 		 <?php } ?> 
     		  						 	<?php } else { ?>
     		  						 		<?php foreach ($language_ids as $language_id) { ?>
-    		  						 	   		<input type="text" name="product[<?php echo $product_id?>][product_attribute][<?php echo $a['attribute_id']; ?>][product_attribute_description][<?php echo $language_id; ?>][text]" value=""/>
+    		  						 	   		<input type="text"
+						name="product[<?php echo $product_id?>][product_attribute][<?php echo $a['attribute_id']; ?>][product_attribute_description][<?php echo $language_id; ?>][text]"
+						value="" />
     		  						 	   	<?php } ?>
     		  						 	 <?php } ?>
     		  						 </td>
@@ -45,10 +54,10 @@
 					 </tr>
 				 <?php } ?>
 			 </tbody>
-			 </table>
-			 </div>
-			 </form> 
-	 					
+		</table>
+	</div>
+</form>
+
 <script type="text/javascript"><!--
  
  function productUpdates() {
@@ -63,4 +72,3 @@
  }
  
 //--></script>
-			 
