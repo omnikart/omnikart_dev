@@ -5,9 +5,6 @@ namespace OpenCloud\CloudMonitoring\Resource;
 /**
  * ResourceInterface interface.
  */
-interface ResourceInterface
-{
-
-    public function baseUrl();
-
+interface ResourceInterface {
+	public function baseUrl();
 }

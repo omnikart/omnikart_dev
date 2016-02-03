@@ -5,367 +5,345 @@
  * @author http://www.pavothemes.com
  * @copyright	Copyright (C) September 2013 PavoThemes.com <@emai:pavothemes@gmail.com>.All rights reserved.
  * @license		GNU General Public License version 2
-*******************************************************/
-
-class ModelMenuMegamenu extends Model { 
+ *******************************************************/
+class ModelMenuMegamenu extends Model {
 	/**
-	 * @var Array $children as collections of childrent menus 
-	 * 
-	 * @accesss protected
+	 *
+	 * @var Array $children as collections of childrent menus
+	 *     
+	 * @access s protected
 	 */
-	protected $children = array();
+	protected $children = array ();
 	
 	/**
 	 * Get menu information by id
 	 */
-	public function getInfo( $id ){	
-		$sql = ' SELECT m.*, md.title,md.description FROM ' . DB_PREFIX . 'megamenu m LEFT JOIN '
-							.DB_PREFIX.'megamenu_description md ON m.megamenu_id=md.megamenu_id AND language_id='.(int)$this->config->get('config_language_id') ;
-	
-		$sql .= ' WHERE m.megamenu_id='.(int)$id;						
-	
-		$query = $this->db->query( $sql );
+	public function getInfo($id) {
+		$sql = ' SELECT m.*, md.title,md.description FROM ' . DB_PREFIX . 'megamenu m LEFT JOIN ' . DB_PREFIX . 'megamenu_description md ON m.megamenu_id=md.megamenu_id AND language_id=' . ( int ) $this->config->get ( 'config_language_id' );
+		
+		$sql .= ' WHERE m.megamenu_id=' . ( int ) $id;
+		
+		$query = $this->db->query ( $sql );
 		return $query->row;
 	}
 	
 	/**
 	 * get menu description by id
 	 */
-	public function getMenuDescription( $id ){
-		$sql = 'SELECT * FROM '.DB_PREFIX."megamenu_description WHERE megamenu_id=".$id;
-		$query = $this->db->query( $sql );
+	public function getMenuDescription($id) {
+		$sql = 'SELECT * FROM ' . DB_PREFIX . "megamenu_description WHERE megamenu_id=" . $id;
+		$query = $this->db->query ( $sql );
 		return $query->rows;
 	}
-
-
+	
 	/**
-	 * get get all  Menu Childrens by Id
+	 * get get all Menu Childrens by Id
 	 */
-	public function getChild( $id=null, $store_id = 0){
-		$sql = ' SELECT m.*, md.title,md.description FROM ' . DB_PREFIX . 'megamenu m LEFT JOIN '
-								.DB_PREFIX.'megamenu_description md ON m.megamenu_id=md.megamenu_id AND language_id='.(int)$this->config->get('config_language_id') ;
-
-        	$sql .= ' WHERE store_id='.(int)$store_id;
-                if( $id != null ) {
-			$sql .= ' AND parent_id='.(int)$id;
+	public function getChild($id = null, $store_id = 0) {
+		$sql = ' SELECT m.*, md.title,md.description FROM ' . DB_PREFIX . 'megamenu m LEFT JOIN ' . DB_PREFIX . 'megamenu_description md ON m.megamenu_id=md.megamenu_id AND language_id=' . ( int ) $this->config->get ( 'config_language_id' );
+		
+		$sql .= ' WHERE store_id=' . ( int ) $store_id;
+		if ($id != null) {
+			$sql .= ' AND parent_id=' . ( int ) $id;
 		}
 		$sql .= ' ORDER BY `position`  ';
-		$query = $this->db->query( $sql );						
+		$query = $this->db->query ( $sql );
 		return $query->rows;
 	}
-
+	
 	/**
 	 * whethere parent has menu childrens
 	 */
-	public function hasChild( $id ){
-		return isset($this->children[$id]);
-	}	
+	public function hasChild($id) {
+		return isset ( $this->children [$id] );
+	}
 	
 	/**
 	 * get collection of menu childrens by parent ID.
 	 */
-	public function getNodes( $id ){
-		return $this->children[$id];
+	public function getNodes($id) {
+		return $this->children [$id];
 	}
-
-	//start fix delete tree
+	
+	// start fix delete tree
 	/**
 	 * delete mega menu data by id
-	 */ 
-	public function delete( $id, $store_id){
-		$childs = $this->getChild( null, $store_id );
-		foreach($childs as $child ){
-			$this->children[$child['parent_id']][] = $child;	
+	 */
+	public function delete($id, $store_id) {
+		$childs = $this->getChild ( null, $store_id );
+		foreach ( $childs as $child ) {
+			$this->children [$child ['parent_id']] [] = $child;
 		}
-		$this->recursiveDelete($id, $store_id); 
+		$this->recursiveDelete ( $id, $store_id );
 	}
 	/**
 	 * recursive delete tree
-	 */ 
-	public function recursiveDelete($parent_id, $store_id)
-	{
-		$sql = " DELETE FROM ".DB_PREFIX ."megamenu_description WHERE megamenu_id=".(int)$parent_id .";";
-		$this->db->query($sql);
-		$sql = " DELETE FROM ".DB_PREFIX ."megamenu WHERE store_id = ".$store_id." AND megamenu_id=".(int)$parent_id .";";
-		$this->db->query($sql);
-
-		if( $this->hasChild($parent_id) ){
-			$data = $this->getNodes( $parent_id );
-			foreach( $data as $menu ){
-				if($menu['megamenu_id'] > 1) {
-					 $this->recursiveDelete( $menu['megamenu_id'], $store_id );
-				}	
+	 */
+	public function recursiveDelete($parent_id, $store_id) {
+		$sql = " DELETE FROM " . DB_PREFIX . "megamenu_description WHERE megamenu_id=" . ( int ) $parent_id . ";";
+		$this->db->query ( $sql );
+		$sql = " DELETE FROM " . DB_PREFIX . "megamenu WHERE store_id = " . $store_id . " AND megamenu_id=" . ( int ) $parent_id . ";";
+		$this->db->query ( $sql );
+		
+		if ($this->hasChild ( $parent_id )) {
+			$data = $this->getNodes ( $parent_id );
+			foreach ( $data as $menu ) {
+				if ($menu ['megamenu_id'] > 1) {
+					$this->recursiveDelete ( $menu ['megamenu_id'], $store_id );
+				}
 			}
 		}
 	}
-	//end fix delete tree
+	// end fix delete tree
 	
 	/**
 	 * Render Tree Menu by ID
 	 */
-	public function getTree( $id=null, $store_id = 0 , $selected ){
-		$childs = $this->getChild( $id, $store_id );
-		foreach($childs as $child ){
-			$this->children[$child['parent_id']][] = $child;	
+	public function getTree($id = null, $store_id = 0, $selected) {
+		$childs = $this->getChild ( $id, $store_id );
+		foreach ( $childs as $child ) {
+			$this->children [$child ['parent_id']] [] = $child;
 		}
-		$parent = 1 ;
-		$output = $this->genTree( $parent, 1, $store_id , $selected );
+		$parent = 1;
+		$output = $this->genTree ( $parent, 1, $store_id, $selected );
 		return $output;
 	}
-
-	
-
-	public function genTree( $parent, $level, $store_id = 0, $selected=0 ){
-		if( $this->hasChild($parent) ){
-			$data = $this->getNodes( $parent );
-			$t = $level == 1?" sortable":"";
-			$output = '<ol class="level'.$level. $t.' ">';
-
-			$store = ($store_id > 0)?'&store_id='.$store_id:'';
-
-			foreach( $data as $menu ){
-				$url  = $this->url->link('module/pavmegamenu', 'id='.$menu['megamenu_id'].$store.'&token=' . $this->session->data['token'], 'SSL') ;
-				$cls = $menu['megamenu_id'] == $selected ? 'class="active"':"";
-				$output .='<li id="list_'.$menu['megamenu_id'].'" '.$cls.' >
-				<div><span class="disclose"><span></span></span>'.($menu['title']?$menu['title']:"").' (ID:'.$menu['megamenu_id'].') <a class="quickedit" rel="id_'.$menu['megamenu_id'].'" href="'.$url .'">E</a><span class="quickdel" rel="id_'.$menu['megamenu_id'].'">D</span></div>';
-				if($menu['megamenu_id'] > 1) {
-					$output .= $this->genTree( $menu['megamenu_id'], $level+1, $store_id, $selected );
+	public function genTree($parent, $level, $store_id = 0, $selected = 0) {
+		if ($this->hasChild ( $parent )) {
+			$data = $this->getNodes ( $parent );
+			$t = $level == 1 ? " sortable" : "";
+			$output = '<ol class="level' . $level . $t . ' ">';
+			
+			$store = ($store_id > 0) ? '&store_id=' . $store_id : '';
+			
+			foreach ( $data as $menu ) {
+				$url = $this->url->link ( 'module/pavmegamenu', 'id=' . $menu ['megamenu_id'] . $store . '&token=' . $this->session->data ['token'], 'SSL' );
+				$cls = $menu ['megamenu_id'] == $selected ? 'class="active"' : "";
+				$output .= '<li id="list_' . $menu ['megamenu_id'] . '" ' . $cls . ' >
+				<div><span class="disclose"><span></span></span>' . ($menu ['title'] ? $menu ['title'] : "") . ' (ID:' . $menu ['megamenu_id'] . ') <a class="quickedit" rel="id_' . $menu ['megamenu_id'] . '" href="' . $url . '">E</a><span class="quickdel" rel="id_' . $menu ['megamenu_id'] . '">D</span></div>';
+				if ($menu ['megamenu_id'] > 1) {
+					$output .= $this->genTree ( $menu ['megamenu_id'], $level + 1, $store_id, $selected );
 				}
 				$output .= '</li>';
 			}
 			$output .= '</ol>';
 			return $output;
 		}
-		return ;
+		return;
 	}
-
+	
 	/**
 	 * render dropdown menu
 	 */
-	public function getDropdown( $id=null, $selected=1, $store_id = 0  ){
-		$this->children = array();
-		$childs = $this->getChild( $id, $store_id );
-		foreach($childs as $child ){
-			$this->children[$child['parent_id']][] = $child;	
+	public function getDropdown($id = null, $selected = 1, $store_id = 0) {
+		$this->children = array ();
+		$childs = $this->getChild ( $id, $store_id );
+		foreach ( $childs as $child ) {
+			$this->children [$child ['parent_id']] [] = $child;
 		}
 		
 		$output = '<select class="form-control" name="megamenu[parent_id]" >';
-		$output .='<option value="1">ROOT</option>';	
-		$output .= $this->genOption( 1 ,1, $selected );
+		$output .= '<option value="1">ROOT</option>';
+		$output .= $this->genOption ( 1, 1, $selected );
 		$output .= '</select>';
-		return $output ;
+		return $output;
 	}
-
+	
 	/**
 	 * render option of dropdown as subs
 	 */
-	public function genOption( $parent, $level=0, $selected){
+	public function genOption($parent, $level = 0, $selected) {
 		$output = '';
-		if( $this->hasChild($parent) ){
-			$data = $this->getNodes( $parent );
+		if ($this->hasChild ( $parent )) {
+			$data = $this->getNodes ( $parent );
 			
-			foreach( $data as $menu ){
-				$select = $selected == $menu['megamenu_id'] ? 'selected="selected"':"";
-				$output .= '<option value="'.$menu['megamenu_id'].'" '.$select.'>'.str_repeat("-",$level) ." ".$menu['title'].' (ID:'.$menu['megamenu_id'].')</option>';
-				$output .= $this->genOption(  $menu['megamenu_id'],$level+1, $selected );
-			}				
+			foreach ( $data as $menu ) {
+				$select = $selected == $menu ['megamenu_id'] ? 'selected="selected"' : "";
+				$output .= '<option value="' . $menu ['megamenu_id'] . '" ' . $select . '>' . str_repeat ( "-", $level ) . " " . $menu ['title'] . ' (ID:' . $menu ['megamenu_id'] . ')</option>';
+				$output .= $this->genOption ( $menu ['megamenu_id'], $level + 1, $selected );
+			}
 		}
 		
 		return $output;
 	}
-
+	
 	/**
 	 * Mass Update Data for list of childrens by prent IDs
 	 */
-	public function massUpdate( $data, $root ){
-		$child = array();
-		foreach( $data as $id => $parentId ){
-			if( $parentId <=0 ){
+	public function massUpdate($data, $root) {
+		$child = array ();
+		foreach ( $data as $id => $parentId ) {
+			if ($parentId <= 0) {
 				$parentId = $root;
 			}
-			$child[$parentId][] = $id;
+			$child [$parentId] [] = $id;
 		}
 		
-		foreach( $child as $parentId => $menus ){
+		foreach ( $child as $parentId => $menus ) {
 			$i = 1;
-			foreach( $menus as $menuId ){
-				$sql = " UPDATE  ". DB_PREFIX . "megamenu SET parent_id=".(int)$parentId.', position='.$i.' WHERE megamenu_id='.(int)$menuId;
-				$this->db->query( $sql );
-				$i++;
+			foreach ( $menus as $menuId ) {
+				$sql = " UPDATE  " . DB_PREFIX . "megamenu SET parent_id=" . ( int ) $parentId . ', position=' . $i . ' WHERE megamenu_id=' . ( int ) $menuId;
+				$this->db->query ( $sql );
+				$i ++;
 			}
 		}
 	}
 	
-	
-	//start import category
-	public function checkExitItemMenu($category, $store_id){
-		$query = $this->db->query("SELECT megamenu_id FROM ".DB_PREFIX."megamenu WHERE store_id = ".$store_id." AND `type`='category' AND item=".$category['category_id']);
+	// start import category
+	public function checkExitItemMenu($category, $store_id) {
+		$query = $this->db->query ( "SELECT megamenu_id FROM " . DB_PREFIX . "megamenu WHERE store_id = " . $store_id . " AND `type`='category' AND item=" . $category ['category_id'] );
 		return $query->num_rows;
 	}
 	public function deletecategories($store_id) {
-		$query = $this->db->query("SELECT megamenu_id FROM ".DB_PREFIX."megamenu WHERE store_id = ".$store_id);
+		$query = $this->db->query ( "SELECT megamenu_id FROM " . DB_PREFIX . "megamenu WHERE store_id = " . $store_id );
 		if ($query->num_rows) {
-			foreach ($query->rows as $row) {
-				$this->db->query( "DELETE FROM ".DB_PREFIX ."megamenu_description WHERE megamenu_id = ".$row['megamenu_id'] );
+			foreach ( $query->rows as $row ) {
+				$this->db->query ( "DELETE FROM " . DB_PREFIX . "megamenu_description WHERE megamenu_id = " . $row ['megamenu_id'] );
 			}
 		}
-		$this->db->query( "DELETE FROM ".DB_PREFIX ."megamenu WHERE store_id = ".$store_id );
+		$this->db->query ( "DELETE FROM " . DB_PREFIX . "megamenu WHERE store_id = " . $store_id );
 	}
-
-	public function importCategories($store_id = 0){
-		$sql = "SELECT cd.`name`,c.* FROM ".DB_PREFIX ."category c
-				LEFT JOIN ".DB_PREFIX ."category_description cd ON c.category_id = cd.category_id
-				WHERE  cd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+	public function importCategories($store_id = 0) {
+		$sql = "SELECT cd.`name`,c.* FROM " . DB_PREFIX . "category c
+				LEFT JOIN " . DB_PREFIX . "category_description cd ON c.category_id = cd.category_id
+				WHERE  cd.language_id = '" . ( int ) $this->config->get ( 'config_language_id' ) . "'
 				ORDER BY parent_id ASC";
-		$query = $this->db->query( $sql );
-		if($query->num_rows){
+		$query = $this->db->query ( $sql );
+		if ($query->num_rows) {
 			$categories = $query->rows;
 		}
-		$this->load->model('catalog/category');
-		foreach ($categories as &$category){
-			$category['language'] = $this->model_catalog_category->getCategoryDescriptions($category['category_id']);
+		$this->load->model ( 'catalog/category' );
+		foreach ( $categories as &$category ) {
+			$category ['language'] = $this->model_catalog_category->getCategoryDescriptions ( $category ['category_id'] );
 			
-			if($this->checkExitItemMenu($category, $store_id) == 0){
-				if((int)$category['parent_id'] > 0){
-					$query1 = $this->db->query("SELECT megamenu_id FROM ".DB_PREFIX."megamenu WHERE store_id = ".$store_id." AND `type`='category' AND item='".$category['parent_id']."'");
-					if($query1->num_rows){
-						$megamenu_parent_id = (int)$query1->row['megamenu_id'];
+			if ($this->checkExitItemMenu ( $category, $store_id ) == 0) {
+				if (( int ) $category ['parent_id'] > 0) {
+					$query1 = $this->db->query ( "SELECT megamenu_id FROM " . DB_PREFIX . "megamenu WHERE store_id = " . $store_id . " AND `type`='category' AND item='" . $category ['parent_id'] . "'" );
+					if ($query1->num_rows) {
+						$megamenu_parent_id = ( int ) $query1->row ['megamenu_id'];
 					}
 				} else {
 					$megamenu_parent_id = 1;
 				}
-				$this->insertCategory($category, $megamenu_parent_id, $store_id);
+				$this->insertCategory ( $category, $megamenu_parent_id, $store_id );
 			}
 		}
 	}
-	public function insertCategory($category = array(), $megamenu_parent_id, $store_id = 0){
-		$data = array();
-		$data['megamenu']['position'] = 99;
-		$data['megamenu']['item'] = $category['category_id'];
-		$data['megamenu']['published'] = 1;
-		$data['megamenu']['parent_id'] = $megamenu_parent_id;
-		$data['megamenu']['show_title'] = 1;
-		$data['megamenu']['widget_id'] = 1;
-		$data['megamenu']['type_submenu'] = 'menu';
-		$data['megamenu']['type'] = 'category';
-		$data['megamenu']['colums'] = 1;
-		$data['megamenu']['store_id'] = $store_id;
-		$data['megamenu']['is_group'] = 0;
-
-		$sql = "INSERT INTO ".DB_PREFIX . "megamenu ( `";
-		$tmp = array();
-		$vals = array();
-		foreach( $data["megamenu"] as $key => $value ){
-			$tmp[] = $key;
-			$vals[]=$this->db->escape($value);
+	public function insertCategory($category = array(), $megamenu_parent_id, $store_id = 0) {
+		$data = array ();
+		$data ['megamenu'] ['position'] = 99;
+		$data ['megamenu'] ['item'] = $category ['category_id'];
+		$data ['megamenu'] ['published'] = 1;
+		$data ['megamenu'] ['parent_id'] = $megamenu_parent_id;
+		$data ['megamenu'] ['show_title'] = 1;
+		$data ['megamenu'] ['widget_id'] = 1;
+		$data ['megamenu'] ['type_submenu'] = 'menu';
+		$data ['megamenu'] ['type'] = 'category';
+		$data ['megamenu'] ['colums'] = 1;
+		$data ['megamenu'] ['store_id'] = $store_id;
+		$data ['megamenu'] ['is_group'] = 0;
+		
+		$sql = "INSERT INTO " . DB_PREFIX . "megamenu ( `";
+		$tmp = array ();
+		$vals = array ();
+		foreach ( $data ["megamenu"] as $key => $value ) {
+			$tmp [] = $key;
+			$vals [] = $this->db->escape ( $value );
 		}
-	 	$sql .= implode("` , `",$tmp)."`) VALUES ('".implode("','",$vals)."') ";
-	 	$this->db->query( $sql );
-	 	$data['megamenu']['megamenu_id'] = $this->db->getLastId();
-	 	
-	 	$this->load->model('localisation/language');
-	 	$languages = $this->model_localisation_language->getLanguages();
-	 	
-	 	if( isset($category["language"]) ){
-	 		$sql = " DELETE FROM ".DB_PREFIX ."megamenu_description WHERE megamenu_id=".(int)$data["megamenu"]['megamenu_id'] ;
-	 		$this->db->query( $sql );
-	 		
-	 		foreach( $category["language"] as $key => $categorydes ){
-	 			
-	 			$sql = "INSERT INTO ".DB_PREFIX ."megamenu_description(`language_id`, `megamenu_id`,`title`)
-							VALUES(".$key.",'".$data['megamenu']['megamenu_id']."','".$this->db->escape($categorydes['name'])."') ";
-	 			$this->db->query( $sql );
-	 		}
-	 	}
+		$sql .= implode ( "` , `", $tmp ) . "`) VALUES ('" . implode ( "','", $vals ) . "') ";
+		$this->db->query ( $sql );
+		$data ['megamenu'] ['megamenu_id'] = $this->db->getLastId ();
+		
+		$this->load->model ( 'localisation/language' );
+		$languages = $this->model_localisation_language->getLanguages ();
+		
+		if (isset ( $category ["language"] )) {
+			$sql = " DELETE FROM " . DB_PREFIX . "megamenu_description WHERE megamenu_id=" . ( int ) $data ["megamenu"] ['megamenu_id'];
+			$this->db->query ( $sql );
+			
+			foreach ( $category ["language"] as $key => $categorydes ) {
+				
+				$sql = "INSERT INTO " . DB_PREFIX . "megamenu_description(`language_id`, `megamenu_id`,`title`)
+							VALUES(" . $key . ",'" . $data ['megamenu'] ['megamenu_id'] . "','" . $this->db->escape ( $categorydes ['name'] ) . "') ";
+				$this->db->query ( $sql );
+			}
+		}
 	}
-	//end import category
-
+	// end import category
+	
 	/**
 	 * Edit Or Create new children
 	 */
-	public function editData( $data ){
-
-		if( $data["megamenu"] ){
-			if(  (int)$data['megamenu']['megamenu_id'] > 0 ){
-				$sql = " UPDATE  ". DB_PREFIX . "megamenu SET  ";
-				$tmp = array();
-				foreach( $data["megamenu"] as $key => $value ){
-					if( $key != "megamenu_id" ){
-						$tmp[] = "`".$key."`='".$this->db->escape($value)."'";
+	public function editData($data) {
+		if ($data ["megamenu"]) {
+			if (( int ) $data ['megamenu'] ['megamenu_id'] > 0) {
+				$sql = " UPDATE  " . DB_PREFIX . "megamenu SET  ";
+				$tmp = array ();
+				foreach ( $data ["megamenu"] as $key => $value ) {
+					if ($key != "megamenu_id") {
+						$tmp [] = "`" . $key . "`='" . $this->db->escape ( $value ) . "'";
 					}
 				}
-				$sql .= implode( " , ", $tmp );
-				$sql .= " WHERE megamenu_id=".$data['megamenu']['megamenu_id'];
+				$sql .= implode ( " , ", $tmp );
+				$sql .= " WHERE megamenu_id=" . $data ['megamenu'] ['megamenu_id'];
 				
-				//	echo '<pre>'.print_r( $sql, 1 ); die;
-				$this->db->query( $sql );
+				// echo '<pre>'.print_r( $sql, 1 ); die;
+				$this->db->query ( $sql );
 			} else {
-				$data['megamenu']['position'] = 99;
-				$sql = "INSERT INTO ".DB_PREFIX . "megamenu ( `";
-				$tmp = array();
-				$vals = array();
-				foreach( $data["megamenu"] as $key => $value ){
-					$tmp[] = $key;
-					$vals[]=$this->db->escape($value);
-				}				
+				$data ['megamenu'] ['position'] = 99;
+				$sql = "INSERT INTO " . DB_PREFIX . "megamenu ( `";
+				$tmp = array ();
+				$vals = array ();
+				foreach ( $data ["megamenu"] as $key => $value ) {
+					$tmp [] = $key;
+					$vals [] = $this->db->escape ( $value );
+				}
 				
-			 	$sql .= implode("` , `",$tmp)."`) VALUES ('".implode("','",$vals)."') ";
-				$this->db->query( $sql );
-				$data['megamenu']['megamenu_id'] = $this->db->getLastId();
-			}
-		
-		
-		}
-		$this->load->model('localisation/language');
-		$languages = $this->model_localisation_language->getLanguages();
-	
-		if( isset($data["megamenu_description"]) ){
-			$sql = " DELETE FROM ".DB_PREFIX ."megamenu_description WHERE megamenu_id=".(int)$data["megamenu"]['megamenu_id'] ;
-			$this->db->query( $sql );
-	 
-			foreach( $languages as $language ){
-				$sql = "INSERT INTO ".DB_PREFIX ."megamenu_description(`language_id`, `megamenu_id`,`title`,`description`) 
-							VALUES(".$language['language_id'].",'".$data['megamenu']['megamenu_id']."','".$this->db->escape($data["megamenu_description"][$language['language_id']]['title'])."','"
-							.$this->db->escape($data["megamenu_description"][$language['language_id']]['description'])."') ";
-				$this->db->query( $sql );					
+				$sql .= implode ( "` , `", $tmp ) . "`) VALUES ('" . implode ( "','", $vals ) . "') ";
+				$this->db->query ( $sql );
+				$data ['megamenu'] ['megamenu_id'] = $this->db->getLastId ();
 			}
 		}
-		return $data['megamenu']['megamenu_id'];
+		$this->load->model ( 'localisation/language' );
+		$languages = $this->model_localisation_language->getLanguages ();
+		
+		if (isset ( $data ["megamenu_description"] )) {
+			$sql = " DELETE FROM " . DB_PREFIX . "megamenu_description WHERE megamenu_id=" . ( int ) $data ["megamenu"] ['megamenu_id'];
+			$this->db->query ( $sql );
+			
+			foreach ( $languages as $language ) {
+				$sql = "INSERT INTO " . DB_PREFIX . "megamenu_description(`language_id`, `megamenu_id`,`title`,`description`) 
+							VALUES(" . $language ['language_id'] . ",'" . $data ['megamenu'] ['megamenu_id'] . "','" . $this->db->escape ( $data ["megamenu_description"] [$language ['language_id']] ['title'] ) . "','" . $this->db->escape ( $data ["megamenu_description"] [$language ['language_id']] ['description'] ) . "') ";
+				$this->db->query ( $sql );
+			}
+		}
+		return $data ['megamenu'] ['megamenu_id'];
 	}
 	
-	
-	 
-	
-	 
-
-	 /**
-	  * Automatic checking installation to whethere creating tables and data sample, configuration of modules.
-	  */
-	public function install(){
-
-
-
-		$sql = " SHOW TABLES LIKE '".DB_PREFIX."megamenu'";
-		$query = $this->db->query( $sql );
+	/**
+	 * Automatic checking installation to whethere creating tables and data sample, configuration of modules.
+	 */
+	public function install() {
+		$sql = " SHOW TABLES LIKE '" . DB_PREFIX . "megamenu'";
+		$query = $this->db->query ( $sql );
 		
-		if( count($query->rows) <=0 ){
-			//$file = DIR_APPLICATION.'model/sample/module.php';
-			$file = (DIR_APPLICATION).'model/sample/'.$this->config->get('config_template').'/sample.php';
-			if( file_exists($file) ){
-				require_once( $file );
-		 		$sample = new ModelSampleModule( $this->registry );
-		 	    $result = $sample->installSampleQuery( $this->config->get('config_template'),'pavmegamenu', true );
-		 	    $result = $sample->installSample( $this->config->get('config_template'),'pavmegamenu', true );
+		if (count ( $query->rows ) <= 0) {
+			// $file = DIR_APPLICATION.'model/sample/module.php';
+			$file = (DIR_APPLICATION) . 'model/sample/' . $this->config->get ( 'config_template' ) . '/sample.php';
+			if (file_exists ( $file )) {
+				require_once ($file);
+				$sample = new ModelSampleModule ( $this->registry );
+				$result = $sample->installSampleQuery ( $this->config->get ( 'config_template' ), 'pavmegamenu', true );
+				$result = $sample->installSample ( $this->config->get ( 'config_template' ), 'pavmegamenu', true );
 			}
-		}	
-
-
-		$sql = " SHOW TABLES LIKE '".DB_PREFIX."megamenu_widgets'";
-		$query = $this->db->query( $sql );
-		$sql = array();
-		if( count($query->rows) <=0 ){ 
-			$sql[]  = "	
-				CREATE TABLE IF NOT EXISTS `".DB_PREFIX."megamenu_widgets` (
+		}
+		
+		$sql = " SHOW TABLES LIKE '" . DB_PREFIX . "megamenu_widgets'";
+		$query = $this->db->query ( $sql );
+		$sql = array ();
+		if (count ( $query->rows ) <= 0) {
+			$sql [] = "	
+				CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "megamenu_widgets` (
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `name` varchar(250) NOT NULL,
 				  `type` varchar(255) NOT NULL,
@@ -373,27 +351,26 @@ class ModelMenuMegamenu extends Model {
 				  `store_id` int(11) NOT NULL,
 				  PRIMARY KEY (`id`)
 				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ; ";
-
-$sql[] = "INSERT INTO `".DB_PREFIX."megamenu_widgets` VALUES (1, 'Video Opencart Installation', 'video_code', 'a:1:{s:10:\"video_code\";s:168:\"&lt;iframe width=&quot;300&quot; height=&quot;315&quot; src=&quot;//www.youtube.com/embed/cUhPA5qIxDQ&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;\";}', 0);";
-$sql[] = "INSERT INTO `".DB_PREFIX."megamenu_widgets` VALUES (2, 'Demo HTML Sample', 'html', 'a:1:{s:4:\"html\";a:1:{i:1;s:275:\"Dorem ipsum dolor sit amet consectetur adipiscing elit congue sit amet erat roin tincidunt vehicula lorem in adipiscing urna iaculis vel. Dorem ipsum dolor sit amet consectetur adipiscing elit congue sit amet erat roin tincidunt vehicula lorem in adipiscing urna iaculis vel.\";}}', 0);";
-$sql[] = "INSERT INTO `".DB_PREFIX."megamenu_widgets` VALUES (3, 'Products Latest', 'product_list', 'a:4:{s:9:\"list_type\";s:6:\"newest\";s:5:\"limit\";s:1:\"6\";s:11:\"image_width\";s:3:\"120\";s:12:\"image_height\";s:3:\"120\";}', 0);";
-$sql[] = "INSERT INTO `".DB_PREFIX."megamenu_widgets` VALUES (4, 'Products In Cat 20', 'product_category', 'a:4:{s:11:\"category_id\";s:2:\"20\";s:5:\"limit\";s:1:\"6\";s:11:\"image_width\";s:3:\"120\";s:12:\"image_height\";s:3:\"120\";}', 0);";
-$sql[] = "INSERT INTO `".DB_PREFIX."megamenu_widgets` VALUES (5, 'Manufactures', 'banner', 'a:4:{s:8:\"group_id\";s:1:\"8\";s:11:\"image_width\";s:2:\"80\";s:12:\"image_height\";s:2:\"80\";s:5:\"limit\";s:2:\"12\";}', 0);";
-$sql[] = "INSERT INTO `".DB_PREFIX."megamenu_widgets` VALUES (6, 'PavoThemes Feed', 'feed', 'a:1:{s:8:\"feed_url\";s:55:\"http://www.pavothemes.com/opencart-themes.feed?type=rss\";}', 0);";
-
-			foreach( $sql as $q ){
-				$query = $this->db->query( $q );
+			
+			$sql [] = "INSERT INTO `" . DB_PREFIX . "megamenu_widgets` VALUES (1, 'Video Opencart Installation', 'video_code', 'a:1:{s:10:\"video_code\";s:168:\"&lt;iframe width=&quot;300&quot; height=&quot;315&quot; src=&quot;//www.youtube.com/embed/cUhPA5qIxDQ&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;\";}', 0);";
+			$sql [] = "INSERT INTO `" . DB_PREFIX . "megamenu_widgets` VALUES (2, 'Demo HTML Sample', 'html', 'a:1:{s:4:\"html\";a:1:{i:1;s:275:\"Dorem ipsum dolor sit amet consectetur adipiscing elit congue sit amet erat roin tincidunt vehicula lorem in adipiscing urna iaculis vel. Dorem ipsum dolor sit amet consectetur adipiscing elit congue sit amet erat roin tincidunt vehicula lorem in adipiscing urna iaculis vel.\";}}', 0);";
+			$sql [] = "INSERT INTO `" . DB_PREFIX . "megamenu_widgets` VALUES (3, 'Products Latest', 'product_list', 'a:4:{s:9:\"list_type\";s:6:\"newest\";s:5:\"limit\";s:1:\"6\";s:11:\"image_width\";s:3:\"120\";s:12:\"image_height\";s:3:\"120\";}', 0);";
+			$sql [] = "INSERT INTO `" . DB_PREFIX . "megamenu_widgets` VALUES (4, 'Products In Cat 20', 'product_category', 'a:4:{s:11:\"category_id\";s:2:\"20\";s:5:\"limit\";s:1:\"6\";s:11:\"image_width\";s:3:\"120\";s:12:\"image_height\";s:3:\"120\";}', 0);";
+			$sql [] = "INSERT INTO `" . DB_PREFIX . "megamenu_widgets` VALUES (5, 'Manufactures', 'banner', 'a:4:{s:8:\"group_id\";s:1:\"8\";s:11:\"image_width\";s:2:\"80\";s:12:\"image_height\";s:2:\"80\";s:5:\"limit\";s:2:\"12\";}', 0);";
+			$sql [] = "INSERT INTO `" . DB_PREFIX . "megamenu_widgets` VALUES (6, 'PavoThemes Feed', 'feed', 'a:1:{s:8:\"feed_url\";s:55:\"http://www.pavothemes.com/opencart-themes.feed?type=rss\";}', 0);";
+			
+			foreach ( $sql as $q ) {
+				$query = $this->db->query ( $q );
 			}
 		}
-
-
-		$sql = " SHOW TABLES LIKE '".DB_PREFIX."megamenu'";
-		$query = $this->db->query( $sql );
 		
-		if( count($query->rows) <=0 ){
-			$sql = array();
-			$sql[]  = "	
-				CREATE TABLE IF NOT EXISTS `".DB_PREFIX."megamenu` (
+		$sql = " SHOW TABLES LIKE '" . DB_PREFIX . "megamenu'";
+		$query = $this->db->query ( $sql );
+		
+		if (count ( $query->rows ) <= 0) {
+			$sql = array ();
+			$sql [] = "	
+				CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "megamenu` (
 				  `megamenu_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 				  `image` varchar(255) NOT NULL DEFAULT '',
 				  `parent_id` int(11) NOT NULL DEFAULT '0',
@@ -428,8 +405,8 @@ $sql[] = "INSERT INTO `".DB_PREFIX."megamenu_widgets` VALUES (6, 'PavoThemes Fee
 				  PRIMARY KEY (`megamenu_id`)
 				) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=41 ;
 			";
-			$sql[] = "	
-						CREATE TABLE IF NOT EXISTS `".DB_PREFIX."megamenu_description` (
+			$sql [] = "	
+						CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "megamenu_description` (
 						  `megamenu_id` int(11) NOT NULL,
 						  `language_id` int(11) NOT NULL,
 						  `title` varchar(255) NOT NULL,
@@ -439,11 +416,10 @@ $sql[] = "INSERT INTO `".DB_PREFIX."megamenu_widgets` VALUES (6, 'PavoThemes Fee
 						) ENGINE=MyISAM DEFAULT CHARSET=utf8;		
 											
 			";
-					
-					
-			$sql[] = " 
 			
-INSERT INTO `".DB_PREFIX."megamenu` (`megamenu_id`, `image`, `parent_id`, `is_group`, `width`, `submenu_width`, `colum_width`, `submenu_colum_width`, `item`, `colums`, `type`, `is_content`, `show_title`, `type_submenu`, `level_depth`, `published`, `store_id`, `position`, `show_sub`, `url`, `target`, `privacy`, `position_type`, `menu_class`, `description`, `content_text`, `submenu_content`, `level`, `left`, `right`) VALUES
+			$sql [] = " 
+			
+INSERT INTO `" . DB_PREFIX . "megamenu` (`megamenu_id`, `image`, `parent_id`, `is_group`, `width`, `submenu_width`, `colum_width`, `submenu_colum_width`, `item`, `colums`, `type`, `is_content`, `show_title`, `type_submenu`, `level_depth`, `published`, `store_id`, `position`, `show_sub`, `url`, `target`, `privacy`, `position_type`, `menu_class`, `description`, `content_text`, `submenu_content`, `level`, `left`, `right`) VALUES
 (1, '', 0, 2, NULL, NULL, NULL, NULL, NULL, '1', '', 2, 1, '1', 0, 1, 0, 0, 0, NULL, NULL, 0, 'top', NULL, NULL, NULL, NULL, -5, 34, 47),
 (2, '', 1, 0, NULL, NULL, NULL, 'col1=3, col2=3, col3=6', '20', '3', 'category', 0, 1, 'menu', 0, 1, 0, 2, 0, '', NULL, 0, 'top', '', NULL, '', '', 0, 0, 0),
 (3, '', 1, 0, NULL, NULL, NULL, '', '18', '1', 'category', 0, 1, 'menu', 0, 1, 0, 5, 0, '', NULL, 0, 'top', 'pav-parrent', NULL, '', '', 0, 0, 0),
@@ -485,9 +461,9 @@ INSERT INTO `".DB_PREFIX."megamenu` (`megamenu_id`, `image`, `parent_id`, `is_gr
 
 
 ";
-
-			$sql[] = "
-INSERT INTO `".DB_PREFIX."megamenu_description` (`megamenu_id`, `language_id`, `title`, `description`) VALUES
+			
+			$sql [] = "
+INSERT INTO `" . DB_PREFIX . "megamenu_description` (`megamenu_id`, `language_id`, `title`, `description`) VALUES
 (2, 2, 'Electronics', ''),
 (3, 1, 'Digital', ''),
 (3, 2, 'Digital', ''),
@@ -564,18 +540,16 @@ INSERT INTO `".DB_PREFIX."megamenu_description` (`megamenu_id`, `language_id`, `
 (40, 1, 'Home', '');
 ";
 			
-			foreach( $sql as $q ){
-				$query = $this->db->query( $q );
+			foreach ( $sql as $q ) {
+				$query = $this->db->query ( $q );
 			}
 		}
-		$query = $this->db->query( "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE()
-        AND COLUMN_NAME='widget_id' AND TABLE_NAME='".DB_PREFIX."megamenu'");
-		if(count($query->rows) <= 0){
-			$query = $this->db->query("ALTER TABLE `".DB_PREFIX."megamenu` ADD COLUMN `widget_id` int DEFAULT '0'");
+		$query = $this->db->query ( "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE()
+        AND COLUMN_NAME='widget_id' AND TABLE_NAME='" . DB_PREFIX . "megamenu'" );
+		if (count ( $query->rows ) <= 0) {
+			$query = $this->db->query ( "ALTER TABLE `" . DB_PREFIX . "megamenu` ADD COLUMN `widget_id` int DEFAULT '0'" );
 		}
-		
 	}
-	 
 }
 
 ?>

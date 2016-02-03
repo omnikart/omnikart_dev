@@ -11,12 +11,8 @@
 
 /**
  * Description of Tenant
- * 
- * @link 
- * 
- * @codeCoverageIgnore
+ *
+ * @link @codeCoverageIgnore
  */
-class Tenant
-{
-    
+class Tenant {
 }

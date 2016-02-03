@@ -1,318 +1,432 @@
 <?php echo $header; ?><?php echo $column_left; ?>
 <div id="content">
-<div class="page-header">
-  <div class="container-fluid">
-    <div class="pull-right">
-      <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a>
-    </div>
-    <h1><?php echo $heading_title; ?></h1>
-    <ul class="breadcrumb">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right">
+				<a href="<?php echo $cancel; ?>" data-toggle="tooltip"
+					title="<?php echo $button_cancel; ?>" class="btn btn-default"><i
+					class="fa fa-reply"></i></a>
+			</div>
+			<h1><?php echo $heading_title; ?></h1>
+			<ul class="breadcrumb">
       <?php foreach ($breadcrumbs as $breadcrumb) { ?>
       <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
       <?php } ?>
     </ul>
-  </div>
-</div>
-<div class="container-fluid">
+		</div>
+	</div>
+	<div class="container-fluid">
   <?php foreach($error_warning as $warning) { ?>
-    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $warning; ?></div>
+    <div class="alert alert-danger">
+			<i class="fa fa-exclamation-circle"></i> <?php echo $warning; ?></div>
   <?php } ?>
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_bulk; ?></h3>
-    </div>
-    <div class="panel-body" id="page-listing">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<i class="fa fa-list"></i> <?php echo $text_bulk; ?></h3>
+			</div>
+			<div class="panel-body" id="page-listing">
       <?php if (!isset($error_fail)) { ?>
-        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
-          <div class="well">
-            <div class="row">
-              <div class="col-sm-12 text-right">
-                <a class="btn btn-primary" id="button-verify"><i class="fa fa-check"></i> <?php echo $text_preview_all; ?></a>
-                <a class="btn btn-primary" id="button-edit" style="display:none;"><i class="fa fa-pencil"></i> <?php echo $button_edit; ?></a>
-                <a class="btn btn-primary" id="button-submit" style="display:none;"><i class="fa fa-plus-circle"></i> <?php echo $button_submit; ?></a>
-              </div>
-            </div>
-          </div>
+        <form action="<?php echo $action; ?>" method="post"
+					enctype="multipart/form-data" id="form" class="form-horizontal">
+					<div class="well">
+						<div class="row">
+							<div class="col-sm-12 text-right">
+								<a class="btn btn-primary" id="button-verify"><i
+									class="fa fa-check"></i> <?php echo $text_preview_all; ?></a> <a
+									class="btn btn-primary" id="button-edit" style="display: none;"><i
+									class="fa fa-pencil"></i> <?php echo $button_edit; ?></a> <a
+									class="btn btn-primary" id="button-submit"
+									style="display: none;"><i class="fa fa-plus-circle"></i> <?php echo $button_submit; ?></a>
+							</div>
+						</div>
+					</div>
           <?php if ($products) { ?>
             <?php $i = 0; ?>
             <?php foreach ($products as $product) { ?>
               <div class="well listingBox" id="p_row_<?php echo $i; ?>">
-                <input type="hidden" class="product_id openbay_data_<?php echo $i; ?>" name="product_id" value="<?php echo $i; ?>" />
-                <input type="hidden" class="openbay_data_<?php echo $i; ?>" name="product_id" value="<?php echo $product['product_id']; ?>" id="product-id-<?php echo $i; ?>" />
-                <input type="hidden" name="price_original" id="price_original_<?php echo $i; ?>" value="<?php echo number_format($product['price']*(($default['defaults']['tax']/100) + 1), 2, '.', ''); ?>" />
-                <input type="hidden" class="openbay_data_<?php echo $i; ?>" name="catalog_epid" id="catalog_epid_<?php echo $i; ?>" value="0" />
-                <div class="row">
-                  <div class="col-sm-7">
-                    <h4 id="product_title_<?php echo $i; ?>" style="display:none;"></h4>
-                  </div>
-                  <div class="col-sm-5 form-group text-right" id="p_row_buttons_<?php echo $i; ?>">
-                    <a class="btn btn-primary" onclick="showCategory('<?php echo $i; ?>');" id="editCategory_<?php echo $i; ?>" ><i class="fa fa-pencil"></i> <?php echo $text_category; ?></a>
-                    <a class="btn btn-primary" onclick="showProfiles('<?php echo $i; ?>');" id="editProfiles_<?php echo $i; ?>" ><i class="fa fa-pencil"></i> <?php echo $text_profile; ?></a>
-                    <a class="btn btn-primary" style="display:none;" onclick="showCatalog('<?php echo $i; ?>');" id="editCatalog_<?php echo $i; ?>" ><i class="fa fa-pencil"></i> <?php echo $text_catalog; ?></a>
-                    <a class="btn btn-primary" style="display:none;" onclick="showFeatures('<?php echo $i; ?>');" id="editFeature_<?php echo $i; ?>"><i class="fa fa-pencil"></i> <?php echo $text_features; ?></a>
-                    <a class="btn btn-danger" onclick="removeBox('<?php echo $i; ?>')"> <i class="fa fa-minus-circle"></i> <?php echo $button_remove; ?></a>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="row" id="product_messages_<?php echo $i; ?>" style="display:none;"></div>
-                    <div class="row product_content_<?php echo $i; ?>">
-                      <div class="col-sm-2">
-                        <div class="row">
-                          <div class="col-sm-12 form-group text-center">
-                            <img class="img-thumbnail" src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>" />
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-sm-12 form-group">
-                            <h4 class="text-center"><span class="label label-success"><?php echo $text_stock; ?>: <?php echo $product['quantity']; ?></span></h4>
-                            <input type="hidden" name="qty" value="<?php echo $product['quantity']; ?>" class="openbay_data_<?php echo $i; ?>" />
-                          </div>
-                        </div>
-                        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="overlay-feature-<?php echo $i; ?>" data-backdrop="static" data-keyboard="false">
-                          <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                              <div class="modal-body" id="feature-data-<?php echo $i; ?>"></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="overlay-category-<?php echo $i; ?>" data-backdrop="static" data-keyboard="false">
-                          <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                              <div class="modal-body">
-                                <div class="page-header">
-                                  <div class="container-fluid">
-                                    <div class="pull-right">
-                                      <a onclick="overlayHide();" class="btn btn-default" data-toggle="tooltip" title="<?php echo $text_close; ?>"><i class="fa fa-reply"></i></a>
-                                    </div>
-                                    <h1 class="panel-title"><?php echo $text_category; ?></h1>
-                                  </div>
-                                </div>
-                                <div class="container-fluid">
-                                  <div class="panel panel-default">
-                                    <div class="panel-body">
-                                    <div class="well">
-                                      <div class="row">
-                                        <div class="form-group">
-                                          <label class="col-sm-2 control-label"><?php echo $text_suggested; ?></label>
-                                          <div class="col-sm-10">
-                                            <div class="alert alert-info" id="loadingSuggestedCat_<?php echo $i; ?>"><i class="fa fa-cog fa-lg fa-spin"></i> <?php echo $text_category; ?></div>
-                                            <div id="suggestedCat_<?php echo $i; ?>"></div>
-                                            <input type="hidden" name="finalCat" id="finalCat_<?php echo $i; ?>" class="openbay_data_<?php echo $i; ?>" />
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="row">
-                                        <div class="form-group" id="cSelections_<?php echo $i; ?>" style="display:none;">
-                                          <label class="col-sm-2 control-label"><?php echo $text_category_choose; ?></label>
-                                          <div class="col-sm-10">
-                                          <div class="alert alert-info" id="imageLoading_<?php echo $i; ?>"><i class="fa fa-cog fa-lg fa-spin"></i> <?php echo $text_loading_categories; ?></div>
-                                          <div class="row form-group">
-                                            <div class="col-sm-12">
-                                              <select id="catsSelect1_<?php echo $i; ?>" class="form-control" onchange="loadCategories(2, false, <?php echo $i; ?>);"></select>
-                                            </div>
-                                          </div>
-                                          <div class="row form-group">
-                                            <div class="col-sm-12">
-                                              <select id="catsSelect2_<?php echo $i; ?>" class="form-control" onchange="loadCategories(3, false, <?php echo $i; ?>);" style="display:none;"></select>
-                                            </div>
-                                          </div>
-                                          <div class="row form-group">
-                                            <div class="col-sm-12">
-                                              <select id="catsSelect3_<?php echo $i; ?>" class="form-control" onchange="loadCategories(4, false, <?php echo $i; ?>);" style="display:none;"></select>
-                                            </div>
-                                          </div>
-                                          <div class="row form-group">
-                                            <div class="col-sm-12">
-                                              <select id="catsSelect4_<?php echo $i; ?>" class="form-control" onchange="loadCategories(5, false, <?php echo $i; ?>, false, <?php echo $i; ?>);" style="display:none;"></select>
-                                            </div>
-                                          </div>
-                                          <div class="row form-group">
-                                            <div class="col-sm-12">
-                                              <select id="catsSelect5_<?php echo $i; ?>" class="form-control" onchange="loadCategories(6, false, <?php echo $i; ?>);" style="display:none;"></select>
-                                            </div>
-                                          </div>
-                                          <div class="row form-group">
-                                            <div class="col-sm-12">
-                                              <select id="catsSelect6_<?php echo $i; ?>" class="form-control" onchange="loadCategories(7, false, <?php echo $i; ?>);" style="display:none;"></select>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+						<input type="hidden"
+							class="product_id openbay_data_<?php echo $i; ?>"
+							name="product_id" value="<?php echo $i; ?>" /> <input
+							type="hidden" class="openbay_data_<?php echo $i; ?>"
+							name="product_id" value="<?php echo $product['product_id']; ?>"
+							id="product-id-<?php echo $i; ?>" /> <input type="hidden"
+							name="price_original" id="price_original_<?php echo $i; ?>"
+							value="<?php echo number_format($product['price']*(($default['defaults']['tax']/100) + 1), 2, '.', ''); ?>" />
+						<input type="hidden" class="openbay_data_<?php echo $i; ?>"
+							name="catalog_epid" id="catalog_epid_<?php echo $i; ?>" value="0" />
+						<div class="row">
+							<div class="col-sm-7">
+								<h4 id="product_title_<?php echo $i; ?>" style="display: none;"></h4>
+							</div>
+							<div class="col-sm-5 form-group text-right"
+								id="p_row_buttons_<?php echo $i; ?>">
+								<a class="btn btn-primary"
+									onclick="showCategory('<?php echo $i; ?>');"
+									id="editCategory_<?php echo $i; ?>"><i class="fa fa-pencil"></i> <?php echo $text_category; ?></a>
+								<a class="btn btn-primary"
+									onclick="showProfiles('<?php echo $i; ?>');"
+									id="editProfiles_<?php echo $i; ?>"><i class="fa fa-pencil"></i> <?php echo $text_profile; ?></a>
+								<a class="btn btn-primary" style="display: none;"
+									onclick="showCatalog('<?php echo $i; ?>');"
+									id="editCatalog_<?php echo $i; ?>"><i class="fa fa-pencil"></i> <?php echo $text_catalog; ?></a>
+								<a class="btn btn-primary" style="display: none;"
+									onclick="showFeatures('<?php echo $i; ?>');"
+									id="editFeature_<?php echo $i; ?>"><i class="fa fa-pencil"></i> <?php echo $text_features; ?></a>
+								<a class="btn btn-danger"
+									onclick="removeBox('<?php echo $i; ?>')"> <i
+									class="fa fa-minus-circle"></i> <?php echo $button_remove; ?></a>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="row" id="product_messages_<?php echo $i; ?>"
+									style="display: none;"></div>
+								<div class="row product_content_<?php echo $i; ?>">
+									<div class="col-sm-2">
+										<div class="row">
+											<div class="col-sm-12 form-group text-center">
+												<img class="img-thumbnail"
+													src="<?php echo $product['image']; ?>"
+													alt="<?php echo $product['name']; ?>" />
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12 form-group">
+												<h4 class="text-center">
+													<span class="label label-success"><?php echo $text_stock; ?>: <?php echo $product['quantity']; ?></span>
+												</h4>
+												<input type="hidden" name="qty"
+													value="<?php echo $product['quantity']; ?>"
+													class="openbay_data_<?php echo $i; ?>" />
+											</div>
+										</div>
+										<div class="modal fade" tabindex="-1" role="dialog"
+											aria-labelledby="mySmallModalLabel" aria-hidden="true"
+											id="overlay-feature-<?php echo $i; ?>" data-backdrop="static"
+											data-keyboard="false">
+											<div class="modal-dialog modal-lg">
+												<div class="modal-content">
+													<div class="modal-body" id="feature-data-<?php echo $i; ?>"></div>
+												</div>
+											</div>
+										</div>
+										<div class="modal fade" tabindex="-1" role="dialog"
+											aria-labelledby="mySmallModalLabel" aria-hidden="true"
+											id="overlay-category-<?php echo $i; ?>"
+											data-backdrop="static" data-keyboard="false">
+											<div class="modal-dialog modal-lg">
+												<div class="modal-content">
+													<div class="modal-body">
+														<div class="page-header">
+															<div class="container-fluid">
+																<div class="pull-right">
+																	<a onclick="overlayHide();" class="btn btn-default"
+																		data-toggle="tooltip"
+																		title="<?php echo $text_close; ?>"><i
+																		class="fa fa-reply"></i></a>
+																</div>
+																<h1 class="panel-title"><?php echo $text_category; ?></h1>
+															</div>
+														</div>
+														<div class="container-fluid">
+															<div class="panel panel-default">
+																<div class="panel-body">
+																	<div class="well">
+																		<div class="row">
+																			<div class="form-group">
+																				<label class="col-sm-2 control-label"><?php echo $text_suggested; ?></label>
+																				<div class="col-sm-10">
+																					<div class="alert alert-info"
+																						id="loadingSuggestedCat_<?php echo $i; ?>">
+																						<i class="fa fa-cog fa-lg fa-spin"></i> <?php echo $text_category; ?></div>
+																					<div id="suggestedCat_<?php echo $i; ?>"></div>
+																					<input type="hidden" name="finalCat"
+																						id="finalCat_<?php echo $i; ?>"
+																						class="openbay_data_<?php echo $i; ?>" />
+																				</div>
+																			</div>
+																		</div>
+																		<div class="row">
+																			<div class="form-group"
+																				id="cSelections_<?php echo $i; ?>"
+																				style="display: none;">
+																				<label class="col-sm-2 control-label"><?php echo $text_category_choose; ?></label>
+																				<div class="col-sm-10">
+																					<div class="alert alert-info"
+																						id="imageLoading_<?php echo $i; ?>">
+																						<i class="fa fa-cog fa-lg fa-spin"></i> <?php echo $text_loading_categories; ?></div>
+																					<div class="row form-group">
+																						<div class="col-sm-12">
+																							<select id="catsSelect1_<?php echo $i; ?>"
+																								class="form-control"
+																								onchange="loadCategories(2, false, <?php echo $i; ?>);"></select>
+																						</div>
+																					</div>
+																					<div class="row form-group">
+																						<div class="col-sm-12">
+																							<select id="catsSelect2_<?php echo $i; ?>"
+																								class="form-control"
+																								onchange="loadCategories(3, false, <?php echo $i; ?>);"
+																								style="display: none;"></select>
+																						</div>
+																					</div>
+																					<div class="row form-group">
+																						<div class="col-sm-12">
+																							<select id="catsSelect3_<?php echo $i; ?>"
+																								class="form-control"
+																								onchange="loadCategories(4, false, <?php echo $i; ?>);"
+																								style="display: none;"></select>
+																						</div>
+																					</div>
+																					<div class="row form-group">
+																						<div class="col-sm-12">
+																							<select id="catsSelect4_<?php echo $i; ?>"
+																								class="form-control"
+																								onchange="loadCategories(5, false, <?php echo $i; ?>, false, <?php echo $i; ?>);"
+																								style="display: none;"></select>
+																						</div>
+																					</div>
+																					<div class="row form-group">
+																						<div class="col-sm-12">
+																							<select id="catsSelect5_<?php echo $i; ?>"
+																								class="form-control"
+																								onchange="loadCategories(6, false, <?php echo $i; ?>);"
+																								style="display: none;"></select>
+																						</div>
+																					</div>
+																					<div class="row form-group">
+																						<div class="col-sm-12">
+																							<select id="catsSelect6_<?php echo $i; ?>"
+																								class="form-control"
+																								onchange="loadCategories(7, false, <?php echo $i; ?>);"
+																								style="display: none;"></select>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
 
-                        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="overlay-catalog-<?php echo $i; ?>" data-backdrop="static" data-keyboard="false">
-                          <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                              <div class="modal-body">
-                                <div class="page-header">
-                                  <div class="container-fluid">
-                                    <div class="pull-right">
-                                      <a onclick="overlayHide();" class="btn btn-default" data-toggle="tooltip" title="<?php echo $text_close; ?>"><i class="fa fa-reply"></i></a>
-                                    </div>
-                                    <h1 class="panel-title"><?php echo $text_catalog_search; ?></h1>
-                                  </div>
-                                </div>
-                                <div class="container-fluid">
-                                  <div class="panel panel-default">
-                                    <div class="panel-body">
-                                      <div class="well">
-                                        <div class="row">
-                                          <div class="form-group">
-                                            <label class="col-sm-2 control-label"><?php echo $text_search_term; ?></label>
-                                            <div class="col-sm-10">
-                                              <input type="text" name="catalog_search" id="catalog_search_<?php echo $i; ?>" value="" class="form-control"/>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div class="row">
-                                          <div class="col-sm-12 text-right">
-                                            <a onclick="searchEbayCatalog('<?php echo $i; ?>');" class="btn btn-primary" id="button-catalog-search-<?php echo $i; ?>"><?php echo $text_search; ?></a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div id="catalog-results-<?php echo $i; ?>" style="display:none;"></div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+										<div class="modal fade" tabindex="-1" role="dialog"
+											aria-labelledby="mySmallModalLabel" aria-hidden="true"
+											id="overlay-catalog-<?php echo $i; ?>" data-backdrop="static"
+											data-keyboard="false">
+											<div class="modal-dialog modal-lg">
+												<div class="modal-content">
+													<div class="modal-body">
+														<div class="page-header">
+															<div class="container-fluid">
+																<div class="pull-right">
+																	<a onclick="overlayHide();" class="btn btn-default"
+																		data-toggle="tooltip"
+																		title="<?php echo $text_close; ?>"><i
+																		class="fa fa-reply"></i></a>
+																</div>
+																<h1 class="panel-title"><?php echo $text_catalog_search; ?></h1>
+															</div>
+														</div>
+														<div class="container-fluid">
+															<div class="panel panel-default">
+																<div class="panel-body">
+																	<div class="well">
+																		<div class="row">
+																			<div class="form-group">
+																				<label class="col-sm-2 control-label"><?php echo $text_search_term; ?></label>
+																				<div class="col-sm-10">
+																					<input type="text" name="catalog_search"
+																						id="catalog_search_<?php echo $i; ?>" value=""
+																						class="form-control" />
+																				</div>
+																			</div>
+																		</div>
+																		<div class="row">
+																			<div class="col-sm-12 text-right">
+																				<a onclick="searchEbayCatalog('<?php echo $i; ?>');"
+																					class="btn btn-primary"
+																					id="button-catalog-search-<?php echo $i; ?>"><?php echo $text_search; ?></a>
+																			</div>
+																		</div>
+																	</div>
+																	<div id="catalog-results-<?php echo $i; ?>"
+																		style="display: none;"></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
 
-                        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="overlay-profile-<?php echo $i; ?>" data-backdrop="static" data-keyboard="false">
-                          <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                              <div class="modal-body">
-                                <div class="page-header">
-                                  <div class="container-fluid">
-                                    <div class="pull-right">
-                                      <a onclick="overlayHide();" class="btn btn-default" data-toggle="tooltip" title="<?php echo $text_close; ?>"><i class="fa fa-reply"></i></a>
-                                    </div>
-                                    <h1 class="panel-title"><?php echo $text_profile; ?></h1>
-                                  </div>
-                                </div>
-                                <div class="container-fluid">
-                                  <div class="panel panel-default">
-                                    <div class="panel-body">
-                                    <div class="well">
-                                      <div class="form-group">
-                                        <label class="col-sm-2 control-label"><?php echo $text_profile_theme; ?></label>
-                                        <div class="col-sm-10">
-                                          <select name="theme_profile" class="openbay_data_<?php echo $i; ?> form-control">
+										<div class="modal fade" tabindex="-1" role="dialog"
+											aria-labelledby="mySmallModalLabel" aria-hidden="true"
+											id="overlay-profile-<?php echo $i; ?>" data-backdrop="static"
+											data-keyboard="false">
+											<div class="modal-dialog modal-lg">
+												<div class="modal-content">
+													<div class="modal-body">
+														<div class="page-header">
+															<div class="container-fluid">
+																<div class="pull-right">
+																	<a onclick="overlayHide();" class="btn btn-default"
+																		data-toggle="tooltip"
+																		title="<?php echo $text_close; ?>"><i
+																		class="fa fa-reply"></i></a>
+																</div>
+																<h1 class="panel-title"><?php echo $text_profile; ?></h1>
+															</div>
+														</div>
+														<div class="container-fluid">
+															<div class="panel panel-default">
+																<div class="panel-body">
+																	<div class="well">
+																		<div class="form-group">
+																			<label class="col-sm-2 control-label"><?php echo $text_profile_theme; ?></label>
+																			<div class="col-sm-10">
+																				<select name="theme_profile"
+																					class="openbay_data_<?php echo $i; ?> form-control">
                                             <?php foreach($default['profiles_theme'] as $s) { echo '<option value="'.$s['ebay_profile_id'].'"'.($default['profiles_theme_def'] == $s['ebay_profile_id'] ? ' selected' : '').'>'.$s['name'].'</option>'; } ?>
                                           </select>
-                                        </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <label class="col-sm-2 control-label"><?php echo $text_profile_shipping; ?></label>
-                                        <div class="col-sm-10">
-                                          <select name="shipping_profile" class="openbay_data_<?php echo $i; ?> form-control">
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<label class="col-sm-2 control-label"><?php echo $text_profile_shipping; ?></label>
+																			<div class="col-sm-10">
+																				<select name="shipping_profile"
+																					class="openbay_data_<?php echo $i; ?> form-control">
                                             <?php foreach($default['profiles_shipping'] as $s) { echo '<option value="'.$s['ebay_profile_id'].'"'.($default['profiles_shipping_def'] == $s['ebay_profile_id'] ? ' selected' : '').'>'.$s['name'].'</option>'; } ?>
                                           </select>
-                                        </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <label class="col-sm-2 control-label"><?php echo $text_profile_generic; ?></label>
-                                        <div class="col-sm-10">
-                                          <select name="generic_profile" id="generic_profile_<?php echo $i; ?>" class="openbay_data_<?php echo $i; ?> form-control" onchange="genericProfileChange(<?php echo $i; ?>);">
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<label class="col-sm-2 control-label"><?php echo $text_profile_generic; ?></label>
+																			<div class="col-sm-10">
+																				<select name="generic_profile"
+																					id="generic_profile_<?php echo $i; ?>"
+																					class="openbay_data_<?php echo $i; ?> form-control"
+																					onchange="genericProfileChange(<?php echo $i; ?>);">
                                             <?php foreach($default['profiles_generic'] as $s) { echo '<option value="'.$s['ebay_profile_id'].'"'.($default['profiles_generic_def'] == $s['ebay_profile_id'] ? ' selected' : '').'>'.$s['name'].'</option>'; } ?>
                                           </select>
-                                        </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <label class="col-sm-2 control-label"><?php echo $text_profile_returns; ?></label>
-                                        <div class="col-sm-10">
-                                          <select name="return_profile" class="openbay_data_<?php echo $i; ?> form-control">
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<label class="col-sm-2 control-label"><?php echo $text_profile_returns; ?></label>
+																			<div class="col-sm-10">
+																				<select name="return_profile"
+																					class="openbay_data_<?php echo $i; ?> form-control">
                                             <?php foreach($default['profiles_returns'] as $s) { echo '<option value="'.$s['ebay_profile_id'].'"'.($default['profiles_returns_def'] == $s['ebay_profile_id'] ? ' selected' : '').'>'.$s['name'].'</option>'; } ?>
                                           </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-10">
-                        <div class="form-group">
-                          <label class="col-sm-2 control-label"><?php echo $text_title; ?></label>
-                          <div class="col-sm-10">
-                            <input type="text" name="title" class="openbay_data_<?php echo $i; ?> form-control" value="<?php echo $product['name']; ?>" id="title_<?php echo $i; ?>" />
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-sm-2 control-label"><?php echo $text_price; ?></label>
-                          <div class="col-sm-10">
-                            <input id="price_<?php echo $i; ?>" type="text" name="price" class="openbay_data_<?php echo $i; ?> form-control" value="<?php echo number_format($product['price']*(($default['defaults']['tax']/100) + 1), 2, '.', ''); ?>" />
-                          </div>
-                        </div>
-                        <div class="alert alert-info" id="conditionLoading_<?php echo $i; ?>"><i class="fa fa-cog fa-lg fa-spin"></i> <?php echo $text_loading_condition; ?></div>
-                        <div class="form-group" id="conditionContainer_<?php echo $i; ?>" style="display:none;">
-                          <label class="col-sm-2 control-label"><?php echo $entry_condition; ?></label>
-                          <div class="col-sm-10">
-                            <select name="condition" class="openbay_data_<?php echo $i; ?> form-control" id="conditionRow_<?php echo $i; ?>">
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-10">
+										<div class="form-group">
+											<label class="col-sm-2 control-label"><?php echo $text_title; ?></label>
+											<div class="col-sm-10">
+												<input type="text" name="title"
+													class="openbay_data_<?php echo $i; ?> form-control"
+													value="<?php echo $product['name']; ?>"
+													id="title_<?php echo $i; ?>" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label"><?php echo $text_price; ?></label>
+											<div class="col-sm-10">
+												<input id="price_<?php echo $i; ?>" type="text" name="price"
+													class="openbay_data_<?php echo $i; ?> form-control"
+													value="<?php echo number_format($product['price']*(($default['defaults']['tax']/100) + 1), 2, '.', ''); ?>" />
+											</div>
+										</div>
+										<div class="alert alert-info"
+											id="conditionLoading_<?php echo $i; ?>">
+											<i class="fa fa-cog fa-lg fa-spin"></i> <?php echo $text_loading_condition; ?></div>
+										<div class="form-group"
+											id="conditionContainer_<?php echo $i; ?>"
+											style="display: none;">
+											<label class="col-sm-2 control-label"><?php echo $entry_condition; ?></label>
+											<div class="col-sm-10">
+												<select name="condition"
+													class="openbay_data_<?php echo $i; ?> form-control"
+													id="conditionRow_<?php echo $i; ?>">
                               <?php foreach($default['profiles_returns'] as $s) { echo '<option value="'.$s['ebay_profile_id'].'"'.($default['profiles_returns_def'] == $s['ebay_profile_id'] ? ' selected' : '').'>'.$s['name'].'</option>'; } ?>
                             </select>
-                          </div>
-                        </div>
-                        <div class="alert alert-info" id="durationLoading_<?php echo $i; ?>"><i class="fa fa-cog fa-lg fa-spin"></i> <?php echo $text_loading_duration; ?></div>
-                        <div class="form-group" id="durationContainer_<?php echo $i; ?>" style="display:none;">
-                          <label class="col-sm-2 control-label"><?php echo $text_duration; ?></label>
-                          <div class="col-sm-10">
-                            <select name="duration" class="openbay_data_<?php echo $i; ?> form-control" id="durationRow_<?php echo $i; ?>">
+											</div>
+										</div>
+										<div class="alert alert-info"
+											id="durationLoading_<?php echo $i; ?>">
+											<i class="fa fa-cog fa-lg fa-spin"></i> <?php echo $text_loading_duration; ?></div>
+										<div class="form-group"
+											id="durationContainer_<?php echo $i; ?>"
+											style="display: none;">
+											<label class="col-sm-2 control-label"><?php echo $text_duration; ?></label>
+											<div class="col-sm-10">
+												<select name="duration"
+													class="openbay_data_<?php echo $i; ?> form-control"
+													id="durationRow_<?php echo $i; ?>">
                               <?php foreach($default['profiles_returns'] as $s) { echo '<option value="'.$s['ebay_profile_id'].'"'.($default['profiles_returns_def'] == $s['ebay_profile_id'] ? ' selected' : '').'>'.$s['name'].'</option>'; } ?>
                             </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
               <?php $i++;?>
             <?php } ?>
           <?php } else { ?>
-            <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $text_no_results; ?></div>
+            <div class="alert alert-danger">
+						<i class="fa fa-exclamation-circle"></i> <?php echo $text_no_results; ?></div>
           <?php } ?>
         </form>
-        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="overlay-loading" data-backdrop="static" data-keyboard="false">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-body">
-                <div class="progress">
-                  <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="loading-bar"></div>
-                </div>
-                <p class="text-center"><?php echo $text_preparing0; ?> <span id="ajax-count-complete-display">0</span> <?php echo $text_preparing1; ?> <span id="ajax-count-total-display">0</span> <?php echo $text_preparing2; ?> </p>
-              </div>
-            </div>
-          </div>
-        </div>
+				<div class="modal fade" tabindex="-1" role="dialog"
+					aria-labelledby="mySmallModalLabel" aria-hidden="true"
+					id="overlay-loading" data-backdrop="static" data-keyboard="false">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="progress">
+									<div class="progress-bar progress-bar-striped active"
+										role="progressbar" aria-valuenow="1" aria-valuemin="0"
+										aria-valuemax="100" style="width: 0%" id="loading-bar"></div>
+								</div>
+								<p class="text-center"><?php echo $text_preparing0; ?> <span
+										id="ajax-count-complete-display">0</span> <?php echo $text_preparing1; ?> <span
+										id="ajax-count-total-display">0</span> <?php echo $text_preparing2; ?> </p>
+							</div>
+						</div>
+					</div>
+				</div>
       <?php } else { ?>
         <?php foreach($error_fail as $fail) { ?>
-          <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $fail; ?></div>
+          <div class="alert alert-danger">
+					<i class="fa fa-exclamation-circle"></i> <?php echo $fail; ?></div>
         <?php } ?>
       <?php } ?>
     </div>
-  </div>
-</div>
+		</div>
+	</div>
 
-<input type="hidden" id="total-items" value="<?php echo $count; ?>" name="total-items" />
-<input type="hidden" id="ajax-count" value="0" />
-<input type="hidden" id="ajax-count-total" value="0" />
-<input type="hidden" id="ajax-count-complete" value="0" />
-<script type="text/javascript">
+	<input type="hidden" id="total-items" value="<?php echo $count; ?>"
+		name="total-items" /> <input type="hidden" id="ajax-count" value="0" />
+	<input type="hidden" id="ajax-count-total" value="0" /> <input
+		type="hidden" id="ajax-count-complete" value="0" />
+	<script type="text/javascript">
   $(document).ready(function() {
     overlay('overlay-loading');
 

@@ -2,12 +2,8 @@
 
 namespace OpenCloud\CloudMonitoring\Resource;
 
-class AgentHostInfo extends AgentHost
-{
-	
-	public function setProperty($property, $value, array $prefixes = array())
-	{
+class AgentHostInfo extends AgentHost {
+	public function setProperty($property, $value, array $prefixes = array()) {
 		$this->$property = $value;
 	}
-
 }

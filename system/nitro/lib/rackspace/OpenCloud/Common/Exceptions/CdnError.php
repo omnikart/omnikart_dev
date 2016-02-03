@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class CdnError extends \Exception {}
+class CdnError extends \Exception {
+}

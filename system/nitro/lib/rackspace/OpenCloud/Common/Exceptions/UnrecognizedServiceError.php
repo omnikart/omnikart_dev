@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class UnrecognizedServiceError extends \Exception {}
+class UnrecognizedServiceError extends \Exception {
+}

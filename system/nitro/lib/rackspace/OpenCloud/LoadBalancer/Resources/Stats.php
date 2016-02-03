@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP OpenCloud library.
  * 
@@ -8,64 +9,60 @@
  * @author    Glen Campbell <glen.campbell@rackspace.com>
  * @author    Jamie Hannaford <jamie.hannaford@rackspace.com>
  */
-
 namespace OpenCloud\LoadBalancer\Resources;
 
 /**
  * Returns statistics about the load balancer.
- * 
+ *
  * @link http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/List_Load_Balancer_Stats-d1e1524.html
  */
-class Stats extends Readonly 
-{
-    
-    /**
-     * Connections closed by this load balancer because the 'connect_timeout' 
-     * interval was exceeded.
-     * 
-     * @var int 
-     */
-    public $connectTimeOut;
-    
-    /**
-     * Number of transaction or protocol errors in this load balancer.
-     * 
-     * @var int 
-     */
-    public $connectError;
-    
-    /**
-     * Number of connection failures in this load balancer.
-     * 
-     * @var int 
-     */
-    public $connectFailure;
-    
-    /**
-     * Connections closed by this load balancer because the 'timeout' interval 
-     * was exceeded.
-     * 
-     * @var int 
-     */
-    public $dataTimedOut;
-    
-    /**
-     * Connections closed by this load balancer because the 'keepalive_timeout' 
-     * interval was exceeded.
-     * 
-     * @var int 
-     */
-    public $keepAliveTimedOut;
-    
-    /**
-     * Maximum number of simultaneous TCP connections this load balancer has 
-     * processed at any one time.
-     * 
-     * @var int 
-     */
-    public $maxConn;
-
-    protected static $json_name = false;
-    protected static $url_resource = 'stats';
-
+class Stats extends Readonly {
+	
+	/**
+	 * Connections closed by this load balancer because the 'connect_timeout'
+	 * interval was exceeded.
+	 *
+	 * @var int
+	 */
+	public $connectTimeOut;
+	
+	/**
+	 * Number of transaction or protocol errors in this load balancer.
+	 *
+	 * @var int
+	 */
+	public $connectError;
+	
+	/**
+	 * Number of connection failures in this load balancer.
+	 *
+	 * @var int
+	 */
+	public $connectFailure;
+	
+	/**
+	 * Connections closed by this load balancer because the 'timeout' interval
+	 * was exceeded.
+	 *
+	 * @var int
+	 */
+	public $dataTimedOut;
+	
+	/**
+	 * Connections closed by this load balancer because the 'keepalive_timeout'
+	 * interval was exceeded.
+	 *
+	 * @var int
+	 */
+	public $keepAliveTimedOut;
+	
+	/**
+	 * Maximum number of simultaneous TCP connections this load balancer has
+	 * processed at any one time.
+	 *
+	 * @var int
+	 */
+	public $maxConn;
+	protected static $json_name = false;
+	protected static $url_resource = 'stats';
 }

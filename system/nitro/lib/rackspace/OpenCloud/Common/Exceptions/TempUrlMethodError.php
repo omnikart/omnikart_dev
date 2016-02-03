@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class TempUrlMethodError extends \Exception {}
+class TempUrlMethodError extends \Exception {
+}

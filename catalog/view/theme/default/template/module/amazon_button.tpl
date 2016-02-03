@@ -1,5 +1,7 @@
 <div class="panel panel-default">
-  <div class="panel-body" style="text-align: <?php echo $align; ?>;"><span id="AmazonCheckoutWidgetModule<?php echo $module; ?>"></span></div>
+	<div class="panel-body" style="text-align: <?php echo $align; ?>;">
+		<span id="AmazonCheckoutWidgetModule<?php echo $module; ?>"></span>
+	</div>
 </div>
 <script type="text/javascript"><!--
 new CBA.Widgets.InlineCheckoutWidget({

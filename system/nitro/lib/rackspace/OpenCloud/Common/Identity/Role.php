@@ -11,11 +11,8 @@
 
 /**
  * Description of Role
- * 
- * @link 
- * 
- * @codeCoverageIgnore
+ *
+ * @link @codeCoverageIgnore
  */
-class Role
-{
+class Role {
 }

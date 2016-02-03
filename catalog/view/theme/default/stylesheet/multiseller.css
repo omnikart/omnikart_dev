@@ -1,6 +1,7 @@
-.control-inline input, .control-inline select, .input-auto, .ms-product input[type='text'].input-auto {
-    width: auto;
-    display: inline;
+.control-inline input, .control-inline select, .input-auto, .ms-product input[type='text'].input-auto
+	{
+	width: auto;
+	display: inline;
 }
 
 /* table alignment style override */
@@ -21,14 +22,14 @@
 	display: inline-block;
 }
 
-table.list tbody td, table.list thead td  {
+table.list tbody td, table.list thead td {
 	text-align: center;
 	padding: 7px;
-    vertical-align: middle;
+	vertical-align: middle;
 }
 
 .dataTables_wrapper .pagination {
-    display: block;
+	display: block;
 }
 
 .ms-totals {
@@ -50,10 +51,10 @@ table.list tbody td, table.list thead td  {
 .ms-overlay {
 	width: 100%;
 	height: 100%;
-    top: 0;
-    left: 0;
+	top: 0;
+	left: 0;
 	z-index: 100;
-	background-color:#EEE;
+	background-color: #EEE;
 	opacity: 0.5;
 	position: absolute;
 }
@@ -62,19 +63,17 @@ table.list tbody td, table.list thead td  {
 	margin-top: 5px;
 }
 
-.ms-product div.error p,
-.register-seller p.error {
+.ms-product div.error p, .register-seller p.error {
 	margin: 0;
 }
 
-.ms-account-product-form p.warning.main,
-.ms-account-profile p.warning.main,
-.register-seller .warning.main {
+.ms-account-product-form p.warning.main, .ms-account-profile p.warning.main,
+	.register-seller .warning.main {
 	display: none;
 }
 
-.ms-product .progress div .ui-widget-content,
-.ms-product .progress div .ui-widget-header {
+.ms-product .progress div .ui-widget-content, .ms-product .progress div .ui-widget-header
+	{
 	background-image: none !important;
 	border: 1px solid #6db1f2;
 	background-color: #92c6f9 !important;
@@ -82,15 +81,15 @@ table.list tbody td, table.list thead td  {
 
 .ms-product .progress div.ui-progressbar {
 	margin: 10px 0;
-	height: 20px;	
+	height: 20px;
 }
 
 .ms-product .progress div.ui-progressbar div.label {
-    float: left;
-    width:100%;
-    text-align:center;
-    margin-top: 3px;
-    font-weight: bold;
+	float: left;
+	width: 100%;
+	text-align: center;
+	margin-top: 3px;
+	font-weight: bold;
 }
 
 .ms-product .progress {
@@ -106,6 +105,7 @@ table.list tbody td, table.list thead td  {
 	background: #FFFFFF;
 	overflow-y: scroll;
 }
+
 .ms-product .scrollbox img {
 	float: right;
 	cursor: pointer;
@@ -114,29 +114,32 @@ table.list tbody td, table.list thead td  {
 .ms-product .scrollbox div {
 	padding: 3px;
 }
+
 .ms-product .scrollbox div input {
 	margin: 0px;
 	padding: 0px;
 	margin-right: 3px;
 }
+
 .ms-product .scrollbox div.even {
 	background: #FFFFFF;
 }
+
 .ms-product .scrollbox div.odd {
 	background: #E4EEF7;
 }
 
 .ms-product .scrollbox div.odd.disabled {
 	background: #EDEDED;
-	color: #848484; 
+	color: #848484;
 }
 
 .ms-product .scrollbox div.even.disabled {
 	background: #F8F8F8;
-	color: #848484; 
+	color: #848484;
 }
 
-.ms-product tr > td {
+.ms-product tr>td {
 	padding-bottom: 10px;
 	vertical-align: top;
 }
@@ -155,7 +158,7 @@ table.list tbody td, table.list thead td  {
 }
 
 .ms-product .ms-image {
-	position:relative;
+	position: relative;
 	display: inline-block;
 	border: 1px solid #EEEEEE;
 	margin: 0 5px;
@@ -172,7 +175,7 @@ table.list tbody td, table.list thead td  {
 	background: #ffffff url(../image/ms-tick.png) no-repeat left top;
 	display: inline-block;
 	padding-left: 40px;
-	line-height:30px;
+	line-height: 30px;
 }
 
 .ms-account-product-form .ms-button-delete {
@@ -198,7 +201,7 @@ table.list tbody td, table.list thead td  {
 }
 
 .ms-account-product-form .option {
-	width:100%;
+	width: 100%;
 	display: block;
 	margin-bottom: 10px;
 }
@@ -227,7 +230,7 @@ table.list tbody td, table.list thead td  {
 	right: 8px;
 	background-size: 16px 16px;
 	height: 16px;
-	width: 16px;	
+	width: 16px;
 }
 
 .o-heading .option_required {
@@ -244,11 +247,11 @@ table.list tbody td, table.list thead td  {
 }
 
 .option_value {
-    margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
 .select_option_value {
-    margin-top: 15px;
+	margin-top: 15px;
 }
 
 .option_name {
@@ -256,14 +259,12 @@ table.list tbody td, table.list thead td  {
 	width: 125px;
 }
 
-span.option_price,
-input.option_quantity {
+span.option_price, input.option_quantity {
 	margin-right: 25px;
 }
 
-.option_value .ms-button-delete,
-.option_price_prefix,
-.option_required {
+.option_value .ms-button-delete, .option_price_prefix, .option_required
+	{
 	background-size: 24px 24px;
 	width: 24px;
 	height: 24px;
@@ -278,8 +279,8 @@ input.option_quantity {
 	float: right;
 }
 
-.ms-product .ms-download .ms-buttons a,
-.ms-product .ms-download .ms-buttons span.disabled {
+.ms-product .ms-download .ms-buttons a, .ms-product .ms-download .ms-buttons span.disabled
+	{
 	display: inline-block;
 	width: 32px;
 	height: 32px;
@@ -295,7 +296,6 @@ input.option_quantity {
 	font-weight: bold;
 	background: url('../image/button.png') top left repeat-x;
 	text-align: center;
-	
 	-webkit-border-radius: 7px 7px 7px 7px;
 	-moz-border-radius: 7px 7px 7px 7px;
 	-khtml-border-radius: 7px 7px 7px 7px;
@@ -344,7 +344,7 @@ input.option_quantity {
 }
 
 .ms-account-product-form .attention.ms-commission span,
-.ms-account-profile .attention.ms-commission span {
+	.ms-account-profile .attention.ms-commission span {
 	font-weight: bold;
 }
 
@@ -353,6 +353,7 @@ input.option_quantity {
 }
 
 .ms-language-div {
+	
 }
 
 .ms-note {
@@ -376,7 +377,7 @@ input.option_quantity {
 	margin: 0;
 }
 
-#ms-withdrawal tr:first-child + tr td:first-child + td {
+#ms-withdrawal tr:first-child+tr td:first-child+td {
 	padding-top: 5px;
 }
 
@@ -394,7 +395,7 @@ input.option_quantity {
 	display: inline-block;
 }
 
-.ms-sellerprofile .seller-data > div {
+.ms-sellerprofile .seller-data>div {
 	display: inline;
 	float: left;
 }
@@ -425,70 +426,69 @@ input.option_quantity {
 	border: 0;
 }
 
-
 .ms-catalog-seller-profile .seller-banner img {
+	
 }
-
 
 .ms-catalog-seller-profile .seller-description {
-    white-space: pre-wrap;
+	white-space: pre-wrap;
 }
+
 .ms-catalog-seller-profile .avatar-box {
-    display: inline-block;
-    margin: 0;
-    float: left;
+	display: inline-block;
+	margin: 0;
+	float: left;
 }
 
 .ms-catalog-seller-profile .avatar-box>img {
-    margin: 0;
+	margin: 0;
 }
 
 .ms-catalog-seller-profile .info-box h3 {
-    margin: 0;
+	margin: 0;
 }
 
 .ms-catalog-seller-profile .info-box>div {
-    display:inline-block;
-    margin-left: 20px;
+	display: inline-block;
+	margin-left: 20px;
 }
 
 .ms-catalog-seller-profile .product-thumb .caption {
-    min-height: 0;
-    text-align: center;
+	min-height: 0;
+	text-align: center;
 }
 
 .ms-catalog-seller-profile .product-thumb .button-group button {
-    width: 100%
+	width: 100%
 }
 
 /* seller list */
 .catalog-seller .caption {
-    min-height: 150px;
+	min-height: 150px;
 }
 
 .catalog-seller .caption p {
-    margin: 0
+	margin: 0
 }
 
 .catalog-seller .product-grid .seller-description {
-    display: none;
+	display: none;
 }
 
-
 .catalog-seller .product-list {
-
+	
 }
 
 .ms-carousel ul li a {
-    color: #38B0E3;
-    display: block;
-    font-weight: bold;
-    margin-bottom: 4px;
-    text-decoration: none;
+	color: #38B0E3;
+	display: block;
+	font-weight: bold;
+	margin-bottom: 4px;
+	text-decoration: none;
 }
 
 .ms-carousel .jcarousel-container {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 .ms-carousel .image img {
@@ -497,30 +497,28 @@ input.option_quantity {
 }
 
 /* general dialog styles */
-
-.ms-jquery-dialog,
-div.ms-jquery-dialog.ui-widget-content,
-.ms-jquery-dialog div.ui-widget-content {
+.ms-jquery-dialog, div.ms-jquery-dialog.ui-widget-content,
+	.ms-jquery-dialog div.ui-widget-content {
 	background-color: white;
 }
 
-.ms-jquery-dialog .ui-widget-header,
-.ms-jquery-dialog .ui-state-hover {
-       background: url("../../../javascript/jquery/ui/themes/base/images/ui-bg_glass_75_dadada_1x400.png") repeat-x scroll 50% 50% #CCCCCC;
-       border: 1px solid #BBBBBB;
-       color: #666666;
-       border-bottom-left-radius: 0;
-       border-bottom-right-radius: 0;
+.ms-jquery-dialog .ui-widget-header, .ms-jquery-dialog .ui-state-hover {
+	background:
+		url("../../../javascript/jquery/ui/themes/base/images/ui-bg_glass_75_dadada_1x400.png")
+		repeat-x scroll 50% 50% #CCCCCC;
+	border: 1px solid #BBBBBB;
+	color: #666666;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
 }
 
-.ms-jquery-dialog .ui-widget-header .ui-icon,
-.ms-jquery-dialog .ui-state-hover .ui-icon,
-.ms-jquery-dialog .ui-state-focus .ui-icon {
-	background-image: url("../../../javascript/jquery/ui/themes/base/images/ui-icons_222222_256x240.png");
+.ms-jquery-dialog .ui-widget-header .ui-icon, .ms-jquery-dialog .ui-state-hover .ui-icon,
+	.ms-jquery-dialog .ui-state-focus .ui-icon {
+	background-image:
+		url("../../../javascript/jquery/ui/themes/base/images/ui-icons_222222_256x240.png");
 	border: medium none;
-    float: right;
+	float: right;
 }
-
 
 .ms-jquery-dialog .ui-widget-content.ui-dialog-buttonpane {
 	border-top: none;
@@ -532,7 +530,6 @@ div.ms-jquery-dialog.ui-widget-content,
 }
 
 /* general dialog form styles */
-
 .ms-jquery-dialog p.warning {
 	padding: 10px 10px 10px 33px;
 	margin-bottom: 15px;
@@ -559,32 +556,29 @@ div.ms-jquery-dialog.ui-widget-content,
 	height: 150px;
 }
 
-.ms-jquery-dialog .ms-form label,
-.ms-jquery-dialog .ms-form input,
-.ms-jquery-dialog .ms-form textarea {
+.ms-jquery-dialog .ms-form label, .ms-jquery-dialog .ms-form input,
+	.ms-jquery-dialog .ms-form textarea {
 	margin-top: 5px;
 	margin-bottom: 5px;
 	display: inline-block;
 }
 
 /* seller contact form */
-
 .ms-sellercontact-image {
 	text-align: center;
 }
 
 .ms-sellercontact-image img {
 	padding: 3px;
-	border: 1px solid #E7E7E7;		
+	border: 1px solid #E7E7E7;
 }
 
 .ms-sellercontact-image a {
 	text-decoration: none;
-	outline: none;		
+	outline: none;
 }
 
-.ms-sellercontact-dialog h3,
-.ms-sellercontact-dialog h4 {
+.ms-sellercontact-dialog h3, .ms-sellercontact-dialog h4 {
 	text-align: center;
 	margin: 20px 0;
 }
@@ -644,21 +638,19 @@ div.ms-jquery-dialog.ui-widget-content,
 	background-image: url(../image/ms-cross.png);
 }
 
-
-.ms-account-order .products p,
-.ms-account-dashboard .products p {
+.ms-account-order .products p, .ms-account-dashboard .products p {
 	display: inline-block;
 	width: 100%;
 	margin: 0;
 }
 
-.ms-account-order .products .name,
-.ms-account-dashboard .products .name {
+.ms-account-order .products .name, .ms-account-dashboard .products .name
+	{
 	float: left;
 }
 
-.ms-account-order .products .total,
-.ms-account-dashboard .products .total {
+.ms-account-order .products .total, .ms-account-dashboard .products .total
+	{
 	float: right;
 }
 
@@ -684,9 +676,7 @@ ul.ms-sellermenu.graphical li a {
 }
 
 /* seller dashboard */
-
-.ms-account-dashboard h2,
-.ms-account-transaction h2 {
+.ms-account-dashboard h2, .ms-account-transaction h2 {
 	text-align: center;
 	clear: both;
 	margin: 10px;
@@ -698,8 +688,7 @@ ul.ms-sellermenu.graphical li a {
 	display: inline-block;
 }
 
-.ms-account-dashboard .overview p,
-.ms-account-dashboard .stats p {
+.ms-account-dashboard .overview p, .ms-account-dashboard .stats p {
 	margin-bottom: 5px;
 }
 
@@ -723,25 +712,23 @@ ul.ms-sellermenu.graphical li a {
 	margin-right: 5px;
 }
 
-
 /*
  *
  * datatables 
  *
  */
-
 .dataTables_wrapper .dataTables_processing {
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    margin:0;
-    background: rgba(255,255,255,.90);
-    border: 1px solid #efefef;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	margin: 0;
+	background: rgba(255, 255, 255, .90);
+	border: 1px solid #efefef;
 }
 
 .dataTables_wrapper .dataTables_processing i {
-    margin-top: 15px;
+	margin-top: 15px;
 }
 
 .dataTables_length, .dataTables_filter {
@@ -756,7 +743,6 @@ ul.ms-sellermenu.graphical li a {
 .dataTables_filter {
 	float: right;
 }
-
 
 .dataTables_wrapper table.dataTable {
 	margin-bottom: 10px;
@@ -791,7 +777,7 @@ table .large {
 table .filter input[type="text"] {
 	width: 100%;
 	box-sizing: border-box;
-	-webkit-box-sizing:border-box;
+	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 }
 
@@ -804,8 +790,8 @@ table.list thead td.right {
 }
 
 .dataTables_wrapper .paging_full_numbers a.paginate_button,
-.dataTables_wrapper .paging_full_numbers a.paginate_button:hover,
-.dataTables_wrapper .paging_full_numbers a.paginate_active {
+	.dataTables_wrapper .paging_full_numbers a.paginate_button:hover,
+	.dataTables_wrapper .paging_full_numbers a.paginate_active {
 	border: 1px solid #DDDDDD;
 	padding: 4px 10px;
 	font-size: 12px;
@@ -815,7 +801,7 @@ table.list thead td.right {
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	border-radius: 0;
-	margin: 0 2px;	
+	margin: 0 2px;
 }
 
 .dataTables_wrapper .paging_full_numbers a.paginate_active {
@@ -828,55 +814,62 @@ table.list thead td.right {
 }
 
 .avatars-list input {
-    display: none;
+	display: none;
 }
+
 .avatars-list label {
-    padding: 5px;
+	padding: 5px;
 }
+
 .avatars-list div {
-    float: left;
-    margin: 5px;
+	float: left;
+	margin: 5px;
 }
+
 .avatars-list img {
-    cursor: pointer;
+	cursor: pointer;
 }
+
 .avatars-list label span {
-    display: block;
-    width: 100px;
-    height: 100px;
+	display: block;
+	width: 100px;
+	height: 100px;
 }
+
 .avatars-group {
-    overflow: hidden;
+	overflow: hidden;
 }
+
 .comment-column-right {
-    float: right;
-    padding: 0 0 10px 10px;
-    width: 20%;
+	float: right;
+	padding: 0 0 10px 10px;
+	width: 20%;
 }
+
 .comment-ratings {
-    width: 100%;
+	width: 100%;
 }
+
 .comment-ratings tr td {
-    padding-right: 10px;
+	padding-right: 10px;
 }
 
 .has-error .error, .error {
-    color: #a94442;
+	color: #a94442;
 }
 
 .inline {
-    display:inline;
+	display: inline;
 }
 
 .module .product-thumb .caption {
-    padding: 0 20px;
-    min-height: 50px;
-    text-align: center;
+	padding: 0 20px;
+	min-height: 50px;
+	text-align: center;
 }
 
-.ms-account-order-info table thead,
-.ms-account-order-info table tfoot {
-    color: #595959;
-    border-color: #e8e8e8;
-    background: #fcfcfc;
+.ms-account-order-info table thead, .ms-account-order-info table tfoot {
+	color: #595959;
+	border-color: #e8e8e8;
+	background: #fcfcfc;
 }

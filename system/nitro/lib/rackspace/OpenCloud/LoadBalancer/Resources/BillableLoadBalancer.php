@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP OpenCloud library.
  * 
@@ -8,15 +9,12 @@
  * @author    Glen Campbell <glen.campbell@rackspace.com>
  * @author    Jamie Hannaford <jamie.hannaford@rackspace.com>
  */
-
 namespace OpenCloud\LoadBalancer\Resources;
 
 /**
  * Used to get a list of billable load balancers for a specific date range
  */
-class BillableLoadBalancer extends ReadOnly 
-{
-
-    protected static $url_resource = 'loadbalancers/billable';
-    protected static $json_name = null;
+class BillableLoadBalancer extends ReadOnly {
+	protected static $url_resource = 'loadbalancers/billable';
+	protected static $json_name = null;
 }

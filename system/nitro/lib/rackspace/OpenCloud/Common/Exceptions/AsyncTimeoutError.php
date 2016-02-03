@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class AsyncTimeoutError extends \Exception {}
+class AsyncTimeoutError extends \Exception {
+}

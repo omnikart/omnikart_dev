@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class UnsupportedVersionError extends \Exception {}
+class UnsupportedVersionError extends \Exception {
+}

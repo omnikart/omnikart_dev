@@ -1,7 +1,8 @@
 <div class="panel panel-default">
-  <div class="panel-body" style="text-align: right;"> <span id="pp_login_container"></span>
-    <script src="https://www.paypalobjects.com/js/external/api.js"></script>
-    <script>
+	<div class="panel-body" style="text-align: right;">
+		<span id="pp_login_container"></span>
+		<script src="https://www.paypalobjects.com/js/external/api.js"></script>
+		<script>
 paypal.use(['login'], function(login) {
 	login.render ({
 		'appid': '<?php echo $client_id; ?>',
@@ -14,5 +15,5 @@ paypal.use(['login'], function(login) {
 	});
 });
     </script>
-  </div>
+	</div>
 </div>

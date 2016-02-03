@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class InvalidArgumentError extends \Exception {}
+class InvalidArgumentError extends \Exception {
+}

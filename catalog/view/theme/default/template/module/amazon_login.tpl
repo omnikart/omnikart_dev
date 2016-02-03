@@ -13,11 +13,11 @@
 	});
 </script>
 <?php if (isset($amazon_login_pay_test)) { ?>
-	<label>Debug Error Code     :</label>
-	<div id="errorCode"></div>
-	<br>
-	<label>Debug Error Message  :</label>
-	<div id="errorMessage"></div>
+<label>Debug Error Code :</label>
+<div id="errorCode"></div>
+<br>
+<label>Debug Error Message :</label>
+<div id="errorMessage"></div>
 <?php } ?>
 <div id="AmazonLoginButton"></div>
 <script type="text/javascript">

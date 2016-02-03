@@ -242,7 +242,7 @@ class ControllerModuleEnquiry extends Controller {
 							$this->session->data ['enquiry'] [$key] += ( int ) $quantity;
 						}
 					}
-					$json ['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $enquiry ['product_id']), $enquiry['name']);
+					$json ['success'] = sprintf ( $this->language->get ( 'text_success' ), $this->url->link ( 'product/product', 'product_id=' . $enquiry ['product_id'] ), $enquiry ['name'] );
 					$json ['number'] = count ( $this->session->data ['enquiry'] );
 				}
 			}
@@ -261,16 +261,14 @@ class ControllerModuleEnquiry extends Controller {
 			$this->model_module_enquiry->renderEnquiry ( $this->request->get ['enquiry_id'] );
 		}
 	}
-	
-	public function deleteProduct(){
-		if ($this->request->server['REQUEST_METHOD'] == 'POST'){
-			if (isset($this->request->post['key'])) {
-				unset($this->session->data['enquiry'][$this->request->post['key']]);
-				$this->getEnquiry();
+	public function deleteProduct() {
+		if ($this->request->server ['REQUEST_METHOD'] == 'POST') {
+			if (isset ( $this->request->post ['key'] )) {
+				unset ( $this->session->data ['enquiry'] [$this->request->post ['key']] );
+				$this->getEnquiry ();
 			}
 		}
 	}
-	
 	public function getEnquiry() {
 		$data = array ();
 		$data ['enquiries'] = array ();
@@ -297,6 +295,64 @@ class ControllerModuleEnquiry extends Controller {
 			$this->response->setOutput ( $this->load->view ( $this->config->get ( 'config_template' ) . '/template/module/enquiry_products.tpl', $data ) );
 		} else {
 			$this->response->setOutput ( $this->load->view ( 'default/template/module/enquiry_products.tpl', $data ) );
+		}
+	}
+	public function getEnquiryComment() {
+		if (isset ( $this->request->get ['enquiry_id'] ))
+			$enquiry_id = $this->request->get ['enquiry_id'];
+		else
+			$enquiry_id = 0;
+		$this->load->model ( 'account/customerpartner' );
+		$seller_id = $this->model_account_customerpartner->getuserseller ();
+		$json = array ();
+		$this->load->model ( 'module/enquiry' );
+		$json = $this->model_module_enquiry->getEnquiryComments ( $enquiry_id, $seller_id );
+		$this->response->setOutput ( json_encode ( $json ) );
+	}
+	public function addEnquiryComment() {
+		$this->load->model ( 'account/customerpartner' );
+		$seller_id = $this->model_account_customerpartner->getuserseller ();
+		$json = array ();
+		if ($this->request->server ['REQUEST_METHOD'] == 'POST') {
+			if (isset ( $this->request->post )) {
+				$this->load->model ( 'module/enquiry' );
+				$data = $this->request->post;
+				$json = $this->model_module_enquiry->addEnquiryComments ( $data ['enquiry_id'], $seller_id, $data ['enquiry'] [$data ['enquiry_id']] );
+				$this->response->setOutput ( json_encode ( $json ) );
+			}
+		}
+	}
+	public function getQuotationSuppliers() {
+		if (isset ( $this->request->get ['enquiry_id'] ))
+			$enquiry_id = $this->request->get ['enquiry_id'];
+		else
+			$enquiry_id = 0;
+		$json = array ();
+		$this->load->model ( 'module/enquiry' );
+		$json = $this->model_module_enquiry->getQuotationBySuppliers ( $enquiry_id );
+		$this->response->setOutput ( json_encode ( $json ) );
+	}
+	public function getSentEnquiryComment() {
+		if (isset ( $this->request->get ['quote_id'] ))
+			$quote_id = $this->request->get ['quote_id'];
+		else
+			$quote_id = 0;
+		$json = array ();
+		$this->load->model ( 'module/enquiry' );
+		$json = $this->model_module_enquiry->getSentEnquiryComments ( $quote_id );
+		$this->response->setOutput ( json_encode ( $json ) );
+	}
+	public function addSentEnquiryComment() {
+		$this->load->model ( 'account/customerpartner' );
+		$customer_id = $this->model_account_customerpartner->getuserseller ();
+		$json = array ();
+		if ($this->request->server ['REQUEST_METHOD'] == 'POST') {
+			if (isset ( $this->request->post )) {
+				$this->load->model ( 'module/enquiry' );
+				$data = $this->request->post;
+				$json = $this->model_module_enquiry->addSentEnquiryComments ( $data ['quote_id'], $customer_id, $data ['quote'] [$data ['quote_id']] );
+				$this->response->setOutput ( json_encode ( $json ) );
+			}
 		}
 	}
 }

@@ -1,112 +1,144 @@
-<div class="modal fade" id="<?php echo $modal_id; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-	  	<div class="modal-header">
-	  		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	  		<h4>Product Enquiry Form</h4>
-	  	</div>
-      <div class="modal-body"><!-- edited latest -->
-      	<form id="enquiry_form">
-	  	   <div class="row">
-	  	   <div class="col-sm-12">
-	  	   	<div class="table-responsive">
-			  	<table class="table" id="productquery">
-			  		<thead>
-			  			<tr style="visible:none;">
-			  				<th class="col-sm-6">Product Name</th>
-			  				<th class="col-sm-5">Quantity</th>
-			  				<th class="col-sm-1"></th>
-			  			</tr>
-			  		</thead>
-			  		<tbody id="product-0">
-			  			<tr>
-					  		<td>
-					          <div class="form-group required">
-					              <input type="text" name="product[0][name]" value="" placeholder="Product Name" id="product-name" class="form-control" />
-					          </div>
-					    	</td>
-							<td>
-					          <div class="form-group required">
-					          	<div class="input-group">
-					              <input type="text" name="product[0][quantity]" value="" placeholder="Quantity Required" id="quantity" class="form-control quantity" />
-					              <span class="input-group-btn">
-	            					<button type="button" id="button-ctrl" data-loading-text="Loading..." class="btn btn-primary btn-increase"><i class="fa fa-plus"></i></button>
-	            					<button type="button" id="button-ctrl" data-loading-text="Loading..." class="btn btn-primary btn-decrease"><i class="fa fa-minus"></i></button>
-	            				  </span>
-	            				 </div>
-					          </div>
-						    </td>
-						    <td><button type="button" id="button-upload" onclick="$('#product-0').remove();" class="btn btn-danger btn-decrease"><i class="fa fa-times"></i></button>
-						    </td>
-						</tr>
-						<tr>
-							<td colspan="3">
-						        <div class="form-group required">
-						            <textarea rows="5" name="product[0][specification]" placeholder="Please specify your requirement and product specifications required" id="specification" class="form-control"></textarea>
-						        </div>
-							</td>
-			  			</tr>
-			  		</tbody>
-			   	</table>
+<div class="modal fade" id="<?php echo $modal_id; ?>" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h4>Product Enquiry Form</h4>
 			</div>
-		   	  <div class="col-sm-12">
-		   	  	<div class="row">
-			   	  <div class="col-sm-6">
-			   	  	<button type="button" id="addqueryproduct" class="btn btn-default">Add Product</button>
-			   	  	<button type="button" id="button-upload" class="btn btn-default">Upload</button>
-			   	  </div>
-			   	  <div class="col-sm-6">
-		   	  		<div id="uploaded-file"></div>
-		            		
-			        
-			      </div>
-			   	  </div>
-			   	</div>
-		   	  </div>
-		   	  <div class="clearfix"></div>
-		   	  <br />
-		   	  <hr />
-		   	  <div class="col-sm-12">
-			  	<div class="row">
-			   	  <div class="col-sm-6">
-			          <div class="form-group required">
-			            <label class="control-label" for="first-name">First Name</label>
-			              <input type="text" name="firstname" value="<?php echo ($logged)?$firstname:''; ?>" placeholder="First Name" id="first-name" class="form-control" />
-			          </div>
-			      </div>
-				  <div class="col-sm-6">
-			          <div class="form-group required">
-			            <label class="control-label" for="last-name">Last Name</label>
-			            <input type="text" name="lastname" value="<?php echo ($logged)?$lastname:''; ?>" placeholder="Last Name" id="last-name" class="form-control" />
-			          </div>
-			      </div>		      
-			   </div>
-			  </div>
-  		   	  <div class="col-sm-12">
-			  	<div class="row">
-			      <div class="col-sm-6">
-			          <div class="form-group required">
-			            <label class="control-label" for="phone">Contact Number</label>
-			              <input type="text" name="phone" value="<?php echo ($logged)?$phone:''; ?>" placeholder="Phone Number" id="phone" class="form-control" />
-			          </div>
-		          </div>
-			      <div class="col-sm-6">
-			          <div class="form-group">
-			            <label class="control-label" for="email">Email Id</label>
-			              <input type="text" name="email" value="<?php echo ($logged)?$email:''; ?>" placeholder="Email Id" id="email" class="form-control" />
-			          </div>
-		          </div>
-		        </div>
-	          </div>
-	       </div>	          
-	       </div>          
-        </form>
-      <div class="modal-footer">
-	   	<button type="button" class="btn btn-default" id="submit-enquiry">Submit Enquiry</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
+			<div class="modal-body">
+				<!-- edited latest -->
+				<form id="enquiry_form">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="table-responsive">
+								<table class="table" id="productquery">
+									<thead>
+										<tr style="visible: none;">
+											<th class="col-sm-6">Product Name</th>
+											<th class="col-sm-5">Quantity</th>
+											<th class="col-sm-1"></th>
+										</tr>
+									</thead>
+									<tbody id="product-0">
+										<tr>
+											<td>
+												<div class="form-group required">
+													<input type="text" name="product[0][name]" value=""
+														placeholder="Product Name" id="product-name"
+														class="form-control" />
+												</div>
+											</td>
+											<td>
+												<div class="form-group required">
+													<div class="input-group">
+														<input type="text" name="product[0][quantity]" value=""
+															placeholder="Quantity Required" id="quantity"
+															class="form-control quantity" /> <span
+															class="input-group-btn">
+															<button type="button" id="button-ctrl"
+																data-loading-text="Loading..."
+																class="btn btn-primary btn-increase">
+																<i class="fa fa-plus"></i>
+															</button>
+															<button type="button" id="button-ctrl"
+																data-loading-text="Loading..."
+																class="btn btn-primary btn-decrease">
+																<i class="fa fa-minus"></i>
+															</button>
+														</span>
+													</div>
+												</div>
+											</td>
+											<td><button type="button" id="button-upload"
+													onclick="$('#product-0').remove();"
+													class="btn btn-danger btn-decrease">
+													<i class="fa fa-times"></i>
+												</button></td>
+										</tr>
+										<tr>
+											<td colspan="3">
+												<div class="form-group required">
+													<textarea rows="5" name="product[0][specification]"
+														placeholder="Please specify your requirement and product specifications required"
+														id="specification" class="form-control"></textarea>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-sm-12">
+								<div class="row">
+									<div class="col-sm-6">
+										<button type="button" id="addqueryproduct"
+											class="btn btn-default">Add Product</button>
+										<button type="button" id="button-upload"
+											class="btn btn-default">Upload</button>
+									</div>
+									<div class="col-sm-6">
+										<div id="uploaded-file"></div>
+
+
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						<br />
+						<hr />
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group required">
+										<label class="control-label" for="first-name">First Name</label>
+										<input type="text" name="firstname"
+											value="<?php echo ($logged)?$firstname:''; ?>"
+											placeholder="First Name" id="first-name" class="form-control" />
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group required">
+										<label class="control-label" for="last-name">Last Name</label>
+										<input type="text" name="lastname"
+											value="<?php echo ($logged)?$lastname:''; ?>"
+											placeholder="Last Name" id="last-name" class="form-control" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group required">
+										<label class="control-label" for="phone">Contact Number</label>
+										<input type="text" name="phone"
+											value="<?php echo ($logged)?$phone:''; ?>"
+											placeholder="Phone Number" id="phone" class="form-control" />
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label class="control-label" for="email">Email Id</label> <input
+											type="text" name="email"
+											value="<?php echo ($logged)?$email:''; ?>"
+											placeholder="Email Id" id="email" class="form-control" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+			
+			</div>
+			</form>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" id="submit-enquiry">Submit
+					Enquiry</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
 </div>
 <script type="text/javascript">
 	var productrow = 0;
@@ -230,8 +262,6 @@ $('#enquiry_modal').on('click','#productquery button.btn-decrease',function(){
 					if (json['success']) {
 						html = '<a target="_Blank" href="'+json['link']+'">'+json['mask']+'</a><input type="hidden" name="filename" value="'+json['filename']+'" />'
 						$('#uploaded-file').html(html);
-						
-						
 						$('input[name=\'mask\']').attr('value', json['mask']);
 					}
 				},			

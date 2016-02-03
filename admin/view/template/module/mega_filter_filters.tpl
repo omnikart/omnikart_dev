@@ -2,8 +2,10 @@
 
 <div class="col-xs-2">
 	<ul class="nav nav-tabs tabs-left">
-		<li class="active"><a data-toggle="tab" href="#filters-list"><i class="glyphicon glyphicon-align-justify"></i> <?php echo $text_list; ?></a></li>
-		<li><a data-toggle="tab" href="#filters-images"><i class="glyphicon glyphicon glyphicon-picture"></i> <?php echo $text_images; ?></a></li>
+		<li class="active"><a data-toggle="tab" href="#filters-list"><i
+				class="glyphicon glyphicon-align-justify"></i> <?php echo $text_list; ?></a></li>
+		<li><a data-toggle="tab" href="#filters-images"><i
+				class="glyphicon glyphicon glyphicon-picture"></i> <?php echo $text_images; ?></a></li>
 	</ul>
 </div>
 
@@ -11,41 +13,43 @@
 	<div class="tab-content">
 		<br />
 		<div class="tab-pane active" id="filters-list">
-			<br /><?php echo $entry_default_values; ?><br /><br />
-			<?php 
-
-				$_filtersName		= $_name . '_filters';
-				$_filtersValues		= $filters;
-
-				require DIR_TEMPLATE . 'module/' . $_name . '-filters.tpl';
-
+			<br /><?php echo $entry_default_values; ?><br />
+			<br />
+			<?php
+			
+			$_filtersName = $_name . '_filters';
+			$_filtersValues = $filters;
+			
+			require DIR_TEMPLATE . 'module/' . $_name . '-filters.tpl';
+			
 			?>
 		</div>
 		<div class="tab-pane" id="filters-images">
 			<table class="table table-without-thead">
 				<tr>
-					<td class="vertical-middle" width="150">
-						<i class="glyphicon glyphicon glyphicon-picture"></i> <?php echo $entry_set_images; ?>
+					<td class="vertical-middle" width="150"><i
+						class="glyphicon glyphicon glyphicon-picture"></i> <?php echo $entry_set_images; ?>
 					</td>
-					<td class="vertical-middle" width="200" height="60">
-						<select id="filters-language_images" class="form-control">
+					<td class="vertical-middle" width="200" height="60"><select
+						id="filters-language_images" class="form-control">
 							<?php foreach( $languages as $language ) { ?>
 								<option value="<?php echo $language['language_id']; ?>"><?php echo $language['name']; ?></option>
 							<?php } ?>
-						</select>
-					</td>
-					<td class="vertical-middle" width="200" height="60">
-						<select id="filters-filter_images" class="form-control">
+						</select></td>
+					<td class="vertical-middle" width="200" height="60"><select
+						id="filters-filter_images" class="form-control">
 							<option value=""><?php echo $text_select_filter; ?></option>
 							<?php foreach( $filterItems as $filter_id => $filter ) { ?>
 								<option value="<?php echo $filter_id; ?>"><?php echo $filter['name']; ?></option>
 							<?php } ?>
-						</select>
-					</td>
-					<td class="vertical-middle">
-						<a href="#" id="save-sort-values_images" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok"></i> <?php echo $text_save; ?></a>
-						<img src="view/stylesheet/mf/img/loading.gif" id="save-sort-loader_images" />
-						<a href="#" id="reset-sort-values_images" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-repeat"></i> <?php echo $text_reset; ?></a>
+						</select></td>
+					<td class="vertical-middle"><a href="#"
+						id="save-sort-values_images" class="btn btn-success btn-sm"><i
+							class="glyphicon glyphicon-ok"></i> <?php echo $text_save; ?></a>
+						<img src="view/stylesheet/mf/img/loading.gif"
+						id="save-sort-loader_images" /> <a href="#"
+						id="reset-sort-values_images" class="btn btn-danger btn-sm"><i
+							class="glyphicon glyphicon-repeat"></i> <?php echo $text_reset; ?></a>
 					</td>
 				</tr>
 				<tr>
@@ -53,10 +57,10 @@
 				</tr>
 			</table>
 		</div>
-	</dvi>
-</div>
-	
-<script type="text/javascript">
+		</dvi>
+	</div>
+
+	<script type="text/javascript">
 	var MF_AJAX_PARAMS = '<?php echo $HTTP_URL ? "&option=com_mijoshop&format=raw" : ""; ?>';
 	
 	function initByType( _TYPE_ ){

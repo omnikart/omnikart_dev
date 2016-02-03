@@ -1,33 +1,33 @@
 <?php echo $header; ?><div id="columns"><?php echo $column_left; ?><?php echo $column_right; ?>
 <div class="container"><?php echo $content_top; ?>
-	<div style="text-align:center;">
-		<h3><?php echo $heading_address; ?></h3>
+	<div style="text-align: center;">
+			<h3><?php echo $heading_address; ?></h3>
 		<?php if(isset($amazon_login_pay_test)){ ?>
-		<label>Debug Error Code     :</label>
-		<div id="errorCode"></div>
-		<br>
-		<label>Debug Error Message  :</label>
-		<div id="errorMessage"></div>
+		<label>Debug Error Code :</label>
+			<div id="errorCode"></div>
+			<br> <label>Debug Error Message :</label>
+			<div id="errorMessage"></div>
 		<?php } ?>
-		<div style="margin: 0 auto; width: 400px; height: 228px;" id="addressBookWidgetDiv">
+		<div style="margin: 0 auto; width: 400px; height: 228px;"
+				id="addressBookWidgetDiv"></div>
+			<div style="margin: 5px auto 0; width: 180px;">
+				<div class="shipping-methods amazon-payments-box"></div>
+			</div>
 		</div>
-		<div style="margin: 5px auto 0; width: 180px;">
-			<div class="shipping-methods amazon-payments-box"></div>
+		<div style="clear: both;"></div>
+		<div class="buttons">
+			<div class="pull-left">
+				<a href="<?php echo $cart; ?>" class="btn btn-primary"><?php echo $text_cart; ?></a>
+			</div>
+			<div class="pull-right">
+				<input class="btn btn-primary" id="continue-button" type="submit"
+					value="<?php echo $text_continue; ?>" />
+			</div>
 		</div>
-	</div>
-	<div style="clear: both;"></div>
-	<div class="buttons">
-		<div class="pull-left">
-			<a href="<?php echo $cart; ?>" class="btn btn-primary"><?php echo $text_cart; ?></a>
-		</div>
-		<div class="pull-right">
-			<input class="btn btn-primary" id="continue-button" type="submit" value="<?php echo $text_continue; ?>" />
-		</div>
-	</div>
-	<input type="hidden" name="addressSelected" value="0" />
+		<input type="hidden" name="addressSelected" value="0" />
 	<?php echo $content_bottom; ?>
 </div>
-<script type="text/javascript"><!--
+	<script type="text/javascript"><!--
 $(document).ready(function() {
 		amazon.Login.setClientId('<?php echo $amazon_login_pay_client_id ?>');
 

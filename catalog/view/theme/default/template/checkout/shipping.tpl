@@ -1,42 +1,52 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <h4 class="panel-title"><a href="#collapse-shipping" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"><?php echo $heading_title; ?> <i class="fa fa-caret-down"></i></a></h4>
-  </div>
-  <div id="collapse-shipping" class="panel-collapse collapse">
-    <div class="panel-body">
-      <p><?php echo $text_shipping; ?></p>
-      <form class="form-horizontal">
-        <div class="form-group required">
-          <label class="col-sm-2 control-label" for="input-country"><?php echo $entry_country; ?></label>
-          <div class="col-sm-10">
-            <select name="country_id" id="input-country" class="form-control">
-              <option value=""><?php echo $text_select; ?></option>
+	<div class="panel-heading">
+		<h4 class="panel-title">
+			<a href="#collapse-shipping" class="accordion-toggle"
+				data-toggle="collapse" data-parent="#accordion"><?php echo $heading_title; ?> <i
+				class="fa fa-caret-down"></i></a>
+		</h4>
+	</div>
+	<div id="collapse-shipping" class="panel-collapse collapse">
+		<div class="panel-body">
+			<p><?php echo $text_shipping; ?></p>
+			<form class="form-horizontal">
+				<div class="form-group required">
+					<label class="col-sm-2 control-label" for="input-country"><?php echo $entry_country; ?></label>
+					<div class="col-sm-10">
+						<select name="country_id" id="input-country" class="form-control">
+							<option value=""><?php echo $text_select; ?></option>
               <?php foreach ($countries as $country) { ?>
               <?php if ($country['country_id'] == $country_id) { ?>
-              <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
+              <option value="<?php echo $country['country_id']; ?>"
+								selected="selected"><?php echo $country['name']; ?></option>
               <?php } else { ?>
               <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
               <?php } ?>
               <?php } ?>
             </select>
-          </div>
-        </div>
-        <div class="form-group required">
-          <label class="col-sm-2 control-label" for="input-zone"><?php echo $entry_zone; ?></label>
-          <div class="col-sm-10">
-            <select name="zone_id" id="input-zone" class="form-control">
-            </select>
-          </div>
-        </div>
-        <div class="form-group required">
-          <label class="col-sm-2 control-label" for="input-postcode"><?php echo $entry_postcode; ?></label>
-          <div class="col-sm-10">
-            <input type="text" name="postcode" value="<?php echo $postcode; ?>" placeholder="<?php echo $entry_postcode; ?>" id="input-postcode" class="form-control" />
-          </div>
-        </div>
-        <input type="button" value="<?php echo $button_quote; ?>" id="button-quote" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary" />
-      </form>
-      <script type="text/javascript"><!--
+					</div>
+				</div>
+				<div class="form-group required">
+					<label class="col-sm-2 control-label" for="input-zone"><?php echo $entry_zone; ?></label>
+					<div class="col-sm-10">
+						<select name="zone_id" id="input-zone" class="form-control">
+						</select>
+					</div>
+				</div>
+				<div class="form-group required">
+					<label class="col-sm-2 control-label" for="input-postcode"><?php echo $entry_postcode; ?></label>
+					<div class="col-sm-10">
+						<input type="text" name="postcode"
+							value="<?php echo $postcode; ?>"
+							placeholder="<?php echo $entry_postcode; ?>" id="input-postcode"
+							class="form-control" />
+					</div>
+				</div>
+				<input type="button" value="<?php echo $button_quote; ?>"
+					id="button-quote" data-loading-text="<?php echo $text_loading; ?>"
+					class="btn btn-primary" />
+			</form>
+			<script type="text/javascript"><!--
 $('#button-quote').on('click', function() {
 	$.ajax({
 		url: 'index.php?route=checkout/shipping/quote',
@@ -159,7 +169,7 @@ $(document).delegate('#button-shipping', 'click', function() {
 	});
 });
 //--></script>
-<script type="text/javascript"><!--
+			<script type="text/javascript"><!--
 $('select[name=\'country_id\']').on('change', function() {
 	$.ajax({
 		url: 'index.php?route=checkout/shipping/country&country_id=' + this.value,
@@ -203,6 +213,6 @@ $('select[name=\'country_id\']').on('change', function() {
 
 $('select[name=\'country_id\']').trigger('change');
 //--></script>
-    </div>
-  </div>
+		</div>
+	</div>
 </div>

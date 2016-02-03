@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP OpenCloud library.
  * 
@@ -8,30 +9,22 @@
  * @author    Glen Campbell <glen.campbell@rackspace.com>
  * @author    Jamie Hannaford <jamie.hannaford@rackspace.com>
  */
-
 namespace OpenCloud\LoadBalancer\Resources;
 
 /**
  * This defines a read-only SubResource - one that cannot be created, updated,
- * or deleted. Many subresources are like this, and this simplifies their
+ * or deleted.
+ * Many subresources are like this, and this simplifies their
  * class definitions.
  */
-abstract class Readonly extends SubResource 
-{
-	
-	public function create($params = array()) 
-	{ 
-		return $this->noCreate(); 
+abstract class Readonly extends SubResource {
+	public function create($params = array()) {
+		return $this->noCreate ();
 	}
-
-	public function update($params = array()) 
-	{ 
-		return $this->noUpdate(); 
+	public function update($params = array()) {
+		return $this->noUpdate ();
 	}
-
-	public function delete() 
-	{ 
-		return $this->noDelete(); 
+	public function delete() {
+		return $this->noDelete ();
 	}
-
 }

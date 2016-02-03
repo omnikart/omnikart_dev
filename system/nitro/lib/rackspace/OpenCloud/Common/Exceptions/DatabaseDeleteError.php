@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class DatabaseDeleteError extends \Exception {}
+class DatabaseDeleteError extends \Exception {
+}

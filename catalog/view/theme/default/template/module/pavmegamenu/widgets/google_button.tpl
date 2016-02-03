@@ -1,14 +1,17 @@
 <?php if ( $width)  { ?>
-	<div class="widget-blogs box <?php $addition_cls?> <?php if ( isset($stylecls)&&$stylecls) { ?>box-<?php echo $stylecls; ?><?php } ?>">
+<div
+	class="widget-blogs box <?php $addition_cls?> <?php if ( isset($stylecls)&&$stylecls) { ?>box-<?php echo $stylecls; ?><?php } ?>">
 		<?php if( $show_title ) { ?>
 		<div class="widget-heading box-heading"><?php echo $heading_title?></div>
 		<?php } ?>
 		<div class="widget-inner block_content">
-			<div class="g-plusone" data-size="<?php echo $size?>" data-annotation="<?php echo $annotation; ?>" data-width="<?php echo $width;?>"></div>
-		</div>
+		<div class="g-plusone" data-size="<?php echo $size?>"
+			data-annotation="<?php echo $annotation; ?>"
+			data-width="<?php echo $width;?>"></div>
 	</div>
+</div>
 <?php } ?>
- 
+
 <script type="text/javascript">
   window.___gcfg = {lang: 'en-US'};
 
@@ -18,4 +21,3 @@
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
   })();
 </script>
- 

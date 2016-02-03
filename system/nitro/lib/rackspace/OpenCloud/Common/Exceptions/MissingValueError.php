@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class MissingValueError extends \Exception {}
+class MissingValueError extends \Exception {
+}

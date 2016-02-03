@@ -1,46 +1,46 @@
 <?php echo $header; ?><div id="columns"><?php echo $column_left; ?><?php echo $column_right; ?>
 <div class="container"><?php echo $content_top; ?>
-	<form class="payment-form" method="POST" action="<?php echo $process_order; ?>">
-		<div style="text-align:center;">
-			<h3><?php echo $heading_confirm; ?></h3>
+	<form class="payment-form" method="POST"
+			action="<?php echo $process_order; ?>">
+			<div style="text-align: center;">
+				<h3><?php echo $heading_confirm; ?></h3>
 			<?php if(isset($amazon_login_pay_test)){ ?>
-			<label>Debug Error Code     :</label>
-			<div id="errorCode_address"></div>
-			<br>
-			<label>Debug Error Message  :</label>
-			<div id="errorMessage_address"></div>
+			<label>Debug Error Code :</label>
+				<div id="errorCode_address"></div>
+				<br> <label>Debug Error Message :</label>
+				<div id="errorMessage_address"></div>
 			<?php } ?>
-			<div style="display: inline-block; width: 400px; height: 185px;" id="readOnlyAddressBookWidgetDiv"></div>
-			<br>
+			<div style="display: inline-block; width: 400px; height: 185px;"
+					id="readOnlyAddressBookWidgetDiv"></div>
+				<br>
 			<?php if($amazon_login_pay_test){ ?>
-			<label>Debug Error Code     :</label>
-			<div id="errorCode_wallet"></div>
-			<br>
-			<label>Debug Error Message  :</label>
-			<div id="errorMessage_wallet"></div>
+			<label>Debug Error Code :</label>
+				<div id="errorCode_wallet"></div>
+				<br> <label>Debug Error Message :</label>
+				<div id="errorMessage_wallet"></div>
 			<?php } ?>
-			<div style="display: inline-block; width: 400px; height: 185px;" id="readOnlyWalletWidgetDiv"></div>
-		</div>
-		<div style="clear: both;"></div>
-	</form>
-	<div class="checkout-product" style="margin-top: 15px">
-		<table class="table table-bordered table-hover">
-			<thead>
-				<tr>
-					<td class="text-left"><?php echo $column_name; ?></td>
-					<td class="text-left"><?php echo $column_model; ?></td>
-					<td class="text-right"><?php echo $column_quantity; ?></td>
-					<td class="text-right"><?php echo $column_price; ?></td>
-					<td class="text-right"><?php echo $column_total; ?></td>
-				</tr>
-			</thead>
-			<tbody>
+			<div style="display: inline-block; width: 400px; height: 185px;"
+					id="readOnlyWalletWidgetDiv"></div>
+			</div>
+			<div style="clear: both;"></div>
+		</form>
+		<div class="checkout-product" style="margin-top: 15px">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<td class="text-left"><?php echo $column_name; ?></td>
+						<td class="text-left"><?php echo $column_model; ?></td>
+						<td class="text-right"><?php echo $column_quantity; ?></td>
+						<td class="text-right"><?php echo $column_price; ?></td>
+						<td class="text-right"><?php echo $column_total; ?></td>
+					</tr>
+				</thead>
+				<tbody>
 				<?php foreach ($products as $product) { ?>
 					<tr>
 						<td class="text-left"><?php echo $product['name']; ?>
 							<?php foreach ($product['option'] as $option) { ?>
-								<br />
-								&nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
+								<br /> &nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
 							<?php } ?></td>
 						<td class="text-left"><?php echo $product['model']; ?></td>
 						<td class="text-right"><?php echo $product['quantity']; ?></td>
@@ -49,7 +49,7 @@
 					</tr>
 				<?php } ?>
 			</tbody>
-			<tfoot>
+				<tfoot>
 				<?php foreach ($totals as $total) { ?>
 					<tr>
 						<td colspan="4" class="text-right"><strong><?php echo $total['title']; ?>:</strong></td>
@@ -57,19 +57,20 @@
 					</tr>
 				<?php } ?>
 			</tfoot>
-		</table>
-	</div>
-	<div class="buttons">
-		<div class="pull-left">
-			<a href="<?php echo $back; ?>" class="btn btn-primary"><?php echo $text_back; ?></a>
+			</table>
 		</div>
-		<div class="pull-right">
-			<input class="btn btn-primary" id="confirm-button" type="submit" value="<?php echo $text_confirm; ?>" />
+		<div class="buttons">
+			<div class="pull-left">
+				<a href="<?php echo $back; ?>" class="btn btn-primary"><?php echo $text_back; ?></a>
+			</div>
+			<div class="pull-right">
+				<input class="btn btn-primary" id="confirm-button" type="submit"
+					value="<?php echo $text_confirm; ?>" />
+			</div>
 		</div>
-	</div>
 	<?php echo $content_bottom; ?>
 </div>
-<script>
+	<script>
 	$(document).ready(function() {
 		amazon.Login.setClientId('<?php echo $amazon_login_pay_client_id ?>');
 		new OffAmazonPayments.Widgets.AddressBook({

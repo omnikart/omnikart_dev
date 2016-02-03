@@ -2,6 +2,5 @@
 
 namespace OpenCloud\CloudMonitoring\Exception;
 
-class TestException extends CloudMonitoringException
-{
+class TestException extends CloudMonitoringException {
 }

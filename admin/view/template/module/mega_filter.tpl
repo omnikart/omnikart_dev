@@ -5,15 +5,19 @@
 		<?php $module_row = 1; ?>
 
 		<?php foreach ($modules as $row => $module) { ?>
-			<li<?php echo $module_row == 1 ? ' class="active"' : ''; ?>>
-				<a href="#tab-module-<?php echo $row; ?>" id="module-<?php echo $row; ?>">
-					<b style="font-weight:normal"><?php echo ! empty( $module['name'] ) ? $module['name'] : $tab_module . ' ' . $row; ?></b>
-					<span class="btn btn-danger btn-xs pull-right"><i class="glyphicon glyphicon-remove"></i></span>
-				</a>
-			</li>
+			<li <?php echo $module_row == 1 ? ' class="active"' : ''; ?>><a
+			href="#tab-module-<?php echo $row; ?>"
+			id="module-<?php echo $row; ?>"> <b style="font-weight: normal"><?php echo ! empty( $module['name'] ) ? $module['name'] : $tab_module . ' ' . $row; ?></b>
+				<span class="btn btn-danger btn-xs pull-right"><i
+					class="glyphicon glyphicon-remove"></i></span>
+		</a></li>
 			<?php $module_row++; ?>
 		<?php } ?>
-		<li id="module-add"><a style="background: none !important; border:none !important;" id="add-new-module" class="pull-right"><span class="btn btn-success btn-xs pull-right"><i class="glyphicon glyphicon-plus-sign"></i> <?php echo $button_add_module; ?></span></a></li>
+		<li id="module-add"><a
+			style="background: none !important; border: none !important;"
+			id="add-new-module" class="pull-right"><span
+				class="btn btn-success btn-xs pull-right"><i
+					class="glyphicon glyphicon-plus-sign"></i> <?php echo $button_add_module; ?></span></a></li>
 	</ul>
 </div>
 
@@ -1166,6 +1170,6 @@ MFP._stores				= <?php echo json_encode( $stores ); ?>;
 MFP._customerGroups		= <?php echo json_encode( $customerGroups ); ?>;
 
 MFP.init( <?php echo json_encode( $modules ); ?> );
-</script> 
+</script>
 
 <?php require DIR_TEMPLATE . 'module/' . $_name . '-footer.tpl'; ?>

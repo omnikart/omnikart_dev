@@ -1,59 +1,63 @@
 <?php
 class ControllerModuleCategoryWall extends Controller {
 	public function index() {
-		$this->load->language('module/category_wall');
-
-		$data['heading_title'] = $this->language->get('heading_title');
-
-		if (isset($this->request->get['path'])) {
-			$parts = explode('_', (string)$this->request->get['path']);
-		} else {
-			$parts = array();
-		}
-
-		if (isset($parts[0])) {
-			$data['category_id'] = $parts[0];
-		} else {
-			$data['category_id'] = 0;
-		}
-
-		if (isset($parts[1])) {
-			$data['child_id'] = $parts[1];
-		} else {
-			$data['child_id'] = 0;
-		}
-
-		$this->load->model('catalog/category');
-
-		$this->load->model('catalog/product');
-
-		$data['categories'] = array();
-
-		$data['categories'] = array();
-
-		$categories = $this->model_catalog_category->getCategories(0);
-        
-		$this->load->model('tool/image');
+		$this->load->language ( 'module/category_wall' );
 		
-		foreach ($categories as $category) {
-			if ($category['top']) {
-
-				$filter_data = array('filter_category_id' => $category['category_id'], 'filter_sub_category' => true);
-
-				$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
-				if ($product_total!=0)	{
-				$data['categories'][] = array(
-					'name'     => $category['name'],
-					'image'    => $this->model_tool_image->resize($category['image'],150,150),
-					'href'     => $this->url->link('product/category', 'path=' . $category['category_id'])
-				);}
+		$data ['heading_title'] = $this->language->get ( 'heading_title' );
+		
+		if (isset ( $this->request->get ['path'] )) {
+			$parts = explode ( '_', ( string ) $this->request->get ['path'] );
+		} else {
+			$parts = array ();
+		}
+		
+		if (isset ( $parts [0] )) {
+			$data ['category_id'] = $parts [0];
+		} else {
+			$data ['category_id'] = 0;
+		}
+		
+		if (isset ( $parts [1] )) {
+			$data ['child_id'] = $parts [1];
+		} else {
+			$data ['child_id'] = 0;
+		}
+		
+		$this->load->model ( 'catalog/category' );
+		
+		$this->load->model ( 'catalog/product' );
+		
+		$data ['categories'] = array ();
+		
+		$data ['categories'] = array ();
+		
+		$categories = $this->model_catalog_category->getCategories ( 0 );
+		
+		$this->load->model ( 'tool/image' );
+		
+		foreach ( $categories as $category ) {
+			if ($category ['top']) {
+				
+				$filter_data = array (
+						'filter_category_id' => $category ['category_id'],
+						'filter_sub_category' => true 
+				);
+				
+				$product_total = $this->model_catalog_product->getTotalProducts ( $filter_data );
+				if ($product_total != 0) {
+					$data ['categories'] [] = array (
+							'name' => $category ['name'],
+							'image' => $this->model_tool_image->resize ( $category ['image'], 150, 150 ),
+							'href' => $this->url->link ( 'product/category', 'path=' . $category ['category_id'] ) 
+					);
+				}
 			}
 		}
-
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/category_wall.tpl')) {
-			return $this->load->view($this->config->get('config_template') . '/template/module/category_wall.tpl', $data);
+		
+		if (file_exists ( DIR_TEMPLATE . $this->config->get ( 'config_template' ) . '/template/module/category_wall.tpl' )) {
+			return $this->load->view ( $this->config->get ( 'config_template' ) . '/template/module/category_wall.tpl', $data );
 		} else {
-			return $this->load->view('default/template/module/category_wall.tpl', $data);
+			return $this->load->view ( 'default/template/module/category_wall.tpl', $data );
 		}
 	}
 }

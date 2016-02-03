@@ -2,6 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class BaseException extends \Exception
-{
+class BaseException extends \Exception {
 }

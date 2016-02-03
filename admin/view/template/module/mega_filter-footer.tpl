@@ -1,7 +1,8 @@
-				</form>
-			</div>
-		</div>
-	</div>
+
+</form>
+</div>
+</div>
+</div>
 </div>
 
 <script type="text/javascript">

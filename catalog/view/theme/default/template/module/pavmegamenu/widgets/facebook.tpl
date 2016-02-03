@@ -19,6 +19,12 @@
 	}(document, 'script', 'facebook-jssdk'));</script>
 <?php } ?>
 
-<div class="fb-like-box" data-href="<?php echo $page_url ;?>" data-colorscheme="<?php echo $color ;?>" data-height="<?php echo $height ;?>" data-width="<?php echo $width ;?>" data-show-faces="<?php echo $show_faces ;?>" data-stream="<?php echo $show_stream ;?>" data-show-border="<?php echo $show_border ;?>" data-header="<?php echo $show_header ;?>"></div>
+<div class="fb-like-box" data-href="<?php echo $page_url ;?>"
+		data-colorscheme="<?php echo $color ;?>"
+		data-height="<?php echo $height ;?>"
+		data-width="<?php echo $width ;?>"
+		data-show-faces="<?php echo $show_faces ;?>"
+		data-stream="<?php echo $show_stream ;?>"
+		data-show-border="<?php echo $show_border ;?>"
+		data-header="<?php echo $show_header ;?>"></div>
 </div>
- 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP OpenCloud library.
  * 
@@ -8,31 +9,27 @@
  * @author    Glen Campbell <glen.campbell@rackspace.com>
  * @author    Jamie Hannaford <jamie.hannaford@rackspace.com>
  */
-
 namespace OpenCloud\LoadBalancer\Resources;
 
 /**
- * This class will retrieve a list of events associated with the activity 
- * between the node and the load balancer. The events report errors found with the node.
+ * This class will retrieve a list of events associated with the activity
+ * between the node and the load balancer.
+ * The events report errors found with the node.
  */
-class NodeEvent extends Readonly 
-{
-    
-    public $detailedMessage;
-    public $nodeId;
-    public $id;
-    public $type;
-    public $description;
-    public $category;
-    public $severity;
-    public $relativeUri;
-    public $accountId;
-    public $loadbalancerId;
-    public $title;
-    public $author;
-    public $created;
-
-    protected static $json_name = 'nodeServiceEvent';
-    protected static $url_resource = 'nodes/events';
-
+class NodeEvent extends Readonly {
+	public $detailedMessage;
+	public $nodeId;
+	public $id;
+	public $type;
+	public $description;
+	public $category;
+	public $severity;
+	public $relativeUri;
+	public $accountId;
+	public $loadbalancerId;
+	public $title;
+	public $author;
+	public $created;
+	protected static $json_name = 'nodeServiceEvent';
+	protected static $url_resource = 'nodes/events';
 }

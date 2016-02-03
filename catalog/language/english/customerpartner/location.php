@@ -1,6 +1,6 @@
 <?php
-// Heading 
-$_['heading_title']     = 'Location';
-//Text
+// Heading
+$_ ['heading_title'] = 'Location';
+// Text
 
-$_['text_map']	=	'View Larger Map';
+$_ ['text_map'] = 'View Larger Map';
