@@ -1,10 +1,10 @@
 <div class="row">
-<div class="col-sm-12">
-<div class="col-sm-12 white">
-<h3 class="nmt"><?php echo $heading_title; ?></h3>
-<div class="row">
-<div class="flexslider featured" id="featured<?php echo $module; ?>">
-	<ul class="slides">
+	<div class="col-sm-12">
+		<div class="col-sm-12 white">
+			<h3 class="nmt"><?php echo $heading_title; ?></h3>
+			<div class="row">
+				<div class="flexslider featured" id="featured<?php echo $module; ?>">
+					<ul class="slides">
 	  <?php foreach ($products as $product) { ?>
 	  <li>
 		  <div class="product-layout col-xs-12">
@@ -13,12 +13,13 @@
 		    </div>
 		  </div>
 		 </li>
+
 	  <?php } ?>
 	</ul>
-</div>
-</div>
-</div>
-</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <script type="text/javascript"><!--
 $('#featured<?php echo $module; ?>').flexslider({
@@ -35,5 +36,7 @@ $('#featured<?php echo $module; ?>').flexslider({
 	});
 --></script>
 <style>
-.featured .product-thumb{margin-bottom:0;}
+.featured .product-thumb {
+	margin-bottom: 0;
+}
 </style>

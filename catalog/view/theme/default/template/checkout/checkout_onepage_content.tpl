@@ -8,7 +8,8 @@
     <!-- Shipping/Payment Method -- Voucher/coupon -->
     <div class="col-sm-9" id="methods-summary-panel">
         <?php echo $right_content; ?>
-    </div><!-- END Shipping/Payment Method-Voucher/coupon -->
+    </div>
+	<!-- END Shipping/Payment Method-Voucher/coupon -->
 </div>
 <?php }else{ ?>
 <script type="text/javascript"><!--

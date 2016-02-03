@@ -1,12 +1,12 @@
 <?php
 class ControllerCommonCart extends Controller {
 	public function index() {
-		$this->load->language('common/cart');
-
+		$this->load->language ( 'common/cart' );
+		
 		// Totals
-		$this->load->model('extension/extension');
-
-		$total_data = array();
+		$this->load->model ( 'extension/extension' );
+		
+		$total_data = array ();
 		$total = 0;
 		$taxes = $this->cart->getTaxes();
 		
@@ -18,24 +18,24 @@ class ControllerCommonCart extends Controller {
 			foreach ($results as $key => $value) {
 				$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
 			}
-
-			array_multisort($sort_order, SORT_ASC, $results);
-
-			foreach ($results as $result) {
-				if ($this->config->get($result['code'] . '_status')) {
-					$this->load->model('total/' . $result['code']);
-
-					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+			
+			array_multisort ( $sort_order, SORT_ASC, $results );
+			
+			foreach ( $results as $result ) {
+				if ($this->config->get ( $result ['code'] . '_status' )) {
+					$this->load->model ( 'total/' . $result ['code'] );
+					
+					$this->{'model_total_' . $result ['code']}->getTotal ( $total_data, $total, $taxes );
 				}
 			}
-
-			$sort_order = array();
-
-			foreach ($total_data as $key => $value) {
-				$sort_order[$key] = $value['sort_order'];
+			
+			$sort_order = array ();
+			
+			foreach ( $total_data as $key => $value ) {
+				$sort_order [$key] = $value ['sort_order'];
 			}
-
-			array_multisort($sort_order, SORT_ASC, $total_data);
+			
+			array_multisort ( $sort_order, SORT_ASC, $total_data );
 		}
 
 		$data['text_empty'] = $this->language->get('text_empty');
@@ -146,23 +146,20 @@ class ControllerCommonCart extends Controller {
 						'text'  => $this->currency->format($result['value']),
 				);
 			}
-			
 		}
-
+		
 		// Gift Voucher
-		$data['vouchers'] = array();
-
-		if (!empty($this->session->data['vouchers'])) {
-			foreach ($this->session->data['vouchers'] as $key => $voucher) {
-				$data['vouchers'][] = array(
-					'key'         => $key,
-					'description' => $voucher['description'],
-					'amount'      => $this->currency->format($voucher['amount'])
+		$data ['vouchers'] = array ();
+		
+		if (! empty ( $this->session->data ['vouchers'] )) {
+			foreach ( $this->session->data ['vouchers'] as $key => $voucher ) {
+				$data ['vouchers'] [] = array (
+						'key' => $key,
+						'description' => $voucher ['description'],
+						'amount' => $this->currency->format ( $voucher ['amount'] ) 
 				);
 			}
 		}
-
-
 
 		$data['cart'] = $this->url->link('checkout/cart');
 		$data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
@@ -170,11 +167,10 @@ class ControllerCommonCart extends Controller {
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/cart.tpl')) {
 			return $this->load->view($this->config->get('config_template') . '/template/common/cart.tpl', $data);
 		} else {
-			return $this->load->view('default/template/common/cart.tpl', $data);
+			return $this->load->view ( 'default/template/common/cart.tpl', $data );
 		}
 	}
-
 	public function info() {
-		$this->response->setOutput($this->index());
+		$this->response->setOutput ( $this->index () );
 	}
 }

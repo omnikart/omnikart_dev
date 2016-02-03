@@ -1,14 +1,11 @@
 <?php
 class ControllerAccountCustomerpartnerSoldinvoice extends Controller {
-
-	private $error = array();
-	private $data = array();
-
+	private $error = array ();
+	private $data = array ();
 	public function index() {
-
-		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('account/customerpartner/soldinvoice&order_id='.$this->request->get['order_id'], '', 'SSL');
-			$this->response->redirect($this->url->link('account/login', '', 'SSL'));
+		if (! $this->customer->isLogged ()) {
+			$this->session->data ['redirect'] = $this->url->link ( 'account/customerpartner/soldinvoice&order_id=' . $this->request->get ['order_id'], '', 'SSL' );
+			$this->response->redirect ( $this->url->link ( 'account/login', '', 'SSL' ) );
 		}
 
 		$this->load->model('account/customerpartner');
@@ -72,82 +69,90 @@ class ControllerAccountCustomerpartnerSoldinvoice extends Controller {
 			if ($order_info['invoice_no']) {
 				$this->data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];
 			} else {
-				$this->data['invoice_no'] = '';
+				$this->data ['invoice_no'] = '';
 			}
-	
-			$this->data['date_added'] = date($this->language->get('date_format_short'), strtotime($order_info['date_added']));
 			
-			if ($order_info['payment_address_format']) {
-      			$format = $order_info['payment_address_format'];
-    		} else {
+			$this->data ['date_added'] = date ( $this->language->get ( 'date_format_short' ), strtotime ( $order_info ['date_added'] ) );
+			
+			if ($order_info ['payment_address_format']) {
+				$format = $order_info ['payment_address_format'];
+			} else {
 				$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
 			}
 			
-    		$find = array(
-	  			'{firstname}',
-	  			'{lastname}',
-	  			'{company}',
-      			'{address_1}',
-      			'{address_2}',
-     			'{city}',
-      			'{postcode}',
-      			'{zone}',
-				'{zone_code}',
-      			'{country}'
-			);
-	
-			$replace = array(
-	  			'firstname' => $order_info['payment_firstname'],
-	  			'lastname'  => $order_info['payment_lastname'],
-	  			'company'   => $order_info['payment_company'],
-      			'address_1' => $order_info['payment_address_1'],
-      			'address_2' => $order_info['payment_address_2'],
-      			'city'      => $order_info['payment_city'],
-      			'postcode'  => $order_info['payment_postcode'],
-      			'zone'      => $order_info['payment_zone'],
-				'zone_code' => $order_info['payment_zone_code'],
-      			'country'   => $order_info['payment_country']  
+			$find = array (
+					'{firstname}',
+					'{lastname}',
+					'{company}',
+					'{address_1}',
+					'{address_2}',
+					'{city}',
+					'{postcode}',
+					'{zone}',
+					'{zone_code}',
+					'{country}' 
 			);
 			
-			$this->data['payment_address'] = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
-
-      		$this->data['payment_method'] = $order_info['payment_method'];			
-			$order_info['store_address'] = $this->config->get('config_address');
-			$order_info['store_email'] = $this->customer->getEmail();
-			$order_info['store_fax'] = $this->customer->getFax();
-			$order_info['store_telephone'] = $this->customer->getTelephone();
-			$order_info['store_url'] = $this->url->link('customerpartner/profile&id='.$this->customer->getId());
-
-			if ($order_info['shipping_address_format']) {
-      			$format = $order_info['shipping_address_format'];
-    		} else {
+			$replace = array (
+					'firstname' => $order_info ['payment_firstname'],
+					'lastname' => $order_info ['payment_lastname'],
+					'company' => $order_info ['payment_company'],
+					'address_1' => $order_info ['payment_address_1'],
+					'address_2' => $order_info ['payment_address_2'],
+					'city' => $order_info ['payment_city'],
+					'postcode' => $order_info ['payment_postcode'],
+					'zone' => $order_info ['payment_zone'],
+					'zone_code' => $order_info ['payment_zone_code'],
+					'country' => $order_info ['payment_country'] 
+			);
+			
+			$this->data ['payment_address'] = str_replace ( array (
+					"\r\n",
+					"\r",
+					"\n" 
+			), '<br />', preg_replace ( array (
+					"/\s\s+/",
+					"/\r\r+/",
+					"/\n\n+/" 
+			), '<br />', trim ( str_replace ( $find, $replace, $format ) ) ) );
+			
+			$this->data ['payment_method'] = $order_info ['payment_method'];
+			$order_info ['store_address'] = $this->config->get ( 'config_address' );
+			$order_info ['store_email'] = $this->customer->getEmail ();
+			$order_info ['store_fax'] = $this->customer->getFax ();
+			$order_info ['store_telephone'] = $this->customer->getTelephone ();
+			$order_info ['store_url'] = $this->url->link ( 'customerpartner/profile&id=' . $this->customer->getId () );
+			
+			if ($order_info ['shipping_address_format']) {
+				$format = $order_info ['shipping_address_format'];
+			} else {
 				$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
 			}
-		
-    		$find = array(
-	  			'{firstname}',
-	  			'{lastname}',
-	  			'{company}',
-      			'{address_1}',
-      			'{address_2}',
-     			'{city}',
-      			'{postcode}',
-      			'{zone}',
-				'{zone_code}',
-      			'{country}'
+			
+			$find = array (
+					'{firstname}',
+					'{lastname}',
+					'{company}',
+					'{address_1}',
+					'{address_2}',
+					'{city}',
+					'{postcode}',
+					'{zone}',
+					'{zone_code}',
+					'{country}' 
 			);
-	
-			$replace = array(
-	  			'firstname' => $order_info['shipping_firstname'],
-	  			'lastname'  => $order_info['shipping_lastname'],
-	  			'company'   => $order_info['shipping_company'],
-      			'address_1' => $order_info['shipping_address_1'],
-      			'address_2' => $order_info['shipping_address_2'],
-      			'city'      => $order_info['shipping_city'],
-      			'postcode'  => $order_info['shipping_postcode'],
-      			'zone'      => $order_info['shipping_zone'],
-				'zone_code' => $order_info['shipping_zone_code'],
-      			'country'   => $order_info['shipping_country']  
+			
+			$replace = array (
+					'firstname' => $order_info ['shipping_firstname'],
+					'lastname' => $order_info ['shipping_lastname'],
+					'company' => $order_info ['shipping_company'],
+					'address_1' => $order_info ['shipping_address_1'],
+					'address_2' => $order_info ['shipping_address_2'],
+					'city' => $order_info ['shipping_city'],
+					'postcode' => $order_info ['shipping_postcode'],
+					'zone' => $order_info ['shipping_zone'],
+					'zone_code' => $order_info ['shipping_zone_code'],
+					'country' => $order_info ['shipping_country'] 
 			);
 
 			$this->data['shipping_address'] = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
@@ -173,40 +178,39 @@ class ControllerAccountCustomerpartnerSoldinvoice extends Controller {
       		$totals = $this->model_account_customerpartner->getOrderTotals($order_id,$seller_id);
       		if($totals AND isset($totals[0]['total']))      			
 						$this->data['totals'][]['total'] = $this->currency->format($totals[0]['total'], $order_info['currency_code'], 1);
-		    
 		}
 		
-		$this->data['order'] = $order_info;
-
-		$this->data['action'] = $this->url->link('account/customerpartner/soldinvoice&order_id='.$order_id, '', 'SSL');
+		$this->data ['order'] = $order_info;
 		
-		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
+		$this->data ['action'] = $this->url->link ( 'account/customerpartner/soldinvoice&order_id=' . $order_id, '', 'SSL' );
+		
+		if (isset ( $this->error ['warning'] )) {
+			$this->data ['error_warning'] = $this->error ['warning'];
 		} else {
-			$this->data['error_warning'] = '';
+			$this->data ['error_warning'] = '';
 		}
-
-		if (isset($this->session->data['success'])) {
-			$this->data['success'] = $this->session->data['success'];
-			unset($this->session->data['success']);
+		
+		if (isset ( $this->session->data ['success'] )) {
+			$this->data ['success'] = $this->session->data ['success'];
+			unset ( $this->session->data ['success'] );
 		} else {
-			$this->data['success'] = '';
+			$this->data ['success'] = '';
 		}
-
-		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
-
-		$this->data['column_left'] = $this->load->controller('common/column_left');
-		$this->data['column_right'] = $this->load->controller('common/column_right');
-		$this->data['content_top'] = $this->load->controller('common/content_top');
-		$this->data['content_bottom'] = $this->load->controller('common/content_bottom');
-		$this->data['footer'] = $this->load->controller('common/footer');
-		$this->data['header'] = $this->load->controller('common/header');
-						
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/customerpartner/soldinvoice.tpl')) {
-			$this->response->setOutput($this->load->view( $this->config->get('config_template') . '/template/account/customerpartner/soldinvoice.tpl' , $this->data));			
+		
+		$this->data ['back'] = $this->url->link ( 'account/account', '', 'SSL' );
+		
+		$this->data ['column_left'] = $this->load->controller ( 'common/column_left' );
+		$this->data ['column_right'] = $this->load->controller ( 'common/column_right' );
+		$this->data ['content_top'] = $this->load->controller ( 'common/content_top' );
+		$this->data ['content_bottom'] = $this->load->controller ( 'common/content_bottom' );
+		$this->data ['footer'] = $this->load->controller ( 'common/footer' );
+		$this->data ['header'] = $this->load->controller ( 'common/header' );
+		
+		if (file_exists ( DIR_TEMPLATE . $this->config->get ( 'config_template' ) . '/template/account/customerpartner/soldinvoice.tpl' )) {
+			$this->response->setOutput ( $this->load->view ( $this->config->get ( 'config_template' ) . '/template/account/customerpartner/soldinvoice.tpl', $this->data ) );
 		} else {
-			$this->response->setOutput($this->load->view('default/template/account/customerpartner/soldinvoice.tpl' , $this->data));
-		}	
+			$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/soldinvoice.tpl', $this->data ) );
+		}
 	}
 }
 ?>

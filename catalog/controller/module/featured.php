@@ -1,39 +1,38 @@
 <?php
 class ControllerModuleFeatured extends Controller {
 	public function index($setting) {
-		$this->load->language('product/gp_grouped');
+		$this->load->language ( 'product/gp_grouped' );
 		static $module = 0;
 		
-		$this->load->language('module/featured');
-
-		$data['heading_title'] = $setting['name'];
-
-		$data['text_tax'] = $this->language->get('text_tax');
-
-		$data['button_cart'] = $this->language->get('button_cart');
-		$data['button_wishlist'] = $this->language->get('button_wishlist');
-		$data['button_compare'] = $this->language->get('button_compare');
-
-		$this->load->model('catalog/product');
-
-		$this->load->model('tool/image');
-		$this->document->addStyle('catalog/view/javascript/jquery/homepage/flexslider.css');
-		$this->document->addScript('catalog/view/javascript/jquery/homepage/jquery.flexslider-min.js');
-		$data['products'] = array();
-
-		if (!$setting['limit']) {
-			$setting['limit'] = 4;
+		$this->load->language ( 'module/featured' );
+		
+		$data ['heading_title'] = $setting ['name'];
+		
+		$data ['text_tax'] = $this->language->get ( 'text_tax' );
+		
+		$data ['button_cart'] = $this->language->get ( 'button_cart' );
+		$data ['button_wishlist'] = $this->language->get ( 'button_wishlist' );
+		$data ['button_compare'] = $this->language->get ( 'button_compare' );
+		
+		$this->load->model ( 'catalog/product' );
+		
+		$this->load->model ( 'tool/image' );
+		$this->document->addStyle ( 'catalog/view/javascript/jquery/homepage/flexslider.css' );
+		$this->document->addScript ( 'catalog/view/javascript/jquery/homepage/jquery.flexslider-min.js' );
+		$data ['products'] = array ();
+		
+		if (! $setting ['limit']) {
+			$setting ['limit'] = 4;
 		}
-	
-		$data['limit'] = (int)$setting['limit'];
-
-		if (!empty($setting['product'])) {
-			$products = $setting['product'];
+		
+		$data ['limit'] = ( int ) $setting ['limit'];
+		
+		if (! empty ( $setting ['product'] )) {
+			$products = $setting ['product'];
 			
-
-			foreach ($products as $product_id) {
-				$product_info = $this->model_catalog_product->getProduct($product_id);
-
+			foreach ( $products as $product_id ) {
+				$product_info = $this->model_catalog_product->getProduct ( $product_id );
+				
 				if ($product_info) {
 					$product_vendor = $this->model_catalog_product->getSupplierProduct($product_info['product_id'],$product_info['vendor_id']);
 					
@@ -101,13 +100,13 @@ class ControllerModuleFeatured extends Controller {
 				}
 			}
 		}
-		$data['module'] = $module++;
+		$data ['module'] = $module ++;
 		
-		if ($data['products']) {
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/featured.tpl')) {
-				return $this->load->view($this->config->get('config_template') . '/template/module/featured.tpl', $data);
+		if ($data ['products']) {
+			if (file_exists ( DIR_TEMPLATE . $this->config->get ( 'config_template' ) . '/template/module/featured.tpl' )) {
+				return $this->load->view ( $this->config->get ( 'config_template' ) . '/template/module/featured.tpl', $data );
 			} else {
-				return $this->load->view('default/template/module/featured.tpl', $data);
+				return $this->load->view ( 'default/template/module/featured.tpl', $data );
 			}
 		}
 	}

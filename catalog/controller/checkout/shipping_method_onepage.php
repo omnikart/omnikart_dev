@@ -294,5 +294,4 @@ class ControllerCheckoutShippingMethodOnepage extends Controller {
     }
 
 }
-
 ?>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php if (isset($new_payment_address_id) && $new_payment_address_id !== false) { ?>    <input type="hidden" id="new_payment_address_id" name="new_payment_address_id" value="<?php echo $new_payment_address_id; ?>"/><?php } ?><div id="payment-address-options" style="<?php echo (!($addresses && (!$shipping_required || $trust_exist))?'display:none;':''); ?>">    <div class="radio">        <label for="payment-address-existing">             <input type="radio" name="payment_address" value="existing" id="payment-address-existing"  <?php if ($use_exist) echo 'checked="checked"'; ?>/><?php echo $text_address_existing; ?> 
         </label>    </div>    <div class="radio clearfix">        <label for="payment-address-new">            <input type="radio" name="payment_address" value="new" id="payment-address-new" <?php echo (!$use_exist?'checked="checked"':''); ?> />           <?php echo $text_address_new; ?>
         </label>    </div>    <div class="row">        <hr>      </div></div><?php // if ($addresses && (!$shipping_required || $trust_exist)) { ?><div id="payment-existing" style="<?php echo (!$use_exist?'display:none;':''); ?>">    <!--    <select name="address_id" style="width: 100%; margin-bottom: 15px;" size="5">        <?php if (!$shipping_required) {//## show all trust & fake address ?>            <?php foreach ($addresses as $address) { ?>                <?php if ($address['address_id'] == $address_id) { ?>                    <option value="<?php echo $address['address_id']; ?>" selected="selected"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>                <?php } else { ?>                    <option value="<?php echo $address['address_id']; ?>"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>                <?php } ?>            <?php } ?>        <?php } else { //$trust_exist?>            <?php foreach ($trusted_addresses as $address) { ?>                <?php if ($address['address_id'] == $address_id) { ?>                    <option value="<?php echo $address['address_id']; ?>" selected="selected"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>                <?php } else { ?>                    <option value="<?php echo $address['address_id']; ?>"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>                <?php } ?>            <?php } ?>              <?php } ?>    </select>     -->  <form> <?php foreach ($addresses as $address) { ?>  <div class="clearfix payment-address"> 		<input type="radio" name="address_id" id="address<?php echo $address['address_id']; ?>" value="<?php echo $address['address_id']; ?>" class="radio" <?php echo (($address['address_id'] == $address_id)?'checked':''); ?> />		<label for="address<?php echo $address['address_id']; ?>">			<?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?><br />			<?php echo $address['address_1']; ?> <?php echo $address['city']; ?><br />			<?php echo $address['zone']; ?> <?php echo $address['country']; ?>		</label>  </div>  </form><?php } ?>     </div><?php // }   ?>
@@ -16,32 +17,13 @@
         </div>
         <?php } ?>
         <?php if ($custom_field['type'] == 'time') { ?>
-        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">
-          <label class=" control-label" for="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>
-          <div >
-            <div class="input-group time">
-              <input type="text" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" value="<?php echo $custom_field['value']; ?>" placeholder="<?php echo $custom_field['name']; ?>" data-date-format="HH:mm" id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" class="form-control" />
-              <span class="input-group-btn">
-              <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-              </span></div>
-          </div>
-        </div>
+        <div			class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field"			data-sort="<?php echo $custom_field['sort_order']; ?>">			<label class=" control-label"				for="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>			<div>				<div class="input-group time">					<input type="text"						name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]"						value="<?php echo $custom_field['value']; ?>"						placeholder="<?php echo $custom_field['name']; ?>"						data-date-format="HH:mm"						id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"						class="form-control" /> <span class="input-group-btn">						<button type="button" class="btn btn-default">							<i class="fa fa-calendar"></i>						</button>					</span>				</div>			</div>		</div>
         <?php } ?>
         <?php if ($custom_field['type'] == 'datetime') { ?>
-        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">
-          <label class=" control-label" for="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>
-          <div >
-            <div class="input-group datetime">
-              <input type="text" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" value="<?php echo $custom_field['value']; ?>" placeholder="<?php echo $custom_field['name']; ?>" data-date-format="YYYY-MM-DD HH:mm" id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" class="form-control" />
-              <span class="input-group-btn">
-              <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-              </span></div>
-          </div>
-        </div>
+        <div			class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field"			data-sort="<?php echo $custom_field['sort_order']; ?>">			<label class=" control-label"				for="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>			<div>				<div class="input-group datetime">					<input type="text"						name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]"						value="<?php echo $custom_field['value']; ?>"						placeholder="<?php echo $custom_field['name']; ?>"						data-date-format="YYYY-MM-DD HH:mm"						id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"						class="form-control" /> <span class="input-group-btn">						<button type="button" class="btn btn-default">							<i class="fa fa-calendar"></i>						</button>					</span>				</div>			</div>		</div>
         <?php } ?>
         <?php } ?>
         <?php } ?>
-
     </form>
 
     <br />
@@ -50,7 +32,7 @@
     <?php if ($shipping_required) { ?>            <div class="form-group form-group-sm">                <?php // echo $shipping_address_same;   ?>                <div class="checkbox">                    <label>                        <?php if ($shipping_address_same) { ?>                            <input type="checkbox" name="shipping_address_same" value="1" checked="checked" />                        <?php } else { ?>                            <input type="checkbox" name="shipping_address_same" value="1" />                        <?php } ?>                        <strong><?php echo $entry_shipping; ?></strong>                    </label>                </div>            </div>        <?php } ?><div class="row">    <div class="panel-footer">        <div class="text-right">            <input type="button" value="<?php echo $button_ok; ?>" id="button-payment-address" class="btn btn-sm btn-<?php                   if ($css['checkout_theme'] == 'standar') {                       echo 'warning';                   } else {                       echo $css['checkout_theme'];                   }                   ?>"  style="<?php                   if (!empty($css['common_btn_color'])) {                       echo "background-color:{$css['common_btn_color']}!important; background-image:none;";                   }                   if ($use_exist) {                       echo 'display:none;';                   }                   ?>"/>        </div>    </div>
 </div>
 
-<script type="text/javascript"><!--
+<script type="text/javascript"><!--
     $(document).ready(function() {
 
         //$shipping_address_same indicate that the shipping detail whether same billing detail or not.
@@ -63,9 +45,7 @@
 
     });
 
-//--></script>
-
-<script type="text/javascript"><!--
+//--></script><script type="text/javascript"><!--
 
 $('#payment-address .form-group[data-sort]').detach().each(function() {
 	if ($(this).attr('data-sort') >= 0 && $(this).attr('data-sort') <= $('#payment-address .form-group').length) {
@@ -185,8 +165,7 @@ $('#payment-address button[id^=\'button-payment-custom-field\']').on('click', fu
     //$('#payment-address select[name=\'country_id\']').trigger('change');
 
 
-    //--></script>
-<script type="text/javascript"><!--
+    //--></script><script type="text/javascript"><!--
 $('.date').datetimepicker({
 	pickTime: false
 });
@@ -199,5 +178,4 @@ $('.datetime').datetimepicker({
 	pickDate: true,
 	pickTime: true
 });
-//--></script>
-
+//--></script>

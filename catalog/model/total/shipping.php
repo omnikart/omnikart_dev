@@ -33,11 +33,10 @@ class ModelTotalShipping extends Model {
 					if (!isset($taxes[$tax_rate['tax_rate_id']])) {
 						$taxes[$tax_rate['tax_rate_id']] = $tax_rate['amount'];
 					} else {
-						$taxes[$tax_rate['tax_rate_id']] += $tax_rate['amount'];
+						$taxes [$tax_rate ['tax_rate_id']] += $tax_rate ['amount'];
 					}
 				}
 			}
-
 			$total += $cost;/*$this->session->data['shipping_method']['cost'][$vendor_id];*/
 		}
 	}

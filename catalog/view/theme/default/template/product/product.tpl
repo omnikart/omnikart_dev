@@ -396,7 +396,8 @@
 												<button type="button" id="button-quote" data-cart="quote"
 													data-loading-text="<?php echo $text_loading; ?>"
 													class="btn btn-info btn-block">
-													<i class="fa fa-flip-horizontal fa-file-text-o"></i>&nbsp Add to Quotation
+													<i class="fa fa-flip-horizontal fa-file-text-o"></i>&nbsp
+													Add to Quotation
 												</button>
 											</div>
 										</div>

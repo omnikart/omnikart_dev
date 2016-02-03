@@ -1,12 +1,12 @@
 <?php echo $header; ?><div id="columns">
-<div class="container">
-  <ul class="breadcrumb">
+	<div class="container">
+		<ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
     <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
     <?php } ?>
   </ul>
 
-  <div class="row"><?php echo $column_left; ?>
+		<div class="row"><?php echo $column_left; ?>
     <?php if ($column_left && $column_right) { ?>
     <?php $class = 'col-sm-6'; ?>
     <?php } elseif ($column_left || $column_right) { ?>
@@ -16,7 +16,8 @@
     <?php } ?>
 
     <?php if ($error_warning) { ?>
-      <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i><?php echo $error_warning; ?></div>
+      <div class="alert alert-danger">
+				<i class="fa fa-exclamation-circle"></i><?php echo $error_warning; ?></div>
     <?php } ?>
     <?php if($chkIsPartner){ ?>
     <div id="content" class="<?php echo $class; ?>">
@@ -25,80 +26,100 @@
       <?php echo $heading_title; ?>
     </h1>
 
-    <fieldset>
-      <legend><i class="fa fa-list"></i> <?php echo $heading_title; ?></legend>
+				<fieldset>
+					<legend>
+						<i class="fa fa-list"></i> <?php echo $heading_title; ?></legend>
       <?php if($isMember) { ?>
       <div class="well">
-        <div class="row">
-          <div class="col-sm-4">
-            <div class="form-group">
-              <label class="control-label" for="input-order"><?php echo $text_orderid; ?></label>               
-              <input type="text" name="filter_order" value="<?php echo $filter_order; ?>" placeholder="<?php echo $text_orderid; ?>" id="input-order" class="form-control" />
-            </div>            
-            <div class="form-group">
-              <label class="control-label" for="input-name"><?php echo $text_customer; ?></label>
-              <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $text_customer; ?>" id="input-name" class="form-control" />
-            </div>
-          </div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label class="control-label" for="input-order"><?php echo $text_orderid; ?></label>
+									<input type="text" name="filter_order"
+										value="<?php echo $filter_order; ?>"
+										placeholder="<?php echo $text_orderid; ?>" id="input-order"
+										class="form-control" />
+								</div>
+								<div class="form-group">
+									<label class="control-label" for="input-name"><?php echo $text_customer; ?></label>
+									<input type="text" name="filter_name"
+										value="<?php echo $filter_name; ?>"
+										placeholder="<?php echo $text_customer; ?>" id="input-name"
+										class="form-control" />
+								</div>
+							</div>
 
-          <div class="col-sm-4">
-            <div class="form-group">
-              <label class="control-label" for="input-date"><?php echo $text_added_date; ?></label>
-              <div class="input-group date">
-                <input type="text" name="filter_date" value="<?php echo $filter_date; ?>" data-date-format="YYYY-MM-DD" placeholder="<?php echo $text_added_date; ?>" id="input-date" class="form-control date" />
-                <span class="input-group-btn">
-                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                </span>
-              </div>
-            </div>
-          </div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label class="control-label" for="input-date"><?php echo $text_added_date; ?></label>
+									<div class="input-group date">
+										<input type="text" name="filter_date"
+											value="<?php echo $filter_date; ?>"
+											data-date-format="YYYY-MM-DD"
+											placeholder="<?php echo $text_added_date; ?>" id="input-date"
+											class="form-control date" /> <span class="input-group-btn">
+											<button type="button" class="btn btn-default">
+												<i class="fa fa-calendar"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+							</div>
 
-          <div class="col-sm-4">
-            <div class="form-group">
-              <label class="control-label" for="input-status"><?php echo $text_status; ?></label>                
-              <select name="filter_status" class="form-control" id="input-status">
-                <option value="*"></option>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label class="control-label" for="input-status"><?php echo $text_status; ?></label>
+									<select name="filter_status" class="form-control"
+										id="input-status">
+										<option value="*"></option>
                 <?php foreach ($status as $key => $value) { ?>                  
-                  <option value="<?php echo $value['name']; ?>" <?php echo ($filter_status==$value['name']) ? 'selected' : ''; ?> ><?php echo $value['name']; ?></option>                
+                  <option value="<?php echo $value['name']; ?>"
+											<?php echo ($filter_status==$value['name']) ? 'selected' : ''; ?>><?php echo $value['name']; ?></option>                
                 <?php } ?>
               </select>
-            </div> 
-            <a onclick="filter();" class="btn btn-primary"><?php echo $button_filter; ?></a>
-            <a onclick="refilter();" class="btn btn-default"> <i class="fa fa-refresh"></i> </a> 
+								</div>
+								<a onclick="filter();" class="btn btn-primary"><?php echo $button_filter; ?></a>
+								<a onclick="refilter();" class="btn btn-default"> <i
+									class="fa fa-refresh"></i>
+								</a>
 
-          </div>
+							</div>
 
-        </div>
-      </div>
+						</div>
+					</div>
 
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-          <thead>
-            <tr>              
-              <td class="left">
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<td class="left">
                 <?php if ($sort == 'o.order_id') { ?>
-                <a href="<?php echo $sort_order; ?>" class="<?php echo strtolower($order); ?>"><?php echo $text_orderid; ?></a>
+                <a href="<?php echo $sort_order; ?>"
+										class="<?php echo strtolower($order); ?>"><?php echo $text_orderid; ?></a>
                 <?php } else { ?>
                 <a href="<?php echo $sort_order; ?>"><?php echo $text_orderid; ?></a>
                 <?php } ?>
               </td>
-              <td class="left">
+									<td class="left">
                 <?php if ($sort == 'o.firstname') { ?>
-                <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $text_customer; ?></a>
+                <a href="<?php echo $sort_name; ?>"
+										class="<?php echo strtolower($order); ?>"><?php echo $text_customer; ?></a>
                 <?php } else { ?>
                 <a href="<?php echo $sort_name; ?>"><?php echo $text_customer; ?></a>
                 <?php } ?>
               </td>
-              <td class="left"><?php echo ($text_products); ?></td>
-              <td class="left"><?php echo $text_total; ?></td>
-              <td class="left"><?php if($sort == 'os.name') { ?>
-                <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>" ><?php echo $text_status; ?></a>
+									<td class="left"><?php echo ($text_products); ?></td>
+									<td class="left"><?php echo $text_total; ?></td>
+									<td class="left"><?php if($sort == 'os.name') { ?>
+                <a href="<?php echo $sort_status; ?>"
+										class="<?php echo strtolower($order); ?>"><?php echo $text_status; ?></a>
                 <?php } else { ?>
                 <a href="<?php echo $sort_status; ?>"><?php echo $text_status; ?></a>
                 <?php } ?>
-              </td>        
-              <td class="left"><?php if($sort == 'o.date_added') { ?>
-                <a href="<?php echo $sort_date; ?>" class="<?php echo strtolower($order); ?>" ><?php echo $text_added_date; ?></a>
+              </td>
+									<td class="left"><?php if($sort == 'o.date_added') { ?>
+                <a href="<?php echo $sort_date; ?>"
+										class="<?php echo strtolower($order); ?>"><?php echo $text_added_date; ?></a>
                 <?php } else { ?>
                 <a href="<?php echo $sort_date; ?>"><?php echo $text_added_date; ?></a>
                 <?php } ?>
@@ -128,30 +149,32 @@
               <?php } ?>
             <?php } else{ ?>
             <tr>
-              <td class="text-center" colspan="10"><?php echo $text_no_results; ?></td>
-            </tr>
+									<td class="text-center" colspan="10"><?php echo $text_no_results; ?></td>
+								</tr>
             <?php } ?>
           </tbody>
-        </table>
-      </div>
-      <div class="text-right"><?php echo $pagination ;?></div>
-      <div class="text-right"><?php echo $results ;?></div>
+						</table>
+					</div>
+					<div class="text-right"><?php echo $pagination ;?></div>
+					<div class="text-right"><?php echo $results ;?></div>
       <?php } else { ?>
-        <div class="text-danger">
-          Warning: You are not authorised to view this page, Please contact to site administrator!
-        </div>
+        <div class="text-danger">Warning: You are not authorised to view
+						this page, Please contact to site administrator!</div>
       <?php } ?>
     </fieldset>
     <?php echo $content_bottom; ?> 
     </div>
-    <?php }else{
-          echo "<h2 class='text-danger'> For Become Seller inform Admin </h2>"; 
-    } ?>
+    <?php
+				
+} else {
+					echo "<h2 class='text-danger'> For Become Seller inform Admin </h2>";
+				}
+				?>
     <?php echo $column_right; ?>  
   </div>
-</div>
+	</div>
 
-<script type="text/javascript">
+	<script type="text/javascript">
 $('.date').datetimepicker({
   pickTime: false
 });
@@ -189,13 +212,13 @@ function filter() {
 
   location = url;
 }
-//--></script> 
-<script type="text/javascript"><!--
+//--></script>
+	<script type="text/javascript"><!--
 $('fieldset input').keydown(function(e) {
   if (e.keyCode == 13) {
     filter();
   }
 });
 
-//--></script> 
+//--></script>
 </div><?php echo $footer; ?>
