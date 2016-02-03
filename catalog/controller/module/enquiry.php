@@ -317,7 +317,40 @@ class ControllerModuleEnquiry extends Controller {
 			if (isset ( $this->request->post )) {
 				$this->load->model ( 'module/enquiry' );
 				$data = $this->request->post;
-				$json = $this->model_module_enquiry->addEnquiryComments ( $data['enquiry_id'], $seller_id, $data['enquiry'][$data['enquiry_id']] );
+				$json = $this->model_module_enquiry->addEnquiryComments ( $data ['enquiry_id'], $seller_id, $data ['enquiry'] [$data ['enquiry_id']] );
+				$this->response->setOutput ( json_encode ( $json ) );
+			}
+		}
+	}
+	public function getQuotationSuppliers() {
+		if (isset ( $this->request->get ['enquiry_id'] ))
+			$enquiry_id = $this->request->get ['enquiry_id'];
+		else
+			$enquiry_id = 0;
+		$json = array ();
+		$this->load->model ( 'module/enquiry' );
+		$json = $this->model_module_enquiry->getQuotationBySuppliers ( $enquiry_id );
+		$this->response->setOutput ( json_encode ( $json ) );
+	}
+	public function getSentEnquiryComment() {
+		if (isset ( $this->request->get ['quote_id'] ))
+			$quote_id = $this->request->get ['quote_id'];
+		else
+			$quote_id = 0;
+		$json = array ();
+		$this->load->model ( 'module/enquiry' );
+		$json = $this->model_module_enquiry->getSentEnquiryComments ( $quote_id );
+		$this->response->setOutput ( json_encode ( $json ) );
+	}
+	public function addSentEnquiryComment() {
+		$this->load->model ( 'account/customerpartner' );
+		$customer_id = $this->model_account_customerpartner->getuserseller ();
+		$json = array ();
+		if ($this->request->server ['REQUEST_METHOD'] == 'POST') {
+			if (isset ( $this->request->post )) {
+				$this->load->model ( 'module/enquiry' );
+				$data = $this->request->post;
+				$json = $this->model_module_enquiry->addSentEnquiryComments ( $data ['quote_id'], $customer_id, $data ['quote'] [$data ['quote_id']] );
 				$this->response->setOutput ( json_encode ( $json ) );
 			}
 		}

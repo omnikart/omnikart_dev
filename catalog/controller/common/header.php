@@ -94,6 +94,7 @@ class ControllerCommonHeader extends Controller {
 		
 		$data ['t_db'] = "Dashboard";
 		$data ['t_so'] = "Schedule Order";
+		$data ['t_se'] = "Sent Enquiries";
 		
 		$this->load->model ( 'account/customerpartner' );
 		$data ['chkIsPartner'] = $this->model_account_customerpartner->chkIsPartner ();
@@ -110,6 +111,7 @@ class ControllerCommonHeader extends Controller {
 		
 		$data ['b_db'] = $this->url->link ( 'account/cd', '', 'SSL' );
 		$data ['b_so'] = $this->url->link ( 'checkout/orderlater', '', 'SSL' );
+		$data ['b_se'] = $this->url->link ( 'account/customerpartner/sentenquiry','','SSL' );
 		
 		$rights = $this->customer->getRights ();
 		$data ['rights'] = $rights ['rights'];
@@ -124,10 +126,7 @@ class ControllerCommonHeader extends Controller {
 		$status = true;
 		
 		if (isset ( $this->request->server ['HTTP_USER_AGENT'] )) {
-			$robots = explode ( "\n", str_replace ( array (
-					"\r\n",
-					"\r" 
-			), "\n", trim ( $this->config->get ( 'config_robots' ) ) ) );
+			$robots = explode("\n", str_replace(array("\r\n","\r"), "\n", trim($this->config->get('config_robots'))));
 			foreach ( $robots as $robot ) {
 				if ($robot && strpos ( $this->request->server ['HTTP_USER_AGENT'], trim ( $robot ) ) !== false) {
 					$status = false;

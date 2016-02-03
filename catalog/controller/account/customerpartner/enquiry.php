@@ -103,7 +103,7 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 				'filter_status' => $filter_status,
 				'start' => ($page - 1) * $this->config->get ( 'config_product_limit' ),
 				'limit' => $this->config->get ( 'config_product_limit' ),
-				'customer_id' => $sellerId 
+				'seller_id' => $sellerId 
 		);
 		
 		$enquiries = $this->model_account_customerpartner->getEnquiries ( $data );
@@ -116,7 +116,7 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 		}
 		
 		$this->data ['isMember'] = true;
-		
+		$this->data ['isSentEnquiry'] = false;
 		$this->data ['heading_title'] = $this->language->get ( 'heading_title_productlist' );
 		$this->data ['text_enabled'] = $this->language->get ( 'text_enabled' );
 		$this->data ['text_disabled'] = $this->language->get ( 'text_disabled' );

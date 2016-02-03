@@ -121,27 +121,47 @@ class ModelModuleEnquiry extends Model {
 		return $this->cache->get ( 'payment_terms' );
 	}
 	public function getEnquiryComments($enquiry_id, $seller_id) {
-		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "quote qt WHERE qt.enquiry_id='" . $enquiry_id . "' AND qt.supplier_id='" . $seller_id . "'" );
+		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "quote qt WHERE qt.enquiry_id='" . $enquiry_id . "' AND qt.supplier_id='" . $seller_id . "' ORDER BY qt.quote_id DESC LIMIT 1" );
 		$data = array ();
 		if ($query->num_rows) {
-			$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "quote_revision qt WHERE qt.quote_id='" . $query->row ['quote_id'] . "' ORDER BY qt.quote_revision_id DESC LIMIT 1" );
-			$query = $this->db->query ( "SELECT *, (IFNULL((SELECT CONCAT (ct.firstname, ' ', ct.lastname) FROM " .DB_PREFIX. "customer ct WHERE ct.customer_id = qct.customer_id),(SELECT CONCAT (ct.firstname, ' ', ct.lastname) FROM " .DB_PREFIX. "customer ct WHERE ct.customer_id = '" . (int)$seller_id . "'))) AS authorname FROM " . DB_PREFIX . "quote_comment qct WHERE qct.quote_revision_id='" . $query->row ['quote_revision_id'] . "' " );
+			$query = $this->db->query ( "SELECT *, (IFNULL((SELECT CONCAT (ct.firstname, ' ', ct.lastname) FROM " . DB_PREFIX . "customer ct WHERE ct.customer_id = qct.customer_id),(SELECT CONCAT (ct.firstname, ' ', ct.lastname) FROM " . DB_PREFIX . "customer ct WHERE ct.customer_id = '" . ( int ) $seller_id . "'))) AS authorname FROM " . DB_PREFIX . "quote_comment qct WHERE qct.quote_id='" . $query->row ['quote_id'] . "' " );
 			foreach ( $query->rows as $key => $comment ) {
-				$data ['comments'][]=$comment;
+				$data ['comments'] [] = $comment;
 			}
 		} else {
-			$data = array ();
 			$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry et WHERE et.enquiry_id='" . $enquiry_id . "'" );
 			$this->db->query ( "INSERT INTO `" . DB_PREFIX . "quote` SET customer_id='" . ( int ) $query->row ['customer_id'] . "', enquiry_id='" . ( int ) $enquiry_id . "', supplier_id='" . ( int ) $seller_id . "', postcode='" . ( int ) $query->row ['postcode'] . "', date_added=NOW()" );
-			$quote_id = $this->db->getLastId ();
-			$this->db->query ( "INSERT INTO `" . DB_PREFIX . "quote_revision` SET quote_id='" . ( int ) $quote_id . "', status='" . ( int ) $query->row ['status'] . "', date_added=NOW()" );
 		}
 		return $data;
 	}
 	public function addEnquiryComments($enquiry_id, $seller_id, $comment) {
-		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "quote qt LEFT JOIN " . DB_PREFIX . "quote_revision qrt ON (qrt.quote_id = qt.quote_id)  WHERE qt.enquiry_id='" . $enquiry_id . "' AND qt.supplier_id='" . $seller_id . "' ORDER BY qrt.quote_revision_id DESC LIMIT 1" );
-		if ($query->num_rows) {
-			$query = $this->db->query ( "INSERT INTO " . DB_PREFIX . "quote_comment SET quote_revision_id='" . $query->row ['quote_revision_id'] . "', comment='" . $comment . "'" );
+		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "quote qt WHERE qt.enquiry_id='" . $enquiry_id . "' AND qt.supplier_id='" . $seller_id . "' ORDER BY qt.quote_id DESC LIMIT 1" );
+		$this->db->query ( "INSERT INTO " . DB_PREFIX . "quote_comment SET quote_id='" . $query->row ['quote_id'] . "', comment='" . $comment . "'" );
+	}
+	public function getQuotationBySuppliers($enquiry_id) {
+		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry_to_supplier e2s LEFT JOIN " . DB_PREFIX . "quote q ON (e2s.enquiry_id = q.enquiry_id) WHERE e2s.enquiry_id='" . $enquiry_id . "'" );
+		$data = array ();
+		foreach ( $query->rows as $enquirytoSupplier ) {
+			$this->load->model ( 'account/customer' );
+			$data ['quotes'] [$enquirytoSupplier ['supplier_id']] ['info'] = $this->model_account_customer->getCustomer ( $enquirytoSupplier ['supplier_id'] );
+			$data ['quotes'] [$enquirytoSupplier ['supplier_id']] ['quote'] = $enquirytoSupplier;
+			/* $data ['quotes'] [$enquirytoSupplier['supplier_id']] = $this->getEnquiryComments ( $enquiry_id, $enquirytoSupplier['supplier_id'] ); */
 		}
+		return $data;
+	}
+	public function getSentEnquiryComments($quote_id) {
+		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "quote qt WHERE qt.quote_id='" . $quote_id . "'" );
+		$data = array ();
+		if ($query->num_rows) {
+			$query = $this->db->query ( "SELECT *, (IFNULL((SELECT CONCAT (ct.firstname, ' ', ct.lastname) FROM " . DB_PREFIX . "customer ct WHERE ct.customer_id = qct.customer_id),(SELECT CONCAT (ct.firstname, ' ', ct.lastname) FROM " . DB_PREFIX . "customer ct WHERE ct.customer_id = '" . ( int ) $query->row['supplier_id'] . "'))) AS authorname FROM " . DB_PREFIX . "quote_comment qct WHERE qct.quote_id='" . $quote_id . "' " );
+			foreach ( $query->rows as $key => $comment ) {
+				$data ['comments'] [] = $comment;
+			}
+		}
+		return $data;
+	}
+	public function addSentEnquiryComments($quote_id, $customer_id, $comment) {
+		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "quote qt WHERE qt.quote_id='" . $quote_id . "'" );
+		$this->db->query ( "INSERT INTO " . DB_PREFIX . "quote_comment SET quote_id='" . $query->row ['quote_id'] . "', customer_id='" .$customer_id . "', comment='" . $comment . "'" );
 	}
 }

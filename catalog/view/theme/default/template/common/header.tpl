@@ -200,6 +200,9 @@ fbq('track', 'Purchase', {value: '0.00', currency: 'USD'});
 															<li><a class="btn btn-primary"
 																href="<?php echo $b_so; ?>"><i
 																	class="fa fa-calendar-plus-o"></i><?php echo $t_so; ?></a></li>
+															<li><a class="btn btn-primary"
+																href="<?php echo $b_se;?>" ><i
+																	class="fa fa-file-text-o"></i><?php echo $t_se;?></a></li>
 													<?php } ?>
 											
 													

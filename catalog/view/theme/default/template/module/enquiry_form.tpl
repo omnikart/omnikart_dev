@@ -105,6 +105,7 @@
 				
 				if (json['success']){
 					$('#enquiry_form input[type=text], #enquiry_form textarea').val("");
+					$('#enquiry_modal button.btn-decrease').trigger('click');
 					setTimeout(function(){ $('.modal').modal('hide'); }, 1000);
 					$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
 				} else if(!json['logged']) { 

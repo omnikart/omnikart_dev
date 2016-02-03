@@ -206,9 +206,12 @@ $('#columns').on('click','.panel-quote-comments',function(){
 
 		    if (json.comments) {
 	    	 $.each(json.comments, function(key,val) {
-			    html_read_comments +=     		'<h4 class="">'+val['authorname']+'</h4>';
-			    html_read_comments +=	 		'<p class="">'+val['comment']+'</p><hr />';
-	             /* alert(key+val['comment']); */
+	    		 html_read_comments += 		'<div class="panel panel-default">';
+	    		 html_read_comments += 			'<div class="panel-heading">';
+	    		 html_read_comments +=     			'<h4 class="panel-title">'+val['authorname']+'</h4>';
+	    		 html_read_comments +=			'</div>';
+	    		 html_read_comments += 			'<div class="panel-body">'+val['comment']+'</div>';
+	    		 html_read_comments += 		'</div>';
 	         });
 		    }
 	    	var enquiry_comments_modal = addmodal('enquiry-comments','');
