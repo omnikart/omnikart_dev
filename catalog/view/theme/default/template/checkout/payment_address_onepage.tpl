@@ -1,243 +1,9 @@
-
-<?php if (isset($new_payment_address_id) && $new_payment_address_id !== false) { ?>
-    <input type="hidden" id="new_payment_address_id" name="new_payment_address_id" value="<?php echo $new_payment_address_id; ?>"/>
-<?php } ?>
-
-
-<div id="payment-address-options" style="<?php
-if (!($addresses && (!$shipping_required || $trust_exist))) {
-    echo 'display:none;';
-}
-?>">
-    <div class="radio">
-        
-        <label for="payment-address-existing"> 
-            <input type="radio" name="payment_address" value="existing" id="payment-address-existing"  <?php if ($use_exist) echo 'checked="checked"'; ?>/>
-        <?php echo $text_address_existing; ?> </label>
-    </div>
-
-
-    <div class="radio clearfix">
-        
-        <label for="payment-address-new">
-            <input type="radio" name="payment_address" value="new" id="payment-address-new" <?php
-        if (!$use_exist) {
-            echo 'checked="checked"';
-        }
-        ?> />
-           <?php echo $text_address_new; ?> </label>
-    </div>
-
-    <div class="row">
-        <hr>  
-    </div>
-</div>
-
-
-
-<?php // if ($addresses && (!$shipping_required || $trust_exist)) { ?>
-<div id="payment-existing" style="<?php
-if (!$use_exist) {
-    echo 'display:none;';
-}
-?>">
-    <select name="address_id" style="width: 100%; margin-bottom: 15px;" size="5">
-        <?php if (!$shipping_required) {//## show all trust & fake address ?>
-            <?php foreach ($addresses as $address) { ?>
-                <?php if ($address['address_id'] == $address_id) { ?>
-                    <option value="<?php echo $address['address_id']; ?>" selected="selected"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
-                <?php } else { ?>
-                    <option value="<?php echo $address['address_id']; ?>"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
-                <?php } ?>
-            <?php } ?>
-        <?php } else { //$trust_exist?>
-            <?php foreach ($trusted_addresses as $address) { ?>
-                <?php if ($address['address_id'] == $address_id) { ?>
-                    <option value="<?php echo $address['address_id']; ?>" selected="selected"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
-                <?php } else { ?>
-                    <option value="<?php echo $address['address_id']; ?>"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
-                <?php } ?>
-            <?php } ?>      
-        <?php } ?>
-    </select>
-</div>
-
-<?php // }   ?>
-
-
-<div id="payment-new"  style="display:<?php
-if (!$use_exist) {
-    echo 'block;';
-} else {
-    echo 'none;';
-}
-?>">
-
-    <form class="form-horizontal" role="form">
-        <div class="form-group form-group-sm ">
-            <span class="required">*</span> <?php echo $entry_firstname; ?>
-            <input type="text" name="firstname"  id="input-payment-firstname" value="<?php
-            if (!empty($new_address['firstname'])) {
-                echo $new_address['firstname'];
-            }
-            ?>" class="form-control input-sm" />
-        </div>
-        <div class="form-group form-group-sm ">
-            <span class="required">*</span> <?php echo $entry_lastname; ?>
-            <input type="text" name="lastname"  id="input-payment-lastname" value="<?php
-            if (!empty($new_address['lastname'])) {
-                echo $new_address['lastname'];
-            }
-            ?>" class="form-control input-sm" />
-        </div>
-        <div class="form-group form-group-sm ">
-            <?php echo $entry_company; ?>
-            <input type="text" name="company"  id="input-payment-company" value="<?php
-            if (!empty($new_address['company'])) {
-                echo $new_address['company'];
-            }
-            ?>" class="form-control input-sm" />
-        </div>
-
-        <div class="form-group form-group-sm ">
-            <span class="required">*</span> <?php echo $entry_address_1; ?>
-            <input type="text" name="address_1"  id="input-payment-address-1" value="<?php
-            if (!empty($new_address['address_1'])) {
-                echo $new_address['address_1'];
-            }
-            ?>" class="form-control input-sm" />
-        </div>
-
-        <div class="form-group form-group-sm ">
-            <?php echo $entry_address_2; ?>
-            <input type="text" name="address_2"  id="input-payment-address-2" value="<?php
-            if (!empty($new_address['address_2'])) {
-                echo $new_address['address_2'];
-            }
-            ?>" class="form-control input-sm" />
-        </div>
-
-        <div class="form-group form-group-sm ">
-            <span class="required">*</span> <?php echo $entry_city; ?>
-            <input type="text" name="city"  id="input-payment-city" value="<?php
-            if (!empty($new_address['city'])) {
-                echo $new_address['city'];
-            }
-            ?>" class="form-control input-sm" />
-        </div>
-
-        <div class="form-group form-group-sm ">
-            <span id="payment-postcode-required" class="required">*</span> <?php echo $entry_postcode; ?>
-            <input type="text" name="postcode"  id="input-payment-postcode" value="<?php
-            if (!empty($new_address['postcode'])) {
-                echo $new_address['postcode'];
-            }
-            ?>" class="form-control input-sm" />
-        </div>
-
-        <div class="form-group form-group-sm ">
-            <span class="required">*</span> <?php echo $entry_country; ?>
-            <select name="country_id"  id="input-payment-country" class="form-control input-sm">
-                <option value=""><?php echo $text_select; ?></option>
-                <?php foreach ($countries as $country) { ?>
-                    <?php if ($country['country_id'] == $country_id) { ?>
-                        <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
-                    <?php } else { ?>
-                        <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
-                    <?php } ?>
-                <?php } ?>
-            </select>
-        </div>
-        <div class="form-group form-group-sm ">
-            <span class="required">*</span> <?php echo $entry_zone; ?>
-            <select name="zone_id"  id="input-payment-zone" class="form-control input-sm">
-                <?php if ($zones) { ?>
-                    <option value=""><?php echo $text_select; ?></option>
-                    <?php foreach ($zones as $zn) { ?>
-                        <?php if ($zn['zone_id'] == $zone_id) { ?>
-                            <option value="<?php echo $zn['zone_id']; ?>" selected="selected"><?php echo $zn['name']; ?></option>
-                        <?php } else { ?>
-                            <option value="<?php echo $zn['zone_id']; ?>"><?php echo $zn['name']; ?></option>
-                        <?php } ?>
-                    <?php } ?>
-                <?php } else { ?>
-                    <option value="0" selected="selected"><?php echo $text_none; ?></option>
-                <?php } ?>
-            </select>
-        </div>
-        <?php foreach ($custom_fields as $custom_field) { ?>
-        <?php if ($custom_field['location'] == 'address') { ?>
-        <?php if ($custom_field['type'] == 'select') { ?>
-        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">
-          <label class=" control-label" for="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>
-          <div >
-            <select name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" class="form-control input-sm">
-              <option value=""><?php echo $text_select; ?></option>
-              <?php foreach ($custom_field['custom_field_value'] as $custom_field_value) { ?>
-              <option value="<?php echo $custom_field_value['custom_field_value_id']; ?>"><?php echo $custom_field_value['name']; ?></option>
-              <?php } ?>
-            </select>
-          </div>
-        </div>
-        <?php } ?>
-        <?php if ($custom_field['type'] == 'radio') { ?>
-        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">
-          <label class=" control-label"><?php echo $custom_field['name']; ?></label>
-          <div >
-            <div id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>">
-              <?php foreach ($custom_field['custom_field_value'] as $custom_field_value) { ?>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" value="<?php echo $custom_field_value['custom_field_value_id']; ?>" />
-                  <?php echo $custom_field_value['name']; ?></label>
-              </div>
-              <?php } ?>
-            </div>
-          </div>
-        </div>
-        <?php } ?>
-        <?php if ($custom_field['type'] == 'checkbox') { ?>
-        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">
-          <label class=" control-label"><?php echo $custom_field['name']; ?></label>
-          <div >
-            <div id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>">
-              <?php foreach ($custom_field['custom_field_value'] as $custom_field_value) { ?>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>][]" value="<?php echo $custom_field_value['custom_field_value_id']; ?>" />
-                  <?php echo $custom_field_value['name']; ?></label>
-              </div>
-              <?php } ?>
-            </div>
-          </div>
-        </div>
-        <?php } ?>
-        <?php if ($custom_field['type'] == 'text') { ?>
-        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">
-          <label class="control-label" for="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>
-          <div >
-            <input type="text" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" value="<?php echo $custom_field['value']; ?>" placeholder="<?php echo $custom_field['name']; ?>" id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" class="form-control input-sm" />
-          </div>
-        </div>
-        <?php } ?>
-        <?php if ($custom_field['type'] == 'textarea') { ?>
-        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">
-          <label class=" control-label" for="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>
-          <div >
-            <textarea name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" rows="5" placeholder="<?php echo $custom_field['name']; ?>" id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" class="form-control"><?php echo $custom_field['value']; ?></textarea>
-          </div>
-        </div>
-        <?php } ?>
-        <?php if ($custom_field['type'] == 'file') { ?>
-        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">
-          <label class=" control-label"><?php echo $custom_field['name']; ?></label>
-          <div >
-            <button type="button" id="button-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-sm btn-default"><i class="fa fa-upload"></i> <?php echo $button_upload; ?></button>
-            <input type="hidden" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" value="" id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" />
-          </div>
-        </div>
-        <?php } ?>
-        <?php if ($custom_field['type'] == 'date') { ?>
+<?php if (isset($new_payment_address_id) && $new_payment_address_id !== false) { ?>    <input type="hidden" id="new_payment_address_id" name="new_payment_address_id" value="<?php echo $new_payment_address_id; ?>"/><?php } ?><div id="payment-address-options" style="<?php echo (!($addresses && (!$shipping_required || $trust_exist))?'display:none;':''); ?>">    <div class="radio">        <label for="payment-address-existing">             <input type="radio" name="payment_address" value="existing" id="payment-address-existing"  <?php if ($use_exist) echo 'checked="checked"'; ?>/><?php echo $text_address_existing; ?> 
+        </label>    </div>    <div class="radio clearfix">        <label for="payment-address-new">            <input type="radio" name="payment_address" value="new" id="payment-address-new" <?php echo (!$use_exist?'checked="checked"':''); ?> />           <?php echo $text_address_new; ?>
+        </label>    </div>    <div class="row">        <hr>      </div></div><?php // if ($addresses && (!$shipping_required || $trust_exist)) { ?><div id="payment-existing" style="<?php echo (!$use_exist?'display:none;':''); ?>">    <!--    <select name="address_id" style="width: 100%; margin-bottom: 15px;" size="5">        <?php if (!$shipping_required) {//## show all trust & fake address ?>            <?php foreach ($addresses as $address) { ?>                <?php if ($address['address_id'] == $address_id) { ?>                    <option value="<?php echo $address['address_id']; ?>" selected="selected"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>                <?php } else { ?>                    <option value="<?php echo $address['address_id']; ?>"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>                <?php } ?>            <?php } ?>        <?php } else { //$trust_exist?>            <?php foreach ($trusted_addresses as $address) { ?>                <?php if ($address['address_id'] == $address_id) { ?>                    <option value="<?php echo $address['address_id']; ?>" selected="selected"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>                <?php } else { ?>                    <option value="<?php echo $address['address_id']; ?>"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>                <?php } ?>            <?php } ?>              <?php } ?>    </select>     -->  <form> <?php foreach ($addresses as $address) { ?>  <div class="clearfix payment-address"> 		<input type="radio" name="address_id" id="address<?php echo $address['address_id']; ?>" value="<?php echo $address['address_id']; ?>" class="radio" <?php echo (($address['address_id'] == $address_id)?'checked':''); ?> />		<label for="address<?php echo $address['address_id']; ?>">			<?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?><br />			<?php echo $address['address_1']; ?> <?php echo $address['city']; ?><br />			<?php echo $address['zone']; ?> <?php echo $address['country']; ?>		</label>  </div>  </form><?php } ?>     </div><?php // }   ?>
+
+
+<div id="payment-new"  style="display:<?php echo (!$use_exist?'block;':'none'); ?>">    <form class="form-horizontal" role="form">        <div class="form-group form-group-sm ">            <span class="required">*</span> <?php echo $entry_firstname; ?>            <input type="text" name="firstname"  id="input-payment-firstname" value="<?php            if (!empty($new_address['firstname'])) {                echo $new_address['firstname'];            }            ?>" class="form-control input-sm" />        </div>        <div class="form-group form-group-sm ">            <span class="required">*</span> <?php echo $entry_lastname; ?>            <input type="text" name="lastname"  id="input-payment-lastname" value="<?php echo (!empty($new_address['lastname'])?$new_address['lastname']:''); ?>" class="form-control input-sm" />        </div>        <div class="form-group form-group-sm ">            <?php echo $entry_company; ?>            <input type="text" name="company"  id="input-payment-company" value="<?php echo (!empty($new_address['company'])?$new_address['company']:''); ?>" class="form-control input-sm" />        </div>        <div class="form-group form-group-sm ">            <span class="required">*</span> <?php echo $entry_address_1; ?>            <input type="text" name="address_1"  id="input-payment-address-1" value="<?php echo (!empty($new_address['address_1'])?$new_address['address_1']:''); ?>" class="form-control input-sm" />        </div>        <div class="form-group form-group-sm ">            <?php echo $entry_address_2; ?>            <input type="text" name="address_2"  id="input-payment-address-2" value="<?php echo (!empty($new_address['address_2'])?$new_address['address_2']:''); ?>" class="form-control input-sm" />        </div>        <div class="form-group form-group-sm ">            <span class="required">*</span> <?php echo $entry_city; ?>            <input type="text" name="city"  id="input-payment-city" value="<?php (!empty($new_address['city'])?$new_address['city']:''); ?>" class="form-control input-sm" />        </div>        <div class="form-group form-group-sm ">            <span id="payment-postcode-required" class="required">*</span> <?php echo $entry_postcode; ?>            <input type="text" name="postcode"  id="input-payment-postcode" value="<?php echo (!empty($new_address['postcode'])?$new_address['postcode']:''); ?>" class="form-control input-sm" />        </div>        <div class="form-group form-group-sm ">            <span class="required">*</span> <?php echo $entry_country; ?>            <select name="country_id"  id="input-payment-country" class="form-control input-sm">                <option value=""><?php echo $text_select; ?></option>                <?php foreach ($countries as $country) { ?>                        <option value="<?php echo $country['country_id']; ?>" <?php echo (($country['country_id'] == $country_id)?'selected="selected"':'') ?> ><?php echo $country['name']; ?></option>                <?php } ?>            </select>        </div>        <div class="form-group form-group-sm ">            <span class="required">*</span> <?php echo $entry_zone; ?>            <select name="zone_id"  id="input-payment-zone" class="form-control input-sm">                <?php if ($zones) { ?>                    <option value=""><?php echo $text_select; ?></option>                    <?php foreach ($zones as $zn) { ?>                            <option value="<?php echo $zn['zone_id']; ?>" <?php if (($zn['zone_id'] == $zone_id)?'selected="selected"':''); ?>><?php echo $zn['name']; ?></option>                    <?php } ?>                <?php } else { ?>                    <option value="0" selected="selected"><?php echo $text_none; ?></option>                <?php } ?>            </select>        </div>        <?php foreach ($custom_fields as $custom_field) { ?>        <?php if ($custom_field['location'] == 'address') { ?>        <?php if ($custom_field['type'] == 'select') { ?>        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">          <label class=" control-label" for="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>          <div >            <select name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" class="form-control input-sm">              <option value=""><?php echo $text_select; ?></option>              <?php foreach ($custom_field['custom_field_value'] as $custom_field_value) { ?>              <option value="<?php echo $custom_field_value['custom_field_value_id']; ?>"><?php echo $custom_field_value['name']; ?></option>              <?php } ?>            </select>          </div>        </div>        <?php } ?>        <?php if ($custom_field['type'] == 'radio') { ?>        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">          <label class=" control-label"><?php echo $custom_field['name']; ?></label>          <div >            <div id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>">              <?php foreach ($custom_field['custom_field_value'] as $custom_field_value) { ?>              <div class="radio">                <label>                  <input type="radio" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" value="<?php echo $custom_field_value['custom_field_value_id']; ?>" />                  <?php echo $custom_field_value['name']; ?></label>              </div>              <?php } ?>            </div>          </div>        </div>        <?php } ?>        <?php if ($custom_field['type'] == 'checkbox') { ?>        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">          <label class=" control-label"><?php echo $custom_field['name']; ?></label>          <div >            <div id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>">              <?php foreach ($custom_field['custom_field_value'] as $custom_field_value) { ?>              <div class="checkbox">                <label>                  <input type="checkbox" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>][]" value="<?php echo $custom_field_value['custom_field_value_id']; ?>" />                  <?php echo $custom_field_value['name']; ?></label>              </div>              <?php } ?>            </div>          </div>        </div>        <?php } ?>        <?php if ($custom_field['type'] == 'text') { ?>        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">          <label class="control-label" for="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>          <div >           <input type="text" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" value="<?php echo $custom_field['value']; ?>" placeholder="<?php echo $custom_field['name']; ?>" id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" class="form-control input-sm" />          </div>        </div>        <?php } ?>        <?php if ($custom_field['type'] == 'textarea') { ?>        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">          <label class=" control-label" for="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?></label>          <div >            <textarea name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" rows="5" placeholder="<?php echo $custom_field['name']; ?>" id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" class="form-control"><?php echo $custom_field['value']; ?></textarea>          </div>        </div>        <?php } ?>        <?php if ($custom_field['type'] == 'file') { ?>        <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">          <label class=" control-label"><?php echo $custom_field['name']; ?></label>          <div >            <button type="button" id="button-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-sm btn-default"><i class="fa fa-upload"></i> <?php echo $button_upload; ?></button>            <input type="hidden" name="custom_field[<?php echo $custom_field['custom_field_id']; ?>]" value="" id="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>" />          </div>        </div>        <?php } ?>        <?php if ($custom_field['type'] == 'date') { ?>
         <div class="form-group<?php echo ($custom_field['required'] ? ' required' : ''); ?> form-group-sm custom-field" data-sort="<?php echo $custom_field['sort_order']; ?>">
           <label class="control-label" for="input-payment-custom-field<?php echo $custom_field['custom_field_id']; ?>"><?php echo $custom_field['name']; ?>fadf</label>
           <div >
@@ -281,46 +47,7 @@ if (!$use_exist) {
     <br />
 
 </div>
-    <?php if ($shipping_required) { ?>
-
-            <div class="form-group form-group-sm">
-                <?php // echo $shipping_address_same;   ?>
-                <div class="checkbox">
-                    <label>
-                        <?php if ($shipping_address_same) { ?>
-                            <input type="checkbox" name="shipping_address_same" value="1" checked="checked" />
-                        <?php } else { ?>
-                            <input type="checkbox" name="shipping_address_same" value="1" />
-                        <?php } ?>
-                        <strong><?php echo $entry_shipping; ?></strong>
-                    </label>
-                </div>
-
-            </div>
-
-        <?php } ?>
-<div class="row">
-    <div class="panel-footer">
-
-        
-
-        <div class="text-right">
-            <input type="button" value="<?php echo $button_ok; ?>" id="button-payment-address" class="btn btn-sm btn-<?php
-                   if ($css['checkout_theme'] == 'standar') {
-                       echo 'warning';
-                   } else {
-                       echo $css['checkout_theme'];
-                   }
-                   ?>"  style="<?php
-                   if (!empty($css['common_btn_color'])) {
-                       echo "background-color:{$css['common_btn_color']}!important; background-image:none;";
-                   }
-                   if ($use_exist) {
-                       echo 'display:none;';
-                   }
-                   ?>"/>
-        </div>
-    </div>
+    <?php if ($shipping_required) { ?>            <div class="form-group form-group-sm">                <?php // echo $shipping_address_same;   ?>                <div class="checkbox">                    <label>                        <?php if ($shipping_address_same) { ?>                            <input type="checkbox" name="shipping_address_same" value="1" checked="checked" />                        <?php } else { ?>                            <input type="checkbox" name="shipping_address_same" value="1" />                        <?php } ?>                        <strong><?php echo $entry_shipping; ?></strong>                    </label>                </div>            </div>        <?php } ?><div class="row">    <div class="panel-footer">        <div class="text-right">            <input type="button" value="<?php echo $button_ok; ?>" id="button-payment-address" class="btn btn-sm btn-<?php                   if ($css['checkout_theme'] == 'standar') {                       echo 'warning';                   } else {                       echo $css['checkout_theme'];                   }                   ?>"  style="<?php                   if (!empty($css['common_btn_color'])) {                       echo "background-color:{$css['common_btn_color']}!important; background-image:none;";                   }                   if ($use_exist) {                       echo 'display:none;';                   }                   ?>"/>        </div>    </div>
 </div>
 
 <script type="text/javascript"><!--

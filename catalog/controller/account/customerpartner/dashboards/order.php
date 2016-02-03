@@ -12,8 +12,10 @@ class ControllerAccountCustomerpartnerDashboardsOrder extends Controller {
 
 		// Total Orders
 		$this->load->model('account/customerpartner');
-
+		
 		$sellerId = $this->model_account_customerpartner->isSubUser($this->customer->getId());
+		
+		$marketplace_complete_order_status = $this->config->get('marketplace_complete_order_status');
 		
 		$today = $this->model_account_customerpartner->getSellerOrdersTotal(array('filter_date' => date('Y-m-d', strtotime('-1 day'))),$sellerId);
 

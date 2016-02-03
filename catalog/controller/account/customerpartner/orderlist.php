@@ -18,7 +18,7 @@ class ControllerAccountCustomerpartnerOrderlist extends Controller {
 		if($customerRights && !array_key_exists('view-all-order', $customerRights['rights'])) {
 			$this->response->redirect($this->url->link('account/account', '','SSL'));
 		}
-
+		
 		$sellerId = $this->model_account_customerpartner->isSubUser($this->customer->getId());
 		if(!$customerRights['isParent'] && !$sellerId) {
 			$this->data['chkIsPartner'] = $this->model_account_customerpartner->chkIsPartner();
@@ -27,7 +27,7 @@ class ControllerAccountCustomerpartnerOrderlist extends Controller {
 		} else {
 			$this->data['chkIsPartner'] = false;
 		}
-			
+		$sellerId = $this->model_account_customerpartner->getuserseller();
 		if(!$this->data['chkIsPartner'])
 			$this->response->redirect($this->url->link('account/account'));
 
@@ -117,13 +117,13 @@ class ControllerAccountCustomerpartnerOrderlist extends Controller {
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
-			$sort = 'o.firstname';
+			$sort = 'o.order_id';
 		}
 
 		if (isset($this->request->get['order'])) {
 			$order = $this->request->get['order'];
 		} else {
-			$order = 'ASC';
+			$order = 'DESC';
 		}
 
 		if (isset($this->request->get['page'])) {
@@ -144,7 +144,7 @@ class ControllerAccountCustomerpartnerOrderlist extends Controller {
 		);
 				
 		$orders = $this->model_account_customerpartner->getSellerOrders($data,$sellerId);
-		
+
 		$orderstotal = $this->model_account_customerpartner->getSellerOrdersTotal($data,$sellerId);	
 
 		if($orders){
@@ -167,7 +167,8 @@ class ControllerAccountCustomerpartnerOrderlist extends Controller {
 				$orders[$key]['total'] = $this->currency->format($orders[$key]['total']);
 				$orders[$key]['productname'] = substr($orders[$key]['productname'], 0, -2);
 
-				$orders[$key]['orderidlink']= $this->url->link('account/customerpartner/orderinfo&order_id='.$order_list['order_id'],'','SSL');			
+				$orders[$key]['orderidlink']= $this->url->link('account/customerpartner/orderinfo&order_id='.$order_list['order_id'],'','SSL');
+				$orders[$key]['pdforderidlink']= $this->url->link('account/customerpartner/orderinfo/pdf&order_id='.$order_list['order_id'],'','SSL');			
 				
 			}
 			

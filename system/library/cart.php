@@ -42,7 +42,7 @@ class Cart {
 				} else {
 					$options = array();
 				}
-
+				
 				// Profile
 				if (!empty($product['recurring_id'])) {
 					$recurring_id = $product['recurring_id'];
@@ -56,17 +56,46 @@ class Cart {
 					$option_price = 0;
 					$option_points = 0;
 					$option_weight = 0;
-
 					$option_data = array();
 
+					$price = $product_query->row['price']; // Getting Product Default Price set by omnikart. ( MRP )
+						
+					if ($vendor_id) { // if $vendor_id != 0  get the vendor product details
+						$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND c2p.customer_id = '".(int)$vendor_id."' AND status='1')");
+					} else { // if $vendor_id = 0  get the default vendor product details
+						$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND status='1') ORDER BY c2p.sort_order ASC LIMIT 1");
+					}
+					
+					if($vendor->row && $vendor->row['price']){ // Check if any vendor exist for the product if yes the update the produc price
+						$price = $vendor->row['price'];
+						$id = $vendor->row['id'];
+						$vendor_id = $vendor->row['customer_id'];
+					} else {$vendor_id = 0;$id=0;} // if vendor_id is not zero and no vendor exist for the product then set $vendor_id = 0;
+								
+					
+					$query = $this->db->query("SELECT * FROM `".DB_PREFIX."customerpartner_to_product_option` WHERE id='" . (int)$vendor->row['id'] . "'");
+					$option_values = array();
+					if ($query->num_rows){
+						foreach ($query->rows as $option_value) {
+							$option_values[$option_value['product_option_value_id']] = array(
+								'product_option_value_id'=>$option_value['product_option_value_id'],
+								'product_id'=>$option_value['product_id'],
+								'id'=>$option_value['id'],
+								'sku'=>$option_value['sku'],
+								'price'=>$option_value['price'],
+								'quantity'=>$option_value['quantity']
+							);
+						}
+					}
+					
 					foreach ($options as $product_option_id => $value) { // Product Options Query //
 						$option_query = $this->db->query("SELECT po.product_option_id, po.option_id, od.name, o.type FROM " . DB_PREFIX . "product_option po LEFT JOIN `" . DB_PREFIX . "option` o ON (po.option_id = o.option_id) LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) WHERE po.product_option_id = '" . (int)$product_option_id . "' AND po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 						if ($option_query->num_rows) {
 							if ($option_query->row['type'] == 'select' || $option_query->row['type'] == 'radio' || $option_query->row['type'] == 'image') {
-								$option_value_query = $this->db->query("SELECT pov.option_value_id, ovd.name, pov.quantity, pov.subtract, pov.price, pov.price_prefix, pov.points, pov.points_prefix, pov.weight, pov.weight_prefix FROM " . DB_PREFIX . "product_option_value pov LEFT JOIN " . DB_PREFIX . "option_value ov ON (pov.option_value_id = ov.option_value_id) LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE pov.product_option_value_id = '" . (int)$value . "' AND pov.product_option_id = '" . (int)$product_option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
-
-								if ($option_value_query->num_rows) {
+								$option_value_query = $this->db->query("SELECT pov.option_value_id, ovd.name, cppo.quantity AS quantity, pov.subtract, cppo.price AS price, pov.price_prefix, pov.points, pov.points_prefix, pov.weight, pov.weight_prefix FROM " . DB_PREFIX . "product_option_value pov INNER JOIN " . DB_PREFIX . "option_value ov ON (pov.option_value_id = ov.option_value_id) INNER JOIN " . DB_PREFIX . "option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) INNER JOIN `" . DB_PREFIX . "customerpartner_to_product_option` cppo ON (cppo.product_option_value_id=pov.product_option_value_id) WHERE pov.product_option_value_id = '" . (int)$value . "' AND pov.product_option_id = '" . (int)$product_option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cppo.id='" . (int)$id . "'");
+								
+								if ($option_value_query->num_rows ) {
 									if ($option_value_query->row['price_prefix'] == '+') {
 										$option_price += $option_value_query->row['price'];
 									} elseif ($option_value_query->row['price_prefix'] == '-') {
@@ -88,7 +117,7 @@ class Cart {
 									if ($option_value_query->row['subtract'] && (!$option_value_query->row['quantity'] || ($option_value_query->row['quantity'] < $quantity))) {
 										$stock = false;
 									}
-
+							
 									$option_data[] = array(
 										'product_option_id'       => $product_option_id,
 										'product_option_value_id' => $value,
@@ -175,18 +204,6 @@ class Cart {
 						}
 					}
 
-					$price = $product_query->row['price']; // Getting Product Default Price set by omnikart. ( MRP )
-					
-					if ($vendor_id) { // if $vendor_id != 0  get the vendor product details
-							$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND c2p.customer_id = '".(int)$vendor_id."' AND status='1')");
-					} else { // if $vendor_id = 0  get the default vendor product details
-							$vendor = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p WHERE (c2p.product_id=".(int)$product_id." AND status='1') ORDER BY c2p.sort_order ASC LIMIT 1");
-					}
-		
-					if($vendor->row && $vendor->row['price']){ // Check if any vendor exist for the product if yes the update the produc price
-						$price = $vendor->row['price'];
-					} else $vendor_id = 0; // if vendor_id is not zero and no vendor exist for the product then set $vendor_id = 0;
-
 					// Product Discounts
 
 					$discount_quantity[$product_id.'-'.$vendor_id] = 0;
@@ -242,7 +259,7 @@ class Cart {
 					}
 
 					// Stock
-					if($vendor->row){
+					if ($vendor->row) {
 						if (!$vendor->row['quantity'] || ($vendor->row['quantity'] < $quantity)) {
 							$stock = false;
 						}
@@ -294,6 +311,7 @@ class Cart {
 
 					$this->data[$key] = array(
 						'key'             => $key,
+						'id'              => $id,
 						'product_id'      => $product_query->row['product_id'],
 						'name'            => $product_query->row['name'],
 						'model'           => $product_query->row['model'],
@@ -390,67 +408,105 @@ class Cart {
 		$this->session->data['cart'] = array();
 	}
 
-	public function getWeight() {
+	public function getWeight($vendor_id = 0) {
 		$weight = 0;
-
-		foreach ($this->getProducts() as $product) {
-			if ($product['shipping']) {
-				$weight += $this->weight->convert($product['weight'], $product['weight_class_id'], $this->config->get('config_weight_class_id'));
+		if ($vendor_id) {
+			foreach ($this->getProducts() as $product) {
+				if ($product['shipping'] && ($product['vendor_id']==$vendor_id)) {
+						$weight += $this->weight->convert($product['weight'], $product['weight_class_id'], $this->config->get('config_weight_class_id'));
+				}
+			}	
+		} else {
+			foreach ($this->getProducts() as $product) {
+				if ($product['shipping']) {
+					$weight += $this->weight->convert($product['weight'], $product['weight_class_id'], $this->config->get('config_weight_class_id'));
+				}
 			}
 		}
-
 		return $weight;
 	}
 
-	public function getSubTotal() {
+	public function getSubTotal($vendor_id = 0) {
 		$total = 0;
-
-		foreach ($this->getProducts() as $product) {
-			$total += $product['total'];
+		if ($vendor_id) {
+			foreach ($this->getProducts() as $product) {
+				if ($vendor_id && ($product['vendor_id']==$vendor_id)) {
+					$total += $product['total'];
+				} 
+			}
+		} else {
+			foreach ($this->getProducts() as $product) {
+				$total += $product['total'];
+			}
 		}
-
 		return $total;
 	}
 
-	public function getTaxes() {
+	public function getTaxes($vendor_id = 0) {
 		$tax_data = array();
 
-		foreach ($this->getProducts() as $product) {
-			if ($product['tax_class_id']) {
-				$tax_rates = $this->tax->getRates($product['price'], $product['tax_class_id']);
 
-				foreach ($tax_rates as $tax_rate) {
-					if (!isset($tax_data[$tax_rate['tax_rate_id']])) {
-						$tax_data[$tax_rate['tax_rate_id']] = ($tax_rate['amount'] * $product['quantity']);
-					} else {
-						$tax_data[$tax_rate['tax_rate_id']] += ($tax_rate['amount'] * $product['quantity']);
+		if ($vendor_id) {
+			foreach ($this->getProducts() as $product) {
+				if ($product['vendor_id']==$vendor_id) {
+					if ($product['tax_class_id']) {
+						$tax_rates = $this->tax->getRates($product['price'], $product['tax_class_id']);
+						foreach ($tax_rates as $tax_rate) {
+							if (!isset($tax_data[$tax_rate['tax_rate_id']])) {
+								$tax_data[$tax_rate['tax_rate_id']] = ($tax_rate['amount'] * $product['quantity']);
+							} else {
+								$tax_data[$tax_rate['tax_rate_id']] += ($tax_rate['amount'] * $product['quantity']);
+							}
+						}
+					}
+				}
+			}
+		} else {
+			foreach ($this->getProducts() as $product) {
+				if ($product['tax_class_id']) {
+					$tax_rates = $this->tax->getRates($product['price'], $product['tax_class_id']);
+					foreach ($tax_rates as $tax_rate) {
+						if (!isset($tax_data[$tax_rate['tax_rate_id']])) {
+							$tax_data[$tax_rate['tax_rate_id']] = ($tax_rate['amount'] * $product['quantity']);
+						} else {
+							$tax_data[$tax_rate['tax_rate_id']] += ($tax_rate['amount'] * $product['quantity']);
+						}
 					}
 				}
 			}
 		}
-
 		return $tax_data;
 	}
 
-	public function getTotal() {
+	public function getTotal($vendor_id = 0) {
 		$total = 0;
-
-		foreach ($this->getProducts() as $product) {
-			$total += $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
+		if ($vendor_id) {
+			foreach ($this->getProducts() as $product) {
+				if ($product['vendor_id']==$vendor_id) {
+					$total += $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
+				}
+			}
+		} else {
+			foreach ($this->getProducts() as $product) {
+				$total += $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
+			}
 		}
-
 		return $total;
 	}
 
-	public function countProducts() {
+	public function countProducts($vendor_id = 0) {
 		$product_total = 0;
-
-		$products = $this->getProducts();
-
-		foreach ($products as $product) {
-			$product_total += $product['quantity'];
+		if ($vendor_id) {
+			foreach ($this->getProducts() as $product) {
+				if ($product['vendor_id']==$vendor_id) {
+					$product_total += $product['quantity'];
+				}
+			}
+		}	 else {
+			foreach ($this->getProducts() as $product) {
+				$product_total += $product['quantity'];
+			}
 		}
-
 		return $product_total;
 	}
 
@@ -462,41 +518,84 @@ class Cart {
 		return count($this->getRecurringProducts());
 	}
 
-	public function hasStock() {
+	public function hasStock($vendor_id = 0) {
 		$stock = true;
-		foreach ($this->getProducts() as $product) {
-			if (!$product['stock']) {
-				$stock = false;
+		if ($vendor_id) {
+			foreach ($this->getProducts() as $product) {
+				if ($product['vendor_id']==$vendor_id) {
+					if (!$product['stock']) {
+						$stock = false;
+					}
+				}
+			}
+		} else {
+			foreach ($this->getProducts() as $product) {
+				if (!$product['stock']) {
+					$stock = false;
+				}
 			}
 		}
 		return $stock;
 	}
 
-	public function hasShipping() {
+	public function hasShipping($vendor_id = 0) {
 		$shipping = false;
+		if ($vendor_id) {
+			foreach ($this->getProducts() as $product) {
+				if ($product['vendor_id']==$vendor_id) {
+					if ($product['shipping']) {
+						$shipping = true;
+						break;
+					}
+				}
+			}
+		} else {
+			foreach ($this->getProducts() as $product) {
+				if ($product['shipping']) {
+					$shipping = true;
 
-		foreach ($this->getProducts() as $product) {
-			if ($product['shipping']) {
-				$shipping = true;
-
-				break;
+					break;
+				}
 			}
 		}
-
 		return $shipping;
 	}
 
-	public function hasDownload() {
+	public function hasDownload($vendor_id = 0) {
 		$download = false;
+		if ($vendor_id) {
+			foreach ($this->getProducts() as $product) {
+				if ($product['vendor_id']==$vendor_id) {
+					if ($product['download']) {
+						$download = true;
+						break;
+					}
+				}
+			}
+		} else {
+			foreach ($this->getProducts() as $product) {
+				if ($product['download']) {
+					$download = true;
 
-		foreach ($this->getProducts() as $product) {
-			if ($product['download']) {
-				$download = true;
-
-				break;
+					break;
+				}
 			}
 		}
-
 		return $download;
 	}
+	public function getVendors($vendor_id = 0) {
+		$vendors = array();
+		foreach ($this->getProducts() as $key => $product) {
+				if (!isset($vendors[$product['vendor_id']])) {
+						$vendors[$product['vendor_id']]['products'] = array();
+				}
+				$vendors[$product['vendor_id']]['products'][$key] = $product;
+		}
+		if ($vendor_id) {
+			return $vendors[$vendor_id]['products'];
+		} else {
+			return $vendors;
+		}
+	}
+	
 }

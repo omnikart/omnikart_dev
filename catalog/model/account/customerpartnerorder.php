@@ -23,47 +23,37 @@ class ModelAccountCustomerpartnerOrder extends Model {
 		if($this->config->get('marketplace_allowed_shipping_method')) {
 			if(in_array($order_info['shipping_code'],$this->config->get('marketplace_allowed_shipping_method'))) {
 				$admin_shipping_method = true;
-				// if($this->config->get('marketplace_divide_shipping') &&  $this->config->get('marketplace_divide_shipping') == 'yes'){
-						$sellers_count = count($resultData);
-						foreach ($resultData as $key => $value) {
-							if($value['seller'] == 'admin') {
-								$sellers_count = count($resultData) - 1;
-							}
-						}
-						if($sellers_count == 1) {
-							$shipping = $this->session->data['shipping_method']['cost'];
-						}
-				// }
+				$sellers_count = count($resultData);
+				foreach ($resultData as $key => $value) {
+					if($value['seller'] == 'admin') {
+						$sellers_count = count($resultData) - 1;
+					}
+				}
+				if($sellers_count == 1) {
+					$shipping = $this->session->data['shipping_method']['cost'];
+				}
 			}
 		}
 
 
-		foreach ($order_product_query->rows as $product) {		
-
+		foreach ($order_product_query->rows as $product) {
 			$prsql = '';
-
 			$mpSellers = $this->db->query("SELECT c.email,c.telephone,c.customer_id,p.product_id,p.subtract FROM ".DB_PREFIX."product p LEFT JOIN ".DB_PREFIX."customerpartner_to_product c2p ON (p.product_id = c2p.product_id) LEFT JOIN ".DB_PREFIX."customer c ON (c2p.customer_id = c.customer_id) WHERE p.product_id = '".$product['product_id']."' AND c2p.customer_id = '".$product['vendor_id']."' $prsql ORDER BY c2p.id ASC ")->row;
 			if(isset($mpSellers['email']) AND !empty($mpSellers['email'])){
-
 				$option_data = array();
-
 				$order_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$product['order_product_id'] . "'");
-
 				foreach ($order_option_query->rows as $option) {
 					if ($option['type'] != 'file') {
 						$value = $option['value'];
 					} else {
 						$value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
 					}
-
 					$option_data[] = array(
 						'name'  => $option['name'],
 						'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
 					);
 				}
-
 				$product_total = $this->currency->format( ($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)),  $order_info['currency_code'], $order_info['currency_value'] , false);
-
 				$products = array(
 					'product_id' => $product['product_id'],
 					'name'     => $product['name'],
@@ -76,13 +66,12 @@ class ModelAccountCustomerpartnerOrder extends Model {
 				);
 
 				$i = 0;
-
-				if($mpSellers['subtract'])
+				if($mpSellers['subtract']) {
 					$this->db->query("UPDATE " . DB_PREFIX . "customerpartner_to_product SET quantity = quantity-'".(int)$product['quantity']."' WHERE product_id = '".(int)$mpSellers['product_id']."' AND customer_id = '".(int)$mpSellers['customer_id']."'");
+				}
 
 				//add commission entry
 				$commission_array = $this->calculateCommission($products,$mpSellers['customer_id']);
-
 				if($order_info['shipping_code'] != 'wk_custom_shipping.wk_custom_shipping' && $admin_shipping_method) {
 					if(!$paid_shipping) {
 						$commission_array['customer'] = $commission_array['customer'] + $shipping;
@@ -90,9 +79,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 					}
 				} else if($admin_shipping_method) {
 					$sellerDetails = array();
-
 					$sellerDetails[$mpSellers['customer_id']] = $resultData[$mpSellers['customer_id']];
-
 					$shipping_quote = $this->model_shipping_wk_custom_shipping->getQuote($shipping_address, $sellerDetails);
 				}
 				
@@ -100,49 +87,28 @@ class ModelAccountCustomerpartnerOrder extends Model {
 					$commission_array['customer'] = $commission_array['customer'] + $shipping_quote['quote']['wk_custom_shipping']['cost'];
 				}
 
-				$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_to_order SET `order_id` = '".(int)$order_id."',`customer_id` = '".(int)$mpSellers['customer_id']."',`product_id` = '".(int)$product['product_id']."',`order_product_id` = '".(int)$product['order_product_id']."',`price` = '".(float)$product_total."',`quantity` = '".(int)$product['quantity']."',`shipping` = '".$this->db->escape($order_info['shipping_method'])."',`payment` = '".$this->db->escape($order_info['payment_method'])."',`details` = '".$this->db->escape($commission_array['type'])."',`customer` = '".$commission_array['customer']."',`admin` = '".$commission_array['commission']."',`date_added` = NOW() ");
+				$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_to_order SET `order_id` = '".(int)$order_id."',`customer_id` = '".(int)$mpSellers['customer_id']."',`product_id` = '".(int)$product['product_id']."',`order_product_id` = '".(int)$product['order_product_id']."',`price` = '".(float)$product_total."',`quantity` = '".(int)$product['quantity']."',`shipping` = '".$this->db->escape($order_info['shipping_method'])."',`payment` = '".$this->db->escape($order_info['payment_method'])."',`details` = '".$this->db->escape($commission_array['type'])."',`customer` = '".$commission_array['customer']."',`admin` = '".$commission_array['commission']."',`order_status_id` = '0',`date_added` = NOW() ");
 
 				//for adaptive paypal transaction
 				if($order_info['payment_code'] == 'wk_adaptive_pay') {
-		           $this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_transaction SET `customer_id` = '".(int)$mpSellers['customer_id']."',`amount` = '" . $commission_array['customer'] . "',`text` = '" . $this->currency->format($commission_array['customer']) . "',`details` = '".$this->db->escape($commission_array['type'])."',`date_added` = NOW()");
-		        }
-
-				if($mailToSellers){
-
-					foreach($mailToSellers as $key => $value) {
-						foreach($value as $key1 => $value1) {
-							$i = 0;
-							if($key1=='email' AND $value1==$mpSellers['email']){                        
-								$mailToSellers[$key]['products'][] = $products;
-								$mailToSellers[$key]['total'] = $product_total + $mailToSellers[$key]['total'];
-								break;
-							}else{
-								$i++;
-							}
-						}              
-					}  
-				}else{
-					$mailToSellers[] = array('email' => $mpSellers['email'],
-							'customer_id' => $mpSellers['customer_id'],
-							'seller_email' => $mpSellers['email'],
-							'seller_phone' => $mpSellers['telephone'],
-							'products' => array(0 => $products),
-							'total' => $product_total
-							);
-				}  
-
-				if($i>0){
-					$mailToSellers[] = array('email' => $mpSellers['email'],
+					 $this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_transaction SET `customer_id` = '".(int)$mpSellers['customer_id']."',`amount` = '" . $commission_array['customer'] . "',`text` = '" . $this->currency->format($commission_array['customer']) . "',`details` = '".$this->db->escape($commission_array['type'])."',`date_added` = NOW()");
+				}
+				
+				$email64 = base64_encode($mpSellers['email']);
+				if (isset($mailToSellers[$email64])){
+					$mailToSellers[$email64]['products'][] = $products;
+					$mailToSellers[$email64]['total'] = (float)$mailToSellers[$email64]['total'] + (float)$product_total;
+				} else {
+					$mailToSellers[$email64] = array('email' => $mpSellers['email'],
 						'customer_id' => $mpSellers['customer_id'],
 						'seller_email' => $mpSellers['email'],
 						'seller_phone' => $mpSellers['telephone'],
 						'products' => array(0 => $products),
 						'total' => $product_total
-						);
+					);
 				}
 			}
-
-		}  
+		} 
 
 
 		if($this->config->get('marketplace_mailtoseller')){
@@ -358,7 +324,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 	public function calculateCommission($product,$customer_id) {
 		
 		if($product) {
-			$categories_array = $this->db->query("SELECT p2c.category_id,c.parent_id FROM ".DB_PREFIX."product_to_category p2c LEFT JOIN ".DB_PREFIX."category c ON (p2c.category_id = c.category_id) WHERE p2c.product_id = '".(int)$product['product_id']."' ORDER BY p2c.product_id ");
+			$categories_array = $this->db->query("SELECT p2c.category_id,c.parent_id,cpcc.percentage,cpcc.fixed,cpcc.id FROM ".DB_PREFIX."product_to_category p2c LEFT JOIN ".DB_PREFIX."category c ON (p2c.category_id = c.category_id) LEFT JOIN ".DB_PREFIX."customerpartner_commission_category cpcc ON (cpcc.category_id=p2c.category_id) WHERE p2c.product_id = '".(int)$product['product_id']."' ORDER BY p2c.product_id");
 
 			if($this->config->get('marketplace_commissionworkedon'))
 				$categories = $categories_array->rows;
@@ -378,10 +344,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 
 								foreach($categories as $category) {
 									if($category['parent_id']==0){
-										$category_commission = $this->getCategoryCommission($category['category_id']);
-										if($category_commission){
-											$commission_amount += ( $category_commission['percentage'] ? ($category_commission['percentage']*$product['product_total']/100) : 0 ) + $category_commission['fixed'];
-										}
+											$commission_amount += ( $categories['percentage'] ? ($categories['percentage']*$product['product_total']/100) : 0 ) + $category_commission['fixed'];
 									}
 								}
 								$commission_type = 'Category Based';
@@ -394,17 +357,14 @@ class ModelAccountCustomerpartnerOrder extends Model {
 
 								foreach($categories as $category){
 									if($category['parent_id'] > 0){
-										$category_commission = $this->getCategoryCommission($category['category_id']);
-										if($category_commission){
-											$commission_amount += ( $category_commission['percentage'] ? ($category_commission['percentage']*$product['product_total']/100) : 0 ) + $category_commission['fixed'];
-										}
+										$commission_amount += ( $categories['percentage'] ? ($categories['percentage']*$product['product_total']/100) : 0 ) + $category_commission['fixed'];
 									}
 								}	
 
 								$commission_type = 'Category Child Based';									
 								if($commission_amount)
 									break;	
-							}	
+							}
 							
 						default: //just get all amount and process on that (precentage based)
 							$customer_commission = $this->getCustomerCommission($customer_id);
@@ -440,161 +400,102 @@ class ModelAccountCustomerpartnerOrder extends Model {
 		}	
 	}
 
-	public function sellerAdminData($cart, $zip = '',$payment = false ){
-		//price for payment
-		//total for shipping
-
+	public function sellerAdminData($cart, $zip = '',$payment = false ) {
 		$seller = array();
-
-		if($cart AND is_array($cart))
-			foreach($cart as $product){
-
+		if($cart AND is_array($cart)) {
+			foreach($cart as $product) {
 				$entry = 0;
-
-				if(!$product['weight_class_id'])
-					$product['weight_class_id'] = $this->config->get('config_weight_class_id');
-
-				if($product['weight'])
-					$weight = $this->weight->convert($product['weight'], $product['weight_class_id'],$this->config->get('config_weight_class_id'));
-				else
-					$weight = 0;	
+				if(!$product['weight_class_id'])	$product['weight_class_id'] = $this->config->get('config_weight_class_id');
+				
+				if($product['weight']) $weight = $this->weight->convert($product['weight'], $product['weight_class_id'],$this->config->get('config_weight_class_id'));
+				else	$weight = 0;	
 				
 				$weight = ($weight < 0.1 ? 0.1 : $weight);
 				
 				$seller_zip = $this->db->query("SELECT a.postcode,a.customer_id,a.city,c.iso_code_2 as country,z.code as state,c2c.paypalid FROM ".DB_PREFIX."product p LEFT JOIN ".DB_PREFIX."customerpartner_to_product c2p ON (p.product_id = c2p.product_id) LEFT JOIN ".DB_PREFIX."address a ON(c2p.customer_id = a.customer_id) LEFT JOIN ".DB_PREFIX."zone z ON (a.zone_id = z.code) LEFT JOIN ".DB_PREFIX."country c ON (a.country_id = c.country_id) RIGHT JOIN " . DB_PREFIX . "customerpartner_to_customer c2c ON (c2c.customer_id = a.customer_id) WHERE p.product_id='".$product['product_id']."' AND c2p.customer_id='".$product['vendor_id']."'")->row;
 
 				if($seller_zip){
-
 					//partner will get product tax not admin or paste this line after - after me and comment line - comment me 
 					$commission_array = $this->calculateCommission(array('product_id'=>$product['product_id'], 'product_total'=>$product['total']),$seller_zip['customer_id']);
-
 					//add taxes to seller amount
 					if($this->config->get('config_tax')){
 						$commission_array['customer'] += $this->tax->getTax($product['total'], $product['tax_class_id']); //comment me
-						$product['total'] = $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];									
+						$product['total'] = $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
 					} // after me
-
-					if($seller){
-						foreach($seller as $index => $sellers) {
-					        if($sellers['seller'] == $seller_zip['customer_id']) {
-					        	$seller[$index]['weight'] = (float)$sellers['weight']+(float)$weight;
-					        	$seller[$index]['name'] = $sellers['name'].', '.$product['name'];
-										$seller[$index]['total'] = $sellers['total'] + $product['total'];
-				        		$seller[$index]['price'] = (float)$commission_array['customer']+(float)$sellers['price'];
-					        	$entry = 1;
-					         }
-					    }
-					    if($entry == 0){		
-					    	$zipCode = substr($seller_zip['postcode'], 0, 5);
-					    	$seller[$seller_zip['customer_id']] = array(
-										  'seller' => $seller_zip['customer_id'],					    		
-					    				  'zip' => $zipCode,
-										  'weight' => $weight,
-										  'name' => $product['name'],
-										  'city' => $seller_zip['city'],
-										  'country' => $seller_zip['country'],
-										  'state' => $seller_zip['state'],									  
-									  	  'price' => $commission_array['customer'],
-										  'total' => $product['total'],
-										  'paypalid' => $seller_zip['paypalid'],
-										  'primary'=> false
-										  );
-					    }
-					}else{
-					 	$zipCode = substr($seller_zip['postcode'], 0, 5);
+					
+					if (isset($seller[$seller_zip['customer_id']])){
+						$seller[$seller_zip['customer_id']]['weight'] = (float)$seller[$seller_zip['customer_id']]['weight']+(float)$weight;
+						$seller[$seller_zip['customer_id']]['name'] = $seller[$seller_zip['customer_id']]['name'].', '.$product['name'];
+						$seller[$seller_zip['customer_id']]['total'] = (float)$seller[$seller_zip['customer_id']]['total'] + (float)$product['total'];
+						$seller[$seller_zip['customer_id']]['price'] = (float)$seller[$seller_zip['customer_id']]['price']+(float)$sellers['price'];
+					} else {
+						$zipCode = substr($seller_zip['postcode'], 0, 6);
 						$seller[$seller_zip['customer_id']] = array(
-										  'seller' => $seller_zip['customer_id'],							
-												'zip' => $zipCode,
-										  'weight' => $weight,
-										  'name' => $product['name'],
-										  'city' => $seller_zip['city'],
-										  'country' => $seller_zip['country'],
-										  'state' => $seller_zip['state'],										  
-									  	  'price' => $commission_array['customer'],
-										  'total' => $product['total'],									  	  
-										  'paypalid' => $seller_zip['paypalid'],
-										  'primary'=> false										  
-										  );
+							'seller' => $seller_zip['customer_id'],							
+							'zip' => $zipCode,
+							'weight' => $weight,
+							'name' => $product['name'],
+							'city' => $seller_zip['city'],
+							'country' => $seller_zip['country'],
+							'state' => $seller_zip['state'],										  
+							'price' => $commission_array['customer'],
+							'total' => $product['total'],									  	  
+							'paypalid' => $seller_zip['paypalid'],
+							'primary'=> false										  
+						);
 					}
-
 					//admin -> if exists seller 			
 					if($payment){
-						foreach($seller as $index => $sellers) {					
-					        if($sellers['seller'] == 'Admin') {
-					        	$seller[$index]['price'] = (float)$sellers['price']+(float)$commission_array['commission'];
-					        	// $seller[$index]['total'] = (float)$sellers['total'] + (float)$commission_array['commission'];	
-					        	$seller[$index]['name'] = $sellers['name'].', Commission';
-					        	$entry = 1;
-					         }
-					    }
-					    if($entry == 0){		
-					 		$zipCode = substr($this->config->get($zip), 0, 5);					    		 	
-							$seller[] = array(
-											  'seller' => 'Admin',								
-					    				  	  'zip' => $zipCode,
-											  'weight' => 0,											  
-											  'name' => 'Commission',											  
-											  'city' => $this->config->get('wkmpups_city'),
-											  'country' => $this->config->get('wkmpups_country'),
-											  'state' => $this->config->get('wkmpups_state'),
-											  'price' => (float)$commission_array['commission'],
-										  	  'total' => 0,
-											  'paypalid'=> $this->config->get('wk_adaptive_pay_email'),
-											  'primary'=> true
-											  );
-					 	}
+						if (isset($seller['admin'])){
+							$seller['admin']['weight'] = (float)$seller['admin']['weight']+(float)$weight;
+							$seller['admin']['name'] = $seller['admin']['name'].', '.$product['name'];
+							$seller['admin']['total'] = (float)$seller['admin']['total'] + (float)$product['total'];
+							$seller['admin']['price'] = (float)$seller['admin']['price']+(float)$sellers['price'];
+						} else {
+							$zipCode = substr($seller_zip['postcode'], 0, 6);
+							$seller['admin'] = array(
+								'seller' => $seller_zip['customer_id'],							
+									'zip' => $zipCode,
+								'weight' => $weight,
+								'name' => $product['name'],
+								'city' => $seller_zip['city'],
+								'country' => $seller_zip['country'],
+								'state' => $seller_zip['state'],										  
+									'price' => $commission_array['customer'],
+								'total' => $product['total'],									  	  
+								'paypalid' => $seller_zip['paypalid'],
+								'primary'=> false										  
+							);
+						}
 					}
-
 				}else{
 					//add taxes to seller amount
 					if($this->config->get('config_tax'))
-						$product['total'] = $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];									
-						// $product['total'] += $this->tax->getTax($product['total'], $product['tax_class_id']);
-
-					if($seller){
-						foreach($seller as $index => $sellers) {
-					        if($sellers['seller'] == 'Admin') {
-										$seller[$index]['total'] = $sellers['total'] + $product['total'];
-					        	$seller[$index]['weight'] = (float)$sellers['weight']+(float)$weight;
-					        	$seller[$index]['name'] = $sellers['name'].', '.$product['name'];
-				        		$seller[$index]['price'] = (float)$sellers['price']+(float)$product['total'];	        	
-					        	$entry = 1;
-					         }
-					    }
-					    if($entry == 0){
-					 		$zipCode = substr($this->config->get($zip), 0, 5);
-							$seller[] = array(
-										  'seller' => 'Admin',								
-										  'zip' => $zipCode,
-										  'weight' => $weight,
-											'name' => $product['name'],
-										  'city' => $this->config->get('wkmpups_city'),
-										  'country' => $this->config->get('wkmpups_country'),
-										  'state' => $this->config->get('wkmpups_state'),
-											'price' => $product['total'],											  
-										  'total' => $product['total'],										  
-										  'paypalid' => $this->config->get('wk_adaptive_pay_email'),									  
-										  'primary' => true,
-										  );
-					 	}
-					}else{
-					 	$zipCode = substr($this->config->get($zip), 0, 5);
-						$seller[] = array(
-										  'seller' => 'Admin',								
-										  'zip' => $zipCode,
-										  'weight' => $weight,
-									  	  'name' => $product['name'],
-										  'city' => $this->config->get('wkmpups_city'),
-										  'country' => $this->config->get('wkmpups_country'),
-										  'state' => $this->config->get('wkmpups_state'),
-									  	  'price' => $product['total'],											  
-										  'total' => $product['total'],										  
-										  'paypalid' => $this->config->get('wk_adaptive_pay_email'),									  
-										  'primary' => true,
-										);
+						$product['total'] = $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
+					if (isset($seller['admin'])){
+						$seller['admin']['weight'] = (float)$seller['admin']['weight']+(float)$weight;
+						$seller['admin']['name'] = $seller['admin']['name'].', '.$product['name'];
+						$seller['admin']['total'] = (float)$seller['admin']['total'] + (float)$product['total'];
+						$seller['admin']['price'] = (float)$seller['admin']['price']+(float)$sellers['price'];
+					} else {
+						$zipCode = substr($seller_zip['postcode'], 0, 6);
+						$seller['admin'] = array(
+							'seller' => $seller_zip['customer_id'],							
+								'zip' => $zipCode,
+							'weight' => $weight,
+							'name' => $product['name'],
+							'city' => $seller_zip['city'],
+							'country' => $seller_zip['country'],
+							'state' => $seller_zip['state'],										  
+								'price' => $commission_array['customer'],
+							'total' => $product['total'],									  	  
+							'paypalid' => $seller_zip['paypalid'],
+							'primary'=> false										  
+						);
 					}
 				}
 			}
+		}
 		return $seller;
 	}
 
@@ -615,7 +516,7 @@ class ModelAccountCustomerpartnerOrder extends Model {
 		return $result;
 	}
 
-	
+
 }
 
 ?>

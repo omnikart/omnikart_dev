@@ -89,7 +89,7 @@ class ModelShippingwkcustomshipping extends Model {
 
 				if(!isset($res_csv->row['shipping_price']) AND $csv_id == 'Admin'){
 					$result_csv[] = array('shipping_price' => $this->config->get('wk_custom_shipping_admin_flatrate'));
-				}else{
+				} else {
 					$res_error = true;
 					if(!isset($res_csv->row['shipping_price']))
 						$res_error = false;
@@ -109,7 +109,6 @@ class ModelShippingwkcustomshipping extends Model {
 					}
 				}
 			}
-			
 		}
 
 		if($this->config->get('wk_custom_shipping_method')=='both'){

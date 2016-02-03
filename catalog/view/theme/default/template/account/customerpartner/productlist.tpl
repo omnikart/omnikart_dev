@@ -5,7 +5,6 @@
     <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
     <?php } ?>
   </ul>
-
   <?php if ($error_warning) { ?>
     <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i><?php echo $error_warning; ?></div>
   <?php } ?>
@@ -143,7 +142,7 @@
             <tbody>
               <?php if ($products) { ?>
               <?php foreach ($products as $product) { ?>
-              <tr>
+              <tr class="top-row product-<?php echo $product['product_id']; ?>">
                 <td style="text-align: center;"><?php if ($product['selected']) { ?>
                   <input type="checkbox" name="selected[]" value="<?php echo $product['product_id']; ?>" checked="checked" />
                   <?php } else { ?>
@@ -166,7 +165,7 @@
                 	<input type="text" class="form-control" name="products[<?php echo $product['product_id']; ?>][price]" value="<?php echo $product['price']; ?>"/>
                 </td>
                 <td class="text-right">
-				  <input type="text" name="products[<?php echo $product['product_id']; ?>][quantity]" class="form-control <?php if ($product['quantity'] <= 0) { echo "alert-danger"; } elseif ($product['quantity'] <= 5) { echo "alert-warning"; } else { echo "alert-success"; } ?>" value="<?php echo $product['quantity']; ?>"/>                  
+				  <input type="text" name="products[<?php echo $product['product_id']; ?>][quantity]" class="form-control product-quantity <?php if ($product['quantity'] <= 0) { echo "alert-danger"; } elseif ($product['quantity'] <= 5) { echo "alert-warning"; } else { echo "alert-success"; } ?>" value="<?php echo $product['quantity']; ?>"/>                  
               	</td>
 				<td class="text-right">
 				  <input type="text" name="products[<?php echo $product['product_id']; ?>][minimum]" class="form-control" value="<?php echo $product['minimum']; ?>"/>                  
@@ -211,6 +210,38 @@
                   <?php } ?>
                 </td>
               </tr>
+              <?php if (!empty($product['options'])) {?>
+
+              <?php foreach ($product['options'] as $options) { ?>
+              	<tr>
+              		<td></td>
+              		<td colspan="2"><?php echo $options['name']?></td>
+	              	<td colspan="1">Price</td>
+	              	<td colspan="1">Quantity</td>
+	              	<td colspan="7"></td>
+	            </tr>
+              	<?php foreach ($options['product_option_value'] as $product_option_value) { ?>
+	            	<tr>
+              			<td></td>
+	            		<td colspan="2">
+	            			<?php echo $product_option_value['name']; ?>
+	            		</td>
+	            		<td colspan="1">
+	            			<input type="text" name="products[<?php echo $product['product_id']; ?>][options][<?php echo $product_option_value['product_option_value_id']; ?>][price]" class="form-control"  value="<?php echo $product_option_value['price'];?>"/>
+	            		</td>
+	            		<td colspan="1">
+	            			<input type="text" name="products[<?php echo $product['product_id']; ?>][options][<?php echo $product_option_value['product_option_value_id']; ?>][quantity]" data-option-quantity="<?php echo $product['product_id']; ?>"  class="form-control option-quantity" value="<?php echo $product_option_value['quantity'];?>"/>
+	            		</td>
+	            		<td colspan="1">
+	            			<input type="text" name="products[<?php echo $product['product_id']; ?>][options][<?php echo $product_option_value['product_option_value_id']; ?>][sku]" class="form-control" value="<?php echo $product_option_value['sku']; ?>"/>
+	            		</td>
+	            		<td colspan="6"></td>
+	            	</tr>  			
+	            <?php } ?>
+		            
+              <?php } ?>
+              	
+              <?php } ?>
               <?php } ?>
               <?php } else { ?>
               <tr>
@@ -456,6 +487,13 @@ $('#button-upload').on('click', function() {
 			});
 		}
 	}, 500);
+});
+
+$('.option-quantity').on('change',function(){
+	var ths = this.attr('data-option-quantity');
+	$('input[data-option-quantity=\''+ths+'\']').each(function (){
+		alert(this.val());
+	});
 });
 //-->
 //--></script> 

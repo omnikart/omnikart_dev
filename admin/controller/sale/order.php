@@ -1751,7 +1751,7 @@ class ControllerSaleOrder extends Controller {
 
    
 
-            public function pdf() {
+  public function pdf() {
 
     $this->load->language('sale/order');
 

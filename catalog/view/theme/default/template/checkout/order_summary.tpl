@@ -4,29 +4,7 @@
         #confirm tr>td{
             vertical-align: middle;
         }
-        #confirm .product-quantity{
-            min-width: 3em;
-        }
-        .btn-increase {
-         padding: 3px 5px;
-      border-radius: 0px 0px 3px 0px;
-      -moz-border-radius: 0px 0px 3px 0px;
-      -webkit-border-radius: 0px 0px 3px 0px;
-  }
-  .btn-decrease {
-       padding: 3px 5px;
-        border-radius: 0px 0px 0px 3px;
-      -moz-border-radius: 0px 0px 0px 3px;
-      -webkit-border-radius: 0px 0px 0px 3px;
-  }
-  #confirm .product-quantity{
-      height: 24px;
-      border-radius: 3px 3px 0px 0px;
-      -moz-border-radius:3px 3px 0px 0px;
-      -webkit-border-radius:3px 3px 0px 0px;
-      margin-bottom:  -1px;
-     
-  }
+
   .btn-remove{ padding: 3.5px  8px;}
  
     </style>
@@ -43,27 +21,36 @@
             }
         }
         //--></script>
-    <div class="row ">
+
+<div class="row ">
+<div class="col-sm-12">
+<?php foreach ($vendors as $vendor_id => $vendor) { ?>  
+<div class="panel panel-default">
+	<div class="panel-heading">
+  	<?php echo "Sold By: ".$vendor['details']['companyname']; ?>
+	</div>
+  <div class="panel-body">
+	    
         <div class="table-responsive">
-        <table class="table table-striped table-bordered" style="border-bottom: 3px solid #dff0d8;">
+				<table class="table table-striped table-bordered" style="border-bottom: 3px solid #dff0d8;">
             <thead>
                 <tr class="">
                     <th colspan="2" class="name"><?php echo $column_name; ?></th>
                     
                      <?php if($mmos_checkout['enable_pmodel'] == 1) { ?>
                    
-                    <th class="model"><?php echo $column_model; ?></th>  
+                    <th class="model" style="width:100px;"><?php echo $column_model; ?></th>  
                      <?php }  ?>
                    
-                    <th class="quantity text-center"><?php echo $column_quantity; ?></th>
-                    <th class="price"><?php echo $column_price; ?></th>
-                    <th class="total"><?php echo $column_total; ?></th>
+                    <th class="quantity text-center" style="width:100px;"><?php echo $column_quantity; ?></th>
+                    <th class="price" style="width:100px;"><?php echo $column_price; ?></th>
+                    <th class="total" style="width:100px;"><?php echo $column_total; ?></th>
+                    <th class="total" style="width:100px;">Total Tax</th>
                     <th></th>
                 </tr>
             </thead>
-
             <tbody>
-                <?php foreach ($products as $product) { ?>  
+                <?php foreach ($vendor['products'] as $product) { ?>  
                     <?php if ($product['recurring']): ?>
                         <tr>
                             <td colspan="6" style="border:none;"><image src="catalog/view/theme/default/image/reorder.png" alt="" title="" style="float:left;" /><span style="float:left;line-height:18px; margin-left:10px;"> 
@@ -73,7 +60,7 @@
                         </tr>
                     <?php endif; ?>
                     <tr>
-                        <td class="name">
+                        <td class="name" style="width:80px;">
                                <img class="product-image" src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" />   
                              <input  class="product-name" type="hidden" value="<?php echo $product['name']; ?>"/>
                              <input  class="product-image-popup" type="hidden" value="<?php echo $product['image_popup']; ?>"/>
@@ -100,21 +87,20 @@
                         
                         <?php } ?>
                         <td class="quantity text-center">
-                            
-                            <div>
-                                <input type="hidden" class="original-quantity form-control" value="<?php echo $product['quantity']; ?>"/>
-                          
-                                <input type="text" class="product-quantity form-control text-center " name="quantity[<?php echo $product['key']; ?>]" value="<?php echo $product['quantity']; ?>" size="3" onkeypress="validate_quantity_keypress(event)" />
-                            </div>
-                            <div>
-                               
-                                      <button type="button" class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-xs btn-decrease col-xs-6"><span class="glyphicon glyphicon-minus"></span></button>
-                                     <button type="button" class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-xs btn-increase col-xs-6"><span class="glyphicon glyphicon-plus"></span></button>
-                                  
-                            </div>
-                            </td>
+													<div class="input-group input-group-sm">
+														<span class="input-group-btn">
+															<button type="button" class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-decrease"><i class="fa fa-minus"></i></button>														
+														</span>
+														<input type="hidden" class="original-quantity form-control" value="<?php echo $product['quantity']; ?>"/>
+														<input type="text" class="product-quantity form-control text-center " name="quantity[<?php echo $product['key']; ?>]" value="<?php echo $product['quantity']; ?>" size="3" onkeypress="validate_quantity_keypress(event)" />														
+														<span class="input-group-btn">
+															<button type="button" class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-increase"><i class="fa fa-plus"></i></span></button>
+														</span>
+													</div>
+												</td>
                         <td class="price"><?php echo $product['price']; ?></td>
                         <td class="total"><?php echo $product['total']; ?></td>
+                        <td class="total"><?php echo $product['tax']; ?></td>
                         <td class="text-right">
                            
                                 <button type="button"  alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" class="btn-remove btn btn-danger btn-xs" >
@@ -126,7 +112,10 @@
                         </td>
                     </tr>
                 <?php } ?>
-                <?php foreach ($vouchers as $voucher) { ?>
+                </tbody>
+							</table>
+							<table>
+                <?php foreach ($vendor['vouchers'] as $voucher) { ?>
                     <tr>
                         <td class="name" colspan="3"><?php echo $voucher['description']; ?></td>
                          
@@ -145,23 +134,39 @@
                         </td>
                     </tr>
                 <?php } ?>
+               </table>
+        				<table class="pull-right">
+									<?php $i = 0; ?>
+									<?php foreach ($vendor['totals'] as $total) { ?>
+											<tr class="" style="border: none;">
+													<td colspan="<?php echo ($mmos_checkout['enable_pmodel'] == 1) ? '5' : '4'; ?>" class="price text-right "><b><?php echo $total['title']; ?>:</b></td>
+													<td class="total" colspan="2"><?php echo $total['text']; ?></td>
+											</tr>
+											<?php $i++; ?>
+									<?php } ?>
+               </table>
+ 
+    </div>
+	</div>
+</div>
+
+					<?php } ?>
+   					
+					<div class="clearfix"></div><br /><hr />
+					<table class="pull-right">
+            <tbody>
+							<?php foreach ($totals as $total) { ?>
+									<tr class="" style="border: none;">
+											<td colspan="<?php echo ($mmos_checkout['enable_pmodel'] == 1) ? '5' : '4'; ?>" class="price text-right "><b><?php echo $total['title']; ?>:</b></td>
+											<td class="total" colspan="2"><?php echo $total['text']; ?></td>
+									</tr>
+									<?php $i++; ?>
+							<?php } ?>
             </tbody>
+					</table>
+					</div>
+    </div>    
 
-            <tfoot>
-                <?php $i = 0; ?>
-                <?php foreach ($totals as $total) { ?>
-                    <tr class="" style="border: none;">
-                        <td colspan="<?php echo ($mmos_checkout['enable_pmodel'] == 1) ? '5' : '4'; ?>" class="price text-right "><b><?php echo $total['title']; ?>:</b></td>
-                        <td class="total" colspan="2"><?php echo $total['text']; ?></td>
-                    </tr>
-                    <?php $i++; ?>
-                <?php } ?>
-
-            </tfoot>
-
-        </table>
-    </div>
-    </div>
 
 
     <div id="order-comment">

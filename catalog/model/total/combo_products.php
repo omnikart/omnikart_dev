@@ -1,6 +1,6 @@
 <?php
 class ModelTotalComboProducts extends Model {
-	public function getTotal(&$total_data, &$total, &$taxes) {
+	public function getTotal(&$total_data, &$total, &$taxes, $vendor_id = 0) {
 		$this->load->language('total/combo_products');
 		$this->load->model('catalog/product');
 		$this->load->model('checkout/combo_products');
@@ -10,6 +10,7 @@ class ModelTotalComboProducts extends Model {
 		
 		$products_in_cart = $this->cart->getProducts();
 		$product_in_cart_id = array();
+		
 		foreach ($products_in_cart as $product) {
 			for ($i = 0;$i<$product['quantity'];$i++) {
 				$product_in_cart_id[] = $product['product_id'];
@@ -58,7 +59,6 @@ class ModelTotalComboProducts extends Model {
 			
 			$total -= $amount;
 		}
-		
 	}
 	public function check_exist_in_array($check,$array) {
 		$check_in = false;

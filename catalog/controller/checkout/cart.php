@@ -504,4 +504,40 @@ class ControllerCheckoutCart extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
+
+	public function getCart(){
+
+		$this->load->model('extension/extension');
+		$sort_order = array();
+		$results = $this->model_extension_extension->getExtensions('total');
+		foreach ($results as $key => $value) {
+			$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+		}
+		array_multisort($sort_order, SORT_ASC, $results);
+		
+		foreach($this->cart->getVendors() as $vendor_id => $vendors){
+			
+			$totals = array();
+			$total = 0;
+			$taxes = $this->cart->getTaxes($vendor_id);
+				
+			foreach ($vendors as $product){
+				var_dump($product);
+				echo "<br />";
+			}
+			
+	        foreach ($results as $result) {
+				if ($this->config->get($result['code'] . '_status')) {
+					$this->load->model('total/' . $result['code']);
+
+					$this->{'model_total_' . $result['code']}->getTotal($totals, $total, $taxes, $vendor_id);
+				}
+	        }
+	        echo "<br />";
+	        var_dump($totals);
+	        echo "<br />";
+	        echo "<br />";
+	        echo "<br />";
+		}
+	}
 }

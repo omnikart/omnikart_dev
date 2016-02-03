@@ -1,6 +1,6 @@
 <?php
 class ModelTotalCoupon extends Model {
-	public function getTotal(&$total_data, &$total, &$taxes) {
+	public function getTotal(&$total_data, &$total, &$taxes, $vendor_id = 0) {
 		if (isset($this->session->data['coupon'])) {
 			$this->load->language('total/coupon');
 

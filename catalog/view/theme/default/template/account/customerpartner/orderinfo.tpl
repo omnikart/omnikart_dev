@@ -18,7 +18,7 @@
     <?php } ?>
 
   <?php if($chkIsPartner){ ?>
-    <div id="content" class="<?php echo $class; ?>">
+    <div id="content" class="<?php echo $class; ?>" style="font-size:12px;">
     <?php echo $content_top; ?>    
     <h1>
       <?php echo $heading_title; ?>
@@ -30,7 +30,6 @@
 
     <fieldset>
       <legend><i class="fa fa-list"></i> <?php echo $heading_title; ?></legend>
-
       <?php if(!$errorPage && $isMember) { ?> 
         <table class="table table-bordered table-hover">
           <thead>
@@ -104,7 +103,7 @@
                   <?php if($product['tracking']){ ?>
                     <?php echo $product['tracking']; ?>
                   <?php }else{ ?>
-                    <input type="text" class="form-control" name="tracking[<?php echo $product['product_id'];?>]" placeholder="<?php echo $column_tracking_no; ?>" />
+                    <input type="text" class="form-control" name="tracking[<?php echo $product['order_product_id'];?>]" placeholder="<?php echo $column_tracking_no; ?>" />
                   <?php $i = true; } ?>
                 </td>        
               </tr>
@@ -239,7 +238,7 @@
 <script>
 $('#button-history').on('click', function() {
   $.ajax({
-    url: 'index.php?route=account/customerpartner/orderinfo/history&order_id=<?php echo $order_id; ?>',
+    url: 'index.php?route=account/customerpartner/orderinfo/history&order_id=<?php echo $order_id; ?>&customerpartner_order_id=<?php echo $customerpartner_order_id; ?>',
     type: 'post',
     dataType: 'json',
     data: 'order_status_id=' + encodeURIComponent($('select[name=\'order_status_id\']').val()) + '&notify=' + encodeURIComponent($('input[name=\'notify\']').prop('checked') ? 1 : 0) + '&notifyadmin=' + encodeURIComponent($('input[name=\'notifyAdmin\']').prop('checked') ? 1 : 0) + '&comment=' + encodeURIComponent($('textarea[name=\'comment\']').val()),

@@ -10,22 +10,13 @@
     ?>">
    
     <div class="radio">
-        <?php if ($use_exist){ ?> 
-        <input type="radio" name="shipping_address" value="existing" id="shipping-address-existing"  <?php if ($use_exist) echo 'checked="checked"'; ?> />
-        <?php }else{ ?> 
-        <input type="radio" name="shipping_address" value="existing" id="shipping-address-existing"/>
-        <?php } ?> 
-        
-        <label for="shipping-address-existing"><?php echo $text_address_existing; ?></label>
+        <label for="shipping-address-existing"><input type="radio" name="shipping_address" value="existing" id="shipping-address-existing"  <?php echo ($use_exist?'checked="checked"':''); ?> /><?php echo $text_address_existing; ?>
+        </label>
     </div>
 
     <div class="radio">
-        <input type="radio" name="shipping_address" value="new" id="shipping-address-new"  <?php
-        if (!$use_exist) {
-            echo 'checked="checked"';
-        }
-        ?>/>
-        <label for="shipping-address-new"><?php echo $text_address_new; ?></label>
+        <label for="shipping-address-new"><input type="radio" name="shipping_address" value="new" id="shipping-address-new"  <?php echo (!$use_exist?'checked="checked"':'');?>/><?php echo $text_address_new; ?>
+        </label>
     </div>
     <div class="row">
         <hr>
@@ -34,7 +25,7 @@
 
 <?php // if ($addresses && $trust_exist) { ?>
     <div id="shipping-existing" style="<?php if(!$use_exist) {echo 'display:none;';} ?>">
-        <select name="address_id" style="width: 100%; margin-bottom: 15px;" size="5">
+        <!-- <select name="address_id" style="width: 100%; margin-bottom: 15px;" size="5">
             <?php foreach ($trusted_addresses as $address) { ?>
                 <?php if ($address['address_id'] == $address_id) { ?>
                     <option value="<?php echo $address['address_id']; ?>" selected="selected"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
@@ -42,7 +33,20 @@
                     <option value="<?php echo $address['address_id']; ?>"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
                 <?php } ?>
             <?php } ?> 
-        </select>
+        </select> -->
+        <form>
+         <?php foreach ($addresses as $address) { ?>
+					<div class="clearfix shipping-address">
+						<input type="radio" name="address_id" id="saddress<?php echo $address['address_id']; ?>" value="<?php echo $address['address_id']; ?>" class="radio" <?php echo (($address['address_id'] == $address_id)?'checked':''); ?>/>
+						<label for="saddress<?php echo $address['address_id']; ?>">
+							<?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?><br />
+							<?php echo $address['address_1']; ?> <?php echo $address['city']; ?><br />
+							<?php echo $address['zone']; ?> <?php echo $address['country']; ?>
+						</label>
+					</div>
+				<?php } ?>
+        </form>
+        
     </div>
 <?php // } ?>
 

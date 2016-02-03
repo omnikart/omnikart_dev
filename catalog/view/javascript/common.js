@@ -200,7 +200,7 @@ var cart = {
 				
 					$('html, body').animate({ scrollTop: 0 }, 'slow');
 
-					$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
+					$('#cart_modal .modal-body').load('index.php?route=common/cart/info div#cart-content');
 				}
 			}
 		});
@@ -226,7 +226,7 @@ var cart = {
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
 					location = 'index.php?route=checkout/cart';
 				} else {
-					$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
+					$('#cart_modal .modal-body').load('index.php?route=common/cart/info div#cart-content');
 				}
 			}
 		});
@@ -254,7 +254,7 @@ var cart = {
 				} else if (getURLVar('route') == 'b2bcheckout/checkout') {
 					location = 'index.php?route=b2bcheckout/checkout';
 				} else {
-					$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
+					$('#cart_modal .modal-body').load('index.php?route=common/cart/info div#cart-content');
 				}
 			}
 		});

@@ -15,7 +15,7 @@ class ControllerAccountCustomerpartnerSoldinvoice extends Controller {
 		$this->load->model('account/order');
 
 		$this->data['chkIsPartner'] = $this->model_account_customerpartner->chkIsPartner();	
-			
+		$seller_id = $this->model_account_customerpartner->getuserseller();	
 		if(!$this->data['chkIsPartner'])
 			$this->response->redirect($this->url->link('account/account'));
 
@@ -24,7 +24,7 @@ class ControllerAccountCustomerpartnerSoldinvoice extends Controller {
 
       	$order_id = 0;
 
-      	if(isset($this->request->get['order_id'])){
+		if(isset($this->request->get['order_id'])){
 			$order_id = $this->request->get['order_id'];
 		}
 
@@ -61,7 +61,7 @@ class ControllerAccountCustomerpartnerSoldinvoice extends Controller {
 		$this->data['lang'] = 'en';
 		$this->data['base'] = HTTP_SERVER;
 
-		$order_info = $this->model_account_customerpartner->getOrder($order_id);
+		$order_info = $this->model_account_customerpartner->getOrder($order_id,$seller_id);
 
 		if($order_id AND $order_info){
 
@@ -156,11 +156,9 @@ class ControllerAccountCustomerpartnerSoldinvoice extends Controller {
 			
 			$this->data['products'] = array();
 			
-			$products = $this->model_account_customerpartner->getSellerOrderProducts($order_id);
+			$products = $this->model_account_customerpartner->getSellerOrderProducts($order_id,$seller_id);
 
       		foreach ($products as $product) {						
-        						
-
         		$this->data['products'][] = array(
         			'product_id' => $product['product_id'],
           			'name'     => $product['name'],
@@ -170,14 +168,11 @@ class ControllerAccountCustomerpartnerSoldinvoice extends Controller {
           			'price'    => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
 					'total'    => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
 					);
-      		}					
-			
+      		}							
       		$this->data['totals'] = array();
-
-      		$totals = $this->model_account_customerpartner->getOrderTotals($order_id);
-
+      		$totals = $this->model_account_customerpartner->getOrderTotals($order_id,$seller_id);
       		if($totals AND isset($totals[0]['total']))      			
-				$this->data['totals'][]['total'] = $this->currency->format($totals[0]['total'], $order_info['currency_code'], 1);
+						$this->data['totals'][]['total'] = $this->currency->format($totals[0]['total'], $order_info['currency_code'], 1);
 		    
 		}
 		

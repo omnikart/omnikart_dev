@@ -12,7 +12,8 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		}
 
 		$this->load->model('account/customerpartner');
-
+		$this->load->model('catalog/product');
+		
 		//$customerRights = $this->model_account_customerpartner->getCustomerGroupRights($this->customer->getGroupId());
 
     	$customerRights = $this->customer->getRights();
@@ -206,7 +207,56 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 				$sold = $product_sold_quantity['quantity'] ? $product_sold_quantity['quantity'] : 0;
 				$totalearn = $product_sold_quantity['total'] ? $product_sold_quantity['total'] : 0;
 			}
-
+			
+			$supplier_options = $this->model_account_customerpartner->getSupplierProductOptions($result['id']);
+			$product_options = array();
+			foreach ($this->model_catalog_product->getProductOptions($result['product_id']) as $option) {
+				$gp_child_option_col = true;
+			
+				$product_option_value_data = array();
+			
+				foreach ($option['product_option_value'] as $option_value) {
+					if ((float)$option_value['price']) {
+						$child_option_price = $option_value['price'];
+					} else {
+						$child_option_price = false;
+					}
+					
+					if (isset($supplier_options[$option_value['product_option_value_id']])) {
+						$product_option_value_data[] = array(
+								'product_option_value_id' => $option_value['product_option_value_id'],
+								'option_value_id'         => $option_value['option_value_id'],
+								'name'                    => $option_value['name'],
+								'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+								'quantity'				  => $supplier_options[$option_value['product_option_value_id']]['quantity'],
+								'price'                   => $supplier_options[$option_value['product_option_value_id']]['price'],
+								'sku'            		  => $supplier_options[$option_value['product_option_value_id']]['sku'],
+						);
+					} else {
+						$product_option_value_data[] = array(
+							'product_option_value_id' => $option_value['product_option_value_id'],
+							'option_value_id'         => $option_value['option_value_id'],
+							'name'                    => $option_value['name'],
+							'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+							'quantity'				  => 0,
+							'price'                   => 0,
+							'sku'            		  => ''
+							);
+						
+					}
+				}
+			
+				$product_options[] = array(
+						'product_option_id'    => $option['product_option_id'],
+						'product_option_value' => $product_option_value_data,
+						'option_id'            => $option['option_id'],
+						'name'                 => $option['name'],
+						'type'                 => $option['type'],
+						'value'                => $option['value'],
+						'required'             => $option['required']
+				);
+			}
+			$results[$key]['options'] = $product_options;
 			$results[$key]['thumb'] = $thumb;
 			$results[$key]['sold'] = $sold;
 			$results[$key]['soldlink'] = $this->url->link('account/customerpartner/soldlist&product_id='.$result['product_id'],'','SSL');

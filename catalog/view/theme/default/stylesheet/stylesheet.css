@@ -130,8 +130,9 @@ box-shadow: 0 2px 4px rgba(0,0,0,.2);*/
 header.navbar-fixed-top {
 background:#fff;
 }
+#top-links ul > li > a {color: #666;} 
 #top-links li, #top-links a {
-	color: #666;
+	
 	text-shadow: 0 1px 0 #FFF;
 	text-decoration: none;
 }
@@ -1553,3 +1554,4 @@ background-color: #4e3832;
 .title h3{margin-top:12px;}
 .title h3 a{color:#000;}
 .subcategory ul li a{font-size:14px;}
+.gp-child-price{position:relative;}

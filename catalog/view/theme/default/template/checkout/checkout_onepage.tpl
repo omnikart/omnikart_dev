@@ -31,12 +31,38 @@
         padding: 0;
     }
     <?php } ?>
-    #mmosolution button.btn-decrease {
-        border-radius: 0px 0px 0px 3px;
-    }
-     #mmosolution button.btn-increase {
-        border-radius: 0px 0px 3px 0px;
-    }
+    
+    #checkout-panel .payment-address label, #checkout-panel .shipping-address label{width:100%;padding:10px;border:1px solid #ddd;}
+#checkout-panel input.radio:empty {
+					margin-left: -999px;
+}
+ input.radio:empty ~ label {
+	position: relative;
+	float: left;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+input.radio:hover:not(:checked) ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+	color: #333;
+}
+input.radio:hover:not(:checked) ~ label {
+	color: #31708f;
+}
+input.radio:checked ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+	color: #31708f;
+}
+input.radio:checked ~ label {
+	color: #31708f;
+	border:1px solid #31708f;
+}    
+    
     #mmosolution .form-group-sm .form-control {
         height: auto;
         padding: 6px 12px;
@@ -267,9 +293,6 @@
 
     .customer-groups{
         padding-left: 1em;
-    }
-    #checkout-panel{
-        border-width: 3px;
     }
     #checkout-panel .radio{
         padding-top: 0;
@@ -1047,8 +1070,8 @@
         }
 
         function sync_payment_shipping_addresses() {
-            var $payments = $('#payment-existing select[name=\'address_id\']'),
-                    $shippings = $('#shipping-existing select[name=\'address_id\']');
+            var $payments = $('#payment-existing input[name=\'address_id\']:checked'),
+                    $shippings = $('#shipping-existing input[name=\'address_id\']:checked');
             var $source = null, $target = null;
             if ($payments.children('option').length > $shippings.children('option').length) {
                 $source = $payments;
@@ -1069,10 +1092,10 @@
 
             $target.html($select.html());
 
-            if ($('#payment-existing select[name=\'address_id\']>option').length) {
+            if ($('#payment-existing input[name=\'address_id\']').length) {
                 $('#payment-address-options').slideDown();
             }
-            if ($('#shipping-existing select[name=\'address_id\']>option').length) {
+						if ($('#shipping-existing input[name=\'address_id\']').length) {
                 $('#shipping-address-options').slideDown();
             }
         }
@@ -1651,15 +1674,12 @@
             });
 
         });
-
         //ok
-        $('#checkout-container').on('change', '#payment-existing select[name=\'address_id\']', function(event, args) {
-        
+        $('#checkout-container').on('click', '#payment-existing input[name=\'address_id\']', function(event, args) {
             validate_payment_address().done(function() {
                 load_right_content();
             });
         });
-
         //ok
         $('#checkout-container').on('change', '#payment-address input[name=\'payment_address\']', function() {
             if (this.value == 'new') {
@@ -1681,6 +1701,12 @@
                     $('#payment-existing select[name=\'address_id\']>option:first').attr('selected', true);
                 }
                 $('#payment-existing select[name=\'address_id\']').trigger('change');//mark should be processed for shipping address
+                
+                // needchange
+                if (!$('#payment-existing input[name=\'address_id\']:checked').length) {
+                    $('#payment-existing payment-address:first input[name=\'address_id\']').prop('checked', true);
+                }
+                $('#payment-existing input[name=\'address_id\']').trigger('change');//mark should be processed for shipping address
 
             }
         });
@@ -1703,13 +1729,12 @@
             });
         });
 
-        $('#checkout-container').on('change', '#shipping-existing select[name=\'address_id\']', function() {
+        $('#checkout-container').on('click', '#shipping-existing input[name=\'address_id\']', function() {
             validate_shipping_address().done(function() {
                 load_right_content();
             });
 
         });
-
         $('#checkout-container').on('change', '#shipping-address input[name=\'shipping_address\']', function() {//new or existing
             if (this.value == 'new') {
                 $('#shipping-existing').hide();
@@ -1722,10 +1747,10 @@
                 $('#button-shipping-address').hide();
                 $('#shipping-new').hide();
 
-                if (!$('#shipping-existing select[name=\'address_id\']>option:selected').length) {
-                    $('#shipping-existing select[name=\'address_id\']>option:first').attr('selected', true);
+                 if (!$('#shipping-existing input[name=\'address_id\']:selected').length) {
+                    $('#shipping-existing input[name=\'address_id\']:first').prop('checked', true);
                 }
-                $('#shipping-existing select[name=\'address_id\']').attr('disabled', false).trigger('change');//duan
+                $('#shipping-existing input[name=\'address_id\']').attr('disabled', false).trigger('change');//duan
             }
         });
 

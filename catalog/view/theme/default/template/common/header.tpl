@@ -148,15 +148,15 @@ src="https://www.facebook.com/tr?id=1399996446990885&ev=PageView&noscript=1"
 									<div class="dropdown-menu dropdown-menu-right">
 										<div class="dropdown-inner">
 											<ul class="list-unstyled">
-												<div class="col-sm-12">
-													<li><a href="<?php echo $mp_profile; ?>"><?php echo $text_my_profile; ?></a></li>
-													<li><a href="<?php echo $mp_dashboard; ?>"><?php echo $text_dashboard; ?></a></li>
-													<li><a href="<?php echo $mp_orderhistory; ?>"><?php echo $text_orderhistory; ?></a></li>
-													<li><a href="<?php echo $mp_transaction; ?>"><?php echo $text_transaction; ?></a></li>
-													<li><a href="<?php echo $mp_productlist; ?>"><?php echo $text_productlist; ?></a></li>
-													<li><a href="<?php echo $mp_enquiry; ?>"><?php echo $text_enquiry; ?></a></li>													
-													<li><a href="<?php echo $mp_download; ?>"><?php echo $text_download; ?></a></li>
-													<li><a href="<?php echo $mp_add_shipping_mod; ?>"><?php echo $text_wkshipping; ?></a></li>
+												<div class="col-sm-12 hb">
+													<li><a class="btn btn-info" href="<?php echo $mp_profile; ?>"><?php echo $text_my_profile; ?></a></li>
+													<li><a class="btn btn-info" href="<?php echo $mp_dashboard; ?>"><?php echo $text_dashboard; ?></a></li>
+													<li><a class="btn btn-info" href="<?php echo $mp_orderhistory; ?>"><?php echo $text_orderhistory; ?></a></li>
+													<li><a class="btn btn-info" href="<?php echo $mp_transaction; ?>"><?php echo $text_transaction; ?></a></li>
+													<li><a class="btn btn-info" href="<?php echo $mp_productlist; ?>"><?php echo $text_productlist; ?></a></li>
+													<li><a class="btn btn-info" href="<?php echo $mp_enquiry; ?>"><?php echo $text_enquiry; ?></a></li>													
+													<li><a class="btn btn-info" href="<?php echo $mp_download; ?>"><?php echo $text_download; ?></a></li>
+													<li><a class="btn btn-info" href="<?php echo $mp_add_shipping_mod; ?>"><?php echo $text_wkshipping; ?></a></li>
 												</div>
 											</ul>
 											<ul id="dashboard" class="list-unstyled">

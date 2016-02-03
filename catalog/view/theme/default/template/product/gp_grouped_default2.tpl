@@ -236,9 +236,6 @@
   <table id="gp-table" class="gp-table table table-hover table-stripped">
     <thead>
       <tr>
-        <?php if ($column_gp_image) { ?>
-        <td rowspan="2"><?php echo $column_gp_image; ?></td>
-        <?php } ?>
         <?php if ($dbe) { ?>
         	<td rowspan="2">Select</td>
         <?php } ?>
@@ -248,13 +245,14 @@
         	<?php } ?>
         <?php } ?>
         <?php if ($column_gp_price) { ?>
-        <td rowspan="2"><?php echo $column_gp_price; ?></td>
+        <td rowspan="2" style="width:200px;"><?php echo $column_gp_price; ?></td>
         <?php } ?>
         <?php if ($column_gp_option) { ?>
         <td rowspan="2" style="width:300px;"><?php echo $column_gp_option; ?></td>
         <?php } ?>
-        <td rowspan="2" style="width:120px;"><?php echo $column_gp_qty; ?></td>
-        <td rowspan="2" style="width:120px;"></td>
+        <td rowspan="2" class="text-center" style="width:100px;"><?php echo $column_gp_qty; ?></td>
+        <td rowspan="2" class="text-center" style="width:100px;">Add to Cart</td>
+        <td rowspan="2" class="text-center" style="width:100px;">Add to Quotation</td>
       </tr>
         <tr>
         <?php if ($agnames) { ?>
@@ -269,9 +267,6 @@
     <tbody>
       <?php foreach ($childs as $child) { $child_id = $child['child_id']; ?>
       <tr data-gp-child-row="<?php echo $child_id; ?>">
-        <?php if ($column_gp_image) { ?>
-        <td class="gp-col-image"><a class="gp-child-image" href="<?php echo $child['image']['popup']; ?>" title="<?php echo $child['name']; ?>"><img src="<?php echo $child['image']['thumb'] ?>" alt="<?php echo $child['name'] ?>" /></a></td>
-        <?php } ?>
         <?php if ($dbe) { ?>
         	<td class="gp-col-checkbox"><input type="checkbox" name="products[]" id="pcd-<?php echo $child['child_id']; ?>" value="<?php echo $child['child_id']; ?>"/><label for="pcd-<?php echo $child['child_id']; ?>"></label></td>
         <?php } ?>
@@ -289,16 +284,24 @@
           <div class="gp-child-price">
             <?php if (!$child['special']) { ?>
             <?php echo $child['price']; ?>
+				<a class="pull-right dropdown-toggle" href="#" id="discounts<?php echo $child['child_id']; ?>" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            	<?php if ($child['discounts']) { ?>
+					<i class="fa fa-arrow-circle-down"></i>
+           		<?php  } ?>
+           		</a>
+           		<div class="dropdown-menu" aria-labelledby="discounts<?php echo $child['child_id']; ?>">
+		          <div class="col-sm-12 white">
+			          <?php foreach ($child['discounts'] as $discount) { ?>
+			          <div class="gp-toggle-info gp-child-discount"><?php echo $discount['quantity']; ?><?php echo $text_discount; ?><?php echo $discount['price']; ?></div>
+			          <?php } ?>
+		          </div>
+		          <div class="clearfix"></div>
+	            </div>
             <?php } else { ?>
             <span class="gp-child-price-old"><?php echo $child['price']; ?></span> <?php echo $child['special']; ?>
             <?php } ?>
-            <?php if ($child['tax']) { ?>
-            <div class="gp-child-tax"><?php echo $text_tax; ?> <?php echo $child['tax']; ?></div>
-            <?php } ?>
           </div>
-          <?php foreach ($child['discounts'] as $discount) { ?>
-          <div class="gp-toggle-info gp-child-discount"><?php echo $discount['quantity']; ?><?php echo $text_discount; ?><?php echo $discount['price']; ?></div>
-          <?php } ?>
+
           <?php } else { echo "Not Available"; } ?>
         </td>
         <?php } ?>
@@ -457,13 +460,16 @@
           <input name="quantity" id="quantity<?php echo $child_id; ?>" type="text" value="<?php echo $child['qty_now']; ?>" class="form-control" size="2" />
           <?php } ?>
         </td>
-        <td class="gp-col-btn">
+        <td class="text-center">
           <input type="hidden" name="product_id" id="product<?php echo $child_id; ?>" value="<?php echo $child_id; ?>" />
           <?php if ($child['enabled']) {?>
-          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGrouped('<?php echo $child_id; ?>');" class="btn btn-default"><?php echo $button_add_to_cart; ?></button>
+          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGrouped('<?php echo $child_id; ?>');" class="btn btn-default btn-block"><?php echo $button_add_to_cart; ?></button>
           <?php } ?>
-          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGroupedToQuote('<?php echo $child_id; ?>');" class="btn btn-default"><?php echo $button_add_to_quote; ?></button>
+        
         </td>
+        <td class="text-center">
+          <button type="button" data-loading-text="<?php echo $text_loading; ?>" onclick="addGpGroupedToQuote('<?php echo $child_id; ?>');" class="btn btn-default btn-block"><?php echo $button_add_to_quote; ?></button>
+		</td>
       </tr>
       <?php } ?>
     </tbody>
@@ -872,7 +878,7 @@ function addGpGrouped(child_id) {
 				
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 				
-				$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
+				$('#cart_modal .modal-body').load('index.php?route=common/cart/info div#cart-content');
 				if (json['redirect']) {
 					window.location = json['redirect']; 
 				}

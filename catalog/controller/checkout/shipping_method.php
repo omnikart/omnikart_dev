@@ -10,16 +10,17 @@ class ControllerCheckoutShippingMethod extends Controller {
 			$this->load->model('extension/extension');
 
 			$results = $this->model_extension_extension->getExtensions('shipping');
-
+			
 			foreach ($results as $result) {
 				if ($this->config->get($result['code'] . '_status')) {
 					$this->load->model('shipping/' . $result['code']);
 
 					$quote = $this->{'model_shipping_' . $result['code']}->getQuote($this->session->data['shipping_address']);
-
+					
 					if ($quote) {
 						$method_data[$result['code']] = array(
 							'title'      => $quote['title'],
+							'vendor_id'      => $quote['vendor_id'],
 							'quote'      => $quote['quote'],
 							'sort_order' => $quote['sort_order'],
 							'error'      => $quote['error']
@@ -27,7 +28,25 @@ class ControllerCheckoutShippingMethod extends Controller {
 					}
 				}
 			}
+			$method_data_2 = array();
 
+			foreach ($this->cart->getVendors() as $vendor_id => $vendor) {
+				foreach ($results as $result) {
+					if ($this->config->get($result['code'] . '_status')) {
+						$this->load->model('shipping/' . $result['code']);
+
+						$quote = $this->{'model_shipping_' . $result['code']}->getQuote($this->session->data['shipping_address'],$vendor_id);
+						
+						if ($quote) {
+							if (isset($method_data[$result['code']])) {
+								foreach ($method_data[$result['code']]['quote'] as $code => $costs) {
+										$method_data[$result['code']]['quote'][$code]['cost'][$vendor_id] = $quote['quote'][$code]['cost'][$vendor_id];
+								}
+							}
+						}
+					}
+				}
+			}
 			$sort_order = array();
 
 			foreach ($method_data as $key => $value) {

@@ -75,9 +75,7 @@ function addmodal(var_id,var_class) {
 		$('body').append(html);
 		return $('#'+var_id);
 }
-
 --></script>
-
 
 <script type="text/javascript"><!--
 $(document).delegate('#marketinsg-login', 'click', function(e) {

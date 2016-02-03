@@ -383,6 +383,41 @@ class ModelAccountOrder extends Model {
 		}
 	}
 
+	public function getOrdersBySuppliers($order_id) {
+        /*
+        To get company orders not individuals for sub users
+        */
+        if($this->config->get('marketplace_status')) {
+           $this->load->model('account/customerpartner');
+           $sellerId = $this->model_account_customerpartner->getuserseller();
+           $order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$sellerId . "' AND order_status_id > '0'");
+        } else {
+            $order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0'");
+        }
+        /*
+        end here
+        */
+    
+		$data['vendors'] = array();
+		$data['order_info'] = $order_query->row;
+
+		if ($order_query->num_rows) {
+				$vendors = $this->db->query("SELECT cpo.*,os.name AS order_status FROM `" . DB_PREFIX . "customerpartner_order` cpo LEFT JOIN `" . DB_PREFIX . "order_status` os  ON (os.order_status_id = cpo.order_status_id)  WHERE order_id='" . (int)$order_id . "'");
+				foreach ($vendors->rows as $vendor) {
+					$data['vendors'][$vendor['customer_id']] = array();
+					$data['vendors'][$vendor['customer_id']]['customerpartner_order_id'] = $vendor['customerpartner_order_id'];
+					$data['vendors'][$vendor['customer_id']]['order_status_id'] = $vendor['order_status_id'];
+					$data['vendors'][$vendor['customer_id']]['order_status'] = $vendor['order_status'];
+					$supplier_product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_product` WHERE order_id='" . (int)$order_id . "' AND vendor_id='" . (int)$vendor['customer_id'] . "'");
+					$data['vendors'][$vendor['customer_id']]['products'] = $supplier_product_query->rows;		
+				}
+				
+			return $data;
+		} else {
+			return false;
+		}
+	}
+
 	public function getOrders($start = 0, $limit = 20) {
 		if ($start < 0) {
 			$start = 0;
@@ -404,7 +439,7 @@ class ModelAccountOrder extends Model {
            } else {
                 $sellerId = $this->customer->getId();
            }
-           $query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$sellerId . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
+           $query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, GROUP_CONCAT(os.name) as status, o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "customerpartner_order` cpo LEFT JOIN " . DB_PREFIX . "order o ON (o.order_id = cpo.order_id) LEFT JOIN " . DB_PREFIX . "order_status os ON (cpo.order_status_id = os.order_status_id)  WHERE o.customer_id = '" . (int)$sellerId . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY o.order_id ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
         } else {
             $query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
         }
@@ -433,8 +468,8 @@ class ModelAccountOrder extends Model {
     return $query->row['order_status_id'];
   }
   
-	public function getOrderProducts($order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+	public function getOrderProducts($order_id, $vendor_id = 0) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'" .(($vendor_id)?" AND vendor_id='".(int)$vendor_id."'":""));
 
 		return $query->rows;
 	}
@@ -451,49 +486,44 @@ class ModelAccountOrder extends Model {
 		return $query->rows;
 	}
 
-	public function getOrderTotals($order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
-
+	public function getOrderTotals($order_id,$vendor_id = 0) {
+		if ($vendor_id) {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_order_total WHERE order_id = '" . (int)$order_id . "' AND customer_id='".(int)$vendor_id."' ORDER BY sort_order");
+		}else{
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
+		}
 		return $query->rows;
 	}
 
-	public function getOrderHistories($order_id) {
-		$query = $this->db->query("SELECT date_added, os.name AS status, oh.comment, oh.notify FROM " . DB_PREFIX . "order_history oh LEFT JOIN " . DB_PREFIX . "order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
+	public function getOrderHistories($order_id,$customerpartner_order_id) {
+		
+		$query = $this->db->query("SELECT oh.date_added, os.name AS status, oh.comment, oh.notify FROM " . DB_PREFIX . "customerpartner_order_history oh LEFT JOIN " . DB_PREFIX . "order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND oh.customerpartner_order_id = '" . (int)$customerpartner_order_id . "' AND oh.notify<>0 AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
+	
+		
+		//~ $query = $this->db->query("SELECT date_added, os.name AS status, oh.comment, oh.notify FROM " . DB_PREFIX . "order_history oh LEFT JOIN " . DB_PREFIX . "order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
 
 		return $query->rows;
 	}
 
 	public function getTotalOrders() {
-		
-        /*
-        To get company orders not individuals for sub users
-        */
-        if($this->config->get('marketplace_status')) {
-           $this->load->model('account/customerpartner');
-           $sellerId = $this->model_account_customerpartner->isSubUser($this->customer->getId());
-           if($sellerId) {
-                $sellerId = $sellerId;
-           } else {
-                $sellerId = $this->customer->getId();
-           }
-           $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int)$sellerId . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "'");
-        } else {
-            $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "'");
-        }
-        /*
-        end here
-        */
-    
-
+			if($this->config->get('marketplace_status')) {
+				 $this->load->model('account/customerpartner');
+				 $sellerId = $this->model_account_customerpartner->getuserseller();
+				 $query = $this->db->query("SELECT COUNT(DISTINCT o.order_id) AS total FROM `" . DB_PREFIX . "customerpartner_order` cpo LEFT JOIN " . DB_PREFIX . "order o ON (o.order_id = cpo.order_id) LEFT JOIN " . DB_PREFIX . "order_status os ON (cpo.order_status_id = os.order_status_id)  WHERE o.customer_id = '" . (int)$sellerId . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			} else {
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "'");
+			}
 		return $query->row['total'];
 	}
 
 	public function getTotalOrderProductsByOrderId($order_id) {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
-
 		return $query->row['total'];
 	}
-
+	public function getTotalOrderProductsByVendorOrderId($order_id,$vendor_id = 0) {
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "' AND customer_id='" . (int)$vendor_id . "'");
+		return $query->row['total'];
+	}
 	public function getTotalOrderVouchersByOrderId($order_id) {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order_voucher` WHERE order_id = '" . (int)$order_id . "'");
 

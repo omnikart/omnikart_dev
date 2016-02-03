@@ -1,6 +1,6 @@
 <?php
 class ModelTotalVoucher extends Model {
-	public function getTotal(&$total_data, &$total, &$taxes) {
+	public function getTotal(&$total_data, &$total, &$taxes, $vendor_id = 0) {
 		if (isset($this->session->data['voucher'])) {
 			$this->load->language('total/voucher');
 

@@ -103,7 +103,7 @@
                 <a href="<?php echo $sort_date; ?>"><?php echo $text_added_date; ?></a>
                 <?php } ?>
               </td>
-              <td class="center"><?php echo $text_action; ?></td>
+              <td class="center" style="min-width:110px;"><?php echo $text_action; ?></td>
             </tr>
           </thead>
           <tbody>            
@@ -117,7 +117,13 @@
                   <td><?php echo $item['orderstatus']; ?></td>
                   <td><?php echo $item['date_added']; ?></td>
                   <td class="center">
-                  <a class="btn btn-primary btn-xs" href="<?php echo $item['orderidlink']; ?>"><i class="fa fa-eye"></i></a></td>
+										<div class="btn-group" role="group" aria-label="...">
+
+										<a class="btn btn-info" href="<?php echo $item['orderidlink']; ?>"><i class="fa fa-eye"></i></a>
+										
+										<a href="<?php echo $item['pdforderidlink']; ?>" target="_blank" data-toggle="tooltip" title="" class="btn btn-info" data-original-title="Download Tax Invoice(PDF)"><i class="fa fa-file-pdf-o"></i></a>
+										</div>
+                  </td>
         				</tr>	
               <?php } ?>
             <?php } else{ ?>
