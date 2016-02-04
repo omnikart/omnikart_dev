@@ -36,9 +36,9 @@ $('#range a').on('click', function(e) {
 		success: function(json) {
 			var option = {	
 				shadowSize: 0,
-				colors: ['#9FD5F1', '#1065D2'],
+				colors: ['#0000ff', '#1065D2'],
 				bars: { 
-					show: true,
+					show: false,
 					fill: true,
 					lineWidth: 1
 				},
@@ -46,8 +46,11 @@ $('#range a').on('click', function(e) {
 					backgroundColor: '#FFFFFF',
 					hoverable: true
 				},
+		        lines: { 
+			        show: true
+			    },
 				points: {
-					show: false
+					show: true
 				},
 				xaxis: {
 					show: true,

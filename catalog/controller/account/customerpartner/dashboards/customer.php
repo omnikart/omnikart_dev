@@ -11,11 +11,11 @@ class ControllerAccountCustomerpartnerDashboardsCustomer extends Controller {
 		$this->load->model ( 'customerpartner/dashboard' );
 		
 		$today = $this->model_customerpartner_dashboard->getTotalCustomers ( array (
-				'filter_date_added' => date ( 'Y-m-d', strtotime ( '-1 day' ) ) 
+				'filter_date_added' => date ( 'Y-m-d', strtotime ( '-1 week' ) ) 
 		) );
 		
 		$yesterday = $this->model_customerpartner_dashboard->getTotalCustomers ( array (
-				'filter_date_added' => date ( 'Y-m-d', strtotime ( '-2 day' ) ) 
+				'filter_date_added' => date ( 'Y-m-d', strtotime ( '-2 week' ) ) 
 		) );
 		
 		$difference = $today - $yesterday;

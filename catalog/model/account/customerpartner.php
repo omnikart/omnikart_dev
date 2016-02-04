@@ -1730,7 +1730,7 @@ class ModelAccountCustomerpartner extends Model {
 			$seller_id = $this->getuserseller();
 		}
 		
-		$sql = "SELECT DISTINCT o.order_id ,o.date_added,o.currency_code,o.currency_value, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus  FROM " . DB_PREFIX ."order_status os LEFT JOIN ".DB_PREFIX ."customerpartner_order co ON (os.order_status_id = co.order_status_id) LEFT JOIN ".DB_PREFIX ."order o ON (co.order_id = o.order_id) LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE co.customer_id = '".$seller_id."'  AND os.language_id = '".$this->config->get('config_language_id')."'";
+		$sql = "SELECT DISTINCT o.order_id ,o.date_added,o.currency_code,o.currency_value, CONCAT(o.firstname ,' ',o.lastname) AS name ,os.name AS orderstatus  FROM " . DB_PREFIX ."order_status os LEFT JOIN ".DB_PREFIX ."customerpartner_order co ON (os.order_status_id = co.order_status_id) LEFT JOIN ".DB_PREFIX ."order o ON (co.order_id = o.order_id) LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE co.customer_id = '".$seller_id."'  AND os.language_id = '".$this->config->get('config_language_id')."'";
 		
 		if (isset($data['filter_order']) && !is_null($data['filter_order'])) {
 			$sql .= " AND o.order_id = '" . (int)$data['filter_order'] . "'";
@@ -1853,7 +1853,7 @@ class ModelAccountCustomerpartner extends Model {
 		} else {
 			$seller_id = $this->getuserseller();
 		}
-		$sql = $this->db->query("SELECT op.*,c2o.price c2oprice, c2o.paid_status FROM " . DB_PREFIX ."customerpartner_to_order c2o LEFT JOIN " . DB_PREFIX . "order_product op ON (c2o.order_product_id = op.order_product_id AND c2o.order_id = op.order_id) WHERE c2o.order_id = '".$order_id."'  AND c2o.customer_id = '".$seller_id."' ORDER BY op.product_id ");
+		$sql = $this->db->query("SELECT op.*,c2o.price AS c2oprice, c2o.paid_status FROM " . DB_PREFIX ."customerpartner_to_order c2o LEFT JOIN " . DB_PREFIX . "order_product op ON (c2o.order_product_id = op.order_product_id AND c2o.order_id = op.order_id) WHERE c2o.order_id = '".$order_id."'  AND c2o.customer_id = '".$seller_id."' ORDER BY op.product_id ");
 
 		return($sql->rows);
 	}

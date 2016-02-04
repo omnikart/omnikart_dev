@@ -1,6 +1,5 @@
 <?php
 class ModelCustomerpartnerDashboard extends Model {
-	
 	// Sales
 	public function getPaidAmount() {
 		$sql = "SELECT SUM(cp2t.amount) as paid FROM " . DB_PREFIX . "customerpartner_to_transaction cp2t WHERE cp2t.customer_id='" . $this->customer->getId () . "' ";
@@ -32,10 +31,10 @@ class ModelCustomerpartnerDashboard extends Model {
 	
 	// customer
 	public function getTotalCustomers($data = array()) {
-		$sql = "SELECT DISTINCT o.customer_id FROM `" . DB_PREFIX . "order_product` op LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (op.product_id = c2o.product_id AND op.order_id = c2o.order_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) where c2o.customer_id='" . $this->customer->getId () . "' AND o.order_status_id > 0 ";
+		$sql = "SELECT DISTINCT o.customer_id FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "customerpartner_order cpo ON (cpo.order_id = o.order_id) where cpo.customer_id='" . $this->getuserseller(). "' AND cpo.order_status_id > 0 ";
 		
 		if (! empty ( $data ['filter_date_added'] )) {
-			$sql .= " AND DATE(c2o.date_added) = DATE('" . $this->db->escape ( $data ['filter_date_added'] ) . "')";
+			$sql .= " AND DATE(cpo.date_added) = DATE('" . $this->db->escape ( $data ['filter_date_added'] ) . "')";
 		}
 		
 		$query = $this->db->query ( $sql );
@@ -151,7 +150,7 @@ class ModelCustomerpartnerDashboard extends Model {
 			);
 		}
 		
-		$query = $this->db->query ( "SELECT COUNT(*) AS total, HOUR(c2o.date_added) AS hour FROM `" . DB_PREFIX . "order_product` op LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (op.product_id = c2o.product_id AND op.order_id = c2o.order_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) WHERE c2o.customer_id='" . $this->customer->getId () . "' AND order_status_id = '" . ( int ) $this->config->get ( 'config_complete_status_id' ) . "' AND DATE(c2o.date_added) = DATE(NOW()) GROUP BY HOUR(c2o.date_added) ORDER BY c2o.date_added ASC" );
+		$query = $this->db->query ( "SELECT COUNT(*) AS total, HOUR(cpo.date_added) FROM `" . DB_PREFIX . "customerpartner_order` cpo WHERE cpo.customer_id='" . $this->getuserseller () . "' AND cpo.order_status_id <> '0' AND DATE(cpo.date_added) = DATE(NOW()) GROUP BY HOUR(cpo.date_added) ORDER BY cpo.date_added ASC" );
 		
 		foreach ( $query->rows as $result ) {
 			$order_data [$result ['hour']] = array (
@@ -176,7 +175,7 @@ class ModelCustomerpartnerDashboard extends Model {
 			);
 		}
 		
-		$query = $this->db->query ( "SELECT COUNT(*) AS total, c2o.date_added FROM `" . DB_PREFIX . "order_product` op LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (op.product_id = c2o.product_id AND op.order_id = c2o.order_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) WHERE c2o.customer_id='" . $this->customer->getId () . "' AND order_status_id = '" . ( int ) $this->config->get ( 'config_complete_status_id' ) . "' AND DATE(c2o.date_added) >= DATE('" . $this->db->escape ( date ( 'Y-m-d', $date_start ) ) . "') GROUP BY DAYNAME(c2o.date_added)" );
+		$query = $this->db->query ( "SELECT COUNT(*) AS total, cpo.date_added FROM `" . DB_PREFIX . "customerpartner_order` cpo WHERE cpo.customer_id='" . $this->getuserseller () . "' AND cpo.order_status_id <> '0'  AND DATE(cpo.date_added) >= DATE('" . $this->db->escape ( date ( 'Y-m-d', $date_start ) ) . "') GROUP BY DAYNAME(cpo.date_added)" );
 		
 		foreach ( $query->rows as $result ) {
 			$order_data [date ( 'w', strtotime ( $result ['date_added'] ) )] = array (
@@ -199,8 +198,7 @@ class ModelCustomerpartnerDashboard extends Model {
 			);
 		}
 		
-		$query = $this->db->query ( "SELECT COUNT(*) AS total, c2o.date_added FROM `" . DB_PREFIX . "order_product` op LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (op.product_id = c2o.product_id AND op.order_id = c2o.order_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) WHERE c2o.customer_id='" . $this->customer->getId () . "' AND order_status_id = '" . ( int ) $this->config->get ( 'config_complete_status_id' ) . "' AND DATE(c2o.date_added) >= '" . $this->db->escape ( date ( 'Y' ) . '-' . date ( 'm' ) . '-1' ) . "' GROUP BY DATE(c2o.date_added)" );
-		
+		$query = $this->db->query ( "SELECT COUNT(*) AS total, cpo.date_added FROM `" . DB_PREFIX . "customerpartner_order` cpo WHERE cpo.customer_id='" . $this->getuserseller () . "' AND cpo.order_status_id <> '0' AND DATE(cpo.date_added) >= '" . $this->db->escape ( date ( 'Y' ) . '-' . date ( 'm' ) . '-1' ) . "' GROUP BY DATE(cpo.date_added)" );
 		foreach ( $query->rows as $result ) {
 			$order_data [date ( 'j', strtotime ( $result ['date_added'] ) )] = array (
 					'day' => date ( 'd', strtotime ( $result ['date_added'] ) ),
@@ -220,7 +218,7 @@ class ModelCustomerpartnerDashboard extends Model {
 			);
 		}
 		
-		$query = $this->db->query ( "SELECT COUNT(*) AS total, c2o.date_added FROM `" . DB_PREFIX . "order_product` op LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (op.product_id = c2o.product_id AND op.order_id = c2o.order_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) WHERE c2o.customer_id='" . $this->customer->getId () . "' AND order_status_id = '" . ( int ) $this->config->get ( 'config_complete_status' ) . "' AND YEAR(c2o.date_added) = YEAR(NOW()) GROUP BY MONTH(c2o.date_added)" );
+		$query = $this->db->query ( "SELECT COUNT(*) AS total, cpo.date_added FROM `" . DB_PREFIX . "customerpartner_order` cpo WHERE cpo.customer_id='" . $this->getuserseller () . "' AND cpo.order_status_id <> '0' AND YEAR(cpo.date_added) = YEAR(NOW()) GROUP BY MONTH(cpo.date_added)" );
 		
 		foreach ( $query->rows as $result ) {
 			$order_data [date ( 'n', strtotime ( $result ['date_added'] ) )] = array (
@@ -230,6 +228,11 @@ class ModelCustomerpartnerDashboard extends Model {
 		}
 		
 		return $order_data;
+	}
+
+	private function getuserseller() {
+		$this->load->model('account/customerpartner');
+		return $this->model_account_customerpartner->getuserseller();
 	}
 }
 ?>

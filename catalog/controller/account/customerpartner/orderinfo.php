@@ -156,7 +156,7 @@ class ControllerAccountCustomerpartnerOrderinfo extends Controller {
 			} else {
 				$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
 			}
-			
+			$this->data ['shipping_method'] = $order_info['shipping_method'];
 			$find = array (
 					'{firstname}',
 					'{lastname}',
@@ -301,7 +301,7 @@ class ControllerAccountCustomerpartnerOrderinfo extends Controller {
 			
 			$this->data ['histories'] = array ();
 			
-			$results = $this->model_account_customerpartner->getOrderHistories ( $order_id );
+			$results = $this->model_account_customerpartner->getOrderHistories ( $order_id , $order_info['customerpartner_order_id']);
 			
 			foreach ( $results as $result ) {
 				$this->data ['histories'] [] = array (
