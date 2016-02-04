@@ -32,8 +32,8 @@ class ControllerProductProduct extends Controller {
 		$data ['breadcrumbs'] = array ();
 		
 		$data ['breadcrumbs'] [] = array (
-				'text' => $this->language->get ( 'text_home' ),
-				'href' => $this->url->link ( 'common/home' ) 
+			'text' => $this->language->get ( 'text_home' ),
+			'href' => $this->url->link ( 'common/home' ) 
 		);
 		$url = '';
 		if (isset ( $this->request->get ['sort'] ))
@@ -193,11 +193,9 @@ class ControllerProductProduct extends Controller {
 				if (isset($this->request->get['page'])) $url .= '&page=' . $this->request->get['page'];
 				if (isset($this->request->get['limit'])) $url .= '&limit=' . $this->request->get['limit'];
 				$this->response->redirect($this->url->link('product/product', $url . '&product_id=' . $product_info['gp_parent_id']));
-			} elseif ($product_info) {
-		
+		} elseif ($product_info) {
 			$this->load->model('account/customerpartner');
-			if (!$vendor_id) 	$vendor_id = $product_info['vendor_id'];
-			
+			if (!$vendor_id) $vendor_id = $product_info['vendor_id'];
 			$url = '';
 
 			if (isset($this->request->get['path'])) $url .= '&path=' . $this->request->get['path'];
@@ -872,7 +870,6 @@ class ControllerProductProduct extends Controller {
 						;
 						/* } */
 					}
-				}
 				// Column
 				// $data['attributenames'] = $attributenames; edit for filtering
 				$data ['agnames'] = $agnames;
@@ -1221,6 +1218,7 @@ class ControllerProductProduct extends Controller {
 		}
 		return true;
 	}
+	
 	public function getGpProducts() {
 		$data = array ();
 		$this->load->language ( 'product/product' );
@@ -1407,6 +1405,7 @@ class ControllerProductProduct extends Controller {
 		} else {
 			$this->response->setOutput ( $this->load->view ( 'default/template/product/gp_grouped_enquiry_' . $is_gp_grouped ['gp_template'] . '.tpl', $data ) );
 		}
+	}
 	}
 	public function getdescription() {
 		$product_id = $this->request->get ['product_id'];
