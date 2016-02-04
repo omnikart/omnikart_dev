@@ -136,7 +136,7 @@ class ModelModuleEnquiry extends Model {
 	}
 	public function addEnquiryComments($enquiry_id, $seller_id, $comment) {
 		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "quote qt WHERE qt.enquiry_id='" . $enquiry_id . "' AND qt.supplier_id='" . $seller_id . "' ORDER BY qt.quote_id DESC LIMIT 1" );
-		$this->db->query ( "INSERT INTO " . DB_PREFIX . "quote_comment SET quote_id='" . $query->row ['quote_id'] . "', comment='" . $comment . "'" );
+		$query = $this->db->query ( "INSERT INTO " . DB_PREFIX . "quote_comment SET quote_id='" . $query->row ['quote_id'] . "', comment='" . $comment . "'" );
 	}
 	public function getQuotationBySuppliers($enquiry_id) {
 		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry_to_supplier e2s LEFT JOIN " . DB_PREFIX . "quote q ON (e2s.enquiry_id = q.enquiry_id) WHERE e2s.enquiry_id='" . $enquiry_id . "'" );

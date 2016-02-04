@@ -198,40 +198,36 @@ function quotation(enquiry_id){
 
 		if (json.quotes) {
 	    	 $.each(json.quotes, function(key,val) {
-		    	 html_suppliers += '<li role="presentation"><a href="#supplier'+key+'"  aria-controls="supplier'+key+'" role="tab" data-supplierid="'+val['quote']['quote_id']+'" data-toggle="tab">'+val['info']['firstname']+' '+val['info']['lastname']+'</a></li>';
+		    	 html_suppliers += '<li role="presentation" onclick="suppliertabclick(\''+val['quote']['quote_id']+'\');"><a>'+val['info']['firstname']+' '+val['info']['lastname']+'</a></li>';
 	    	 });
 		}
 		
 		html_suppliers += '  </ul>';
 		html_suppliers += '</div>';
 		html_suppliers += '<div class="col-sm-9">';
-		html_suppliers += '<div class="tab-content">';
-		if (json.quotes) {
-	    	 $.each(json.quotes, function(key,val) {
-	    		 html_suppliers += '<div role="tabpanel" class="tab-pane suppliers-tab" id="supplier'+key+'">...</div>';
-	    	 });
-		}
-		
+		html_suppliers += '<div class="tab-content" id="commentsandquote">';
 		html_suppliers += '</div>';
 		html_suppliers += '</div><div class="clearfix"/>';
 		
-		var enquiry_comments_modal = addmodal('view-quotations','');
-    	enquiry_comments_modal.find('.modal-title').html('<h3 class="">Previous Conversations</hr>');
-    	enquiry_comments_modal.find('.modal-body').html(html_suppliers);
-    	enquiry_comments_modal.modal('show');
+		var quotations_comments_modal = addmodal('view-quotations','');
+		quotations_comments_modal.find('.modal-title').html('<h3 class="">Previous Conversations</hr>');
+		quotations_comments_modal.find('.modal-body').html(html_suppliers);
+		quotations_comments_modal.modal('show');
+    	
 	}
 	});
 }
-
-$('body').on('shown.bs.tab','a[data-toggle="tab"]', function (e) {
-  var quote_id = $(e.target).attr("data-supplierid");
-  var tab_id = $(e.target).attr("href"); // activated tab
+function suppliertabclick(quote_id) {
+  
   var html_tab_content='';
   $.ajax({
 	  url : 'index.php?route=module/enquiry/getSentEnquiryComment&quote_id='+quote_id,
 	    dataType: 'json',
 	    success : function (json) {
-		    
+	    	$("#commentsandquote").html("");
+
+	    	html_tab_content = '<div id ="previousconversations" style="overflow-y: scroll; height:400px;">';
+	    	
 		    if (json.comments) {
 	    	 $.each(json.comments, function(key,val) {
 	    		 html_tab_content += 		'<div class="panel panel-default">';
@@ -242,6 +238,7 @@ $('body').on('shown.bs.tab','a[data-toggle="tab"]', function (e) {
 		    	 html_tab_content += 		'</div>';
 	         });
 		    }
+		    html_tab_content += 		'</div>';
 		    
 	    	html_tab_content += 	'<div class="panel-footer">';
 	    	html_tab_content += 		'<div class="quote-comments">';
@@ -253,10 +250,11 @@ $('body').on('shown.bs.tab','a[data-toggle="tab"]', function (e) {
 	    	html_tab_content +=    		'</div>';
 	    	html_tab_content +=    	'</div>';
 	    	
-		    $(tab_id).html(html_tab_content);
+	    	$("#commentsandquote").html(html_tab_content);
+	    	$('#previousconversations').animate({scrollTop:5000}, 'slow');
 	    }
   });
-
+}
   $('body').on('click','#button-comment', function() {
 		$.ajax({
 			url : 'index.php?route=module/enquiry/addSentEnquiryComment',
@@ -264,11 +262,10 @@ $('body').on('shown.bs.tab','a[data-toggle="tab"]', function (e) {
 			dataType: 'json',
 			data: $('.quote-comments textarea[name^=\'quote\'] , .quote-comments input[name=\'quote_id\']'),
 			success : function (json) {
+				suppliertabclick($('.quote-comments input[name=\'quote_id\']').val());
 		    }
 		});
 	});
-  
- });
 //--></script>	
 	
 <script type="text/javascript"><!--
