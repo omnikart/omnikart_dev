@@ -202,7 +202,7 @@ $('#columns').on('click','.panel-quote-comments',function(){
 		    html_write_comment += 		'<button type="button" id="button-comment" data-loading-text="text loading" class="btn btn-primary">Submit Comment</button>'
 	    	html_write_comment +=    '</div>';
 
-	    	var html_read_comments = '';
+	    	var html_read_comments = '<div id ="previousconversations" style="overflow-y: scroll; height:400px;">';
 
 		    if (json.comments) {
 	    	 $.each(json.comments, function(key,val) {
@@ -214,11 +214,13 @@ $('#columns').on('click','.panel-quote-comments',function(){
 	    		 html_read_comments += 		'</div>';
 	         });
 		    }
+		    html_read_comments += '</div>';
 	    	var enquiry_comments_modal = addmodal('enquiry-comments','');
 	    	enquiry_comments_modal.find('.modal-title').html('<h3 class="">Previous Conversations</hr>');
 	    	enquiry_comments_modal.find('.modal-body').html(html_read_comments);
 	    	enquiry_comments_modal.find('.modal-footer').html(html_write_comment);
 	    	enquiry_comments_modal.modal('show');
+	    	$('#previousconversations').animate({scrollTop:5000}, 'slow');
 	    }
 	});
 });
@@ -230,6 +232,15 @@ $('body').on('click','#button-comment', function() {
 		dataType: 'json',
 		data: $('#enquiry-comments textarea[name^=\'enquiry\'] , #enquiry-comments input[name=\'enquiry_id\']'),
 		success : function (json) {
+			 var html_read_comments = '';
+			 html_read_comments += 		'<div class="panel panel-default">';
+    		 html_read_comments += 			'<div class="panel-heading">';
+    		 html_read_comments +=     			'<h4 class="panel-title">'+json['name']+'</h4>';
+    		 html_read_comments +=			'</div>';
+    		 html_read_comments += 			'<div class="panel-body">'+$("#enquiry-comments textarea[name^=\'enquiry\']").val()+'</div>';
+    		 html_read_comments += 		'</div>';
+			$("#enquiry-comments").find('.modal-body').append(html_read_comments);
+			$("#enquiry-comments textarea[name^=\'enquiry\']").val("");		
 	    }
 	});
 });

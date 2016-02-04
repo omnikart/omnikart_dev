@@ -145,16 +145,6 @@ class ControllerAccountCustomerpartnerOrderlist extends Controller {
 		$orderstotal = $this->model_account_customerpartner->getSellerOrdersTotal ( $data, $sellerId );
 		
 		if ($orders) {
-			
-			foreach ( $orders as $key => $order_list ) {
-				
-				$products = $this->model_account_customerpartner->getSellerOrderProducts ( $order_list ['order_id'], $sellerId );
-				
-		$orders = $this->model_account_customerpartner->getSellerOrders($data,$sellerId);
-
-		$orderstotal = $this->model_account_customerpartner->getSellerOrdersTotal($data,$sellerId);	
-
-		if($orders){
 		
 			foreach($orders as $key => $order_list){
 

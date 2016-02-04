@@ -317,7 +317,8 @@ class ControllerModuleEnquiry extends Controller {
 			if (isset ( $this->request->post )) {
 				$this->load->model ( 'module/enquiry' );
 				$data = $this->request->post;
-				$json = $this->model_module_enquiry->addEnquiryComments ( $data ['enquiry_id'], $seller_id, $data ['enquiry'] [$data ['enquiry_id']] );
+				$this->model_module_enquiry->addEnquiryComments ( $data ['enquiry_id'], $seller_id, $data ['enquiry'] [$data ['enquiry_id']] );
+				$json['name'] = $this->customer->getFirstName().' '.$this->customer->getLastName();
 				$this->response->setOutput ( json_encode ( $json ) );
 			}
 		}
