@@ -143,16 +143,6 @@ class ControllerAccountCustomerpartnerOrderlist extends Controller {
 		$orders = $this->model_account_customerpartner->getSellerOrders ( $data, $sellerId );
 		
 		$orderstotal = $this->model_account_customerpartner->getSellerOrdersTotal ( $data, $sellerId );
-		
-		if ($orders) {
-			
-			foreach ( $orders as $key => $order_list ) {
-				
-				$products = $this->model_account_customerpartner->getSellerOrderProducts ( $order_list ['order_id'], $sellerId );
-				
-		$orders = $this->model_account_customerpartner->getSellerOrders($data,$sellerId);
-
-		$orderstotal = $this->model_account_customerpartner->getSellerOrdersTotal($data,$sellerId);	
 
 		if($orders){
 		
@@ -163,23 +153,16 @@ class ControllerAccountCustomerpartnerOrderlist extends Controller {
 				$orders[$key]['products'] = $products;
 				$orders[$key]['productname'] = '';
 				$orders[$key]['total'] = 0;
-
 				if($products){
 					foreach ($products as $key2 => $value) {
 						$orders[$key]['productname'] = $orders[$key]['productname'].$value['name'].' x '.$value['quantity'].' , ';
 						$orders[$key]['total'] += $value['c2oprice'];
 					}
 				}		
-
 				$orders[$key]['total'] = $this->currency->format($orders[$key]['total']);
 				$orders[$key]['productname'] = substr($orders[$key]['productname'], 0, -2);
-
 				$orders[$key]['orderidlink']= $this->url->link('account/customerpartner/orderinfo&order_id='.$order_list['order_id'],'','SSL');
 				$orders[$key]['pdforderidlink']= $this->url->link('account/customerpartner/orderinfo/pdf&order_id='.$order_list['order_id'],'','SSL');			
-				$orders [$key] ['total'] = $this->currency->format ( $orders [$key] ['total'] );
-				$orders [$key] ['productname'] = substr ( $orders [$key] ['productname'], 0, - 2 );
-				
-				$orders [$key] ['orderidlink'] = $this->url->link ( 'account/customerpartner/orderinfo&order_id=' . $order_list ['order_id'], '', 'SSL' );
 			}
 		}
 		
@@ -305,6 +288,6 @@ class ControllerAccountCustomerpartnerOrderlist extends Controller {
 		} else {
 			$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/orderlist.tpl', $this->data ) );
 		}
+		}
 	}
-}
 ?>
