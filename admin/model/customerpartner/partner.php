@@ -651,7 +651,7 @@ class ModelCustomerpartnerPartner extends Model {
 			$sub_query .= " )";
 		}
 		
-		$sql = "SELECT SUM(c2o.quantity) quantity,(SUM(c2o.customer) + SUM(c2o.admin)) as total,SUM(c2o.admin) admin,SUM(c2o.customer) as customer, " . $sub_query . " as paid FROM " . DB_PREFIX . "customerpartner_to_order c2o WHERE c2o.customer_id ='" . ( int ) $partner_id . "' ";
+		$sql = "SELECT SUM(c2o.quantity) AS quantity, (SUM(c2o.customer) + SUM(c2o.admin)) AS total,SUM(c2o.admin) admin,SUM(c2o.customer) AS customer, " . $sub_query . " AS paid FROM " . DB_PREFIX . "customerpartner_to_order c2o WHERE c2o.customer_id ='" . ( int ) $partner_id . "' ";
 		
 		if (isset ( $filter_data ['date_added_from'] ) || isset ( $filter_data ['date_added_to'] )) {
 			if ($filter_data ['date_added_from'] && $filter_data ['date_added_to']) {
@@ -721,8 +721,7 @@ class ModelCustomerpartnerPartner extends Model {
 		return (count ( $total ));
 	}
 	public function getSellerOrdersList($seller_id, $filter_data) {
-		$sql = "SELECT DISTINCT op.order_id,c2o.paid_status,c2o.customer as need_to_pay,o.date_added, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus,op.*, (SELECT group_concat( concat( value) SEPARATOR ', ') FROM " . DB_PREFIX . "order_option oo WHERE oo.order_product_id=c2o.order_product_id ) as value  FROM " . DB_PREFIX . "order_status os LEFT JOIN " . DB_PREFIX . "order o ON (os.order_status_id = o.order_status_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (o.order_id = c2o.order_id) LEFT JOIN " . DB_PREFIX . "order_product op ON op.order_product_id=c2o.order_product_id WHERE c2o.customer_id = '" . ( int ) $seller_id . "' AND os.language_id = '" . $this->config->get ( 'config_language_id' ) . "' ";
-		
+		$sql = "SELECT DISTINCT op.order_id,c2o.paid_status,c2o.customer AS need_to_pay,o.date_added, CONCAT(o.firstname ,' ',o.lastname) AS name ,os.name AS orderstatus,op.*, (SELECT group_concat( concat( value) SEPARATOR ', ') FROM " . DB_PREFIX . "order_option oo WHERE oo.order_product_id=c2o.order_product_id ) AS value  FROM " . DB_PREFIX . "order_status os LEFT JOIN " . DB_PREFIX . "customerpartner_order cpo ON (os.order_status_id = cpo.order_status_id) LEFT JOIN " . DB_PREFIX . "order o ON (o.order_id = cpo.order_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (cpo.order_id = c2o.order_id) LEFT JOIN " . DB_PREFIX . "order_product op ON (op.order_product_id=c2o.order_product_id) WHERE c2o.customer_id = '" . ( int ) $seller_id . "' AND os.language_id = '" . $this->config->get ( 'config_language_id' ) . "' ";
 		if (isset ( $filter_data ['date_added_from'] ) || isset ( $filter_data ['date_added_to'] )) {
 			if ($filter_data ['date_added_from'] && $filter_data ['date_added_to']) {
 				$sql .= " AND o.date_added >= '" . $filter_data ['date_added_from'] . "' && o.date_added <= '" . $filter_data ['date_added_to'] . "' ";
