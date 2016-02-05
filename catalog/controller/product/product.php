@@ -823,52 +823,6 @@ class ControllerProductProduct extends Controller {
 							);
 								/*}*/
 						}
-						
-						$qty_now = '';
-						foreach ( $this->cart->getProducts () as $gp_cart ) {
-							if ($child ['child_id'] == $gp_cart ['product_id']) {
-								$qty_now = $gp_cart ['quantity'];
-							}
-						}
-						
-						foreach ( $child_attributes as $key => $ag ) {
-							$attributenames = array ();
-							if (! isset ( $agnames [$key] ['a'] ))
-								$agnames [$key] ['a'] = array ();
-							$agnames [$key] ['name'] = $ag ['name'];
-							foreach ( $ag ['attribute'] as $key2 => $a ) {
-								$agnames [$key] ['a'] [$key2] = $a ['name'];
-							}
-						}
-						/*
-						 * $curr_vendor = $this->model_account_customerpartner->getProfile($child_info['vendor_id']);
-						 * $vendors = $this->model_account_customerpartner->getProductVendors($child_info['product_id'],$child_info['vendor_id']);
-						 *
-						 * if (!empty($curr_vendor)) {
-						 * $vlink = $this->url->link('customerpartner/profile','id='.$curr_vendor['customer_id'],'SSL');
-						 * }
-						 */
-						
-						$data ['childs'] [$child_info ['product_id']] = array (
-								'child_id' => $child_info ['product_id'],
-								'info' => $child_info,
-								'image' => $child_image,
-								'name' => str_replace ( $product_info ['name'], '', $child_info ['name'] ),
-								'attributes' => $child_attributes,
-								'price' => $child_price,
-								'special' => $child_special,
-								'tax' => $child_tax,
-								'nocart' => $child_child_nocart,
-								'options' => $child_options,
-								'discounts' => $child_discounts,
-								'qty_now' => $qty_now,
-								'enabled' => ($child_info ['price'] != '0' ? true : false) 
-						)
-						// 'curr_vendor'=> $curr_vendor,
-						// 'vlink' => $vlink,
-						// 'vendors' => $vendors
-						;
-						/* } */
 					}
 				// Column
 				// $data['attributenames'] = $attributenames; edit for filtering
