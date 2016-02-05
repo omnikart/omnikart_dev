@@ -29,20 +29,21 @@
     <h1>
       <?php echo $heading_title; ?>
 	  	<div class="pull-right">
-						<button data-toggle="tooltip" class="btn btn-primary"
-							id="updateProducts"
-							title="Update changes for selected products. Page will not refresh after this.">
-							<i class="fa fa-save"></i> Update
-						</button>
-						<button data-toggle="tooltip" class="btn btn-info"
-							id="disableProducts" title="Disable Current Changes">
-							<i class="fa fa-times"></i> Disable
-						</button>
-						<a onclick="$('#form-product').submit();" data-toggle="tooltip"
-							class="btn btn-danger" title="<?php echo $button_delete; ?>"><i
-							class="fa fa-trash-o"></i> Delete</a>
-					</div>
-				</h1>
+			<button data-toggle="tooltip" class="btn btn-primary"
+				id="updateProducts"
+				title="Update changes for selected products. Page will not refresh after this.">
+				<i class="fa fa-save"></i> Update
+			</button>
+			<button data-toggle="tooltip" class="btn btn-info"
+				id="disableProducts" title="Disable Current Changes">
+				<i class="fa fa-times"></i> Disable
+			</button>
+			<a onclick="$('#form-product').submit();" data-toggle="tooltip"
+				class="btn btn-danger" title="<?php echo $button_delete; ?>">
+				<i class="fa fa-trash-o"></i> Delete
+			</a>
+		</div>
+	</h1>
 
 				<fieldset>
 					<legend>
@@ -104,7 +105,7 @@
 				<div class="panel panel-default">
 								<div class="panel-heading"># <?php echo $enquiry['enquiry_id']; ?> &nbsp; <?php echo $enquiry['firstname'].' '.$enquiry['lastname']; ?>
 						<a href="javascript:void();" data-enquiry_id="<?php echo $enquiry['enquiry_id']; ?>" class="panel-quote-comments">Comments</a>
-						<a href="javascript:void();" onclick="quotation('<?php echo $enquiry['enquiry_id']; ?>');" class="pull-right">Reply with Smart Quotation</a>
+						<a href="javascript:void();" data-enquiryId="<?php echo $enquiry['enquiry_id']; ?>" class="pull-right" data-toggle="modal" data-target="#enquiryModal">Reply with Smart Quotation</a> 
 								</div>
 								<div class="panel-body">
 									<p>	Email: <?php echo $enquiry['email']; ?><br />
@@ -186,6 +187,25 @@
 			</div>
 		</div>
 	</div>
+	<div id="enquiryModal" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-lg" style="width:80%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4>Quotation Form<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</h4>
+				</div>
+				<div class="modal-body">
+					<table class="table table-bordered">
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 <script type="text/javascript"><!--
 $('#columns').on('click','.panel-quote-comments',function(){
@@ -244,6 +264,31 @@ $('body').on('click','#button-comment', function() {
 	    }
 	});
 });
+
+$('#enquiryModal').on('show.bs.modal', function (event) {
+	  var button = $(event.relatedTarget); // Button that triggered the modal
+	  var enquiry_id = button.attr('data-enquiryId');
+	  var modal = $('#enquiryModal');
+	  	$.ajax({
+			url: 'index.php?route=account/customerpartner/enquiry/getEnquiry&enquiry_id='+enquiry_id,
+	 		success: function(data) {
+			     modal.find('.modal-body').html(data);
+			}
+		});
+	});
+
+$('#enquiryModal').on('click','#save-quotation',function(){
+	$.ajax({
+		url: 'index.php?route=account/customerpartner/enquiry/updateQuote',
+ 		data: $('#quotation-form').serialize(),
+ 		dataType: 'json',
+ 		method: 'POST',
+ 		success: function(json) {
+		     
+		}
+	});
+});
+
 //--></script>	
 	
 <script type="text/javascript"><!--

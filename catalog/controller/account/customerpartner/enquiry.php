@@ -197,6 +197,118 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/enquiry.tpl', $this->data ) );
 		}
 	}
+
+	public function getEnquiry(){
+	
+		if (isset($this->request->get['enquiry_id']) && (int)$this->request->get['enquiry_id']) {
+			if (isset($this->request->get['quote_revision_id']))
+				$quote_revision_id = $this->request->get['quote_revision_id'];
+			else
+				$quote_revision_id = 0;
+					
+			if (isset($this->request->get['quote_id']))
+				$quote_id = $this->request->get['quote_id'];
+			else
+				$quote_id = 0;
+					
+			$this->load->model('module/enquiry');
+			$this->load->model('account/customerpartner');
+			$seller_id = $this->model_account_customerpartner->getuserseller();
+			$data = $this->model_module_enquiry->getEnquiry($this->request->get['enquiry_id'],$seller_id ,$quote_id,$quote_revision_id);
+			$this->load->model('localisation/tax_class');
+			$data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+			$data['text_none'] = "None";
+			if (isset($this->request->post['tax_class_id'])) {
+				$data['tax_class_id'] = $this->request->post['tax_class_id'];
+			} elseif (!empty($product_info)) {
+				$data['tax_class_id'] = $product_info['tax_class_id'];
+			} else {
+				$data['tax_class_id'] = 0;
+			}
+
+			if (isset($this->request->post['weight'])) {
+				$data['weight'] = $this->request->post['weight'];
+			} elseif (!empty($product_info)) {
+				$data['weight'] = $product_info['weight'];
+			} else {
+				$data['weight'] = '';
+			}
+
+			$this->load->model('localisation/weight_class');
+
+			$data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses();
+
+			if (isset($this->request->post['weight_class_id'])) {
+				$data['weight_class_id'] = $this->request->post['weight_class_id'];
+			} elseif (!empty($product_info)) {
+				$data['weight_class_id'] = $product_info['weight_class_id'];
+			} else {
+				$data['weight_class_id'] = $this->config->get('config_weight_class_id');
+			}
+
+			if (isset($this->request->post['length'])) {
+				$data['length'] = $this->request->post['length'];
+			} elseif (!empty($product_info)) {
+				$data['length'] = $product_info['length'];
+			} else {
+				$data['length'] = '';
+			}
+
+			if (isset($this->request->post['width'])) {
+				$data['width'] = $this->request->post['width'];
+			} elseif (!empty($product_info)) {
+				$data['width'] = $product_info['width'];
+			} else {
+				$data['width'] = '';
+			}
+
+			if (isset($this->request->post['height'])) {
+				$data['height'] = $this->request->post['height'];
+			} elseif (!empty($product_info)) {
+				$data['height'] = $product_info['height'];
+			} else {
+				$data['height'] = '';
+			}
+
+			$this->load->model('localisation/length_class');
+
+			$data['length_classes'] = $this->model_localisation_length_class->getLengthClasses();
+
+			if (isset($this->request->post['length_class_id'])) {
+				$data['length_class_id'] = $this->request->post['length_class_id'];
+			} elseif (!empty($product_info)) {
+				$data['length_class_id'] = $product_info['length_class_id'];
+			} else {
+				$data['length_class_id'] = $this->config->get('config_length_class_id');
+			}
+			$this->load->model('localisation/unit_class');
+			$this->load->model('localisation/payment_term');
+			$data['unit_classes'] = $this->model_localisation_unit_class->getUnitClasses();
+			$data['payment_term']=array();
+			$data['payment_term'] = $this->model_localisation_payment_term->getPaymentTerms();
+			$data['config_name']=$this->config->get('config_name');
+			$data['config_owner']=$this->config->get('config_owner');
+			$data['config_address']=$this->config->get('config_address');
+			$data['config_email']=$this->config->get('config_email');
+			$data['config_telephone']=$this->config->get('config_telephone');
+			$data['enquiryupdates'] = $this->url->link('sale/enquiry/quotation&token=' . $this->session->data['token'] , '&enquiry_id='.(int)$this->request->get['enquiry_id'], 'SSL');
+			
+			$this->response->setOutput($this->load->view('default/template/account/customerpartner/enquiry_form.tpl',$data));
+		}
+	}
+
+	public function updateQuote(){
+		$data= array();
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['enquiry'])) {
+			$data = $this->request->post['enquiry'];
+			$this->load->model('module/enquiry');
+			foreach ($data['product'] as $key => $product) {
+				$data['product'][$key]['total'] = $this->tax->calculate($product['unit_price'],$product['tax_class_id'],true)*$product['quantity'];
+			}
+			$this->model_module_enquiry->updateQuote($data);
+		}
+	}
+	
 	private function validate() {
 		$this->load->language ( 'account/customerpartner/addproduct' );
 		
@@ -210,5 +322,7 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			return false;
 		}
 	}
+
+
 }
 ?>
