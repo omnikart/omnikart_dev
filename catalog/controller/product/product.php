@@ -793,15 +793,19 @@ class ControllerProductProduct extends Controller {
 								}
 							}
 
+							$qty_now = '';
+							foreach ( $this->cart->getProducts () as $gp_cart ) {
+								if ($child ['child_id'] == $gp_cart ['product_id']) {
+									$qty_now = $gp_cart ['quantity'];
+								}
+							}
+							
 							foreach ($child_attributes as $key => $ag){
 								$attributenames = array();
 								if (!isset($agnames[$key]['a'])) $agnames[$key]['a'] = array();
 								$agnames[$key]['name'] = $ag['name'];
 								foreach ($ag['attribute'] as $key2 => $a) {$agnames[$key]['a'][$key2] = $a['name'];} 
 							}
-							
-							
-							
 							
 							$data['childs'][$child_info['product_id']] = array(
 								'child_id'   => $child_info['product_id'],
