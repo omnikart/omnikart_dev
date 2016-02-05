@@ -83,6 +83,74 @@ class Modelcustomerpartnercustomerpartner extends Model {
 			return false;
 		}
 	}
+	
+	public function getSupplierProduct($product_id,$vendor_id = 0,$id = 0) {
+
+		if ($vendor_id) $vendor_id = $vendor_id;
+		else $vendor_id = $this->getuserseller();
+
+		$query = $this->db->query("SELECT DISTINCT cp2p.id, cp2p.product_id, cp2p.sku, cp2p.quantity, cp2p.stock_status_id, cp2p.minimum, cp2p.shipping, cp2p.weight, cp2p.length, cp2p.width, cp2p.height, cp2p.length_class_id, cp2p.unit_class_id, cp2p.edit, cp2p.viewed, cp2p.sort_order, cp2p.status, cp2p.date_available, cp2p.weight_class_id, cp2p.length_class_id, cp2p.unit_class_id, cp2p.date_added, cp2p.date_modified, IFNULL((SELECT cppd.price FROM " . DB_PREFIX . "cp_product_discount cppd WHERE (cppd.id = cp2p.id) AND (cppd.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AND (cppd.quantity = '1') AND ((cppd.date_start = '0000-00-00' OR cppd.date_start < NOW()) AND (cppd.date_end = '0000-00-00' OR cppd.date_end > NOW())) ORDER BY cppd.priority ASC, cppd.price ASC LIMIT 1),cp2p.price) AS price, IFNULL((SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = cp2p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "'), 'Not in Stock') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE cp2p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT ucd.unit FROM " . DB_PREFIX . "unit_class_description ucd WHERE cp2p.unit_class_id = ucd.unit_class_id AND ucd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS unit_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE cp2p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class FROM ".DB_PREFIX."customerpartner_to_product cp2p WHERE cp2p.product_id=" . (int)$product_id . " AND cp2p.customer_id=" . (int)$vendor_id ." AND cp2p.date_available <= NOW()");
+		
+		if ($query->num_rows) {
+			return array(
+				'id'       				 => $query->row['id'],//
+				'product_id'       => $query->row['product_id'],//
+				'sku'              => $query->row['sku'],//
+				'price'            => $query->row['price'],//
+				'quantity'         => $query->row['quantity'],//
+				'stock_status_id'  => $query->row['stock_status_id'],
+				'minimum'          => $query->row['minimum'], //
+				'shipping'         => $query->row['shipping'],
+				'date_available'   => $query->row['date_available'], //
+				'weight'           => $query->row['weight'], //
+				'weight_class_id'  => $query->row['weight_class_id'], //
+				'length'           => $query->row['length'], //
+				'width'            => $query->row['width'], //
+				'height'           => $query->row['height'], //
+				'length_class_id'  => $query->row['length_class_id'], //
+				'unit_class_id'    => $query->row['unit_class_id'],
+				'status'           => $query->row['status'],
+				'edit'             => $query->row['edit'],
+				'sort_order'       => $query->row['sort_order'],//
+				'date_added'       => $query->row['date_added'],
+				'date_modified'    => $query->row['date_modified'],
+				'stock_status'     => $query->row['stock_status'],//
+				'weight_class'     => $query->row['weight_class'],//
+				'length_class'     => $query->row['length_class'],//
+				'unit_class'     	 => $query->row['unit_class'],//
+			);
+		} else {
+			return false;
+		}
+	}
+	
+	public function getProductVendors($product_id) {
+		$query = $this->db->query("SELECT DISTINCT  c2p.id AS id,c2p.customer_id AS vendor_id, c2p.price AS price, CONCAT(c.firstname,' ',c.lastname) AS name, c2c.companyname  FROM " . DB_PREFIX . "customerpartner_to_product c2p LEFT JOIN ".DB_PREFIX ."customerpartner_to_customer c2c ON (c2c.customer_id = c2p.customer_id) LEFT JOIN ".DB_PREFIX."customer c ON (c.customer_id = c2p.customer_id) WHERE (c2p.product_id = '" . (int)$product_id . "' AND c2p.status = '1') ORDER BY c2p.price ASC, c2p.sort_order ASC");
+		$data = array();
+		foreach ($query->rows as $vendor) {
+			$vendor['options'] = $this->getSupplierProductOptions($vendor['id']);
+			$data[] = $vendor;
+		}
+		return $data;
+	}
+	public function getSupplierProductOptions($id){
+		$query = $this->db->query("SELECT * FROM `".DB_PREFIX."customerpartner_to_product_option` WHERE id='" . (int)$id . "'");
+		$option_values = array();
+		if ($query->num_rows){
+			foreach ($query->rows as $option_value) {
+				$option_values[$option_value['product_option_value_id']] = array(
+						'product_option_value_id'=>$option_value['product_option_value_id'],
+						'product_id'=>$option_value['product_id'],
+						'id'=>$option_value['id'],
+						'sku'=>$option_value['sku'],
+						'price'=>$option_value['price'],
+						'quantity'=>$option_value['quantity']
+				);
+			}
+		}
+		return $option_values;
+	}
+	
 	public function getProductsSeller($data = array()) {
 		$sql = "SELECT p.product_id, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . ( int ) $this->config->get ( 'config_customer_group_id' ) . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . ( int ) $this->config->get ( 'config_customer_group_id' ) . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2p.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id)";
 		

@@ -1888,6 +1888,8 @@ class ControllerCatalogProduct extends Controller {
 		$this->load->model ( 'tool/image' );
 		if (isset ( $this->request->get ['filter_name'] ) || isset ( $this->request->get ['filter_model'] )) {
 			$this->load->model ( 'catalog/product' );
+			$this->load->model ( 'customerpartner/customerpartner' );
+				
 			$this->load->model ( 'catalog/option' );
 			
 			if (isset ( $this->request->get ['filter_name'] )) {
@@ -1987,12 +1989,23 @@ class ControllerCatalogProduct extends Controller {
 						'brand' => $result ['brand'],
 						'option' => $option_data,
 						'image' => $image,
-						'price' => $result ['price'] 
+						'price' => $result ['price'],
+						'vendors'=> $this->model_customerpartner_customerpartner->getProductVendors($result ['product_id'])
 				);
 			}
 		}
 		
 		$this->response->addHeader ( 'Content-Type: application/json' );
 		$this->response->setOutput ( json_encode ( $json ) );
+	}
+
+	public function getProductVendors() {
+		if (isset($this->request->post['product_id'])) $product_id = $this->request->post['product_id'];
+		else $product_id = 0;
+		
+		if ($product_id) {
+			
+			
+		}
 	}
 }

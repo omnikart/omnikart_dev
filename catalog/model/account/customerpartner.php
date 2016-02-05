@@ -444,7 +444,7 @@ class ModelAccountCustomerpartner extends Model {
 			$sql .= " LEFT JOIN " . DB_PREFIX ."product_to_category p2c ON (p.product_id = p2c.product_id)";
 		}
 
-		$sql .= " WHERE p.status<>0 AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
+		$sql .= " WHERE p.status<>0 AND p.status<>2 AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
 
 		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {		
 			$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";

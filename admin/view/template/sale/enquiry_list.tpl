@@ -241,7 +241,7 @@
 									</tr>
 									<tr style="color: #0000FF;">
 										<td colspan="6"><h1>Customer Details</h1></td>
-										<td colspan="6"><h1>Information</h1</td>
+										<td colspan="6"><h1>Information></h1></td>
 									</tr>
 									<tr>
 										<td colspan="6">

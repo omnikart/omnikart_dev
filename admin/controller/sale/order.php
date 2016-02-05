@@ -2515,7 +2515,6 @@ class ControllerSaleOrder extends Controller {
 						$url_data [$key] = $value;
 					}
 				}
-				
 				$curl = curl_init ();
 				
 				// Set SSL if required
@@ -2536,7 +2535,6 @@ class ControllerSaleOrder extends Controller {
 					curl_setopt ( $curl, CURLOPT_POST, true );
 					curl_setopt ( $curl, CURLOPT_POSTFIELDS, http_build_query ( $this->request->post ) );
 				}
-				
 				curl_setopt ( $curl, CURLOPT_COOKIE, session_name () . '=' . $this->session->data ['cookie'] . ';' );
 				
 				$json = curl_exec ( $curl );

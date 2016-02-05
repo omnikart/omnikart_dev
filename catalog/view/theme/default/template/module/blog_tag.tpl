@@ -110,14 +110,7 @@ if (isset ( $tags [$i] )) :
 <?php endif; ?>
 
 <style type="text/css">
-<?
-php
- 
-echo 
-
-html_entity_decode ( $custom_style );
-
-?>
+<?php echo html_entity_decode ( $custom_style ); ?>
 </style>
 
 <script type="text/javascript">

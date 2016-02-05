@@ -24,8 +24,7 @@
 						<?php echo (!empty($data['Nitro']['BrowserCache']['Headers']['Pages']['CacheControl'])) ? 'checked=checked' : ''; ?> /></td>
 					<td class="textHeader"><label for="chkPagesCacheControl">Set <strong>Cache-Control</strong>
 							Header
-					</label> <a href="javascript:void(0)" class="infoPopover"
-						data-toggle="popover" data-html="true"
+					</label> <a href="javascript:void(0)" class="infoPopover" data-toggle="popover" data-html="true"
 						data-title="Cache-Control: max-age" data-content="This sets <i>
 						Cache-Control: max-age</i> to a high value, which specifies the
 							maximum amount of time that a representation will be considered

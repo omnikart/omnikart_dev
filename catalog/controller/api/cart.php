@@ -44,13 +44,21 @@ class ControllerApiCart extends Controller {
 					} else {
 						$option = array ();
 					}
-					
+					if (isset ( $this->request->post ['address_id'] )) {
+						$address_id = ( int ) $this->request->post ['address_id'];
+					} else {
+						$address_id = 0;
+					}
 					if (isset ( $this->request->post ['vendor_id'] )) {
 						$vendor_id = $this->request->post ['vendor_id'];
 					} else {
 						$vendor_id = 0;
 					}
-					
+					if (isset ( $this->request->post ['recurring_id'] )) {
+						$recurring_id = $this->request->post ['recurring_id'];
+					} else {
+						$recurring_id = 0;
+					}					
 					$product_options = $this->model_catalog_product->getProductOptions ( $this->request->post ['product_id'] );
 					
 					foreach ( $product_options as $product_option ) {
@@ -60,10 +68,9 @@ class ControllerApiCart extends Controller {
 					}
 					
 					if (! isset ( $json ['error'] ['option'] )) {
-						$this->cart->add ( $this->request->post ['product_id'], $quantity, $option, $vendor_id );
+						$this->cart->add ( $this->request->post ['product_id'], $quantity, $option, $recurring_id, $vendor_id, $address_id);
 						
 						$json ['success'] = $this->language->get ( 'text_success' );
-						
 						unset ( $this->session->data ['shipping_method'] );
 						unset ( $this->session->data ['shipping_methods'] );
 						unset ( $this->session->data ['payment_method'] );

@@ -87,50 +87,20 @@
                         
                         <?php } ?>
                         <td class="quantity text-center">
-													<div class="input-group input-group-sm">
-														<span class="input-group-btn">
-															<button type="button" class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-decrease"><i class="fa fa-minus"></i></button>														
-														</span>
-														<input type="hidden" class="original-quantity form-control" value="<?php echo $product['quantity']; ?>"/>
-														<input type="text" class="product-quantity form-control text-center " name="quantity[<?php echo $product['key']; ?>]" value="<?php echo $product['quantity']; ?>" size="3" onkeypress="validate_quantity_keypress(event)" />														
-														<span class="input-group-btn">
-															<button type="button" class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-increase"><i class="fa fa-plus"></i></span></button>
-														</span>
-													</div>
-												</td>
-                        <td class="price"><?php echo $product['price']; ?></td>
-                        <td class="total"><?php echo $product['total']; ?></td>
-                        <td class="total"><?php echo $product['tax']; ?></td>
-                        <td class="text-right">
-                           
-                                <button type="button"  alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" class="btn-remove btn btn-danger btn-xs" >
-                                  <span class="glyphicon glyphicon-remove"></span>
-                                    <input type="hidden" value="<?php echo $product['key']; ?>"/>
-                                </button>
-
-						<div>
-							<input type="hidden" class="original-quantity form-control"
-								value="<?php echo $product['quantity']; ?>" /> <input
-								type="text" class="product-quantity form-control text-center "
-								name="quantity[<?php echo $product['key']; ?>]"
-								value="<?php echo $product['quantity']; ?>" size="3"
-								onkeypress="validate_quantity_keypress(event)" />
-						</div>
-						<div>
-
-							<button type="button"
-								class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-xs btn-decrease col-xs-6">
-								<span class="glyphicon glyphicon-minus"></span>
-							</button>
-							<button type="button"
-								class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-xs btn-increase col-xs-6">
-								<span class="glyphicon glyphicon-plus"></span>
-							</button>
-
-						</div>
-					</td>
+							<div class="input-group input-group-sm">
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-decrease"><i class="fa fa-minus"></i></button>														
+								</span>
+								<input type="hidden" class="original-quantity form-control" value="<?php echo $product['quantity']; ?>"/>
+								<input type="text" class="product-quantity form-control text-center " name="quantity[<?php echo $product['key']; ?>]" value="<?php echo $product['quantity']; ?>" size="3" onkeypress="validate_quantity_keypress(event)" />														
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-increase"><i class="fa fa-plus"></i></span></button>
+								</span>
+							</div>
+						</td>
 					<td class="price"><?php echo $product['price']; ?></td>
 					<td class="total"><?php echo $product['total']; ?></td>
+					<td class="total"><?php echo $product['tax']; ?></td>
 					<td class="text-right">
 
 						<button type="button" alt="<?php echo $button_remove; ?>"

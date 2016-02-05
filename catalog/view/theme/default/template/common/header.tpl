@@ -187,23 +187,20 @@ fbq('track', 'Purchase', {value: '0.00', currency: 'USD'});
 													<li><a class="btn btn-info" href="<?php echo $mp_add_shipping_mod; ?>"><?php echo $text_wkshipping; ?></a></li>
 												</div>
 											</ul>
+											<?php if ($rights) { ?>
 											<ul id="dashboard" class="list-unstyled">
 												<div class="col-sm-12 hb">
-													<?php if (in_array('db',$rights)) {?>
-														<li><a class="btn btn-primary" href="<?php echo $b_db; ?>"><i
-																	class="fa fa-line-chart"></i><?php echo $t_db; ?></a></li>
-															<li><a class="btn btn-primary"
-																href="<?php echo $b_so; ?>"><i
-																	class="fa fa-calendar-plus-o"></i><?php echo $t_so; ?></a></li>
-															<li><a class="btn btn-primary"
-																href="<?php echo $b_se;?>" ><i
-																	class="fa fa-file-text-o"></i><?php echo $t_se;?></a></li>
-													<?php } ?>
-											
-													
-													</ul>
+												<?php if (in_array('db',$rights)) {?>
+													<li><a class="btn btn-primary" href="<?php echo $b_db; ?>"><i class="fa fa-line-chart"></i><?php echo $t_db; ?></a></li>
+													<li><a class="btn btn-primary" href="<?php echo $b_so; ?>"><i class="fa fa-calendar-plus-o"></i><?php echo $t_so; ?></a></li>
+													<li><a class="btn btn-primary" href="<?php echo $b_se;?>" ><i class="fa fa-file-text-o"></i><?php echo $t_se;?></a></li>
+												<?php } ?>
 												</div>
-											</div></li>
+											</ul>
+											<?php } ?>
+									</div>
+								</div>
+							</li>
 						<?php } else { ?>
 							<li class="dropdown"><a href="<?php echo $menusell; ?>"><span
 												class="hidden-sm hidden-xs hidden-md top-i">Sell Online</span></a></li>

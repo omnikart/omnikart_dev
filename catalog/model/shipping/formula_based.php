@@ -117,7 +117,6 @@ class ModelShippingFormulaBased extends Model {
 			
 			$total_data = array ();
 			$order_total = 0;
-<<<<<<< HEAD
 			$taxes = $this->cart->getTaxes($vendor_id);
 			
 			foreach ($order_totals as $ot) {
@@ -125,22 +124,10 @@ class ModelShippingFormulaBased extends Model {
 				if (!$this->config->get($ot['code'] . '_status')) continue;
 				$this->load->model('total/' . $ot['code']);
 				$this->{'model_total_' . $ot['code']}->getTotal($total_data, $order_total, $taxes, $vendor_id);
-=======
-			$taxes = $this->cart->getTaxes ();
-			
-			foreach ( $order_totals as $ot ) {
-				if ($ot ['code'] == $this->type)
-					break;
-				if (! $this->config->get ( $ot ['code'] . '_status' ))
-					continue;
-				$this->load->model ( 'total/' . $ot ['code'] );
-				$this->{'model_total_' . $ot ['code']}->getTotal ( $total_data, $order_total, $taxes );
->>>>>>> githubmain/master
 			}
 		}
 		
 		// Loop through charges
-<<<<<<< HEAD
 		if ($vendor_id) {
 			$cart_products = $this->cart->getVendors($vendor_id);
 		} else {
@@ -150,13 +137,7 @@ class ModelShippingFormulaBased extends Model {
 		$customer_id = (int)$this->customer->getId();
 		$customer_group_id = (version_compare(VERSION, '2.0') < 0) ? (int)$this->customer->getCustomerGroupId() : (int)$this->customer->getGroupId();
 		$default_currency = $this->config->get('config_currency');
-=======
-		$cart_products = $this->cart->getProducts ();
-		$currency = $this->session->data ['currency'];
-		$customer_id = ( int ) $this->customer->getId ();
-		$customer_group_id = (version_compare ( VERSION, '2.0' ) < 0) ? ( int ) $this->customer->getCustomerGroupId () : ( int ) $this->customer->getGroupId ();
-		$default_currency = $this->config->get ( 'config_currency' );
->>>>>>> githubmain/master
+
 		$distance = 0;
 		$language = $this->session->data ['language'];
 		$store_id = ( int ) $this->config->get ( 'config_store_id' );
@@ -591,7 +572,6 @@ class ModelShippingFormulaBased extends Model {
 					
 					$taxed_charge = $this->tax->calculate ( $rate ['charge'], $rate ['tax_class_id'], $this->config->get ( 'config_tax' ) );
 					
-<<<<<<< HEAD
 					$quote_data[$this->name . '_' . count($quote_data)] = array(
 						'code'			=> $this->name . '.' . $this->name . '_' . count($quote_data),
 						'sort_order'	=> $group_value,
@@ -600,16 +580,6 @@ class ModelShippingFormulaBased extends Model {
 						'value'			=> array($vendor_id => $rate['charge']),
 						'tax_class_id'	=> $rate['tax_class_id'],
 						'text'			=> $this->currency->format($taxed_charge) . ($taxed_charge == $rate['charge'] ? '' : ' (' . $language_text['text_tax'] . ' ' . $this->currency->format($rate['charge']) . ')'),
-=======
-					$quote_data [$this->name . '_' . count ( $quote_data )] = array (
-							'code' => $this->name . '.' . $this->name . '_' . count ( $quote_data ),
-							'sort_order' => $group_value,
-							'title' => $rate ['title'],
-							'cost' => $rate ['charge'],
-							'value' => $rate ['charge'],
-							'tax_class_id' => $rate ['tax_class_id'],
-							'text' => $this->currency->format ( $taxed_charge ) . ($taxed_charge == $rate ['charge'] ? '' : ' (' . $language_text ['text_tax'] . ' ' . $this->currency->format ( $rate ['charge'] ) . ')') 
->>>>>>> githubmain/master
 					);
 				}
 			}
@@ -659,7 +629,6 @@ class ModelShippingFormulaBased extends Model {
 				}
 				
 				$i = 0;
-<<<<<<< HEAD
 				$cost = $this->calculateFormula($charges, $formula_array, $i);
 				$taxed_charge = $this->tax->calculate($cost, $tax_class_id, $this->config->get('config_tax'));
 				
@@ -673,22 +642,6 @@ class ModelShippingFormulaBased extends Model {
 					'value'			=> array($vendor_id => $cost),
 					'tax_class_id'	=> $tax_class_id,
 					'text'			=> $this->currency->format($taxed_charge) . ($taxed_charge == $cost ? '' : ' (' . $language_text['text_tax'] . ' ' . $this->currency->format($cost) . ')'),
-=======
-				$cost = $this->calculateFormula ( $charges, $formula_array, $i );
-				$taxed_charge = $this->tax->calculate ( $cost, $tax_class_id, $this->config->get ( 'config_tax' ) );
-				
-				if ($cost === false || ($this->type == 'shipping' && $cost < 0) || ($this->type == 'total' && $cost == 0))
-					continue;
-				
-				$quote_data [$this->name . '_' . count ( $quote_data )] = array (
-						'code' => $this->name . '.' . $this->name . '_' . count ( $quote_data ),
-						'sort_order' => (isset ( $combination ['sort_order'] ) ? $combination ['sort_order'] : 0),
-						'title' => $title_prefix . implode ( ' + ', $titles ),
-						'cost' => $cost,
-						'value' => $cost,
-						'tax_class_id' => $tax_class_id,
-						'text' => $this->currency->format ( $taxed_charge ) . ($taxed_charge == $cost ? '' : ' (' . $language_text ['text_tax'] . ' ' . $this->currency->format ( $cost ) . ')') 
->>>>>>> githubmain/master
 				);
 			}
 		}
@@ -710,11 +663,7 @@ class ModelShippingFormulaBased extends Model {
 				}
 			}
 			
-<<<<<<< HEAD
 			$order_total += $quote['cost'][$vendor_id];
-=======
-			$order_total += $quote ['cost'];
->>>>>>> githubmain/master
 		}
 		
 		if ($settings ['testing_mode']) {
@@ -722,7 +671,6 @@ class ModelShippingFormulaBased extends Model {
 		}
 		
 		if ($this->type == 'shipping' && $quote_data) {
-<<<<<<< HEAD
 			$replace = array('[distance]', '[postcode]', '[quantity]', '[total]', '[volume]', '[weight]');
 			$with = array(round($distance, 2), $postcode, round($cart_quantity, 2), round($cart_total, 2), round($cart_volume, 2), round($cart_weight, 2));
 			
@@ -733,31 +681,6 @@ class ModelShippingFormulaBased extends Model {
 				'quote'			=> $quote_data,
 				'sort_order'	=> $settings['sort_order'],
 				'error'			=> false
-=======
-			$replace = array (
-					'[distance]',
-					'[postcode]',
-					'[quantity]',
-					'[total]',
-					'[volume]',
-					'[weight]' 
-			);
-			$with = array (
-					round ( $distance, 2 ),
-					$postcode,
-					round ( $cart_quantity, 2 ),
-					round ( $cart_total, 2 ),
-					round ( $cart_volume, 2 ),
-					round ( $cart_weight, 2 ) 
-			);
-			
-			return array (
-					'code' => $this->name,
-					'title' => str_replace ( $replace, $with, html_entity_decode ( $settings ['heading_' . $language], ENT_QUOTES, 'UTF-8' ) ),
-					'quote' => $quote_data,
-					'sort_order' => $settings ['sort_order'],
-					'error' => false 
->>>>>>> githubmain/master
 			);
 		} else {
 			return array ();

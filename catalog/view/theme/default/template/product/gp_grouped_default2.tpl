@@ -296,7 +296,6 @@
             <?php } ?>
             <?php } ?>
             <?php } ?>
-<<<<<<< HEAD
             <div class="form-group">
               <label class="control-label" for="input-quantity"><?php echo $entry_qty; ?></label>
               <input type="text" name="quantity" value="<?php echo $minimum; ?>" size="2" id="input-quantity" class="form-control" />

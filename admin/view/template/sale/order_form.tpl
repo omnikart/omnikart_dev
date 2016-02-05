@@ -465,6 +465,12 @@
 													id="input-quantity" class="form-control" />
 											</div>
 										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-quantity">Vendors</label>
+											<div class="col-sm-10" id="vendor">
+												
+											</div>
+										</div>
 										<div id="option"></div>
 									</fieldset>
 									<div class="text-right">
@@ -1801,7 +1807,8 @@ $('#tab-product input[name=\'product\']').autocomplete({
 						value: item['product_id'],
 						model: item['model'],
 						option: item['option'],
-						price: item['price']						
+						price: item['price'],
+						vendors: item['vendors'],						
 					}
 				}));
 			}
@@ -1810,6 +1817,15 @@ $('#tab-product input[name=\'product\']').autocomplete({
 	'select': function(item) {
 		$('#tab-product input[name=\'product\']').val(item['label']);
 		$('#tab-product input[name=\'product_id\']').val(item['value']);
+		
+		html = '<select name="vendor_id" class="form-control">';
+		$.each(item.vendors, function(k, v) {
+			html += '<option value="'+v['vendor_id']+'">'+v['companyname']+'</option>';
+		});		
+		
+		html += '</select>';
+		
+		$('#vendor').html(html);
 		
 		if (item['option'] != '') {
  			html  = '<fieldset>';
@@ -1988,7 +2004,7 @@ $('#button-product-add').on('click', function() {
 	$.ajax({
 		url: 'index.php?route=sale/order/api&token=<?php echo $token; ?>&api=api/cart/add&store_id=' + $('select[name=\'store_id\'] option:selected').val(),
 		type: 'post',
-		data: $('#tab-product input[name=\'product_id\'], #tab-product input[name=\'quantity\'], #tab-product input[name^=\'option\'][type=\'text\'], #tab-product input[name^=\'option\'][type=\'hidden\'], #tab-product input[name^=\'option\'][type=\'radio\']:checked, #tab-product input[name^=\'option\'][type=\'checkbox\']:checked, #tab-product select[name^=\'option\'], #tab-product textarea[name^=\'option\']'),
+		data: $('#tab-product input[name=\'product_id\'], #tab-product input[name=\'quantity\'], #vendor select[name=\'vendor_id\'], #tab-product input[name^=\'option\'][type=\'text\'], #tab-product input[name^=\'option\'][type=\'hidden\'], #tab-product input[name^=\'option\'][type=\'radio\']:checked, #tab-product input[name^=\'option\'][type=\'checkbox\']:checked, #tab-product select[name^=\'option\'], #tab-product textarea[name^=\'option\']'),
 		dataType: 'json',
 		beforeSend: function() {
 			$('#button-product-add').button('loading');

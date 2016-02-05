@@ -91,69 +91,48 @@ echo $partner ['backgroundcolor'] ? $partner ['backgroundcolor'] : '#ffffff';
 
 .addbgtome {
 	background-color: <?php echo$partner["backgroundcolor"]; ?>;
-	background-image: linear-gradient(to top, #fff, <? php echo $ partner ["backgroundcolor"];
-	?>);
-	background-image: -webkit-gradient(linear, left bottom, left top, from(#FFFFFF),
-		to(<? php echo $ partner [ "backgroundcolor" ]; ?>));
-	background-image: -webkit-linear-gradient(top, <? php echo $ partner ["backgroundcolor"];
+	background-image: linear-gradient(to top, #fff, <?php echo $partner ["backgroundcolor"];?>);
+	background-image: -webkit-gradient(linear, left bottom, left top, from(#FFFFFF),to(<?php echo $partner [ "backgroundcolor" ]; ?>));
+	background-image: -webkit-linear-gradient(top, <?php echo $partner ["backgroundcolor"];
 	?>,# FFFFFF );
-	background-image: -moz-linear-gradient(top, <? php echo $ partner ["backgroundcolor"];
+	background-image: -moz-linear-gradient(top, <?php echo $partner ["backgroundcolor"];
 	?>,# FFFFFF );
-	background-image: -o-linear-gradient(top, <? php echo $ partner ["backgroundcolor"];
+	background-image: -o-linear-gradient(top, <?php echo $partner ["backgroundcolor"];
 	?>,# FFFFFF );
-	background-image: linear-gradient(to bottom, <? php echo $ partner ["backgroundcolor"];
+	background-image: linear-gradient(to bottom, <?php echo $partner ["backgroundcolor"];
 	?>,# FFFFFF );
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=<?php
 	echo $partner ["backgroundcolor"];
 	?>, endColorstr =#FFFFFFFF);
 	-ms-filter:
-		"progid:DXImageTransform.Microsoft.gradient(startColorstr=<?php
-		
-echo $partner ["
-		backgroundcolor "];
-		?>, endColorstr=#FFFFFFFF)";
+		"progid:DXImageTransform.Microsoft.gradient(startColorstr=<?php echo $partner ["backgroundcolor "];?>, endColorstr=#FFFFFFFF)";
 }
 
-.banner-data { <?php if($partner['companylogo']) { ?> background: <?phpecho
-	$partner ["companylogo"];
-	?>; <?php
-} 
-
-else if ($partner ["backgroundcolor "]) {
-	?>
-	background-color: <?php echo$partner["backgroundcolor"]; ?>;
-	background-image: linear-gradient(to top, #fff, <? php echo $ partner ["backgroundcolor"];
-	?>);
-	background-image: -webkit-gradient(linear, left bottom, left top, from(#FFFFFF),
-		to(<? php echo $ partner [ "backgroundcolor" ]; ?>));
-	background-image: -webkit-linear-gradient(top, <? php echo $ partner ["backgroundcolor"];
-	?>,# FFFFFF );
-	background-image: -moz-linear-gradient(top, <? php echo $ partner ["backgroundcolor"];
-	?>,# FFFFFF );
-	background-image: -o-linear-gradient(top, <? php echo $ partner ["backgroundcolor"];
-	?>,# FFFFFF );
-	background-image: linear-gradient(to bottom, <? php echo $ partner ["backgroundcolor"];
-	?>,# FFFFFF );
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=<?php
-	echo $partner ["backgroundcolor"];
-	?>, endColorstr =#FFFFFFFF);
-	-ms-filter:
-		"progid:DXImageTransform.Microsoft.gradient(startColorstr=<?php
+.banner-data { <?php if($partner['companylogo']) { ?> background: <?php echo	$partner ["companylogo"];	?>; 
 	
-echo $partner ["
+<?php } else if ($partner ["backgroundcolor "]) {	?>
+	background-color: <?php echo$partner["backgroundcolor"]; ?>;
+	background-image: linear-gradient(to top, #fff, <?php echo $partner ["backgroundcolor"];
+	?>);
+	background-image: -webkit-gradient(linear, left bottom, left top, from(#FFFFFF),
+		to(<?php echo $partner [ "backgroundcolor" ]; ?>));
+	background-image: -webkit-linear-gradient(top, <?php echo $partner ["backgroundcolor"];
+	?>,# FFFFFF );
+	background-image: -moz-linear-gradient(top, <?php echo $partner ["backgroundcolor"];
+	?>,# FFFFFF );
+	background-image: -o-linear-gradient(top, <?php echo $partner ["backgroundcolor"];
+	?>,# FFFFFF );
+	background-image: linear-gradient(to bottom, <?php echo $partner ["backgroundcolor"];
+	?>,# FFFFFF );
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=<?php
+	echo $partner ["backgroundcolor"];
+	?>, endColorstr =#FFFFFFFF);
+	-ms-filter:
+		"progid:DXImageTransform.Microsoft.gradient(startColorstr=<?php echo $partner ["
 		backgroundcolor "];
-	?>, endColorstr=#FFFFFFFF)";
-	<?
-	php
-} 
-
-else {
-	?>
+	?>, endColorstr=#FFFFFFFF)";	<?php } else {	?>
 	background: #FFF;
-	<?
-	php
-}
-?>
+	<?php } ?>
 }
 </style>
 <?php $class = 'col-sm-12'; ?>
