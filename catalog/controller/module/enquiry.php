@@ -356,4 +356,48 @@ class ControllerModuleEnquiry extends Controller {
 			}
 		}
 	}
+	
+	public function install(){
+		$this->load->model('module/enquiry');
+		$this->model_module_enquiry->install();
+	}	
+	
+	public function quotation(){
+		if (isset($this->request->get['enquiry_id']) && (int)$this->request->get['enquiry_id']) {
+			$this->load->model('module/enquiry');
+			$data = $this->model_module_enquiry->getEnquiry($this->request->get['enquiry_id']);
+			$this->load->model('localisation/tax_class');
+				
+			$data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+			$data['text_none'] = "None";
+			if (isset($this->request->post['tax_class_id'])) {
+				$data['tax_class_id'] = $this->request->post['tax_class_id'];
+			} elseif (!empty($product_info)) {
+				$data['tax_class_id'] = $product_info['tax_class_id'];
+			} else {
+				$data['tax_class_id'] = 0;
+			}
+			$data['payment_term']=array();
+			$this->load->model('localisation/payment_term');
+			$data['payment_term'] = $this->model_localisation_payment_term->getPaymentTerms();
+	
+			if (file_exists ( DIR_TEMPLATE . $this->config->get ( 'config_template' ) . '/template/module/quotation.tpl' )) {
+				$this->response->setOutput ( $this->load->view ( $this->config->get ( 'config_template' ) . '/template/module/quotation.tpl', $data ) );
+			} else {
+				$this->response->setOutput ( $this->load->view ( 'default/template/module/quotation.tpl', $data ) );
+			}
+		}
+	}
+	
+	public function updateQuote(){
+		$data= array();
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['enquiry'])) {
+			$data = $this->request->post['enquiry'];
+			$this->load->model('module/enquiry');
+			foreach ($data['product'] as $key => $product) {
+				$data['product'][$key]['total'] = $this->tax->calculate($product['unit_price'],$product['tax_class_id'],true)*$product['quantity'];
+			}
+			$this->model_module_enquiry->updateQuote($data);
+		}
+	}
 }

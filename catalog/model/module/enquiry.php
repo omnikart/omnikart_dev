@@ -164,4 +164,229 @@ class ModelModuleEnquiry extends Model {
 		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "quote qt WHERE qt.quote_id='" . $quote_id . "'" );
 		$this->db->query ( "INSERT INTO " . DB_PREFIX . "quote_comment SET quote_id='" . $query->row ['quote_id'] . "', customer_id='" .$customer_id . "', comment='" . $comment . "'" );
 	}
+	
+	public function install() {
+		/* enquiry tables */
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "enquiry` (
+			`enquiry_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
+			`customer_id` int(11) NOT NULL,
+	  		`postcode` varchar(11) NOT NULL,
+			`status` tinyint(1) NOT NULL DEFAULT '1',
+		  	`date_added` datetime NOT NULL,
+		  	PRIMARY KEY (`enquiry_id`),
+    		INDEX (`customer_id`,`postcode`)
+		) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
+	
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "enquiry_product` (
+			  `enquiry_product_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
+			  `enquiry_id` int(11) NOT NULL,
+			  `product_id` int(11) NOT NULL,
+			  `category_id` int(11) NOT NULL,
+			  `quantity` int(11) NOT NULL,
+			  `unit_id` int(11) NOT NULL,
+			  PRIMARY KEY (`enquiry_product_id`),
+    		  INDEX (`enquiry_id`,`product_id`,`category_id`),
+			  FOREIGN KEY (`enquiry_id`) REFERENCES `" . DB_PREFIX . "enquiry`(`enquiry_id`) ON UPDATE CASCADE ON DELETE RESTRICT
+		) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
+	
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "enquiry_product_description` (
+			  `enquiry_product_id` int(11) NOT NULL,
+			  `name` varchar(200) NOT NULL,
+			  `description` text NOT NULL,
+			  `files` text NOT NULL,
+			  INDEX (`enquiry_product_id`,`name`),
+			  FOREIGN KEY (`enquiry_product_id`) REFERENCES `" . DB_PREFIX . "enquiry_product`(`enquiry_product_id`) ON UPDATE CASCADE ON DELETE RESTRICT
+		) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" );
+	
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "enquiry_term` (
+			`enquiry_term_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
+			`enquiry_id` int(11) NOT NULL,
+			`term_type`  varchar(64) NOT NULL,
+	  		`term_value` varchar(64) NOT NULL,
+		  	PRIMARY KEY (`enquiry_term_id`),
+			FOREIGN KEY (`enquiry_id`) REFERENCES `" . DB_PREFIX . "enquiry`(`enquiry_id`) ON UPDATE CASCADE ON DELETE RESTRICT
+		) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
+	
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "payment_term` (
+		  `payment_term_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
+		  `name` varchar(64) NOT NULL,
+		  `sort_order` int(3) NOT NULL,
+		  PRIMARY KEY (`payment_term_id`)
+		) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
+	
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "enquiry_to_supplier` (
+		  `enquiry_id` int(11) NOT NULL,
+		  `supplier_id` int(11) NOT NULL,
+		  `status` TINYINT(1) NOT NULL,
+		  PRIMARY KEY (`enquiry_id`,`supplier_id`)
+		) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin" );
+	
+		/* quotation tables */
+	
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "quote` (
+			`quote_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
+			`customer_id` int(11) NOT NULL,
+			`enquiry_id` int(11) NOT NULL,
+	  	 	`postcode` varchar(11) NOT NULL,
+		   	`date_added` datetime NOT NULL,
+		   	PRIMARY KEY (`quote_id`),
+    	 	INDEX (`customer_id`,`enquiry_id`,`postcode`)
+		) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
+	
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "quote_revision` (
+			  `quote_revision_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
+			  `quote_id` int(11) NOT NULL,
+			  `supplier_id` int(11) NOT NULL,
+			  `status` tinyint(1) NOT NULL DEFAULT '1',
+			  `date_added` datetime NOT NULL,
+			   PRIMARY KEY (`quote_revision_id`),
+    		  INDEX (`quote_id`,`supplier_id`),
+			  FOREIGN KEY (`quote_id`) REFERENCES `" . DB_PREFIX . "quote`(`quote_id`) ON UPDATE CASCADE ON DELETE RESTRICT
+		) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
+	
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "quote_product` (
+			  `quote_product_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
+			  `quote_revision_id` int(11) NOT NULL,
+			  `name` varchar(200) NOT NULL,
+			  `tax_class_id` int(11) NOT NULL,
+			  `minimum` int(5) NOT NULL,
+			  `unit_id` int(11) NOT NULL,
+			  `weight` decimal(15,8) NOT NULL,
+			  `weight_class_id` int(11) NOT NULL,
+			  `length` decimal(15,8) NOT NULL,
+			  `width` decimal(15,8) NOT NULL,
+			  `height` decimal(15,8) NOT NULL,
+			  `length_class_id` int(11) NOT NULL,
+			  `total` decimal(15,4) NOT NULL,
+			  PRIMARY KEY (`quote_product_id`),
+			  FOREIGN KEY (`quote_revision_id`) REFERENCES `" . DB_PREFIX . "quote_revision`(`quote_revision_id`) ON UPDATE CASCADE ON DELETE RESTRICT
+		) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
+	
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "quote_term` (
+		  `quote_term_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
+		  `quote_revision_id` int(11) NOT NULL,
+		  `quote_id` int(11) NOT NULL,
+		  `term_type` varchar(200) COLLATE utf8_bin NOT NULL,
+		  `term_value` varchar(200) COLLATE utf8_bin NOT NULL,
+		  `sort_order` int(3) NOT NULL,
+		  PRIMARY KEY (`quote_term_id`)
+		) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
+	
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "quote_total` (
+			`quote_total_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
+			`quote_revision_id` int(11) NOT NULL,
+			`code` varchar(200) COLLATE utf8_bin NOT NULL,
+			`title` varchar(200) COLLATE utf8_bin NOT NULL,
+			`value`  int(11) NOT NULL,
+		  	`sort_order` int(3) NOT NULL,
+		  	PRIMARY KEY (`quote_total_id`),
+			FOREIGN KEY (`quote_revision_id`) REFERENCES `" . DB_PREFIX . "quote_revision`(`quote_revision_id`) ON UPDATE CASCADE ON DELETE RESTRICT
+		) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
+	
+		$this->db->query ( "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "quote_comment` (
+		  `quote_comment_id` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
+		  `quote_revision_id` int(11) NOT NULL,
+		  `customer_id` int(11) NOT NULL,
+		  `supplier_id` int(11) NOT NULL,
+		  `comment` text NOT NULL,
+		  PRIMARY KEY (`quote_comment_id`),
+          FOREIGN KEY (`quote_revision_id`) REFERENCES `" . DB_PREFIX . "quote_revision`(`quote_revision_id`) ON UPDATE CASCADE ON DELETE RESTRICT
+		) ENGINE=INNODB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1" );
+	}
+	
+	public function getQuote($quote_id, $quote_revision_id=0) {
+		$data = array();
+		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."quote q LEFT JOIN ".DB_PREFIX."customer c ON (q.customer_id = c.customer_id) WHERE q.quote_id='" . (int)$quote_id . "'");
+		$data['customer_id'] = $query->row['customer_id'];
+		$data['postcode'] = $query->row['postcode'];
+		$data['date_added'] = $query->row['date_added'];
+		$data['quote_id'] = $query->row['quote_id'];
+		$data['supplier_id'] = $query->row['supplier_id'];
+		$data['firstname'] = $query->row['firstname'];
+		$data['lastname'] = $query->row['lastname'];
+		$data['email'] = $query->row['email'];
+		$data['telephone'] = $query->row['telephone'];
+	
+		if ($quote_revision_id){
+			$query =$this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_revision` WHERE quote_revision_id='" . (int)$quote_revision_id. "'");
+		} else {
+			$query =$this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_revision` WHERE quote_id='" . $quote_id . "' ORDER BY quote_revision_id DESC LIMIT 1 ");
+			$quote_revision_id = $query->row['quote_revision_id'];
+			$query =$this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_revision` WHERE quote_id='" . $quote_id . "' ORDER BY quote_revision_id DESC");
+			$data['revisions'] = $query->rows;
+		}
+		$data['quote_revision_id'] = $quote_revision_id;
+		$data['status'] = $query->row['status'];
+		$data['terms'] = array();
+		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."quote_term qt WHERE qt.quote_id='" . (int)$quote_id . "' AND qt.quote_revision_id='" . (int)$quote_revision_id . "'");
+		foreach ($query->rows as $term) {
+			$data['terms'][$term['quote_term_id']] = array(
+					'quote_term_id' => $term['quote_term_id'],
+					'type' => $term['term_type'],
+					'value' => $term['term_value']
+			);
+		}
+	
+		$data['enquiries'] = array();
+		$query = $this->db->query("SELECT qp.*,ucd.unit AS unit, ucd.title AS unit_title,tc.title AS tax_class,wcd.unit AS weight_class,lcd.unit AS length_class FROM `".DB_PREFIX."quote_product` qp LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = qp.unit_id) LEFT JOIN " . DB_PREFIX . "weight_class_description wcd ON (wcd.weight_class_id = qp.weight_class_id) LEFT JOIN " . DB_PREFIX . "length_class_description lcd ON (lcd.length_class_id = qp.length_class_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) LEFT JOIN " . DB_PREFIX . "tax_class tc ON (tc.tax_class_id = qp.tax_class_id) WHERE qp.quote_revision_id='" . $quote_revision_id . "'");
+		if ($query->num_rows) {
+			foreach ($query->rows as $key=>$enquiry) {
+				$data['enquiries'][$key] = $enquiry;
+				if ($enquiry['product_id'])
+					$data['enquiries'][$key]['link'] = $this->url->link('product/product','product_id='.(int)$enquiry['product_id'],'SSL');
+					if ($enquiry['category_id'])
+						$data['enquiries'][$key]['link'] = $this->url->link('product/category','category_id='.(int)$enquiry['product_id'],'SSL');
+						$data['enquiries'][$key]['description'] = '';
+			}
+		}
+		return $data;
+	}
+	
+	public function updateQuote($data  = array()){
+	
+		if (!$data['revisions']){
+			$data['status'] = '0';
+			$quote_id = $data['quote_id'];
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "quote_revision` SET quote_id='" . (int)$quote_id . "', status='" . (int)$data['status'] . "', date_added=NOW()");
+			$quote_revision_id = $this->db->getLastId();
+			$data['quote_revision_id'] = $quote_revision_id;
+			foreach($data['product'] as $quote_product_id => $product){
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "quote_product` SET quote_revision_id='" . (int)$quote_revision_id . "', price='" .$product['unit_price']. "',tax_class_id='" .(int)$product['tax_class_id'] . "',quantity='" .$product['quantity'] . "',weight='" .$product['weight']. "',weight_class_id='" .(int)$product['weight_class_id']. "',length='" .$product['length']. "',width='" .$product['width']. "',height='" .$product['height']. "',length_class_id='" .(int)$product['length_class_id']. "',total='" . (int)$product['total']. "'");
+			}
+			if (isset($data['term'])) {
+				foreach($data['oldterm'] as $key => $dterm){
+					if ($dterm['term_type'] && $dterm['term_value']) {
+						$this->db->query ("INSERT INTO `" . DB_PREFIX . "quote_term` VALUES ('','" .$data['quote_revision_id']. "','" .$data['quote_id']. "','" . $dterm ['term_type'] . "','" . $dterm ['term_value'] . "','')" );
+					}
+				}
+			}
+			if (isset($data['term'])) {
+				foreach($data['term'] as $key => $dterm){
+					$this->db->query ("INSERT INTO `" . DB_PREFIX . "quote_term` VALUES ('','" .$data['quote_revision_id']. "','" .$data['quote_id']. "','" . $dterm ['term_type'] . "','" . $dterm ['term_value'] . "','')" );
+				}
+			}
+		} else {
+			$data['quote_revision_id'] = $data['revisions'];
+			foreach($data['product'] as $quote_product_id => $product){
+				$this->db->query("UPDATE `" . DB_PREFIX . "quote_product` SET price='" .$product['unit_price']. "',tax_class_id='" .(int)$product['tax_class_id'] . "',quantity='" .$product['quantity'] . "',weight='" .$product['weight']. "',weight_class_id='" .(int)$product['weight_class_id']. "',length='" .$product['length']. "',width='" .$product['width']. "',height='" .$product['height']. "',length_class_id='" .(int)$product['length_class_id']. "',total='" . (int)$product['total']. "' WHERE  quote_product_id = '" . (int)$quote_product_id . "'  ");
+			}
+			$keys = array();
+			if (isset($data['term'])) {
+				foreach($data['oldterm'] as $key => $dterm){
+					if ($dterm['term_type'] && $dterm['term_value']) {
+						$this->db->query ("UPDATE `" . DB_PREFIX . "quote_term` SET term_type='" . $dterm ['term_type'] . "', term_value='" . $dterm ['term_value'] . "' WHERE quote_term_id='" . (int)$key  . "'");
+					} else {
+						$keys[] = $key;
+					}
+				}
+				var_dump($keys);
+				$this->db->query ("DELETE FROM `" . DB_PREFIX . "quote_term` WHERE quote_term_id IN ('" . implode(',',$keys)  . "')");
+			}
+			if (isset($data['term'])) {
+				foreach($data['term'] as $key => $dterm){
+					$this->db->query ("INSERT INTO `" . DB_PREFIX . "quote_term` VALUES ('','" .$data['quote_revision_id']. "','" .$data['quote_id']. "','" . $dterm ['term_type'] . "','" . $dterm ['term_value'] . "','')" );
+				}
+			}
+		}
+	}
 }
