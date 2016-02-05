@@ -32,6 +32,8 @@ class ControllerAccountCustomerpartnerAddproductlist extends Controller {
 			$this->data ['chkIsPartner'] = true;
 		}
 		
+		$sellerId = $this->model_account_customerpartner->getuserseller();
+		
 		if (! $this->data ['chkIsPartner'])
 			$this->response->redirect ( $this->url->link ( 'account/account' ) );
 		

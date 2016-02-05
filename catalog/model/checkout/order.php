@@ -992,7 +992,7 @@ class ModelCheckoutOrder extends Model {
 					
 					$mpSellers = $this->db->query("SELECT c.email,c.telephone,c.customer_id,p.product_id,p.subtract FROM ".DB_PREFIX."product p LEFT JOIN ".DB_PREFIX."customerpartner_to_product c2p ON (p.product_id = c2p.product_id) LEFT JOIN ".DB_PREFIX."customer c ON (c2p.customer_id = c.customer_id) WHERE p.product_id = '".$product['product_id']."' AND c2p.customer_id = '".$product['vendor_id']."' $prsql ORDER BY c2p.id ASC ")->row;
 					
-					if (isset($mpSellers['email']) AND !empty($mpSellers['email'])) {
+					if (!empty($mpSellers)) {
 						$option_data = array();
 						$order_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$product['order_product_id'] . "'");
 						foreach ($order_option_query->rows as $option) {
@@ -1037,25 +1037,27 @@ class ModelCheckoutOrder extends Model {
 							$commission_array['customer'] = $commission_array['customer'] + $shipping_quote['quote']['wk_custom_shipping']['cost'];
 						}
 
-						$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_to_order SET `order_id` = '".(int)$order_id."',`customer_id` = '".(int)$mpSellers['customer_id']."',`product_id` = '".(int)$product['product_id']."',`order_product_id` = '".(int)$product['order_product_id']."',`price` = '".(float)$product_total."',`quantity` = '".(int)$product['quantity']."',`shipping` = '".$this->db->escape($order_info['shipping_method'])."',`payment` = '".$this->db->escape($order_info['payment_method'])."',`details` = '".$this->db->escape($commission_array['type'])."',`customer` = '".$commission_array['customer']."',`admin` = '".$commission_array['commission']."',`order_status_id` = '0',`date_added` = NOW() ");
+						$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_to_order SET `order_id` = '".(int)$order_id."',`customer_id` = '".(int)$mpSellers['customer_id']."',`product_id` = '".(int)$product['product_id']."',`order_product_id` = '".(int)$product['order_product_id']."',`price` = '".(float)$product_total."',`quantity` = '".(int)$product['quantity']."',`shipping` = '".$this->db->escape($order_info['shipping_method'])."',`payment` = '".$this->db->escape($order_info['payment_method'])."',`details` = '".$this->db->escape($commission_array['type'])."',`customer` = '".$commission_array['customer']."',`admin` = '".$commission_array['commission']."',`date_added` = NOW() ");
 
 						//for adaptive paypal transaction
 						if($order_info['payment_code'] == 'wk_adaptive_pay') {
 							 $this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_transaction SET `customer_id` = '".(int)$mpSellers['customer_id']."',`amount` = '" . $commission_array['customer'] . "',`text` = '" . $this->currency->format($commission_array['customer']) . "',`details` = '".$this->db->escape($commission_array['type'])."',`date_added` = NOW()");
 						}
+						if (isset($mpSellers['email']) AND !empty($mpSellers['email'])) {
 						
 						$email64 = base64_encode($mpSellers['email']);
-						if (isset($mailToSellers[$email64])){
-							$mailToSellers[$email64]['products'][] = $products;
-							$mailToSellers[$email64]['total'] = (float)$mailToSellers[$email64]['total'] + (float)$product_total;
-						} else {
-							$mailToSellers[$email64] = array('email' => $mpSellers['email'],
-								'customer_id' => $mpSellers['customer_id'],
-								'seller_email' => $mpSellers['email'],
-								'seller_phone' => $mpSellers['telephone'],
-								'products' => array(0 => $products),
-								'total' => $product_total
-							);
+							if (isset($mailToSellers[$email64])){
+								$mailToSellers[$email64]['products'][] = $products;
+								$mailToSellers[$email64]['total'] = (float)$mailToSellers[$email64]['total'] + (float)$product_total;
+							} else {
+								$mailToSellers[$email64] = array('email' => $mpSellers['email'],
+									'customer_id' => $mpSellers['customer_id'],
+									'seller_email' => $mpSellers['email'],
+									'seller_phone' => $mpSellers['telephone'],
+									'products' => array(0 => $products),
+									'total' => $product_total
+								);
+							}
 						}
 					}
 				} 				
