@@ -129,8 +129,8 @@ class ModelModuleEnquiry extends Model {
 				$data ['comments'] [] = $comment;
 			}
 		} else {
-			$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry et WHERE et.enquiry_id='" . $enquiry_id . "'" );
-			$this->db->query ( "INSERT INTO `" . DB_PREFIX . "quote` SET customer_id='" . ( int ) $query->row ['customer_id'] . "', enquiry_id='" . ( int ) $enquiry_id . "', supplier_id='" . ( int ) $seller_id . "', postcode='" . ( int ) $query->row ['postcode'] . "', date_added=NOW()" );
+			$this->getEnquiry($enquiry_id,$seller_id);
+			return $this->getEnquiryComments($enquiry_id,$seller_id);
 		}
 		return $data;
 	}
