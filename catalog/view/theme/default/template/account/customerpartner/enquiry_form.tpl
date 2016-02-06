@@ -3,9 +3,9 @@
 	<div class="col-sm-12 form-inline">
 		<div class="form-group pull-right">
 	    	<label for="exampleInputName2">Quotation Versions</label>	
-			<select name="enquiry[revisions]" id="getrevision" class="form-control input-sm" >
+			<select name="enquiry[revisions]" class="form-control input-sm" >
 				<?php foreach ($revisions as $revision) { ?>
-			    	<option  id="getrevdata" value="<?php echo $revision['quote_revision_id']; ?>" ><?php echo $revision['quote_revision_id']; ?> (<?php echo $revision['date_added']; ?>)</option>
+			    	<option value="<?php echo $revision['quote_revision_id']; ?>" ><?php echo $revision['quote_revision_id']; ?> (<?php echo $revision['date_added']; ?>)</option>
 				<?php } ?>
 				<option value="0" ><?php echo "New"; ?></option>
 			</select>
@@ -173,14 +173,12 @@
 </form>
 <script type="text/javascript">
 
-$('#getrevdata').on('click',function () {
-	var enquiry_id = button.attr('data-enquiryId');
+$('#enquiryModal').on('change','select[name=\'enquiry[revisions]\']',function () {
+	var quote_revision_id = $('#enquiryModal select[name=\'enquiry[revisions]\']').val(); 
 	var value
+	$('#enquiryModal .modal-body').load('index.php?route=sale/enquiry/getEnquiry&enquiry_id='+enquiry_id+'&quote_revision_id='+quote_revision_id);
    	$.ajax({
-		url: 'index.php?route=sale/enquiry/getEnquiry&token=<?php echo $token; ?>&enquiry_id='+enquiry_id+'&quote_revision_id=<?php echo $quote_revision_id; ?>',
-		type: 'post',
-		data: $('select#getrevision,input[name^=\'selected\']:value'),
-		dataType: 'json',
+		url: 'index.php?route=sale/enquiry/getEnquiry&enquiry_id='+enquiry_id+'&quote_revision_id='+quote_revision_id,
 		success: function(data) {
 		}
 	});
