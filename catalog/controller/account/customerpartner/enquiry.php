@@ -297,6 +297,31 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 		}
 	}
 
+	public function quotation(){
+		if (isset($this->request->get['enquiry_id']) && (int)$this->request->get['enquiry_id']) {
+			$this->load->model('module/enquiry');
+			$this->load->model('account/customerpartner');
+			$seller_id = $this->model_account_customerpartner->getuserseller();
+			$data = $this->model_module_enquiry->getEnquiry($this->request->get['enquiry_id'],$seller_id);
+			$this->load->model('localisation/tax_class');
+				
+			$data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+			$data['text_none'] = "None";
+			if (isset($this->request->post['tax_class_id'])) {
+				$data['tax_class_id'] = $this->request->post['tax_class_id'];
+			} elseif (!empty($product_info)) {
+				$data['tax_class_id'] = $product_info['tax_class_id'];
+			} else {
+				$data['tax_class_id'] = 0;
+			}
+			$data['payment_term']=array();
+			$this->load->model('localisation/payment_term');
+			$data['payment_term'] = $this->model_localisation_payment_term->getPaymentTerms();
+	
+			$this->response->setOutput($this->load->view('default/template/account/customerpartner/quotation.tpl',$data));
+		}
+	}
+	
 	public function updateQuote(){
 		$data= array();
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['enquiry'])) {
