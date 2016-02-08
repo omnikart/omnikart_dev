@@ -98,22 +98,8 @@
 						<a href=""  data-toggle="modal" data-target="#chatModal" style="margin-left:500px;">Chat with customer</a>
 						<a href="javascript:void();" data-enquiryId="<?php echo $enquiry['enquiry_id']; ?>" class="pull-right" data-toggle="modal" data-target="#enquiryModal">Reply with Smart Quotation</a> 
 					</div>
-					<div id="enquiryModal" class="modal fade" role="dialog">
-  							<div class="modal-dialog modal-lg">
- 									<div class="modal-content">
-  											<div class="modal-header">
-        										<button type="button" class="close" data-dismiss="modal">&times;</button>
-        									</div>
-  											<div class="modal-body">
-   											<table class="table table-bordered">
-   											<tbody></tbody></table></div>
-											<div class="modal-footer">
-	    									</div>
-	    							</div>
-								</div>
-							</div>
 					<div id="chatModal" class="modal fade" role="dialog">
-  							<div class="modal-dialog modal-lg">
+  							<div class="modal-dialog modal-lg" style="width: 100%;">
  									<div class="modal-content">
       										<div class="modal-header">
     											<button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -182,6 +168,24 @@
 		</tr>
 		<?php } ?>
       </form>
+<div id="enquiryModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-lg" style="width: 80%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<table class="table table-bordered">
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+		</div>
+	</div>
+</div>
         <div class="row">
           <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
           <div class="col-sm-6 text-right"><?php //echo $results; ?></div>
@@ -645,5 +649,18 @@ $('#enquiryModal').on('show.bs.modal', function (event) {
 		}
 	});
 });
+
+$('#enquiryModal').on('click','#save-quotation',function(){
+	$.ajax({
+		url: 'index.php?route=sale/enquiry/updateQuote&token=<?php echo $token; ?>',
+ 		data: $('#quotation-form').serialize(),
+ 		dataType: 'json',
+ 		method: 'POST',
+ 		success: function(json) {
+		     
+		}
+	});
+});
+
 </script>	
 <?php echo $footer; ?>

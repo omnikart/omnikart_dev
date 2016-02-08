@@ -28,6 +28,24 @@
       <div class="panel-heading">
         <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
       </div>
+      
+       <div class="panel-body">
+        <div class="well">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label" for="input-manufacturer"><?php echo "Manufacturers"; ?></label>
+                <input type="text" name="filter_name" value="" placeholder="<?php echo "name"; ?>" id="input-manufacturer" class="form-control" />
+              </div>
+			</div>
+			<div class="col-sm-4">
+			<div class="form-group">
+			<button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo "Filter"; ?></button>
+			</div>
+				</div>
+			</div>
+		</div>
+	</div>
       <div class="panel-body">
         <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-manufacturer">
           <div class="table-responsive">
@@ -80,3 +98,44 @@
   </div>
 </div>
 <?php echo $footer; ?>
+<script type="text/javascript"><!--
+$('#button-filter').on('click', function() {
+	var url = 'index.php?route=catalog/manufacturer&token=<?php echo $token; ?>';
+
+	var filter_name = $('input[name=\'filter_name\']').val();
+
+	var filter_gpt = $('input[name=\'filter_gpt\']').val();
+
+	if (filter_name) {
+		url += '&filter_gpt=' + encodeURIComponent(filter_gpt);
+	}
+
+	if (filter_name) {
+		url += '&filter_name=' + encodeURIComponent(filter_name);
+	}
+
+	location = url;
+});
+//--></script>
+  <script type="text/javascript"><!--
+$('input[name=\'filter_name\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=catalog/manufacturer/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['manufacturer_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'filter_brand\']').val(item['label']);
+	}
+});
+</script>
+

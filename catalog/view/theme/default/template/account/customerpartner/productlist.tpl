@@ -60,7 +60,7 @@
               </div>
             </div>            
             <div class="form-group">
-              <label class="control-label" for="input-price"><?php echo $column_price; ?></label>
+              <label class="control-label" for="input-"><?php echo $column_price; ?></label>
               <input type="text" name="filter_price" value="<?php echo $filter_price; ?>" placeholder="<?php echo $column_price; ?>" id="input-price" class="form-control" />
             </div>
           </div>

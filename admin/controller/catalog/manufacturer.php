@@ -111,6 +111,19 @@ class ControllerCatalogManufacturer extends Controller {
 	}
 
 	protected function getList() {
+		
+		if (isset($this->request->get['filter_gpt'])) {
+			$filter_gpt = $data['filter_gpt'] = $this->request->get['filter_gpt']; /*check*/
+		} else {
+			$filter_gpt = null;
+		}
+		
+		if (isset($this->request->get['filter_name'])) {
+			$filter_name = $this->request->get['filter_name'];
+		} else {
+			$filter_name = null;
+		}
+		
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
@@ -130,7 +143,15 @@ class ControllerCatalogManufacturer extends Controller {
 		}
 
 		$url = '';
-
+		
+		if (isset($this->request->get['filter_gpt'])) {
+			$url .= '&filter_gpt=' . urlencode(html_entity_decode($this->request->get['filter_gpt'], ENT_QUOTES, 'UTF-8'));
+		}
+		
+		if (isset($this->request->get['filter_name'])) {
+			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+		}
+		
 		if (isset($this->request->get['sort'])) {
 			$url .= '&sort=' . $this->request->get['sort'];
 		}
@@ -161,6 +182,8 @@ class ControllerCatalogManufacturer extends Controller {
 		$data['manufacturers'] = array();
 
 		$filter_data = array(
+			'filter_gpt' => $filter_gpt,
+			'filter_name'=> $filter_name,
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -179,7 +202,7 @@ class ControllerCatalogManufacturer extends Controller {
 				'edit'            => $this->url->link('catalog/manufacturer/edit', 'token=' . $this->session->data['token'] . '&manufacturer_id=' . $result['manufacturer_id'] . $url, 'SSL')
 			);
 		}
-
+		
 		$data['heading_title'] = $this->language->get('heading_title');
 
 		$data['text_list'] = $this->language->get('text_list');
@@ -193,7 +216,7 @@ class ControllerCatalogManufacturer extends Controller {
 		$data['button_add'] = $this->language->get('button_add');
 		$data['button_edit'] = $this->language->get('button_edit');
 		$data['button_delete'] = $this->language->get('button_delete');
-
+		$data['token'] = $this->session->data['token'];
 		if (isset($this->error['warning'])) {
 			$data['error_warning'] = $this->error['warning'];
 		} else {
@@ -215,7 +238,15 @@ class ControllerCatalogManufacturer extends Controller {
 		}
 
 		$url = '';
-
+		
+		if (isset($this->request->get['filter_gpt'])) {
+			$url .= '&filter_gpt=' . urlencode(html_entity_decode($this->request->get['filter_gpt'], ENT_QUOTES, 'UTF-8'));
+		}
+		
+		if (isset($this->request->get['filter_name'])) {
+			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+		}
+		
 		if ($order == 'ASC') {
 			$url .= '&order=DESC';
 		} else {
@@ -230,6 +261,15 @@ class ControllerCatalogManufacturer extends Controller {
 		$data['sort_sort_order'] = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url, 'SSL');
 
 		$url = '';
+		
+		if (isset($this->request->get['filter_gpt'])) {
+			$url .= '&filter_gpt=' . urlencode(html_entity_decode($this->request->get['filter_gpt'], ENT_QUOTES, 'UTF-8'));
+		}
+		
+		if (isset($this->request->get['filter_name'])) {
+			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+		}
+		
 
 		if (isset($this->request->get['sort'])) {
 			$url .= '&sort=' . $this->request->get['sort'];
@@ -248,7 +288,7 @@ class ControllerCatalogManufacturer extends Controller {
 		$data['pagination'] = $pagination->render();
 
 		$data['results'] = sprintf($this->language->get('text_pagination'), ($manufacturer_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($manufacturer_total - $this->config->get('config_limit_admin'))) ? $manufacturer_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $manufacturer_total, ceil($manufacturer_total / $this->config->get('config_limit_admin')));
-
+		$data['filter_name'] = $filter_name;
 		$data['sort'] = $sort;
 		$data['order'] = $order;
 
@@ -300,6 +340,14 @@ class ControllerCatalogManufacturer extends Controller {
 		}
 
 		$url = '';
+		
+		if (isset($this->request->get['filter_gpt'])) {
+			$url .= '&filter_gpt=' . urlencode(html_entity_decode($this->request->get['filter_gpt'], ENT_QUOTES, 'UTF-8'));
+		}
+		
+		if (isset($this->request->get['filter_name'])) {
+			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+		}
 
 		if (isset($this->request->get['sort'])) {
 			$url .= '&sort=' . $this->request->get['sort'];
@@ -447,11 +495,17 @@ class ControllerCatalogManufacturer extends Controller {
 	}
 
 	public function autocomplete() {
+		
 		$json = array();
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/manufacturer');
-
+			
+			if (isset($this->request->get['filter_name'])) {
+				$filter_name = $this->request->get['filter_name'];
+			} else {
+				$filter_name = null;
+			}
 			$filter_data = array(
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
@@ -475,7 +529,6 @@ class ControllerCatalogManufacturer extends Controller {
 		}
 
 		array_multisort($sort_order, SORT_ASC, $json);
-
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}

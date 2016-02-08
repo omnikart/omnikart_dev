@@ -22,7 +22,7 @@
 			  			<tr>
 					  		<td>
 					          <div class="form-group required">
-					              <input type="text" name="product[0][name]" value="" placeholder="Product Name" id="product-name" class="form-control" />
+					              <input type="text" name="product[0][name]" value=trim("") placeholder="Product Name" id="product-name" class="form-control" />
 					          </div>
 					    	</td>
 							<td>
