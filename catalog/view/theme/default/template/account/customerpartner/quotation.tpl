@@ -96,8 +96,8 @@ margin-left: 600;
 				<tr>
 					<td class="center" >Sr No.</td>
 					<td>Name</td>
-					<td >Description</td>
 					<td class="center" >Quantity</td>
+					<td >Description</td>
 					<td class="center" >Unit Price</td>
 					<td class="center" >Tax class</td>
 					<td class="center" >Total Price</td>
@@ -112,10 +112,10 @@ margin-left: 600;
 						<?php } else { ?>
 							<td><?php echo $enquiry['name']; ?></td>
 						<?php } ?>
+						<td class="center"><?php echo $enquiry['quantity']; ?></td>
 						<td>
 						<?php echo round($enquiry['weight'],4); ?> <?php echo $enquiry['weight_class']; ?><hr>
-						<?php echo round($enquiry['length'],4); ?> <?php echo $enquiry['length_class']; ?></td>
-						<td class="center"><?php echo $enquiry['quantity']; ?></td>
+						<?php echo round($enquiry['length'],4); ?> x <?php echo round($enquiry['width'],4); ?> x <?php echo round($enquiry['height'],4); ?> <?php echo $enquiry['length_class']; ?></td>
 						<td class="center"><?php echo $enquiry['price']; ?> <?php echo $enquiry['unit']; ?> </td>
 						<td class="center"><?php echo $enquiry['tax_class']; ?></td>
                    		<td class="center"><?php echo $enquiry['total']; ?></td>
@@ -124,13 +124,10 @@ margin-left: 600;
 			</tbody>
 				<?php foreach ($terms as $term) { ?>
 				<tr>
-					<td colspan="3" class="right"><?php echo $term['type']; ?></td>
-					<td colspan="3">
-					<select class="form-control" name="enquiry[term][<?php echo $key; ?>][term_value]">
-						<?php foreach($payment_term as $pterm) { ?>
-						<option value="<?php echo $pterm['payment_term_id']; ?>" <?php echo ($pterm['payment_term_id']==$term['value']?'selected="selected"':''); ?>  ><?php echo $pterm['name']; ?></option>
-						<?php } ?>
-					</select>
+					<td colspan="4"></td>
+					<td colspan="1" class="right"><?php echo $term['type']; ?></td>
+					<td colspan="2">
+					<?php echo $term['value']; ?>
 					</td>
 				</tr>
 				<?php } ?>

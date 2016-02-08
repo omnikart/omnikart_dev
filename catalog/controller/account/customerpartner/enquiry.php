@@ -291,7 +291,7 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			$data['config_address']=$this->config->get('config_address');
 			$data['config_email']=$this->config->get('config_email');
 			$data['config_telephone']=$this->config->get('config_telephone');
-			$data['enquiryupdates'] = $this->url->link('sale/enquiry/quotation', '&enquiry_id='.(int)$this->request->get['enquiry_id'], 'SSL');
+			$data['enquiryupdates'] = $this->url->link('account/customerpartner/enquiry/quotation', '&enquiry_id='.(int)$this->request->get['enquiry_id'], 'SSL');
 			
 			$this->response->setOutput($this->load->view('default/template/account/customerpartner/enquiry_form.tpl',$data));
 		}
