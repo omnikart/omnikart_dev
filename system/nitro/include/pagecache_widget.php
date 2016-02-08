@@ -1,5 +1,6 @@
 <?php
-if (function_exists('passesPageCacheValidation') && (passesPageCacheValidation() || isPreCacheRequest()) && decideToShowFrontWidget()) {?>
+if (function_exists ( 'passesPageCacheValidation' ) && (passesPageCacheValidation () || isPreCacheRequest ()) && decideToShowFrontWidget ()) {
+	?>
 <script type="text/javascript">
 var xhr;
 if (window.XMLHttpRequest){xhr=new XMLHttpRequest();}

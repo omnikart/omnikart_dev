@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP OpenCloud library.
  * 
@@ -8,7 +9,6 @@
  * @author    Glen Campbell <glen.campbell@rackspace.com>
  * @author    Jamie Hannaford <jamie.hannaford@rackspace.com>
  */
-
 namespace OpenCloud\Compute;
 
 use OpenCloud\Common\PersistentObject;
@@ -19,45 +19,44 @@ use OpenCloud\Common\PersistentObject;
  * At its simplest, a Flavor represents a combination of RAM, disk space,
  * and compute CPUs, though there are other extended attributes.
  */
-class Flavor extends PersistentObject 
-{
-
-    public $status;
-    public $updated;
-    public $vcpus;
-    public $disk;
-    public $name;
-    public $links;
-    public $rxtx_factor;
-    public $ram;
-    public $id;
-    public $swap;
-
-    protected static $json_name = 'flavor';
-    protected static $url_resource = 'flavors';
-    
-    /**
-     * {@inheritDoc}
-     */
-    public function create($params = array()) 
-    { 
-        return $this->noCreate(); 
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public function update($params = array()) 
-    { 
-        return $this->noUpdate(); 
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public function delete() 
-    { 
-        return $this->noDelete(); 
-    }
-
+class Flavor extends PersistentObject {
+	public $status;
+	public $updated;
+	public $vcpus;
+	public $disk;
+	public $name;
+	public $links;
+	public $rxtx_factor;
+	public $ram;
+	public $id;
+	public $swap;
+	protected static $json_name = 'flavor';
+	protected static $url_resource = 'flavors';
+	
+	/**
+	 *
+	 * {@inheritDoc}
+	 *
+	 */
+	public function create($params = array()) {
+		return $this->noCreate ();
+	}
+	
+	/**
+	 *
+	 * {@inheritDoc}
+	 *
+	 */
+	public function update($params = array()) {
+		return $this->noUpdate ();
+	}
+	
+	/**
+	 *
+	 * {@inheritDoc}
+	 *
+	 */
+	public function delete() {
+		return $this->noDelete ();
+	}
 }

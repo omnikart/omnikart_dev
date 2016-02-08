@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
-  <id>ExcelPort OpenStock</id>
-  <version>1.0.1</version>
-  <vqmver>2.x</vqmver>
-  <author>iSenseLabs Team | http://isenselabs.com</author>
-  
-  <file name="admin/model/module/excelport.php">
-  <operation error="log">
-    <search position="after"><![CDATA[/* {EXTRA_PRODUCT_FIELDS} */]]></search>   
-            <add><![CDATA[
+	<id>ExcelPort OpenStock</id>
+	<version>1.0.1</version>
+	<vqmver>2.x</vqmver>
+	<author>iSenseLabs Team | http://isenselabs.com</author>
+
+	<file name="admin/model/module/excelport.php">
+		<operation error="log">
+			<search position="after"><![CDATA[/* {EXTRA_PRODUCT_FIELDS} */]]></search>
+			<add><![CDATA[
       array(
         'title' => 'Has Options',
         'column_full' => 'R',
@@ -20,35 +20,35 @@
         'eval_edit' => ''
       )
       ]]></add>
-        </operation>
-    <operation>
-      <search position="replace"><![CDATA[public $productSize = 26;]]></search>
-      <add><![CDATA[public $productSize = 33;]]></add>
-    </operation>
-  </file>
-  <file name="admin/model/openstock/openstock.php">
-  <operation>
-    <search position="replace"><![CDATA[$optionValues[$v] . ' > ';]]></search>   
-            <add><![CDATA[(!empty($optionValues[$v]) ? $optionValues[$v] : '') . ' > ';]]></add>
-        </operation>
-  </file>
-  <file name="admin/model/module/excelport_product.php">
-    <operation>
-      <search position="after"><![CDATA[$merges = array]]></search>
-      <add><![CDATA[
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[public $productSize = 26;]]></search>
+			<add><![CDATA[public $productSize = 33;]]></add>
+		</operation>
+	</file>
+	<file name="admin/model/openstock/openstock.php">
+		<operation>
+			<search position="replace"><![CDATA[$optionValues[$v] . ' > ';]]></search>
+			<add><![CDATA[(!empty($optionValues[$v]) ? $optionValues[$v] : '') . ' > ';]]></add>
+		</operation>
+	</file>
+	<file name="admin/model/module/excelport_product.php">
+		<operation>
+			<search position="after"><![CDATA[$merges = array]]></search>
+			<add><![CDATA[
       $merges[] = 2;
       $merges[] = 26;
       $merges[] = 2;
       $merges[] = 32;
       ]]></add>
-    </operation>
-    <operation>
-      <search position="before"><![CDATA[$leftColumnStaticText = array]]></search>
-      <add><![CDATA[$dynamicTemplates['open_stock'] = array(4,26,4,32);]]></add>
-    </operation>
-    <operation>
-      <search position="after"><![CDATA[$leftColumnStaticTextColumn4 = array]]></search>
-      <add><![CDATA[
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[$leftColumnStaticText = array]]></search>
+			<add><![CDATA[$dynamicTemplates['open_stock'] = array(4,26,4,32);]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[$leftColumnStaticTextColumn4 = array]]></search>
+			<add><![CDATA[
       $leftColumnStaticTextColumn1[] = null;
       $leftColumnStaticTextColumn1[] = null;
       $leftColumnStaticTextColumn1[] = null;
@@ -78,10 +78,10 @@
       $leftColumnStaticTextColumn4[] = 'Status';
       $leftColumnStaticTextColumn4[] = 'Image';
       ]]></add>
-    </operation>
-    <operation>
-      <search position="before"><![CDATA[if (!empty($designLayoutRange[1])) {]]></search>
-      <add><![CDATA[
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[if (!empty($designLayoutRange[1])) {]]></search>
+			<add><![CDATA[
       
       // Open Stock
       $this->load->model('tool/image');
@@ -124,14 +124,14 @@
       
       
       ]]></add>
-    </operation>
-    <operation>
-      <search position="before"><![CDATA[$source = array(0,2 + $this->productSize*($progress['importedCount']));]]></search>
-      <add><![CDATA[$map['product_open_stock'] = array(4,26);]]></add>
-    </operation>
-    <operation>
-      <search position="before"><![CDATA[// Layouts (Design)]]></search>
-      <add><![CDATA[
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[$source = array(0,2 + $this->productSize*($progress['importedCount']));]]></search>
+			<add><![CDATA[$map['product_open_stock'] = array(4,26);]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[// Layouts (Design)]]></search>
+			<add><![CDATA[
       
         // Open Stock
         $i = 0;
@@ -168,19 +168,19 @@
         }
         
       ]]></add>
-    </operation>
-    <operation>
-      <search position="after"><![CDATA['product_image' => $product_image,]]></search>
-      <add><![CDATA['product_open_stock' => $product_open_stock,]]></add>
-    </operation>
-    
-    <operation>
-                <search position="before"><![CDATA[if (isset($data['product_option'])) {]]></search>
-                <add><![CDATA[ if (!empty($data['custom_has_options'])) ]]></add>
-        </operation>
-        <operation>
-                <search position="before"><![CDATA[if (isset($data['product_discount'])) {]]></search>
-                <add><![CDATA[
+		</operation>
+		<operation>
+			<search position="after"><![CDATA['product_image' => $product_image,]]></search>
+			<add><![CDATA['product_open_stock' => $product_open_stock,]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[if (isset($data['product_option'])) {]]></search>
+			<add><![CDATA[ if (!empty($data['custom_has_options'])) ]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[if (isset($data['product_discount'])) {]]></search>
+			<add><![CDATA[
           if (!empty($data['custom_has_options']) && !empty($data['product_open_stock'])) {
             $this->db->query("DELETE FROM `" . DB_PREFIX . "product_option_relation` WHERE `product_id`= '" . (int)$product_id. "'");
             $this->db->query("DELETE FROM `" . DB_PREFIX . "product_option_relation_group_price` WHERE `product_id`= '" . (int)$product_id. "'");
@@ -277,11 +277,11 @@
             }
           }
         ]]></add>
-        </operation>
-    <operation>
-                <search position="replace"><![CDATA[model = '" . $this->db->escape($data['model']) . "', sku = '" . $this->db->escape($data['sku']) . "', ]]></search>
-                <add><![CDATA[model = '" . $this->db->escape($data['model']) . "', sku = '" . $this->db->escape($data['sku']) . "', has_option = '" . (int)$this->db->escape($data['custom_has_options']) . "', ]]></add>
-        </operation>
-  </file>
-  
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[model = '" . $this->db->escape($data['model']) . "', sku = '" . $this->db->escape($data['sku']) . "', ]]></search>
+			<add><![CDATA[model = '" . $this->db->escape($data['model']) . "', sku = '" . $this->db->escape($data['sku']) . "', has_option = '" . (int)$this->db->escape($data['custom_has_options']) . "', ]]></add>
+		</operation>
+	</file>
+
 </modification>

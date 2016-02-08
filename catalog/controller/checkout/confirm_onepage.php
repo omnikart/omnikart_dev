@@ -13,6 +13,7 @@ class ControllerCheckoutConfirmOnepage extends Controller {
         $this->load->model('checkout/checkout_onepage');
         $this->load->language('checkout/checkout');
         $this->load->model('setting/setting');
+
         $mmos_checkout_extra = $this->model_setting_setting->getSetting('mmos_checkout', $this->config->get('config_store_id'));
         $view_data['mmos_checkout'] = $mmos_checkout_extra['mmos_checkout'];
 
@@ -28,9 +29,16 @@ class ControllerCheckoutConfirmOnepage extends Controller {
             $order_data = array();
             $totals = array();
             $total = 0;
-            $order_data['totals'] = $this->get_total($totals, $total);
-
+            $order_totals = $this->get_total($totals, $total);
+						
             $this->initialize_viewdata($order_data, $view_data);
+
+						foreach ($order_totals as $total) {
+							$view_data['totals'][] = array(
+									'title' => $total['title'],
+									'text' => $this->currency->format($total['value']),
+							);
+						}
 
             if (!$this->customer->isLogged()) {
                 $view_data['account'] = $this->session->data['account'];
@@ -79,8 +87,14 @@ class ControllerCheckoutConfirmOnepage extends Controller {
             $totals = array();
             $total = 0;
             $order_data['totals'] = $this->get_total($totals, $total);
-
-
+						
+						foreach ($order_data['totals'] as $total) {
+							$view_data['totals'][] = array(
+									'title' => $total['title'],
+									'text' => $this->currency->format($total['value']),
+							);
+						}
+						
             $order_data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
             $order_data['store_id'] = $this->config->get('config_store_id');
             $order_data['store_name'] = $this->config->get('config_name');
@@ -233,10 +247,20 @@ class ControllerCheckoutConfirmOnepage extends Controller {
                     'total' => $product['total'],
                     'tax' => $this->tax->getTax($product['price'], $product['tax_class_id']),
                     'reward' => $product['reward'],
-                    'vendor_id' => $product['vendor_id']
+                    'vendor_id' => $product['vendor_id'],
+                    'id' => $product['id']
                 );
             }
-
+            $order_data['vendors'] = array();
+						foreach ($this->cart->getVendors() as $vendor_id => $vendor) {
+							$totals = array();
+							$total = 0;
+							$order_data['vendors'][$vendor_id]['totals'] =  $this->get_total($totals,$total,$vendor_id);
+						}
+            $totals = array();
+            $total = 0;
+            $order_totals = $this->get_total($totals, $total);
+            
             // Gift Voucher
             $order_data['vouchers'] = array();
 
@@ -322,12 +346,18 @@ class ControllerCheckoutConfirmOnepage extends Controller {
 
 
             $this->load->model('checkout/order');
-
+				
             $this->session->data['order_id'] = $this->model_checkout_order->addOrder($order_data);
 
             $view_data['payment'] = $this->load->controller('payment/' . $this->session->data['payment_method']['code']);
 
             $this->initialize_viewdata($order_data, $view_data);
+						foreach ($order_totals as $total) {
+							$view_data['totals'][] = array(
+									'title' => $total['title'],
+									'text' => $this->currency->format($total['value']),
+							);
+						}
 //            $view_data['shipping_required']=$this->cart->hasShipping();
             $view_data['payment_method'] = $order_data['payment_method'];
             $view_data['shipping_method'] = $order_data['shipping_method'];
@@ -357,7 +387,7 @@ class ControllerCheckoutConfirmOnepage extends Controller {
         $this->response->setOutput($this->load->view($template, $view_data));
     }
 
-    protected function get_total(&$totals = array(), &$total = 0) {
+    protected function get_total(&$totals = array(), &$total = 0, $vendor_id = 0) {
 //        $totals = array();
 //        $total = 0;
         $this->load->model('setting/setting');
@@ -377,7 +407,7 @@ class ControllerCheckoutConfirmOnepage extends Controller {
             }
         }
 
-        $taxes = $this->cart->getTaxes();
+        $taxes = $this->cart->getTaxes($vendor_id);
 
         $this->load->model('extension/extension');
 
@@ -397,12 +427,12 @@ class ControllerCheckoutConfirmOnepage extends Controller {
                     if ($result['code'] != 'shipping') {
                         $this->load->model('total/' . $result['code']);
 
-                        $this->{'model_total_' . $result['code']}->getTotal($totals, $total, $taxes);
+                        $this->{'model_total_' . $result['code']}->getTotal($totals, $total, $taxes,$vendor_id);
                     }
                 } else {
                     $this->load->model('total/' . $result['code']);
 
-                    $this->{'model_total_' . $result['code']}->getTotal($totals, $total, $taxes);
+                    $this->{'model_total_' . $result['code']}->getTotal($totals, $total, $taxes,$vendor_id);
                 }
             }
         }
@@ -419,6 +449,7 @@ class ControllerCheckoutConfirmOnepage extends Controller {
 
     protected function initialize_viewdata($order_data = array(), &$view_data) {
         $this->load->model('setting/setting');
+        $this->load->model('account/customerpartner');
 
         //button update/remove cart
         $view_data['button_update'] = $this->language->get('button_update');
@@ -453,103 +484,127 @@ class ControllerCheckoutConfirmOnepage extends Controller {
 
 
         $this->load->model('tool/upload');
+        $view_data['vendors'] = array();
         $view_data['products'] = array();
-        foreach ($this->cart->getProducts() as $product) {
-            $option_data = array();
-
-            foreach ($product['option'] as $option) {
-                if ($option['type'] != 'file') {
-                    $value = $option['value'];
-                } else {
-                    $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
-
-                    if ($upload_info) {
-                        $value = $upload_info['name'];
-                    } else {
-                        $value = '';
-                    }
-                }
-
-                $option_data[] = array(
-                    'name' => $option['name'],
-                    'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
-                );
-            }
-
-            $recurring = '';
-
-            if ($product['recurring']) {
-                $frequencies = array(
-                    'day' => $this->language->get('text_day'),
-                    'week' => $this->language->get('text_week'),
-                    'semi_month' => $this->language->get('text_semi_month'),
-                    'month' => $this->language->get('text_month'),
-                    'year' => $this->language->get('text_year'),
-                );
-
-                if ($product['recurring_trial']) {
-                    $recurring = sprintf($this->language->get('text_trial_description'), $this->currency->format($this->tax->calculate($product['recurring']['trial_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax'))), $product['recurring']['trial_cycle'], $frequencies[$product['recurring']['trial_frequency']], $product['recurring']['trial_duration']) . ' ';
-                }
-
-                if ($product['recurring_duration']) {
-                    $recurring .= sprintf($this->language->get('text_payment_description'), $this->currency->format($this->tax->calculate($product['recurring']['price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax'))), $product['recurring']['cycle'], $frequencies[$product['recurring']['frequency']], $product['recurring']['duration']);
-                } else {
-                    $recurring .= sprintf($this->language->get('text_payment_until_canceled_description'), $this->currency->format($this->tax->calculate($product['recurring']['price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax'))), $product['recurring']['cycle'], $frequencies[$product['recurring']['frequency']], $product['recurring']['duration']);
-                }
-            }
-
-
-
-            if ($product['image']) {
-                $this->load->model('tool/image');
-                $image = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
-                $image_popup = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
-            } else {
-                $image = '';
-                $image_popup = '';
-            }
-
-            $view_data['config_image_popup_width'] = $this->config->get('config_image_thumb_width');
-            $view_data['config_image_popup_height'] = $this->config->get('config_image_thumb_height');
-            $view_data['products'][] = array(
-                'key' => $product['key'],
-                'thumb' => $image,
-                'image_popup' => $image_popup,
-                'product_id' => $product['product_id'],
-                'name' => $product['name'],
-                'model' => $product['model'],
-                'option' => $option_data,
-                'recurring' => $recurring,
-                'quantity' => $product['quantity'],
-                'subtract' => $product['subtract'],
-                'price' => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))),
-                'total' => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']),
-                'href' => $this->url->link('product/product', 'product_id=' . $product['product_id']),
-                //remove cart
-                'remove' => $this->url->link('checkout/cart', 'remove=' . $product['key'])
-            );
-        }
-
-        // Gift Voucher
-        $view_data['vouchers'] = array();
-
-        if (!empty($this->session->data['vouchers'])) {
-            foreach ($this->session->data['vouchers'] as $key => $voucher) {
-                $view_data['vouchers'][] = array(
-                    'key' => $key,
-                    'description' => $voucher['description'],
-                    'amount' => $this->currency->format($voucher['amount'])
-                );
-            }
-        }
-
         $view_data['totals'] = array();
-        foreach ($order_data['totals'] as $total) {
-            $view_data['totals'][] = array(
-                'title' => $total['title'],
-                'text' => $this->currency->format($total['value']),
-            );
+        foreach ($this->cart->getVendors() as $vendor_id => $vendor) {
+					$view_data['vendors'][$vendor_id] = array();
+					$view_data['vendors'][$vendor_id]['details']=$this->model_account_customerpartner->getProfile($vendor_id);
+					foreach ($vendor['products'] as $product) {
+							$option_data = array();
+							foreach ($product['option'] as $option) {
+									if ($option['type'] != 'file') {
+											$value = $option['value'];
+									} else {
+											$upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
+
+											if ($upload_info) {
+													$value = $upload_info['name'];
+											} else {
+													$value = '';
+											}
+									}
+
+									$option_data[] = array(
+											'name' => $option['name'],
+											'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
+									);
+							}
+
+							$recurring = '';
+
+							if ($product['recurring']) {
+									$frequencies = array(
+											'day' => $this->language->get('text_day'),
+											'week' => $this->language->get('text_week'),
+											'semi_month' => $this->language->get('text_semi_month'),
+											'month' => $this->language->get('text_month'),
+											'year' => $this->language->get('text_year'),
+									);
+
+									if ($product['recurring_trial']) {
+											$recurring = sprintf($this->language->get('text_trial_description'), $this->currency->format($this->tax->calculate($product['recurring']['trial_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax'))), $product['recurring']['trial_cycle'], $frequencies[$product['recurring']['trial_frequency']], $product['recurring']['trial_duration']) . ' ';
+									}
+
+									if ($product['recurring_duration']) {
+											$recurring .= sprintf($this->language->get('text_payment_description'), $this->currency->format($this->tax->calculate($product['recurring']['price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax'))), $product['recurring']['cycle'], $frequencies[$product['recurring']['frequency']], $product['recurring']['duration']);
+									} else {
+											$recurring .= sprintf($this->language->get('text_payment_until_canceled_description'), $this->currency->format($this->tax->calculate($product['recurring']['price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax'))), $product['recurring']['cycle'], $frequencies[$product['recurring']['frequency']], $product['recurring']['duration']);
+									}
+							}
+
+
+
+							if ($product['image']) {
+									$this->load->model('tool/image');
+									$image = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
+									$image_popup = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
+							} else {
+									$image = '';
+									$image_popup = '';
+							}
+
+							$view_data['vendors'][$vendor_id]['config_image_popup_width'] = $this->config->get('config_image_thumb_width');
+							$view_data['vendors'][$vendor_id]['config_image_popup_height'] = $this->config->get('config_image_thumb_height');
+							$view_data['vendors'][$vendor_id]['products'][] = array(
+									'key' => $product['key'],
+									'thumb' => $image,
+									'image_popup' => $image_popup,
+									'product_id' => $product['product_id'],
+									'name' => $product['name'],
+									'model' => $product['model'],
+									'option' => $option_data,
+									'recurring' => $recurring,
+									'quantity' => $product['quantity'],
+									'subtract' => $product['subtract'],
+									'price' => $this->currency->format($product['price']),
+									'tax' => $this->currency->format($this->tax->getTax($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))*$product['quantity']),
+									'total' => $this->currency->format($product['price'] * $product['quantity']),
+									'href' => $this->url->link('product/product', 'product_id=' . $product['product_id']),
+									//remove cart
+									'remove' => $this->url->link('checkout/cart', 'remove=' . $product['key'])
+							);
+					}
+					        // Gift Voucher
+					$view_data['vendors'][$vendor_id]['vouchers'] = array();
+
+					if (!empty($this->session->data['vouchers'])) {
+							foreach ($this->session->data['vouchers'] as $key => $voucher) {
+									$view_data['vendors'][$vendor_id]['vouchers'][] = array(
+											'key' => $key,
+											'description' => $voucher['description'],
+											'amount' => $this->currency->format($voucher['amount'])
+									);
+							}
+					}
+
+          $totals = array();
+          $total = 0;
+					$total_vendor = $this->get_total($totals,$total,$vendor_id);
+					$view_data['vendors'][$vendor_id]['totals'] = array();
+					foreach ($total_vendor as $key => $total) {
+							$view_data['vendors'][$vendor_id]['totals'][$key] = array(
+									'title' => $total['title'],
+									'value' => $total['value'],
+									'text' => $this->currency->format($total['value']),
+							);
+							/*
+							if (!isset($view_data['totals'][$key]))  { 
+								$view_data['totals'][$key] = array(
+										'title' => $total['title'],
+										'value' => $total['value'],
+								);
+							} else {
+								$view_data['totals'][$key]['value'] += $total['value'];
+							}*/
+							
+					}
         }
+				
+				foreach ($view_data['totals'] as $key => $total){
+					$view_data['totals'][$key]['text'] =  $this->currency->format($total['value']);
+				}
+				
 
         //term conditions
         if ($this->config->get('config_checkout_id')) {

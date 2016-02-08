@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP OpenCloud library.
  * 
@@ -8,23 +9,20 @@
  * @author    Glen Campbell <glen.campbell@rackspace.com>
  * @author    Jamie Hannaford <jamie.hannaford@rackspace.com>
  */
-
 namespace OpenCloud\LoadBalancer\Resources;
 
 /**
- * All load balancers must define the protocol of the service which is being 
- * load balanced. The protocol selection should be based on the protocol of the 
- * back-end nodes. When configuring a load balancer, the default port for the 
+ * All load balancers must define the protocol of the service which is being
+ * load balanced.
+ * The protocol selection should be based on the protocol of the
+ * back-end nodes. When configuring a load balancer, the default port for the
  * given protocol will be selected unless otherwise specified.
- * 
+ *
  * @link http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/List_Load_Balancing_Protocols-d1e4269.html
  */
-class Protocol extends ReadOnly 
-{
-
-    public $name;
-    public $port;
-    protected static $json_name = 'protocol';
-    protected static $url_resource = 'loadbalancers/protocols';
-
+class Protocol extends ReadOnly {
+	public $name;
+	public $port;
+	protected static $json_name = 'protocol';
+	protected static $url_resource = 'loadbalancers/protocols';
 }

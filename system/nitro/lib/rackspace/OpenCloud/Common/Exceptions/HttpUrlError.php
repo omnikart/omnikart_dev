@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class HttpUrlError extends \Exception {}
+class HttpUrlError extends \Exception {
+}

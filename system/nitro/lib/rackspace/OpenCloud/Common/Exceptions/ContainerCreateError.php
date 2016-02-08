@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class ContainerCreateError extends \Exception {}
+class ContainerCreateError extends \Exception {
+}

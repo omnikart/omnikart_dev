@@ -2,6 +2,5 @@
 
 namespace OpenCloud\CloudMonitoring\Exception;
 
-class ZoneException extends CloudMonitoringException
-{
+class ZoneException extends CloudMonitoringException {
 }

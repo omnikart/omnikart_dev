@@ -9,50 +9,70 @@
     <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
     <?php } ?>
   </ul>
-  <h2><?php echo $heading_title; ?></h2><?php } ?>
+		<h2><?php echo $heading_title; ?></h2><?php } ?>
   <div class="row">
-    <?php /* if (!$banners && $thumb) { ?>
-        <div class="col-sm-12"><img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" title="<?php echo $heading_title; ?>" class="img-thumbnail" /></div>
-    <?php } */?>
+    <?php 
+/*
+		       * if (!$banners && $thumb) { ?>
+		       * <div class="col-sm-12"><img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" title="<?php echo $heading_title; ?>" class="img-thumbnail" /></div>
+		       * <?php }
+		       */
+				?>
   	<div class="col-sm-12">
     <?php if ($categories) { ?>
       <div class="col-sm-12 white">
 	 		<?php if ($banners) { ?>
 		      	<div class="row">
-		      		<div class="col-sm-12">
-						<div id="slideshow" class="flexslider" style="opacity: 1;">
-							<ul class="slides">
+						<div class="col-sm-12">
+							<div id="slideshow" class="flexslider" style="opacity: 1;">
+								<ul class="slides">
 						  		<?php foreach ($banners as $banner) { ?>
 						  			<li>
 										<?php if ($banner['link']) { ?>
-							   				<a href="<?php echo $banner['link']; ?>" ><img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" /></a>
+							   				<a href="<?php echo $banner['link']; ?>"><img
+											src="<?php echo $banner['image']; ?>"
+											alt="<?php echo $banner['title']; ?>" class="img-responsive" /></a>
 							   			<?php } else { ?>
-							   				<img src="<?php echo $banner['image']; ?>" alt="<?php echo $banner['title']; ?>" class="img-responsive" />
+							   				<img src="<?php echo $banner['image']; ?>"
+										alt="<?php echo $banner['title']; ?>" class="img-responsive" />
 							   			<?php } ?>
 							 		</li>
 							 	<?php } ?>			
 							</ul>
+							</div>
 						</div>
 					</div>
-				</div>
 	      	<?php } ?>
-	      <h3>Browse Categories</h3><hr />
-	      <div class="row category-container">
+	      <h3>Browse Categories</h3>
+					<hr />
+					<div class="row category-container">
 	      	<?php foreach ($categories as $category) { ?>
-	        <div class="category-layout col-lg-2 col-md-3 col-sm-4 col-xs-6">
-	            <div class="product-thumb transition">
-	                <div class="image"><a href="<?php echo $category['href']; ?>"><img src="<?php echo $category['image']; ?>" alt="<?php echo $category['name']; ?>" title="<?php echo $category['name']; ?>" class="img-responsive" /></a></div>
-	                <div class="caption">
-	                    <h4><a style="text-decoration: none" href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></h4>
-	                </div>
-	            </div>
-	        </div>
+	        <div
+							class="category-layout col-lg-2 col-md-3 col-sm-4 col-xs-6">
+							<div class="product-thumb transition">
+								<div class="image">
+									<a href="<?php echo $category['href']; ?>"><img
+										src="<?php echo $category['image']; ?>"
+										alt="<?php echo $category['name']; ?>"
+										title="<?php echo $category['name']; ?>"
+										class="img-responsive" /></a>
+								</div>
+								<div class="caption">
+									<h4>
+										<a style="text-decoration: none"
+											href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a>
+									</h4>
+								</div>
+							</div>
+						</div>
 	        <?php } ?>
       	</div>
-      	<div class="col-sm-12 text-center arrowdown">
-			<a class="showmore" data-showmore="category-container"><i class="fa fa-chevron-down"></i>&nbsp;Show More Categories&nbsp;<i class="fa fa-chevron-down"></i></a>
-	      </div>
-      </div>
+					<div class="col-sm-12 text-center arrowdown">
+						<a class="showmore" data-showmore="category-container"><i
+							class="fa fa-chevron-down"></i>&nbsp;Show More Categories&nbsp;<i
+							class="fa fa-chevron-down"></i></a>
+					</div>
+				</div>
     <?php } ?>
 	
     <!-- <div class="row">
@@ -61,15 +81,17 @@
         <?php } ?>    
     </div>
      -->
-    <div class="row">
+				<div class="row">
         <?php if ($combo) { ?>
-        <div class="col-sm-12"><div class="col-sm-12 white"><?php echo $combo; ?></div></div>
+        <div class="col-sm-12">
+						<div class="col-sm-12 white"><?php echo $combo; ?></div>
+					</div>
         <?php } ?>    
     </div>
-    </div>
-  </div>
-  
-  <div class="row"><?php echo $column_left; ?>
+			</div>
+		</div>
+
+		<div class="row"><?php echo $column_left; ?>
     <?php if ($column_left && $column_right) { ?>
     <?php $class = 'col-sm-6'; ?>
     <?php } elseif ($column_left || $column_right) { ?>
@@ -79,74 +101,86 @@
     <?php } ?>
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
     <div class="col-sm-12 white">
-    <div id="mfilter-content-container">
+					<div id="mfilter-content-container">
       <?php if ($products) { ?>
       <div class="row">
-        <div class="col-md-2">
-          <div class="btn-group hidden-xs">
-            <button type="button" id="list-view" class="btn btn-default" data-toggle="tooltip" title="<?php echo $button_list; ?>"><i class="fa fa-th-list"></i></button>
-            <button type="button" id="grid-view" class="btn btn-default" data-toggle="tooltip" title="<?php echo $button_grid; ?>"><i class="fa fa-th"></i></button>
-          </div>
-        </div>
-        <div class="col-md-2">
-        	<a href="<?php echo $compare; ?>" id="compare-total"><?php echo $text_compare; ?></a>
-        </div>
-        <div class="col-md-2 text-right">
-          <label class="control-label" for="input-sort"><?php echo $text_sort; ?></label>
-        </div>
-        <div class="col-md-3 text-right">
-          <select id="input-sort" class="form-control" onchange="location = this.value;">
+							<div class="col-md-2">
+								<div class="btn-group hidden-xs">
+									<button type="button" id="list-view" class="btn btn-default"
+										data-toggle="tooltip" title="<?php echo $button_list; ?>">
+										<i class="fa fa-th-list"></i>
+									</button>
+									<button type="button" id="grid-view" class="btn btn-default"
+										data-toggle="tooltip" title="<?php echo $button_grid; ?>">
+										<i class="fa fa-th"></i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<a href="<?php echo $compare; ?>" id="compare-total"><?php echo $text_compare; ?></a>
+							</div>
+							<div class="col-md-2 text-right">
+								<label class="control-label" for="input-sort"><?php echo $text_sort; ?></label>
+							</div>
+							<div class="col-md-3 text-right">
+								<select id="input-sort" class="form-control"
+									onchange="location = this.value;">
             <?php foreach ($sorts as $sorts) { ?>
             <?php if ($sorts['value'] == $sort . '-' . $order) { ?>
-            <option value="<?php echo $sorts['href']; ?>" selected="selected"><?php echo $sorts['text']; ?></option>
+            <option value="<?php echo $sorts['href']; ?>"
+										selected="selected"><?php echo $sorts['text']; ?></option>
             <?php } else { ?>
             <option value="<?php echo $sorts['href']; ?>"><?php echo $sorts['text']; ?></option>
             <?php } ?>
             <?php } ?>
           </select>
-        </div>
-        <div class="col-md-1 text-right">
-          <label class="control-label" for="input-limit"><?php echo $text_limit; ?></label>
-        </div>
-        <div class="col-md-2 text-right">
-          <select id="input-limit" class="form-control" onchange="location = this.value;">
+							</div>
+							<div class="col-md-1 text-right">
+								<label class="control-label" for="input-limit"><?php echo $text_limit; ?></label>
+							</div>
+							<div class="col-md-2 text-right">
+								<select id="input-limit" class="form-control"
+									onchange="location = this.value;">
             <?php foreach ($limits as $limits) { ?>
             <?php if ($limits['value'] == $limit) { ?>
-            <option value="<?php echo $limits['href']; ?>" selected="selected"><?php echo $limits['text']; ?></option>
+            <option value="<?php echo $limits['href']; ?>"
+										selected="selected"><?php echo $limits['text']; ?></option>
             <?php } else { ?>
             <option value="<?php echo $limits['href']; ?>"><?php echo $limits['text']; ?></option>
             <?php } ?>
             <?php } ?>
           </select>
-        </div>
-      </div>
-      <br />
-      <div class="row">
+							</div>
+						</div>
+						<br />
+						<div class="row">
         <?php foreach ($products as $product) { ?>
         <div class="product-layout product-list col-xs-12">
-          <div class="product-thumb">
+								<div class="product-thumb">
 				<?php require(DIR_TEMPLATE.'default/template/common/product/product.tpl'); ?>
           </div>
-        </div>
+							</div>
         <?php } ?>
       </div>
 
-      <div class="row">
-        <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
-        <div class="col-sm-6 text-right"><?php echo $results; ?></div>
-      </div>
+						<div class="row">
+							<div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
+							<div class="col-sm-6 text-right"><?php echo $results; ?></div>
+						</div>
       <?php } ?>
       <?php if (!$categories && !$products) { ?>
       <p><?php echo $text_empty; ?></p>
-      <div class="buttons">
-        <div class="pull-right"><a href="<?php echo $continue; ?>" class="btn btn-primary"><?php echo $button_continue; ?></a></div>
-      </div>
+						<div class="buttons">
+							<div class="pull-right">
+								<a href="<?php echo $continue; ?>" class="btn btn-primary"><?php echo $button_continue; ?></a>
+							</div>
+						</div>
       <?php } ?>
       </div><?php echo $content_bottom; ?></div>
-    </div>
+			</div>
     <?php echo $column_right; ?></div>
-</div>
-<script type="text/javascript">
+	</div>
+	<script type="text/javascript">
 	var menu = '<li role="presentation" class="divider"></li>';
 	menu += '<li><a class="btn btn-primary" id="button-pcd"><i class="fa fa-plus"></i> DashBoard</a></li>'; 
 	$('#dashboard > div').append(menu);

@@ -1,6 +1,6 @@
 <?php
 class ModelTotalRoundingTotal extends Model {
-	public function getTotal(&$total_data, &$total, &$taxes) {
+	public function getTotal(&$total_data, &$total, &$taxes, $vendor_id = 0) {
 		$this->load->language('total/total');
 		$total_data[] = array( 
 			'code'       => 'rounding_total',

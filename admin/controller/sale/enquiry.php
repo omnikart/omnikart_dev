@@ -260,7 +260,7 @@ class ControllerSaleEnquiry extends Controller {
 			$quote_id = $this->request->get['quote_id'];
 			else
 			$quote_id = 0;
-			
+		
 			$this->load->model('module/enquiry');
 			$data = $this->model_module_enquiry->getEnquiry($this->request->get['enquiry_id'],$quote_id,$quote_revision_id);
 			$this->load->model('localisation/tax_class');

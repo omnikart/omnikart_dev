@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP OpenCloud library.
  * 
@@ -8,7 +9,6 @@
  * @author    Glen Campbell <glen.campbell@rackspace.com>
  * @author    Jamie Hannaford <jamie.hannaford@rackspace.com>
  */
-
 namespace OpenCloud\Compute;
 
 use OpenCloud\Common\PersistentObject;
@@ -22,38 +22,36 @@ use OpenCloud\Common\PersistentObject;
  * not available to Rackspace customers, so we're using the /images
  * resource on the servers API endpoint.
  */
-class Image extends PersistentObject 
-{
-
-    public $status;
-    public $updated;
-    public $links;
-    public $minDisk;
-    public $id;
-    public $name;
-    public $created;
-    public $progress;
-    public $minRam;
-    public $metadata;
-    public $server;
-
-    protected static $json_name = 'image';
-    protected static $url_resource = 'images';
-
-    /**
-     * {@inheritDoc}
-     */
-    public function create($params = array()) 
-    { 
-        return $this->noCreate(); 
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function update($params = array()) 
-    { 
-        return $this->noUpdate(); 
-    }
-
+class Image extends PersistentObject {
+	public $status;
+	public $updated;
+	public $links;
+	public $minDisk;
+	public $id;
+	public $name;
+	public $created;
+	public $progress;
+	public $minRam;
+	public $metadata;
+	public $server;
+	protected static $json_name = 'image';
+	protected static $url_resource = 'images';
+	
+	/**
+	 *
+	 * {@inheritDoc}
+	 *
+	 */
+	public function create($params = array()) {
+		return $this->noCreate ();
+	}
+	
+	/**
+	 *
+	 * {@inheritDoc}
+	 *
+	 */
+	public function update($params = array()) {
+		return $this->noUpdate ();
+	}
 }

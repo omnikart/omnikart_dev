@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class UserListError extends \Exception {}
+class UserListError extends \Exception {
+}

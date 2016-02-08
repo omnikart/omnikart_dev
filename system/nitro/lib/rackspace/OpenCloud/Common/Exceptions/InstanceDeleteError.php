@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class InstanceDeleteError extends \Exception {}
+class InstanceDeleteError extends \Exception {
+}

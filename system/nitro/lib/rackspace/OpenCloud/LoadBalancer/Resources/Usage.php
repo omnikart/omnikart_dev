@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP OpenCloud library.
  * 
@@ -8,43 +9,38 @@
  * @author    Glen Campbell <glen.campbell@rackspace.com>
  * @author    Jamie Hannaford <jamie.hannaford@rackspace.com>
  */
-
 namespace OpenCloud\LoadBalancer\Resources;
 
 /**
  * Reports all usage for a Load Balancer recorded within the preceding 24 hours.
  */
-class Usage extends Readonly 
-{
-    
-    public $id;
-    public $averageNumConnections;
-    
-    /**
-     * Incoming transfer in bytes.
-     * 
-     * @var int 
-     */
-    public $incomingTransfer;
-    
-    /**
-     * Outgoing transfer in bytes.
-     * 
-     * @var int 
-     */
-    public $outgoingTransfer;
-    public $averageNumConnectionsSsl;
-    public $incomingTransferSsl;
-    public $outgoingTransferSsl;
-    public $numVips;
-    public $numPolls;
-    public $startTime;
-    public $endTime;
-    public $vipType;
-    public $sslMode;
-    public $eventType;
-
-    protected static $json_name = 'loadBalancerUsageRecord';
-    protected static $url_resource = 'usage';
-
+class Usage extends Readonly {
+	public $id;
+	public $averageNumConnections;
+	
+	/**
+	 * Incoming transfer in bytes.
+	 *
+	 * @var int
+	 */
+	public $incomingTransfer;
+	
+	/**
+	 * Outgoing transfer in bytes.
+	 *
+	 * @var int
+	 */
+	public $outgoingTransfer;
+	public $averageNumConnectionsSsl;
+	public $incomingTransferSsl;
+	public $outgoingTransferSsl;
+	public $numVips;
+	public $numPolls;
+	public $startTime;
+	public $endTime;
+	public $vipType;
+	public $sslMode;
+	public $eventType;
+	protected static $json_name = 'loadBalancerUsageRecord';
+	protected static $url_resource = 'usage';
 }

@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class ObjectCopyError extends \Exception {}
+class ObjectCopyError extends \Exception {
+}

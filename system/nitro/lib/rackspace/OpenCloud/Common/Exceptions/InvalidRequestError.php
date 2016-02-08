@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class InvalidRequestError extends \Exception {}
+class InvalidRequestError extends \Exception {
+}

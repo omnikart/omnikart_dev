@@ -31,12 +31,38 @@
         padding: 0;
     }
     <?php } ?>
-    #mmosolution button.btn-decrease {
-        border-radius: 0px 0px 0px 3px;
-    }
-     #mmosolution button.btn-increase {
-        border-radius: 0px 0px 3px 0px;
-    }
+    
+    #checkout-panel .payment-address label, #checkout-panel .shipping-address label{width:100%;padding:10px;border:1px solid #ddd;}
+#checkout-panel input.radio:empty {
+					margin-left: -999px;
+}
+ input.radio:empty ~ label {
+	position: relative;
+	float: left;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+input.radio:hover:not(:checked) ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+	color: #333;
+}
+input.radio:hover:not(:checked) ~ label {
+	color: #31708f;
+}
+input.radio:checked ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+	color: #31708f;
+}
+input.radio:checked ~ label {
+	color: #31708f;
+	border:1px solid #31708f;
+}    
+    
     #mmosolution .form-group-sm .form-control {
         height: auto;
         padding: 6px 12px;
@@ -149,94 +175,220 @@
     }
 
 
+        
+background-size
+:
+ 
+round
+ 
+auto
+;
 
+        
+background-repeat
+:
+ 
+no-repeat
+;
 
-    @-webkit-keyframes spin {/*for Chrome 4.0, Safari 4.0, O 15.0*/
-        from {
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -ms-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-        /*transform: scale(1) rotate(0deg);*/
-    }
-    to { 
-        -webkit-transform: rotate(360deg);
-        -moz-transform: rotate(360deg);
-        -ms-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        transform: rotate(360deg);
-        /*transform: scale(1) rotate(360deg);*/
-    }
-    }
-    @-moz-keyframes spin {/*for FF 5.0*/
-        from {
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -ms-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-        /*transform: scale(1) rotate(0deg);*/
-    }
-    to { 
-        -webkit-transform: rotate(360deg);
-        -moz-transform: rotate(360deg);
-        -ms-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        transform: rotate(360deg);
-        /*transform: scale(1) rotate(360deg);*/
-    }
-    }
-    @-o-keyframes spin {/*for O 12.0*/
-        from {
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -ms-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-        /*transform: scale(1) rotate(0deg);*/
-    }
-    to { 
-        -webkit-transform: rotate(360deg);
-        -moz-transform: rotate(360deg);
-        -ms-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        transform: rotate(360deg);
-        /*transform: scale(1) rotate(360deg);*/
-    }
-    }
-    @keyframes spin {/*for IE 10, FF 16, O 12.1*/
-        from {
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -ms-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-        /*transform: scale(1) rotate(0deg);*/
-    }
-    to { 
-        -webkit-transform: rotate(360deg);
-        -moz-transform: rotate(360deg);
-        -ms-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        transform: rotate(360deg);
-        /*transform: scale(1) rotate(360deg);*/
-    }
-    }
+        
+-webkit-background-size
+:
+ 
+100%;
+-moz-background-size
+:
+ 
+100%;
+-o-background-size
+:
+ 
+100%;
+background-size
+:
+ 
+100%
+100%;
+background-position
+:
+ 
+center
+ 
+center
+;
 
-    #mmosolution .glyphicon-spin-animate{
-        position: absolute;
-        right: 0px;
-        font-size: 1.5em;
+    
+}
+.wait-processing-onepage-fixed {
+	position: fixed;
+	top: 5px;
+}
 
-        -webkit-animation: spin .5s infinite linear;
-        -moz-animation: spin .5s infinite linear;
-        -o-animation: spin .5s infinite linear;
-        animation: spin .5s infinite linear;
-    }
+.panel {
+	position: relative;
+}
 
-    #checkout-overlay{
-        /*        position: absolute;
+.panel .panel-heading {
+	position: relative;
+}
+
+.panel .panel-footer {
+	margin-bottom: -15px;
+}
+
+.wait1 {
+	/*position: relative;*/
+	
+}
+
+.wait1:before {
+	/*background-image: url('<?php echo $url_inlude; ?>catalog/view/theme/default/image/loading_checkout_onepage.gif');*/
+	background-image:
+		url('<?php echo $url_inlude; ?>catalog/view/theme/default/image/loading_4.gif');
+	background-repeat: no-repeat;
+	position: absolute;
+	/*right: 0px;*/
+	top: -15px;
+	z-index: 888;
+	width: 30px;
+	height: 15px;
+	border-radius: 1px;
+	content: '';
+}
+
+.border-none {
+	border: none;
+}
+
+.border-top-none {
+	border-top: none !important;
+}
+
+.border-right-none {
+	border-bottom: none !important;
+}
+
+.border-bottom-none {
+	border-right: none !important;
+}
+
+.border-bottom-none {
+	border-bottom: none !important;
+}
+
+.border-left-none {
+	border-left: none !important;
+}
+
+.margin-none {
+	margin: 0 !important;
+}
+
+.margin-top-none {
+	margin-top: 0 !important;
+}
+
+.margin-right-none {
+	margin-right: 0 !important;
+}
+
+.margin-bottom-none {
+	margin-bottom: 0 !important;
+}
+
+.margin-left-none {
+	margin-left: 0 !important;
+}
+
+@
+-webkit-keyframes spin { /*for Chrome 4.0, Safari 4.0, O 15.0*/ from {
+	-webkit-transform:rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+	/*transform: scale(1) rotate(0deg);*/
+}
+
+to {
+	-webkit-transform: rotate(360deg);
+	-moz-transform: rotate(360deg);
+	-ms-transform: rotate(360deg);
+	-o-transform: rotate(360deg);
+	transform: rotate(360deg);
+	/*transform: scale(1) rotate(360deg);*/
+}
+
+}
+@
+-moz-keyframes spin { /*for FF 5.0*/ from { -webkit-transform:rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+	/*transform: scale(1) rotate(0deg);*/
+}
+
+to {
+	-webkit-transform: rotate(360deg);
+	-moz-transform: rotate(360deg);
+	-ms-transform: rotate(360deg);
+	-o-transform: rotate(360deg);
+	transform: rotate(360deg);
+	/*transform: scale(1) rotate(360deg);*/
+}
+
+}
+@
+-o-keyframes spin { /*for O 12.0*/ from { -webkit-transform:rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+	/*transform: scale(1) rotate(0deg);*/
+}
+
+to {
+	-webkit-transform: rotate(360deg);
+	-moz-transform: rotate(360deg);
+	-ms-transform: rotate(360deg);
+	-o-transform: rotate(360deg);
+	transform: rotate(360deg);
+	/*transform: scale(1) rotate(360deg);*/
+}
+
+}
+@
+keyframes spin { /*for IE 10, FF 16, O 12.1*/ from { -webkit-transform:rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+	/*transform: scale(1) rotate(0deg);*/
+}
+
+to {
+	-webkit-transform: rotate(360deg);
+	-moz-transform: rotate(360deg);
+	-ms-transform: rotate(360deg);
+	-o-transform: rotate(360deg);
+	transform: rotate(360deg);
+	/*transform: scale(1) rotate(360deg);*/
+}
+
+}
+#mmosolution .glyphicon-spin-animate {
+	position: absolute;
+	right: 0px;
+	font-size: 1.5em;
+	-webkit-animation: spin .5s infinite linear;
+	-moz-animation: spin .5s infinite linear;
+	-o-animation: spin .5s infinite linear;
+	animation: spin .5s infinite linear;
+}
+
+#checkout-overlay {
+	/*        position: absolute;
                 z-index: 100;
                 width: 100%;
                 height: 100%;
@@ -267,9 +419,6 @@
 
     .customer-groups{
         padding-left: 1em;
-    }
-    #checkout-panel{
-        border-width: 3px;
     }
     #checkout-panel .radio{
         padding-top: 0;
@@ -316,17 +465,17 @@
         background-color: #ffffff;
     }
     /*
+
     #tbl_pament_methods label,#register-form-detail label, #guest-form-detail label{
         white-space: nowrap;
     } */
-
 </style>
-<!--[if gte IE 8]>
+	<!--[if gte IE 8]>
 <style type="text/css">
      
 </style>
 <![endif]-->
-<script type="text/javascript">
+	<script type="text/javascript">
     $(window).bind('scroll', function() {
         if ($(window).scrollTop() > $('#checkout-panel').offset().top - $('#checkout-wait-notification').outerHeight()) {
             $('#checkout-wait-notification').addClass('wait-processing-onepage-fixed');
@@ -351,9 +500,10 @@
         <?php } ?>
     </ul>
     <?php if (!empty($error_warning)) { ?>
-        <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
+        <div class="alert alert-danger">
+				<i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        </div>
+			</div>
     <?php } ?>
 
     <div class="row"><?php echo $column_left; ?>
@@ -369,73 +519,73 @@
             <?php if (!empty($tips['checkout_tip'][$config_language_id])) { ?>
                 
                 <div class="alert alert-warning" role="alert">
-                    <i class="fa fa-lightbulb-o" style="font-size: 1.5em;"></i>&nbsp;<?php echo html_entity_decode($tips['checkout_tip'][$config_language_id]); ?>
+						<i class="fa fa-lightbulb-o" style="font-size: 1.5em;"></i>&nbsp;<?php echo html_entity_decode($tips['checkout_tip'][$config_language_id]); ?>
                 </div>
             <?php } ?>
 <div id="mmosolution">
-            <div class="panel panel-<?php
-            if ($css['checkout_theme'] == 'standar') {
-                echo 'warning';
-            } else {
-                echo $css['checkout_theme'];
-            }
-            ?> " id="checkout-panel" style="<?php
-                 if (!empty($css['checkout_panel_color'])) {
-                     echo "border-color:{$css['checkout_panel_color']}!important;";
-                 }
-                 ?>">
+						<div class="panel panel-<?php
+						if ($css ['checkout_theme'] == 'standar') {
+							echo 'warning';
+						} else {
+							echo $css ['checkout_theme'];
+						}
+						?> " id="checkout-panel" style="<?php
+												if (! empty ( $css ['checkout_panel_color'] )) {
+													echo "border-color:{$css['checkout_panel_color']}!important;";
+												}
+												?>">
 
-<!--<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>-->
-                <div id="checkout-overlay" class="checkout-overlay hidden"></div>
+							<!--<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>-->
+							<div id="checkout-overlay" class="checkout-overlay hidden"></div>
 
-                <div id='checkout-wait-notification' class="wait-processing-onepage hidden"></div>
+							<div id='checkout-wait-notification'
+								class="wait-processing-onepage hidden"></div>
 
-                <div class="panel-heading " style="<?php
-                if (empty($css['checkout_panel_color']) && $css['checkout_theme'] == 'standar') {
-                    echo 'background-color: #FDEBBD; border-color: #FDEBBD;background-image:none;';
-                } else if (!empty($css['checkout_panel_color'])) {
-                    echo "background-color:{$css['checkout_panel_color']}!important;border-color:{$css['checkout_panel_color']}!important;background-image:none;";
-                }
-                ?>border-radius: 0;">
-                    <div class="row">
-                        <div class="col-xs-8">
-                            <h1 class="panel-title" style="font-size: 20px;">
-                                <i class="fa fa-cogs"   style="font-size: 1.5em;"></i>
-                                <strong><?php echo $heading_title; ?></strong>
-                            </h1>
-                        </div>
-                        <div class="col-xs-4 text-right">
+							<div class="panel-heading " style="<?php
+							if (empty ( $css ['checkout_panel_color'] ) && $css ['checkout_theme'] == 'standar') {
+								echo 'background-color: #FDEBBD; border-color: #FDEBBD;background-image:none;';
+							} else if (! empty ( $css ['checkout_panel_color'] )) {
+								echo "background-color:{$css['checkout_panel_color']}!important;border-color:{$css['checkout_panel_color']}!important;background-image:none;";
+							}
+							?>border-radius: 0;">
+								<div class="row">
+									<div class="col-xs-8">
+										<h1 class="panel-title" style="font-size: 20px;">
+											<i class="fa fa-cogs" style="font-size: 1.5em;"></i> <strong><?php echo $heading_title; ?></strong>
+										</h1>
+									</div>
+									<div class="col-xs-4 text-right">
                             <?php if (!empty($mmos_checkout['show_refresh_button'])) { ?>
                             <button id='button-reload'  type="button" class="btn btn-default"
                                         style="<?php
-                                        if (!empty($css['refresh_button_color'])) {
-                                            echo "background-color:{$css['refresh_button_color']}!important;border-color:{$css['refresh_button_color']}!important;background-image:none;";
-                                        }
-                                        ?>">
-                                    <strong><span class="glyphicon glyphicon-refresh"></span></strong>
-                                </button>
+																													if (! empty ( $css ['refresh_button_color'] )) {
+																														echo "background-color:{$css['refresh_button_color']}!important;border-color:{$css['refresh_button_color']}!important;background-image:none;";
+																													}
+																													?>">
+											<strong><span class="glyphicon glyphicon-refresh"></span></strong>
+										</button>
                             <?php } ?>
                         </div>
-                    </div>
-                    <!--            <h1 class="panel-title" style="font-size: 20px;">
+								</div>
+								<!--            <h1 class="panel-title" style="font-size: 20px;">
                                     <span class="glyphicon glyphicon-certificate"></span>&nbsp;<strong><?php echo $heading_title; ?></strong>
                                     <button id='button-reload'  type="button" class="btn btn-default pull-right" title='Refresh'><strong><span class="glyphicon glyphicon-refresh"></span></strong></button>
                                 </h1>-->
-                </div>
+							</div>
 
-                <div class="panel-body" id="checkout-container">
+							<div class="panel-body" id="checkout-container">
                     <?php echo $content; ?>
                 </div>
 
-            </div>
+						</div>
 
-</div>
+					</div>
             <?php echo $content_bottom; ?></div>
         <?php echo $column_right; ?></div>
-</div>
+		</div>
 
 
-<script type="text/javascript"><!--
+		<script type="text/javascript"><!--
 
 
 
@@ -1047,8 +1197,8 @@
         }
 
         function sync_payment_shipping_addresses() {
-            var $payments = $('#payment-existing select[name=\'address_id\']'),
-                    $shippings = $('#shipping-existing select[name=\'address_id\']');
+            var $payments = $('#payment-existing input[name=\'address_id\']:checked'),
+                    $shippings = $('#shipping-existing input[name=\'address_id\']:checked');
             var $source = null, $target = null;
             if ($payments.children('option').length > $shippings.children('option').length) {
                 $source = $payments;
@@ -1069,10 +1219,10 @@
 
             $target.html($select.html());
 
-            if ($('#payment-existing select[name=\'address_id\']>option').length) {
+            if ($('#payment-existing input[name=\'address_id\']').length) {
                 $('#payment-address-options').slideDown();
             }
-            if ($('#shipping-existing select[name=\'address_id\']>option').length) {
+						if ($('#shipping-existing input[name=\'address_id\']').length) {
                 $('#shipping-address-options').slideDown();
             }
         }
@@ -1651,15 +1801,12 @@
             });
 
         });
-
         //ok
-        $('#checkout-container').on('change', '#payment-existing select[name=\'address_id\']', function(event, args) {
-        
+        $('#checkout-container').on('click', '#payment-existing input[name=\'address_id\']', function(event, args) {
             validate_payment_address().done(function() {
                 load_right_content();
             });
         });
-
         //ok
         $('#checkout-container').on('change', '#payment-address input[name=\'payment_address\']', function() {
             if (this.value == 'new') {
@@ -1681,6 +1828,12 @@
                     $('#payment-existing select[name=\'address_id\']>option:first').attr('selected', true);
                 }
                 $('#payment-existing select[name=\'address_id\']').trigger('change');//mark should be processed for shipping address
+                
+                // needchange
+                if (!$('#payment-existing input[name=\'address_id\']:checked').length) {
+                    $('#payment-existing payment-address:first input[name=\'address_id\']').prop('checked', true);
+                }
+                $('#payment-existing input[name=\'address_id\']').trigger('change');//mark should be processed for shipping address
 
             }
         });
@@ -1703,13 +1856,12 @@
             });
         });
 
-        $('#checkout-container').on('change', '#shipping-existing select[name=\'address_id\']', function() {
+        $('#checkout-container').on('click', '#shipping-existing input[name=\'address_id\']', function() {
             validate_shipping_address().done(function() {
                 load_right_content();
             });
 
         });
-
         $('#checkout-container').on('change', '#shipping-address input[name=\'shipping_address\']', function() {//new or existing
             if (this.value == 'new') {
                 $('#shipping-existing').hide();
@@ -1722,10 +1874,10 @@
                 $('#button-shipping-address').hide();
                 $('#shipping-new').hide();
 
-                if (!$('#shipping-existing select[name=\'address_id\']>option:selected').length) {
-                    $('#shipping-existing select[name=\'address_id\']>option:first').attr('selected', true);
+                 if (!$('#shipping-existing input[name=\'address_id\']:selected').length) {
+                    $('#shipping-existing input[name=\'address_id\']:first').prop('checked', true);
                 }
-                $('#shipping-existing select[name=\'address_id\']').attr('disabled', false).trigger('change');//duan
+                $('#shipping-existing input[name=\'address_id\']').attr('disabled', false).trigger('change');//duan
             }
         });
 
@@ -2213,8 +2365,8 @@
             cart_checkout.load_mini_cart();
         });
     });
-    //--></script> 
-<script type="text/javascript"><!--
+    //--></script>
+		<script type="text/javascript"><!--
 
 
                              /* Agree to Terms */
@@ -2255,5 +2407,4 @@
                           return false;
                             });   
                      //--></script>
-
 </div><?php echo $footer; ?>

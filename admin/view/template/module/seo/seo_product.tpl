@@ -2,26 +2,52 @@
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>
-				<td style="width:1px;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked',this.checked);" /></td>
+				<td style="width: 1px;"><input type="checkbox"
+					onclick="$('input[name*=\'selected\']').prop('checked',this.checked);" /></td>
 				<td>Name</td>
 				<td>Model</td>
-				<td>SEO Keyword<button type="button" onclick="generateSEO();" class="btn btn-default">Generate</button></td>
-				<td>Meta Title<button type="button" onclick="generateMetaT();" class="btn btn-default">Generate</button></td>
-				<td>Meta Keywords<button type="button" onclick="generateMetaK();" class="btn btn-default">Generate</button></td>
-				<td>Meta Description<button type="button" onclick="generateMetaD();" class="btn btn-default">Generate</button></td>
+				<td>SEO Keyword
+					<button type="button" onclick="generateSEO();"
+						class="btn btn-default">Generate</button>
+				</td>
+				<td>Meta Title
+					<button type="button" onclick="generateMetaT();"
+						class="btn btn-default">Generate</button>
+				</td>
+				<td>Meta Keywords
+					<button type="button" onclick="generateMetaK();"
+						class="btn btn-default">Generate</button>
+				</td>
+				<td>Meta Description
+					<button type="button" onclick="generateMetaD();"
+						class="btn btn-default">Generate</button>
+				</td>
 			</tr>
 		</thead>
 		<tbody id="products">
 			<?php if ($products) { foreach($products as $key => $product) { ?>
 			<tr id="prod-<?php echo $key; ?>">
-				<td class="product_id"><input name="selected[]" value="<?php echo $product['product_id']; ?>" type="checkbox"></td>
-				<td class="name"><input name="products[<?php echo $product['product_id']; ?>][name]" value="<?php echo $product['name']; ?>" type="text" /></td>
-				<td class="model"><input name="products[<?php echo $product['product_id']; ?>][model]" value="<?php echo $product['model']; ?>" type="text" /></td>
-				<td class="keyword"><input name="products[<?php echo $product['product_id']; ?>][keyword]" value="<?php echo $product['keyword']; ?>" type="text" /></td>
-				<td class="meta_title"><input name="products[<?php echo $product['product_id']; ?>][meta_title]" value="<?php echo $product['meta_title']; ?>" type="text" /></td>
-				<td class="meta_keyword"><input name="products[<?php echo $product['product_id']; ?>][meta_keyword]" value="<?php echo $product['meta_keyword']; ?>" type="text" /></td>
-				<td class="meta_description"><textarea name="products[<?php echo $product['product_id']; ?>][meta_description]" rows="1"><?php echo $product['meta_description']; ?></textarea></td>
-				
+				<td class="product_id"><input name="selected[]"
+					value="<?php echo $product['product_id']; ?>" type="checkbox"></td>
+				<td class="name"><input
+					name="products[<?php echo $product['product_id']; ?>][name]"
+					value="<?php echo $product['name']; ?>" type="text" /></td>
+				<td class="model"><input
+					name="products[<?php echo $product['product_id']; ?>][model]"
+					value="<?php echo $product['model']; ?>" type="text" /></td>
+				<td class="keyword"><input
+					name="products[<?php echo $product['product_id']; ?>][keyword]"
+					value="<?php echo $product['keyword']; ?>" type="text" /></td>
+				<td class="meta_title"><input
+					name="products[<?php echo $product['product_id']; ?>][meta_title]"
+					value="<?php echo $product['meta_title']; ?>" type="text" /></td>
+				<td class="meta_keyword"><input
+					name="products[<?php echo $product['product_id']; ?>][meta_keyword]"
+					value="<?php echo $product['meta_keyword']; ?>" type="text" /></td>
+				<td class="meta_description"><textarea
+						name="products[<?php echo $product['product_id']; ?>][meta_description]"
+						rows="1"><?php echo $product['meta_description']; ?></textarea></td>
+
 			</tr>
 			<?php } } ?>
 		</tbody>

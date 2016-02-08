@@ -1,32 +1,39 @@
 <?php if($tag_layout == 'rotation'): ?>
-    <div class="widget blog-tags">
-    	<div class="widget-header">
-    		<h2 class="widget-title"><span class="<?php echo $titleicon; ?>"></span>&nbsp;<?php echo $title; ?></h2>
-    	</div>
-    	<div class="widget-body content">
+<div class="widget blog-tags">
+	<div class="widget-header">
+		<h2 class="widget-title">
+			<span class="<?php echo $titleicon; ?>"></span>&nbsp;<?php echo $title; ?></h2>
+	</div>
+	<div class="widget-body content">
 
     		<?php if(is_array($tags) && count($tags) > 0): ?>
-            <ul class="weighted" style="font-size: 50%;display: none;" id="weightTags0">   
+            <ul class="weighted" style="font-size: 50%; display: none;"
+			id="weightTags0">   
     			<?php for ($i=0; $i < count($tags); $i++) : ?> 
-    				<?php if(isset($tags[$i])) :	 
-    					$data_weight = rand(1,100);
-    				?>
-    					<li><a href="<?php echo HTTP_SERVER; ?>index.php?route=blog/tag&amp;tag=<?php echo $tags[$i]; ?>" title="" data-weight="<?php echo $data_weight; ?>" style="font-size: 3.16ex"><?php echo ucfirst($tags[$i]); ?></a>
-    					</li>
+    				<?php
+			
+if (isset ( $tags [$i] )) :
+				$data_weight = rand ( 1, 100 );
+				?>
+    					<li><a
+				href="<?php echo HTTP_SERVER; ?>index.php?route=blog/tag&amp;tag=<?php echo $tags[$i]; ?>"
+				title="" data-weight="<?php echo $data_weight; ?>"
+				style="font-size: 3.16ex"><?php echo ucfirst($tags[$i]); ?></a></li>
     				<?php endif; ?>
     			<?php endfor; ?>
     		</ul>
-            <canvas id="tagcanvas0" style="margin-bottom: 20px;width: 100%;min-height: 200px"></canvas>             
+		<canvas id="tagcanvas0"
+			style="margin-bottom: 20px; width: 100%; min-height: 200px"></canvas>             
     		<?php else : ?>
     			<div class="alert alert-warning"><?php echo $not_found; ?></div>
     		<?php endif; ?>
 
     	</div>
-    	<!-- .widget-body -->
-    </div>
-    <!-- .tags -->
+	<!-- .widget-body -->
+</div>
+<!-- .tags -->
 
-    <script type="text/javascript"> 
+<script type="text/javascript"> 
         window.onload = function() {
             TagCanvas.interval = 20;
             TagCanvas.textFont = 'oswald,Arial Black,sans-serif';
@@ -68,22 +75,26 @@
     </script>
 <?php else: ?>
 
-    <div class="widget blog-tags">
-        <div class="widget-header">
-            <h2 class="widget-title"><span class="<?php echo $titleicon; ?>"></span>&nbsp;<?php echo $title; ?></h2>
-        </div>
-        <div class="widget-body content">
+<div class="widget blog-tags">
+	<div class="widget-header">
+		<h2 class="widget-title">
+			<span class="<?php echo $titleicon; ?>"></span>&nbsp;<?php echo $title; ?></h2>
+	</div>
+	<div class="widget-body content">
 
             <?php if(is_array($tags) && count($tags) > 0): ?>
             <ul class="list-unstyled">   
                 <?php for ($i=0; $i < count($tags); $i++) : ?> 
-                    <?php if(isset($tags[$i])) :     
-                        $data_weight = rand(1,100);
-                    ?>
+                    <?php
+			
+if (isset ( $tags [$i] )) :
+				$data_weight = rand ( 1, 100 );
+				?>
 
                     <?php $random_fontsize = rand(12, 18); ?>
-                    <li class="<?php echo ($tags[$i] == $selected) ? 'active' : null; ?>"><a style="font-size: <?php echo $random_fontsize; ?>px" href="<?php echo HTTP_SERVER; ?>index.php?route=blog/tag&amp;tag=<?php echo $tags[$i]; ?>" title="" data-weight="<?php echo $data_weight; ?>"><?php echo ucfirst($tags[$i]); ?></a>
-                    </li>
+                    <li
+				class="<?php echo ($tags[$i] == $selected) ? 'active' : null; ?>"><a style="font-size: <?php echo $random_fontsize; ?>px" href="<?php echo HTTP_SERVER; ?>index.php?route=blog/tag&amp;tag=<?php echo $tags[$i]; ?>" title="" data-weight="<?php echo $data_weight; ?>"><?php echo ucfirst($tags[$i]); ?></a>
+			</li>
                     <?php endif; ?>
                 <?php endfor; ?>
             </ul>            
@@ -92,14 +103,14 @@
             <?php endif; ?>
 
         </div>
-        <!-- .widget-body -->
-    </div>
-    <!-- .tags -->
+	<!-- .widget-body -->
+</div>
+<!-- .tags -->
 
 <?php endif; ?>
 
 <style type="text/css">
-	<?php echo html_entity_decode($custom_style); ?>
+<?php echo html_entity_decode ( $custom_style ); ?>
 </style>
 
 <script type="text/javascript">

@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class MisMatchedChecksumError extends \Exception {}
+class MisMatchedChecksumError extends \Exception {
+}

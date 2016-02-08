@@ -1,15 +1,15 @@
 <modification>
-   <name><![CDATA[<font color="#0000"><b>Pavo Framework 3.0</font>]]></name>
-    <version><![CDATA[<b>1.0</b>]]></version>
-    <author><![CDATA[PavoThemes]]></author>
-    <link><![CDATA[http://www.pavothemes.com]]></link>
-    <code>PAVOFRAMEWORK4</code>    	             
+	<name><![CDATA[<font color="#0000"><b>Pavo Framework 3.0</font>]]></name>
+	<version><![CDATA[<b>1.0</b>]]></version>
+	<author><![CDATA[PavoThemes]]></author>
+	<link><![CDATA[http://www.pavothemes.com]]></link>
+	<code>PAVOFRAMEWORK4</code>
 	<file path="admin/view/template/design/layout_form.tpl">
-			<operation>
-				<search position="replace"><![CDATA[
+		<operation>
+			<search position="replace"><![CDATA[
 				<select name="layout_module[<?php echo $module_row; ?>][position]" class="form-control">
 				]]></search>
-				<add><![CDATA[
+			<add><![CDATA[
 					<select name="layout_module[<?php echo $module_row; ?>][position]" class="form-control">
 					<option value="slideshow"   <?php if ($layout_module['position'] == 'slideshow') { ?>selected="selected"<?php } ?>>
 			 		 	<?php echo ucfirst('slideshow'); ?>
@@ -40,7 +40,7 @@
 			 		 	<?php echo ucfirst('Footer Bottom'); ?>
 			 		 </option>
 				]]></add>
-			</operation>
+		</operation>
 	</file>
 
 	<file path="admin/controller/common/menu.php">
@@ -54,9 +54,9 @@
 			 	 $data['pavo_link'] = $this->url->link('module/themecontrol', 'token=' . $this->session->data['token'], 'SSL');
 			 	  $data['megamenu_link'] = $this->url->link('module/pavmegamenu', 'token=' . $this->session->data['token'], 'SSL');
 			  ]]>
-			</add>	
-		</operation>		
-	</file>		
+			</add>
+		</operation>
+	</file>
 	<file path="admin/view/template/common/menu.tpl">
 		<operation>
 			<search position="replace">
@@ -74,8 +74,8 @@
 			 	  </li>	
 				  <li id="sale">
 			  ]]>
-			</add>	
-		</operation>		
+			</add>
+		</operation>
 	</file>
 	<file path="catalog/language/english/common/cart.php">
 		<operation>
@@ -84,9 +84,9 @@
 			</search>
 			<add>
 			 <![CDATA[$_['text_items']    = '%s item(s)';]]>
-			</add>	
-		</operation>		
-	</file>	
+			</add>
+		</operation>
+	</file>
 
 	<file path="catalog/language/english/checkout/cart.php">
 		<operation>
@@ -95,10 +95,10 @@
 			</search>
 			<add>
 			 <![CDATA[$_['text_items']               = '%s item(s)';]]>
-			</add>	
-		</operation>		
+			</add>
+		</operation>
 	</file>
-	
+
 	<file path="catalog/language/english/common/cart.php">
 		<operation>
 			<search position="replace">
@@ -106,9 +106,9 @@
 			</search>
 			<add>
 			 <![CDATA[$_['text_items']    = '%s item(s)';]]>
-			</add>	
-		</operation>		
-	</file>	
+			</add>
+		</operation>
+	</file>
 
 	<file path="catalog/language/english/checkout/cart.php">
 		<operation>
@@ -117,10 +117,10 @@
 			</search>
 			<add>
 			 <![CDATA[$_['text_items']               = '%s item(s)';]]>
-			</add>	
-		</operation>		
+			</add>
+		</operation>
 	</file>
-	
+
 	<file path="catalog/language/english/common/cart.php">
 		<operation>
 			<search position="replace">
@@ -128,9 +128,9 @@
 			</search>
 			<add>
 			 <![CDATA[$_['text_items']    = '%s item(s)';]]>
-			</add>	
-		</operation>		
-	</file>	
+			</add>
+		</operation>
+	</file>
 
 	<file path="catalog/language/english/checkout/cart.php">
 		<operation>
@@ -139,10 +139,10 @@
 			</search>
 			<add>
 			 <![CDATA[$_['text_items']               = '%s item(s)';]]>
-			</add>	
-		</operation>		
+			</add>
+		</operation>
 	</file>
-	
+
 	<file path="catalog/language/english/common/cart.php">
 		<operation>
 			<search position="replace">
@@ -150,9 +150,9 @@
 			</search>
 			<add>
 			 <![CDATA[$_['text_items']    = '%s item(s)';]]>
-			</add>	
-		</operation>		
-	</file>	
+			</add>
+		</operation>
+	</file>
 	<file path="catalog/language/english/checkout/cart.php">
 		<operation>
 			<search position="replace">
@@ -160,10 +160,10 @@
 			</search>
 			<add>
 			 <![CDATA[$_['text_items']               = '%s item(s)';]]>
-			</add>	
-		</operation>		
+			</add>
+		</operation>
 	</file>
-	
-	
+
+
 </modification>					   
 					   

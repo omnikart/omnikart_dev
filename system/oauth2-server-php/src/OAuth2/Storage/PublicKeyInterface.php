@@ -8,9 +8,8 @@ namespace OAuth2\Storage;
  *
  * @author Brent Shaffer <bshafs at gmail dot com>
  */
-interface PublicKeyInterface
-{
-    public function getPublicKey($client_id = null);
-    public function getPrivateKey($client_id = null);
-    public function getEncryptionAlgorithm($client_id = null);
+interface PublicKeyInterface {
+	public function getPublicKey($client_id = null);
+	public function getPrivateKey($client_id = null);
+	public function getEncryptionAlgorithm($client_id = null);
 }

@@ -25,32 +25,37 @@
  * @version    1.8.0, 2014-03-02
  */
 
-
-/** PHPExcel root directory */
-if (!defined('PHPEXCEL_ROOT')) {
+/**
+ * PHPExcel root directory
+ */
+if (! defined ( 'PHPEXCEL_ROOT' )) {
 	/**
+	 *
 	 * @ignore
+	 *
 	 */
-	define('PHPEXCEL_ROOT', dirname(__FILE__) . '/../../');
-	require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
+	define ( 'PHPEXCEL_ROOT', dirname ( __FILE__ ) . '/../../' );
+	require (PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
 /**
  * PHPExcel_Reader_DefaultReadFilter
  *
- * @category   PHPExcel
- * @package    PHPExcel_Reader
- * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @category PHPExcel
+ * @package PHPExcel_Reader
+ * @copyright Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Reader_DefaultReadFilter implements PHPExcel_Reader_IReadFilter
-{
+class PHPExcel_Reader_DefaultReadFilter implements PHPExcel_Reader_IReadFilter {
 	/**
 	 * Should this cell be read?
 	 *
-	 * @param 	$column		String column index
-	 * @param 	$row			Row index
-	 * @param	$worksheetName	Optional worksheet name
-	 * @return	boolean
+	 * @param $column String
+	 *        	column index
+	 * @param $row Row
+	 *        	index
+	 * @param $worksheetName Optional
+	 *        	worksheet name
+	 * @return boolean
 	 */
 	public function readCell($column, $row, $worksheetName = '') {
 		return true;

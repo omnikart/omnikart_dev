@@ -1,5 +1,6 @@
 <?php if ( isset($raw_html) ) { ?>
-<div class="widget-raw-html box <?php echo $addition_cls ?>  <?php if( isset($stylecls)&&$stylecls ) { ?>box-<?php echo $stylecls;?><?php } ?>">
+<div
+	class="widget-raw-html box <?php echo $addition_cls ?>  <?php if( isset($stylecls)&&$stylecls ) { ?>box-<?php echo $stylecls;?><?php } ?>">
 	<?php if ( isset($widget_heading)&&!empty($widget_heading) ) { ?>
 	<div class="widget-heading title_block">
 		<?php echo $widget_heading?>

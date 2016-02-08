@@ -2,47 +2,55 @@
 
 <?php
 
-	$HTTP_URL = '';
-	
-	if( class_exists( 'MijoShop' ) ) {
-		$HTTP_URL = HTTP_CATALOG . 'opencart/admin/';
-	}
+$HTTP_URL = '';
+
+if (class_exists ( 'MijoShop' )) {
+	$HTTP_URL = HTTP_CATALOG . 'opencart/admin/';
+}
 
 ?>
 
-<link type="text/css" href="<?php echo $HTTP_URL; ?>view/stylesheet/mf/css/bootstrap.css" rel="stylesheet" />
-<link type="text/css" href="<?php echo $HTTP_URL; ?>view/stylesheet/mf/css/style.css" rel="stylesheet" />
+<link type="text/css"
+	href="<?php echo $HTTP_URL; ?>view/stylesheet/mf/css/bootstrap.css"
+	rel="stylesheet" />
+<link type="text/css"
+	href="<?php echo $HTTP_URL; ?>view/stylesheet/mf/css/style.css"
+	rel="stylesheet" />
 
 <script type="text/javascript">
 	$ = jQuery = $.noConflict(true);
 </script>
 
-<script type="text/javascript" src="<?php echo $HTTP_URL; ?>view/stylesheet/mf/js/jquery.min.js"></script>
+<script type="text/javascript"
+	src="<?php echo $HTTP_URL; ?>view/stylesheet/mf/js/jquery.min.js"></script>
 
 <script type="text/javascript">
 	var $$			= $.noConflict(true),
 		$jQuery		= $$;
 </script>
 
-<script type="text/javascript" src="<?php echo $HTTP_URL; ?>view/stylesheet/mf/js/bootstrap.js"></script>
+<script type="text/javascript"
+	src="<?php echo $HTTP_URL; ?>view/stylesheet/mf/js/bootstrap.js"></script>
 
 <div id="content">
 	<div class="breadcrumb">
 		<?php foreach( $breadcrumbs as $breadcrumb ) { ?>
-			<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+			<?php echo $breadcrumb['separator']; ?><a
+			href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
 		<?php } ?>
 	</div>
-	
+
 	<div class="mega-filter-pro">
 		<div class="box">
 			<div class="heading">
-				<h1><img src="view/image/module.png" alt="" /> <?php echo $heading_title; ?></h1>
+				<h1>
+					<img src="view/image/module.png" alt="" /> <?php echo $heading_title; ?></h1>
 			</div>
-			
+
 			<div class="content">
 				<div class="text-center"><?php echo $text_installation_in_progress; ?></div>
 				<div class="progress">
-					<div class="progress-bar" style="width:0%"></div>
+					<div class="progress-bar" style="width: 0%"></div>
 				</div>
 				<div class="text-center progress-info"><?php echo $text_loading; ?>...</div>
 			</div>

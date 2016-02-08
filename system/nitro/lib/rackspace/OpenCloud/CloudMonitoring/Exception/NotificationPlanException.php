@@ -2,6 +2,5 @@
 
 namespace OpenCloud\CloudMonitoring\Exception;
 
-class NotificationPlanException extends CloudMonitoringException
-{
+class NotificationPlanException extends CloudMonitoringException {
 }

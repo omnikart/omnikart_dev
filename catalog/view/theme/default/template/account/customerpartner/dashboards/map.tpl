@@ -1,14 +1,19 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title"><i class="fa fa-eye"></i> <?php echo $heading_title; ?></h3>
-  </div>
-  <div class="panel-body">
-    <div id="vmap" style="width: 100%; height: 260px;"></div>
-  </div>
+	<div class="panel-heading">
+		<h3 class="panel-title">
+			<i class="fa fa-eye"></i> <?php echo $heading_title; ?></h3>
+	</div>
+	<div class="panel-body">
+		<div id="vmap" style="width: 100%; height: 260px;"></div>
+	</div>
 </div>
-<link type="text/css" href="admin/view/javascript/jquery/jqvmap/jqvmap.css" rel="stylesheet" media="screen" />
-<script type="text/javascript" src="admin/view/javascript/jquery/jqvmap/jquery.vmap.js"></script> 
-<script type="text/javascript" src="admin/view/javascript/jquery/jqvmap/maps/jquery.vmap.world.js"></script> 
+<link type="text/css"
+	href="admin/view/javascript/jquery/jqvmap/jqvmap.css" rel="stylesheet"
+	media="screen" />
+<script type="text/javascript"
+	src="admin/view/javascript/jquery/jqvmap/jquery.vmap.js"></script>
+<script type="text/javascript"
+	src="admin/view/javascript/jquery/jqvmap/maps/jquery.vmap.world.js"></script>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$.ajax({
@@ -44,4 +49,4 @@ $(document).ready(function() {
         }
 	});			
 });
-//--></script> 
+//--></script>

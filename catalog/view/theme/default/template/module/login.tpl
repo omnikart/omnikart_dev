@@ -1,8 +1,15 @@
 <?php echo $text_email; ?><br />
-<input id="marketinsg-email" type="text" name="email" value="" class="form-control" /><br /><br />
+<input id="marketinsg-email" type="text" name="email" value=""
+	class="form-control" />
+<br />
+<br />
 <?php echo $text_password; ?><br />
-<input id="marketinsg-password" type="password" name="password" value="" class="form-control" /><br />
-<a href="<?php echo $forgotten; ?>"><?php echo $text_forgotten; ?></a><br /><br />
+<input id="marketinsg-password" type="password" name="password" value=""
+	class="form-control" />
+<br />
+<a href="<?php echo $forgotten; ?>"><?php echo $text_forgotten; ?></a>
+<br />
+<br />
 <a class="btn btn-primary" id="button-login"><span><?php echo $text_login; ?></span></a>
 
 
@@ -42,4 +49,4 @@ $('#marketinsg-password').on('keydown', function(e) {
 		$('#button-login').click();
 	}
 });
-//--></script> 
+//--></script>

@@ -1,5 +1,3 @@
 <?php
-class ModelModuleWay2mint extends Model
-{
-	
+class ModelModuleWay2mint extends Model {
 }

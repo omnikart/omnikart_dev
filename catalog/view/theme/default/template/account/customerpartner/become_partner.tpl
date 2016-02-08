@@ -1,16 +1,18 @@
 <?php echo $header; ?><div id="columns">
-<div class="container">
-  <ul class="breadcrumb">
+	<div class="container">
+		<ul class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
     <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
     <?php } ?>
   </ul>
 
   <?php if ($success) { ?>
-    <div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> <?php echo $success; ?></div>
+    <div class="alert alert-success">
+			<i class="fa fa-exclamation-circle"></i> <?php echo $success; ?></div>
   <?php } ?>
   <?php if ($error_warning) { ?>
-    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?></div>
+    <div class="alert alert-danger">
+			<i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?></div>
   <?php } ?>
 
   <div class="row"><?php echo $column_left; ?>
@@ -27,59 +29,70 @@
       <h1>
         <?php echo $heading_title; ?>
         <div class="pull-right">
-          <a href="<?php echo $back; ?>" data-toggle="tooltip" title="<?php echo $button_back; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a>
-        </div>
-      </h1>
-      
-      <fieldset>
-        <legend><i class="fa fa-list"></i> <?php echo $heading_title; ?></legend>
+						<a href="<?php echo $back; ?>" data-toggle="tooltip"
+							title="<?php echo $button_back; ?>" class="btn btn-default"><i
+							class="fa fa-reply"></i></a>
+					</div>
+				</h1>
+
+				<fieldset>
+					<legend>
+						<i class="fa fa-list"></i> <?php echo $heading_title; ?></legend>
       <?php if($isMember) { ?>
         <?php if(!$in_process){  ?>          
-        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data"  class="form-horizontal">
+        <form action="<?php echo $action; ?>" method="post"
+						enctype="multipart/form-data" class="form-horizontal">
 
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-shoppartner"><span data-toggle="tooltip" title="<?php echo $text_shop_name_info; ?>"><?php echo $text_shop_name; ?></span></label>
-            <div class="col-sm-10">
+						<div class="form-group required">
+							<label class="col-sm-2 control-label" for="input-shoppartner"><span
+								data-toggle="tooltip"
+								title="<?php echo $text_shop_name_info; ?>"><?php echo $text_shop_name; ?></span></label>
+							<div class="col-sm-10">
 
-              <div class="input-group"> 
-                <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                <input type="text" name="shoppartner" value="<?php echo $shoppartner; ?>" id="input-shoppartner" class="form-control" />
-              </div>
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-search"></i></span>
+									<input type="text" name="shoppartner"
+										value="<?php echo $shoppartner; ?>" id="input-shoppartner"
+										class="form-control" />
+								</div>
 
               <?php if ($error_shoppartner) { ?>
               <div class="text-danger"><?php echo $error_shoppartner; ?></div>
               <?php } ?>
             </div>
-          </div>
+						</div>
 
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-entry"><span data-toggle="tooltip" title="<?php echo $text_say_info; ?>"><?php echo $text_say; ?></span></label>
-            <div class="col-sm-10">
-              <textarea id="input-entry" name="description" class="form-control" rows="3"><?php echo $description; ?></textarea>
+						<div class="form-group required">
+							<label class="col-sm-2 control-label" for="input-entry"><span
+								data-toggle="tooltip" title="<?php echo $text_say_info; ?>"><?php echo $text_say; ?></span></label>
+							<div class="col-sm-10">
+								<textarea id="input-entry" name="description"
+									class="form-control" rows="3"><?php echo $description; ?></textarea>
               <?php if ($error_description) { ?>
               <div class="text-danger"><?php echo $error_description; ?></div>
               <?php } ?>
             </div>
-          </div>
+						</div>
 
-          <div class="pull-right">
-            <input type="submit" value="<?php echo $button_continue; ?>" class="btn btn-primary"/>
-          </div> 
+						<div class="pull-right">
+							<input type="submit" value="<?php echo $button_continue; ?>"
+								class="btn btn-primary" />
+						</div>
 
-        </form>
+					</form>
 
         <?php }else {?>             
-          <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <?php echo $text_delay; ?></div>
+          <div class="alert alert-info">
+						<i class="fa fa-exclamation-circle"></i> <?php echo $text_delay; ?></div>
         <?php } ?>
       <?php } else { ?>
-        <div class="text-danger">
-          Warning: You are not authorised to view this page, Please contact to site administrator!
-        </div>
+        <div class="text-danger">Warning: You are not authorised to view
+						this page, Please contact to site administrator!</div>
       <?php } ?>
     </fieldset>
-  </div>
+			</div>
 <?php echo $column_right; ?></div>
-</div>
+	</div>
 
 <?php if(!$in_process){  ?>  
 <script>

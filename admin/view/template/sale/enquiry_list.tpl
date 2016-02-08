@@ -197,7 +197,6 @@
 
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog" style="width: 1200px;">
-
     <!-- Modal content-->
     <div class="modal-content" >
       <div class="modal-header">
@@ -225,7 +224,7 @@
                 </tr>
                 <tr style="color: #0000FF;">  
                   <td colspan="6"><h1>Customer Details</h1></td>
-                  <td colspan="6"><h1>Information</h1</td>
+                  <td colspan="6"><h1>Information</h1></td>
                 </tr>  
 				<tr>
 				  <td colspan="6">

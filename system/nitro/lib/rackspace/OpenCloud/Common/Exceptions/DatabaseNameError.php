@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class DatabaseNameError extends \Exception {}
+class DatabaseNameError extends \Exception {
+}

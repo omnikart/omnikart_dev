@@ -1,32 +1,33 @@
 <!doctype html>
 
 <html>
-  <head>
-    <title>Custom interval</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    
-    <style>
-      body {
-        text-align: center;
-      }
-      
-      #g1, #g2, #g3 {
-        width:200px; height:160px;
-        display: inline-block;
-        margin: 1em;
-      }
-      
-      p {
-        display: block;
-        width: 450px;
-        margin: 2em auto;
-        text-align: left;
-      }
-    </style>
-    
-    <script src="resources/js/raphael.2.1.0.min.js"></script>
-    <script src="resources/js/justgage.1.0.1.min.js"></script>
-    <script>
+<head>
+<title>Custom interval</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style>
+body {
+	text-align: center;
+}
+
+#g1, #g2, #g3 {
+	width: 200px;
+	height: 160px;
+	display: inline-block;
+	margin: 1em;
+}
+
+p {
+	display: block;
+	width: 450px;
+	margin: 2em auto;
+	text-align: left;
+}
+</style>
+
+<script src="resources/js/raphael.2.1.0.min.js"></script>
+<script src="resources/js/justgage.1.0.1.min.js"></script>
+<script>
       var g1, g2, g3;
       
       window.onload = function(){
@@ -65,16 +66,15 @@
       };
     </script>
 
-	</head>
-  <body>    
-    <div id="g1"></div>
-    <div id="g2"></div>
-    <div id="g3"></div>
-    <p>
-      You need to measure, say, between 350 and 980? No problem, just tell it to justGage. Displayed value and color are calculated as a percentage in defined range, with optional min and max labels shown.
-    </p>
-    <p>
-      Also, if displayed value is out of range, relax and kick your feet up - justGage will take care of it for you.
-    </p>
-  </body>
+</head>
+<body>
+	<div id="g1"></div>
+	<div id="g2"></div>
+	<div id="g3"></div>
+	<p>You need to measure, say, between 350 and 980? No problem, just
+		tell it to justGage. Displayed value and color are calculated as a
+		percentage in defined range, with optional min and max labels shown.</p>
+	<p>Also, if displayed value is out of range, relax and kick your
+		feet up - justGage will take care of it for you.</p>
+</body>
 </html>

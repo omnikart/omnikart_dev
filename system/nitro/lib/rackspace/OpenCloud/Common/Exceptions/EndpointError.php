@@ -2,4 +2,5 @@
 
 namespace OpenCloud\Common\Exceptions;
 
-class EndpointError extends \Exception {}
+class EndpointError extends \Exception {
+}

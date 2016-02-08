@@ -28,38 +28,35 @@
 /**
  * PHPExcel_Shared_Escher_DggContainer_BstoreContainer
  *
- * @category   PHPExcel
- * @package    PHPExcel_Shared_Escher
- * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @category PHPExcel
+ * @package PHPExcel_Shared_Escher
+ * @copyright Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Shared_Escher_DggContainer_BstoreContainer
-{
+class PHPExcel_Shared_Escher_DggContainer_BstoreContainer {
 	/**
-	 * BLIP Store Entries. Each of them holds one BLIP (Big Large Image or Picture)
+	 * BLIP Store Entries.
+	 * Each of them holds one BLIP (Big Large Image or Picture)
 	 *
 	 * @var array
 	 */
-	private $_BSECollection = array();
-
+	private $_BSECollection = array ();
+	
 	/**
 	 * Add a BLIP Store Entry
 	 *
-	 * @param PHPExcel_Shared_Escher_DggContainer_BstoreContainer_BSE $BSE
+	 * @param PHPExcel_Shared_Escher_DggContainer_BstoreContainer_BSE $BSE        	
 	 */
-	public function addBSE($BSE)
-	{
-		$this->_BSECollection[] = $BSE;
-		$BSE->setParent($this);
+	public function addBSE($BSE) {
+		$this->_BSECollection [] = $BSE;
+		$BSE->setParent ( $this );
 	}
-
+	
 	/**
 	 * Get the collection of BLIP Store Entries
 	 *
 	 * @return PHPExcel_Shared_Escher_DggContainer_BstoreContainer_BSE[]
 	 */
-	public function getBSECollection()
-	{
+	public function getBSECollection() {
 		return $this->_BSECollection;
 	}
-
 }

@@ -1,23 +1,32 @@
-<div class="widget-accordion box <?php $addition_cls?> <?php if ( isset($stylecls)&&$stylecls) { ?>box-<?php echo $stylecls; ?><?php } ?>" id="newsletter_<?php echo $position.$module;?>">
-		<form id="formNewLestter<?php echo $module?>" method="post" action="<?php echo $action; ?>" class="formNewLestter">
-			<div class="content">
-				<div class="wapper">
-					<div class="description">
-						<span class="title"><?php echo $widget_heading?></span>
-						<br/>
+<div
+	class="widget-accordion box <?php $addition_cls?> <?php if ( isset($stylecls)&&$stylecls) { ?>box-<?php echo $stylecls; ?><?php } ?>"
+	id="newsletter_<?php echo $position.$module;?>">
+	<form id="formNewLestter<?php echo $module?>" method="post"
+		action="<?php echo $action; ?>" class="formNewLestter">
+		<div class="content">
+			<div class="wapper">
+				<div class="description">
+					<span class="title"><?php echo $widget_heading?></span> <br />
 						<?php echo html_entity_decode( $description );?></div>
-					<div class="input-form">
-						<input type="text" class="form-control input-md inputNew" <?php if(!isset($customer_email)): ?> onblur="javascript:if(this.value=='')this.value='<?php echo $this->language->get("default_input_text");?>';" onfocus="javascript:if(this.value=='<?php echo $this->language->get("default_input_text");?>')this.value='';"<?php endif; ?> value="<?php echo isset($customer_email)?$customer_email:$this->language->get("default_input_text");?>" size="18" name="email">
-					</div>
-					<div class="button-submit">
-							<button type="submit" name="submitNewsletter" class="btn btn-outline"><?php echo $this->language->get("button_subscribe");?></button>
-						</div>	
-					<input type="hidden" value="1" name="action">
-					<div class="valid"></div>
+				<div class="input-form">
+					<input type="text" class="form-control input-md inputNew"
+						<?php if(!isset($customer_email)): ?>
+						onblur="javascript:if(this.value=='')this.value='<?php echo $this->language->get("default_input_text");?>';"
+						onfocus="javascript:if(this.value=='<?php echo $this->language->get("default_input_text");?>')this.value='';"
+						<?php endif; ?>
+						value="<?php echo isset($customer_email)?$customer_email:$this->language->get("default_input_text");?>"
+						size="18" name="email">
 				</div>
-			</div>	
+				<div class="button-submit">
+					<button type="submit" name="submitNewsletter"
+						class="btn btn-outline"><?php echo $this->language->get("button_subscribe");?></button>
+				</div>
+				<input type="hidden" value="1" name="action">
+				<div class="valid"></div>
+			</div>
+		</div>
 
-		</form>
+	</form>
 </div>
 
 <script type="text/javascript"><!--

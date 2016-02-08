@@ -331,7 +331,7 @@ class ModelAccountCustomerpartner extends Model {
 		return($sql->row);
 	}
 	
-	public function getProduct($product_id,$vendor_id = 0) {
+	public function getProduct($product_id,$vendor_id = 0,$id = 0) {
 
 		if ($vendor_id) $vendor_id = $vendor_id;
 		else $vendor_id = $this->getuserseller();
@@ -393,6 +393,49 @@ class ModelAccountCustomerpartner extends Model {
 		}
 	}
 
+	public function getSupplierProduct($product_id,$vendor_id = 0,$id = 0) {
+
+		if ($vendor_id) $vendor_id = $vendor_id;
+		else $vendor_id = $this->getuserseller();
+
+		$query = $this->db->query("SELECT DISTINCT cp2p.id, cp2p.product_id, cp2p.sku, cp2p.quantity, cp2p.stock_status_id, cp2p.minimum, cp2p.shipping, cp2p.weight, cp2p.length, cp2p.width, cp2p.height, cp2p.length_class_id, cp2p.unit_class_id, cp2p.edit, cp2p.viewed, cp2p.sort_order, cp2p.status, cp2p.date_available, cp2p.weight_class_id, cp2p.length_class_id, cp2p.unit_class_id, cp2p.date_added, cp2p.date_modified, IFNULL((SELECT cppd.price FROM " . DB_PREFIX . "cp_product_discount cppd WHERE (cppd.id = cp2p.id) AND (cppd.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AND (cppd.quantity = '1') AND ((cppd.date_start = '0000-00-00' OR cppd.date_start < NOW()) AND (cppd.date_end = '0000-00-00' OR cppd.date_end > NOW())) ORDER BY cppd.priority ASC, cppd.price ASC LIMIT 1),cp2p.price) AS price, IFNULL((SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = cp2p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "'), 'Not in Stock') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE cp2p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT ucd.unit FROM " . DB_PREFIX . "unit_class_description ucd WHERE cp2p.unit_class_id = ucd.unit_class_id AND ucd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS unit_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE cp2p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class FROM ".DB_PREFIX."customerpartner_to_product cp2p WHERE cp2p.product_id=" . (int)$product_id . " AND cp2p.customer_id=" . (int)$vendor_id ." AND cp2p.date_available <= NOW() AND cp2p.status=1");
+		
+		if ($query->num_rows) {
+			return array(
+				'id'       				 => $query->row['id'],//
+				'product_id'       => $query->row['product_id'],//
+				'sku'              => $query->row['sku'],//
+				'price'            => $query->row['price'],//
+				'quantity'         => $query->row['quantity'],//
+				'stock_status_id'  => $query->row['stock_status_id'],
+				'minimum'          => $query->row['minimum'], //
+				'shipping'         => $query->row['shipping'],
+				'date_available'   => $query->row['date_available'], //
+				'weight'           => $query->row['weight'], //
+				'weight_class_id'  => $query->row['weight_class_id'], //
+				'length'           => $query->row['length'], //
+				'width'            => $query->row['width'], //
+				'height'           => $query->row['height'], //
+				'length_class_id'  => $query->row['length_class_id'], //
+				'unit_class_id'    => $query->row['unit_class_id'],
+				'status'           => $query->row['status'],
+				'edit'             => $query->row['edit'],
+				'sort_order'       => $query->row['sort_order'],//
+				'date_added'       => $query->row['date_added'],
+				'date_modified'    => $query->row['date_modified'],
+				'stock_status'     => $query->row['stock_status'],//
+				'weight_class'     => $query->row['weight_class'],//
+				'length_class'     => $query->row['length_class'],//
+				'unit_class'     	 => $query->row['unit_class'],//
+			);
+		} else {
+			return false;
+		}
+	}
+
+
+
+
 	public function getProductsSeller($data = array()) {
 
 		$sql = "SELECT p.product_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2p.product_id = p.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
@@ -401,7 +444,7 @@ class ModelAccountCustomerpartner extends Model {
 			$sql .= " LEFT JOIN " . DB_PREFIX ."product_to_category p2c ON (p.product_id = p2c.product_id)";
 		}
 
-		$sql .= " WHERE p.status<>0 AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
+		$sql .= " WHERE p.status<>0 AND p.status<>2 AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
 
 		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {		
 			$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
@@ -636,7 +679,23 @@ class ModelAccountCustomerpartner extends Model {
 		return $query->row?$query->row['total']:0;
 	}
 	
-	
+	public function getSupplierProductOptions($id){
+		$query = $this->db->query("SELECT * FROM `".DB_PREFIX."customerpartner_to_product_option` WHERE id='" . (int)$id . "'");
+		$option_values = array();
+		if ($query->num_rows){
+			foreach ($query->rows as $option_value) {
+				$option_values[$option_value['product_option_value_id']] = array(
+					'product_option_value_id'=>$option_value['product_option_value_id'],
+					'product_id'=>$option_value['product_id'],
+					'id'=>$option_value['id'],
+					'sku'=>$option_value['sku'],
+					'price'=>$option_value['price'],
+					'quantity'=>$option_value['quantity']
+				);
+			}
+		}
+		return $option_values;
+	}
 	
 	public function deleteProduct($product_id) {
 
@@ -888,6 +947,15 @@ class ModelAccountCustomerpartner extends Model {
 				$this->load->model('tool/nitro');
 				$this->model_tool_nitro->clearProductCache($product['product_id']);
 				$this->db->query("UPDATE `".DB_PREFIX."customerpartner_to_product` SET status = '".(int)$product['status']."', price = '".(float)$product['price']."', quantity = '".(int)$product['quantity']."', minimum = '".(int)$product['minimum']."', stock_status_id = '".(int)$product['stock_status_id']."' WHERE product_id = '".(int)$product['product_id']."' AND id = '".(int)$product['id']."' AND customer_id = '".(int)$sellerId."'");
+
+				$implode = array();
+				$this->db->query("DELETE FROM `".DB_PREFIX."customerpartner_to_product_option` WHERE id='" . (int)$product['id'] . "'");
+				if (isset($product['options'])) {
+					foreach ($product['options'] as $product_option_value_id => $option_value) {
+						$implode[] = "('" . (int)$product_option_value_id . "','" . (int)$product['product_id'] . "','" . (int)$product['id'] . "','" . $option_value['sku'] . "','" . (int)$option_value['price'] . "','" . (int)$option_value['quantity'] . "')";		
+					}
+					$this->db->query("INSERT INTO `".DB_PREFIX."customerpartner_to_product_option` (`product_option_value_id`,`product_id`,`id`,`sku`,`price`,`quantity`) VALUES " . implode(",",$implode));
+				}
 			}			
 		}
 	}
@@ -1441,105 +1509,114 @@ class ModelAccountCustomerpartner extends Model {
 	}		
 
 	public function getEnquiries($data) {
-		$enquiries = array();
-		$sql = "SELECT e2s.enquiry_id FROM ".DB_PREFIX ."enquiry_to_supplier e2s LEFT JOIN ".DB_PREFIX."enquiry e ON (e.enquiry_id=e2s.enquiry_id) LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e2s.supplier_id='" . $data['customer_id'] . "'";
-		if (isset($data['filter_name']) && $data['filter_name']){
+		$enquiries = array ();
+		if (isset ( $data ['seller_id'] ))
+			$sql = "SELECT e2s.enquiry_id FROM " . DB_PREFIX . "enquiry_to_supplier e2s LEFT JOIN " . DB_PREFIX . "enquiry e ON (e.enquiry_id=e2s.enquiry_id) LEFT JOIN " . DB_PREFIX . "customer c ON (e.customer_id = c.customer_id) WHERE e2s.supplier_id='" . $data ['seller_id'] . "'";
+		else
+			$sql = "SELECT * FROM " . DB_PREFIX . "enquiry WHERE customer_id='" . $data ['customer_id'] . "'";
+		
+		if (isset ( $data ['filter_name'] ) && $data ['filter_name']) {
 			$sql .= " AND  (";
-			$implode = array();
-			foreach (explode(' ',$data['filter_name']) as $name) {
-				$implode[] = "(c.firstname LIKE '%".$name."%' OR c.lastname LIKE '%".$name."%' OR c.email LIKE '%".$name."%')";
+			$implode = array ();
+			foreach ( explode ( ' ', $data ['filter_name'] ) as $name ) {
+				$implode [] = "(c.firstname LIKE '%" . $name . "%' OR c.lastname LIKE '%" . $name . "%' OR c.email LIKE '%" . $name . "%')";
 			}
-			$sql .= implode(' AND ',$implode).") ";
+			$sql .= implode ( ' AND ', $implode ) . ") ";
 		}
-		if (isset($data['start']) || isset($data['limit'])) {
-			if ($data['start'] < 0) {
-				$data['start'] = 0;
+		if (isset ( $data ['start'] ) || isset ( $data ['limit'] )) {
+			if ($data ['start'] < 0) {
+				$data ['start'] = 0;
 			}
-		
-			if ($data['limit'] < 1) {
-				$data['limit'] = 20;
+			
+			if ($data ['limit'] < 1) {
+				$data ['limit'] = 20;
 			}
-		
-			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+			
+			$sql .= " LIMIT " . ( int ) $data ['start'] . "," . ( int ) $data ['limit'];
 		}
 		
+		$query = $this->db->query ( $sql );
 		
-		$query = $this->db->query($sql);
-
-		foreach ($query->rows as $enquiry_id) {
-			$enquiry = array();
-			$query2 = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry e LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . $enquiry_id['enquiry_id'] . "'");
-			$enquiry['customer_id'] = $query2->row['customer_id'];
-			$enquiry['postcode'] = $query2->row['postcode'];
-			$enquiry['status'] = $query2->row['status'];
-			$enquiry['date_added'] = $query2->row['date_added'];
-			$enquiry['firstname'] = $query2->row['firstname'];
-			$enquiry['lastname'] = $query2->row['lastname'];
-			$enquiry['email'] = $query2->row['email'];
-			$enquiry['telephone'] = $query2->row['telephone'];
-			$enquiry['enquiry_id'] = $enquiry_id['enquiry_id'];
-				
-			$enquiry['terms'] = array();
+		foreach ( $query->rows as $enquiry_id ) {
+			$enquiry = array ();
+			$query2 = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry e LEFT JOIN " . DB_PREFIX . "customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . $enquiry_id ['enquiry_id'] . "'" );
+			$enquiry ['customer_id'] = $query2->row ['customer_id'];
+			$enquiry ['postcode'] = $query2->row ['postcode'];
+			$enquiry ['status'] = $query2->row ['status'];
+			$enquiry ['date_added'] = $query2->row ['date_added'];
+			$enquiry ['firstname'] = $query2->row ['firstname'];
+			$enquiry ['lastname'] = $query2->row ['lastname'];
+			$enquiry ['email'] = $query2->row ['email'];
+			$enquiry ['telephone'] = $query2->row ['telephone'];
+			$enquiry ['enquiry_id'] = $enquiry_id ['enquiry_id'];
 			
-			$query2 = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry_term et WHERE et.enquiry_id='" . $enquiry_id['enquiry_id'] . "'");
+			$enquiry ['terms'] = array ();
 			
-			foreach ($query2->rows as $term) {
-				if ($term['term_type']=='payment') {
-					$term_query = $query = $this->db->query("SELECT name FROM ".DB_PREFIX."payment_term WHERE payment_term_id='".(int)$term['term_value']."'");
-					$term['term_value'] = $term_query->row['name']; 
+			$query2 = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry_term et WHERE et.enquiry_id='" . $enquiry_id ['enquiry_id'] . "'" );
+			
+			foreach ( $query2->rows as $term ) {
+				if ($term ['term_type'] == 'payment') {
+					$term_query = $query = $this->db->query ( "SELECT name FROM " . DB_PREFIX . "payment_term WHERE payment_term_id='" . ( int ) $term ['term_value'] . "'" );
+					$term ['term_value'] = $term_query->row ['name'];
 				}
 				
-				$enquiry['terms'][] = array(
-					'type' => $term['term_type'],
-					'value' => $term['term_value']
+				$enquiry ['terms'] [] = array (
+						'type' => $term ['term_type'],
+						'value' => $term ['term_value'] 
 				);
 			}
 			
-			
-			$query2 = $this->db->query("SELECT ep.*,epd.name AS name, epd.files AS files, epd.description AS description, ucd.title AS unit_title, uc.value AS unit_value FROM ".DB_PREFIX."enquiry_product ep LEFT JOIN ".DB_PREFIX."enquiry_product_description epd ON (epd.enquiry_product_id=ep.enquiry_product_id) LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = ep.unit_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) WHERE ep.enquiry_id='" . $enquiry_id['enquiry_id'] . "' LIMIT 0,5");
+			$query2 = $this->db->query ( "SELECT ep.*,epd.name AS name, epd.files AS files, epd.description AS description, ucd.title AS unit_title, uc.value AS unit_value FROM " . DB_PREFIX . "enquiry_product ep LEFT JOIN " . DB_PREFIX . "enquiry_product_description epd ON (epd.enquiry_product_id=ep.enquiry_product_id) LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = ep.unit_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) WHERE ep.enquiry_id='" . $enquiry_id ['enquiry_id'] . "' LIMIT 0,5" );
 			
 			if ($query2->num_rows) {
-				foreach ($query2->rows as $key=>$enquiry_product) {
-					if ($enquiry_product['product_id'])
-						$enquiry['enquiries'][$key]['link'] = $this->url->link('product/product','product_id='.$enquiry_product['product_id'],'SSL');
-					if ($enquiry_product['category_id'])
-						$enquiry['enquiries'][$key]['link'] = $this->url->link('product/category','category_id='.$enquiry_product['product_id'],'SSL');
-						
-						$enquiry['enquiries'][$key]['name'] = $enquiry_product['name'];
-						$enquiry['enquiries'][$key]['description'] = $enquiry_product['description'];
-						$enquiry['enquiries'][$key]['quantity'] = $enquiry_product['quantity'];
-						$enquiry['enquiries'][$key]['unit_title'] = $enquiry_product['unit_title'];
-						$enquiry['enquiries'][$key]['filenames'] = unserialize($enquiry_product['files']);
+				foreach ( $query2->rows as $key => $enquiry_product ) {
+					if ($enquiry_product ['product_id'])
+						$enquiry ['enquiries'] [$key] ['link'] = $this->url->link ( 'product/product', 'product_id=' . $enquiry_product ['product_id'], 'SSL' );
+					if ($enquiry_product ['category_id'])
+						$enquiry ['enquiries'] [$key] ['link'] = $this->url->link ( 'product/category', 'category_id=' . $enquiry_product ['product_id'], 'SSL' );
+					
+					$enquiry ['enquiries'] [$key] ['name'] = $enquiry_product ['name'];
+					$enquiry ['enquiries'] [$key] ['description'] = $enquiry_product ['description'];
+					$enquiry ['enquiries'] [$key] ['quantity'] = $enquiry_product ['quantity'];
+					$enquiry ['enquiries'] [$key] ['unit_title'] = $enquiry_product ['unit_title'];
+					$enquiry ['enquiries'] [$key] ['filenames'] = unserialize ( $enquiry_product ['files'] );
 				}
 			}
 			
-			$enquiries[$enquiry_id['enquiry_id']] = $enquiry;
+			$enquiries [$enquiry_id ['enquiry_id']] = $enquiry;
 		}
 		
-		return $enquiries; 
+		return $enquiries;
 	}
 	public function getEnquiriesTotal($data) {
-		$sql = "SELECT count(*) AS total FROM ".DB_PREFIX ."enquiry_to_supplier e2s LEFT JOIN ".DB_PREFIX."enquiry e ON (e.enquiry_id=e2s.enquiry_id) LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e2s.supplier_id='" . $data['customer_id'] . "'";
-		if (isset($data['filter_name']) && $data['filter_name']){
+		if (isset ( $data ['seller_id'] ))
+			$sql = "SELECT count(*) AS total FROM " . DB_PREFIX . "enquiry_to_supplier e2s LEFT JOIN " . DB_PREFIX . "enquiry e ON (e.enquiry_id=e2s.enquiry_id) LEFT JOIN " . DB_PREFIX . "customer c ON (e.customer_id = c.customer_id) WHERE e2s.supplier_id='" . $data ['seller_id'] . "'";
+		else 
+			$sql = "SELECT count(*) AS total FROM " .DB_PREFIX .  "enquiry WHERE customer_id='" . $data ['customer_id'] . "'";
+		if (isset ( $data ['filter_name'] ) && $data ['filter_name']) {
 			$sql .= " AND  (";
-			$implode = array();
-			foreach (explode(' ',$data['filter_name']) as $name) {
-				$implode[] = "(c.firstname LIKE '%".$name."%' OR c.lastname LIKE '%".$name."%' OR c.email LIKE '%".$name."%')";
+			$implode = array ();
+			foreach ( explode ( ' ', $data ['filter_name'] ) as $name ) {
+				$implode [] = "(c.firstname LIKE '%" . $name . "%' OR c.lastname LIKE '%" . $name . "%' OR c.email LIKE '%" . $name . "%')";
 			}
-			$sql .= implode(' AND ',$implode).") ";
+			$sql .= implode ( ' AND ', $implode ) . ") ";
 		}
-		$query = $this->db->query($sql);
-		return $query->row['total'];
+		$query = $this->db->query ( $sql );
+		return $query->row ['total'];
 	}
 
 
 	// Order
-	public function getOrderHistories($order_id) {
-		$query = $this->db->query("SELECT date_added, os.name AS status, oh.comment, oh.notify FROM " . DB_PREFIX . "order_history oh LEFT JOIN " . DB_PREFIX . "order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
+	public function getOrderHistories($order_id,$customerpartner_order_id) {
+		$query = $this->db->query("SELECT oh.date_added, os.name AS status, oh.comment, oh.notify FROM " . DB_PREFIX . "customerpartner_order_history oh LEFT JOIN " . DB_PREFIX . "order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND oh.customerpartner_order_id = '" . (int)$customerpartner_order_id . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
 	
 		return $query->rows;
 	}	
-
+	public function getMainOrderHistories($order_id) {
+		$query = $this->db->query("SELECT oh.date_added, os.name AS status, oh.comment, oh.notify FROM " . DB_PREFIX . "order_history oh LEFT JOIN " . DB_PREFIX . "order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
+	
+		return $query->rows;
+	}
 	public function addOrderHistory($order_id, $data) {
 
 		//$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$data['order_status_id'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
@@ -1650,10 +1727,10 @@ class ModelAccountCustomerpartner extends Model {
 		if($seller_id) {
 			$seller_id = $seller_id;
 		} else {
-			$seller_id = $this->customer->getId();
+			$seller_id = $this->getuserseller();
 		}
-
-		$sql = "SELECT DISTINCT o.order_id ,o.date_added,o.currency_code,o.currency_value, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus  FROM " . DB_PREFIX ."order_status os LEFT JOIN ".DB_PREFIX ."order o ON (os.order_status_id = o.order_status_id) LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE c2o.customer_id = '".$seller_id."'  AND os.language_id = '".$this->config->get('config_language_id')."'";
+		
+		$sql = "SELECT DISTINCT o.order_id ,o.date_added,o.currency_code,o.currency_value, CONCAT(o.firstname ,' ',o.lastname) AS name ,os.name AS orderstatus  FROM " . DB_PREFIX ."order_status os LEFT JOIN ".DB_PREFIX ."customerpartner_order co ON (os.order_status_id = co.order_status_id) LEFT JOIN ".DB_PREFIX ."order o ON (co.order_id = o.order_id) LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE co.customer_id = '".$seller_id."'  AND os.language_id = '".$this->config->get('config_language_id')."'";
 		
 		if (isset($data['filter_order']) && !is_null($data['filter_order'])) {
 			$sql .= " AND o.order_id = '" . (int)$data['filter_order'] . "'";
@@ -1714,7 +1791,7 @@ class ModelAccountCustomerpartner extends Model {
 			$seller_id = $this->customer->getId();
 		}
 
-		$sql = "SELECT COUNT(DISTINCT o.order_id) AS total ,o.date_added, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus  FROM " . DB_PREFIX ."order_status os LEFT JOIN ".DB_PREFIX ."order o ON (os.order_status_id = o.order_status_id) LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE c2o.customer_id = '".$seller_id."'  AND os.language_id = '".$this->config->get('config_language_id')."' ";
+		$sql = "SELECT COUNT(DISTINCT o.order_id) AS total FROM " . DB_PREFIX ."order_status os LEFT JOIN ".DB_PREFIX ."customerpartner_order cpo ON (os.order_status_id = cpo.order_status_id) LEFT JOIN ".DB_PREFIX ."order o ON (o.order_id = cpo.order_id) LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE cpo.customer_id = '".$seller_id."'  AND os.language_id = '".$this->config->get('config_language_id')."' ";
 
 		if (isset($data['filter_order']) && !is_null($data['filter_order'])) {
 			$sql .= " AND o.order_id = '" . (int)$data['filter_order'] . "'";
@@ -1727,7 +1804,7 @@ class ModelAccountCustomerpartner extends Model {
 		if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
 			$sql .= " AND os.name LIKE '%" . $data['filter_status'] . "%'";
 		}
-
+		
 		if (!empty($data['filter_date'])) {
 			$sql .= " AND o.date_added LIKE '%" . $this->db->escape($data['filter_date']) . "%'";
 		}
@@ -1770,24 +1847,24 @@ class ModelAccountCustomerpartner extends Model {
 		
 	}
 
-	public function getSellerOrderProducts($order_id,$seller_id){			
+	public function getSellerOrderProducts($order_id,$seller_id = 0){			
 		if($seller_id) {
 			$seller_id = $seller_id;
 		} else {
-			$seller_id = $this->customer->getId();
+			$seller_id = $this->getuserseller();
 		}
-		$sql = $this->db->query("SELECT op.*,c2o.price c2oprice, c2o.paid_status FROM " . DB_PREFIX ."customerpartner_to_order c2o LEFT JOIN " . DB_PREFIX . "order_product op ON (c2o.order_product_id = op.order_product_id AND c2o.order_id = op.order_id) WHERE c2o.order_id = '".$order_id."'  AND c2o.customer_id = '".$seller_id."' ORDER BY op.product_id ");
+		$sql = $this->db->query("SELECT op.*,c2o.price AS c2oprice, c2o.paid_status FROM " . DB_PREFIX ."customerpartner_to_order c2o LEFT JOIN " . DB_PREFIX . "order_product op ON (c2o.order_product_id = op.order_product_id AND c2o.order_id = op.order_id) WHERE c2o.order_id = '".$order_id."'  AND c2o.customer_id = '".$seller_id."' ORDER BY op.product_id ");
 
 		return($sql->rows);
 	}
 
-	public function getOrder($order_id,$seller_id) {
+	public function getOrder($order_id,$seller_id=0) {
 		if($seller_id) {
 			$seller_id = $seller_id;
 		} else {
-			$seller_id = $this->customer->getId();
+			$seller_id = $this->getuserseller();
 		}
-		$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE o.order_id = '" . (int)$order_id . "' AND o.order_status_id > '0' AND c2o.customer_id = '".$seller_id."'");
+		$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "customerpartner_order c2o ON (o.order_id = c2o.order_id) WHERE o.order_id = '" . (int)$order_id . "' AND o.order_status_id > '0' AND c2o.customer_id = '".$seller_id."'");
 		
 		if ($order_query->num_rows) {
 			$country_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'");
@@ -1832,7 +1909,7 @@ class ModelAccountCustomerpartner extends Model {
 				'invoice_prefix'          => $order_query->row['invoice_prefix'],
 				'store_id'                => $order_query->row['store_id'],
 				'store_name'              => $order_query->row['store_name'],
-
+				'customerpartner_order_id'=> $order_query->row['customerpartner_order_id'],
 				'store_url'               => $order_query->row['store_url'],				
 				'customer_id'             => $order_query->row['customer_id'],
 				'firstname'               => $order_query->row['firstname'],
@@ -1889,11 +1966,11 @@ class ModelAccountCustomerpartner extends Model {
 	}
 
 	// return seller products amount from customerpartner_to_order table
-	public function getOrderTotals($order_id,$seller_id) {
+	public function getOrderTotals($order_id,$seller_id = 0) {
 		if($seller_id) {
 			$seller_id = $seller_id;
 		} else {
-			$seller_id = $this->customer->getId();
+			$seller_id = $this->getuserseller();
 		}
 		$query = $this->db->query("SELECT SUM(price) total FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '" . (int)$order_id . "' AND customer_id = '".$seller_id."'");
 
@@ -1914,15 +1991,13 @@ class ModelAccountCustomerpartner extends Model {
 		$comment = '';
 
 		foreach($tracking as $product_id => $tracking_no){
-
 			if($tracking_no){
 				$sql = $this->db->query("SELECT c2t.* FROM " . DB_PREFIX ."customerpartner_sold_tracking c2t WHERE c2t.customer_id='".(int)$this->customer->getId()."' AND c2t.product_id='".(int)$product_id."' AND c2t.order_id='".(int)$order_id."'")->row;
-
 				if(!$sql){
+					$query = $this->db->query("SELECT * FROM " . DB_PREFIX ."customerpartner_order WHERE ")->row;
 					$this->db->query("INSERT INTO " . DB_PREFIX ."customerpartner_sold_tracking SET customer_id='".(int)$this->customer->getId()."' ,tracking='".$this->db->escape($tracking_no)."' ,product_id='".(int)$product_id."' ,order_id='".(int)$order_id."'");
-
 					$sql = $this->db->query("SELECT name FROM " . DB_PREFIX ."order_product WHERE product_id='".(int)$product_id."' AND order_id='".(int)$order_id."'")->row;
-
+					
 					if($sql)
 						$comment .= 'Product - '. $sql['name'].'<br/>'.'Seller Tracking No - '. $tracking_no.'<br/>';
 			    }
@@ -1930,15 +2005,10 @@ class ModelAccountCustomerpartner extends Model {
 		}
 
 		if($comment){
-			$sql = $this->db->query("SELECT o.order_status_id FROM `" . DB_PREFIX ."order` o WHERE o.order_id = '".(int)$order_id."'")->row;
-
+			$sql = $this->db->query("SELECT order_status_id,customerpartner_order_id FROM `" . DB_PREFIX ."customerpartner_order` WHERE order_id='".(int)$order_id."' AND customer_id ='".(int)$this->getuserseller()."'")->row;
 			if($sql)
-				$this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$order_id . "', order_status_id = '" . $sql['order_status_id'] . "', notify = '" .  0 . "', comment = '".$this->db->escape($comment)."', date_added = NOW()");
-			
-			
+				$this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_order_history SET order_id = '" . (int)$order_id . "', customerpartner_order_id='" . $sql['customerpartner_order_id'] . "', order_status_id = '" . $sql['order_status_id'] . "', notify = '" .  0 . "', comment = '".$this->db->escape($comment)."', date_added = NOW()");
 			$sql = $this->db->query("SELECT c2p.product_id FROM " . DB_PREFIX ."order_product o LEFT JOIN " . DB_PREFIX ."customerpartner_to_product c2p ON (o.product_id = c2p.product_id) LEFT JOIN " . DB_PREFIX ."customerpartner_sold_tracking cst ON (c2p.product_id = cst.product_id) where o.order_id='".(int)$order_id."' AND c2p.product_id NOT IN (SELECT product_id FROM " . DB_PREFIX . "customerpartner_sold_tracking cst WHERE cst.order_id = '".(int)$order_id."')")->rows;
-			
-
 			if(!$sql){
 				// $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . $this->config->get('config_complete_status_id') . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 			}

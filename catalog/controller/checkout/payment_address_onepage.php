@@ -58,8 +58,6 @@ class ControllerCheckoutPaymentAddressOnepage extends Controller {
 
 
         $view_data['addresses'] = $addresses = $this->model_account_address->getAddresses();
-
-
         $trusted_addresses = array();
         $fake_addresses = array();
         foreach ($addresses as $address) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP OpenCloud library.
  * 
@@ -7,37 +8,30 @@
  * @version   1.6.0
  * @author    Jamie Hannaford <jamie.hannaford@rackspace.com>
  */
-
 namespace OpenCloud\Autoscale\Resource;
 
 /**
  * Description of Webhook
- * 
- * @link 
+ *
+ * @link
+ *
  */
-class Webhook extends AbstractResource
-{
-    
-    public $id;
-    public $name;
-    public $metadata;
-    public $links;
-    
-    protected static $json_name = 'webhook';
-    protected static $url_resource = 'webhooks';
-    
-    public $createKeys = array(
-        'name',
-        'metadata'
-    );
-    
-    public function createJson()
-    {
-        $object = new \stdClass;
-        $object->name = $this->name;
-        $object->metadata = $this->metadata;
-       
-        return $object;
-    }
-    
+class Webhook extends AbstractResource {
+	public $id;
+	public $name;
+	public $metadata;
+	public $links;
+	protected static $json_name = 'webhook';
+	protected static $url_resource = 'webhooks';
+	public $createKeys = array (
+			'name',
+			'metadata' 
+	);
+	public function createJson() {
+		$object = new \stdClass ();
+		$object->name = $this->name;
+		$object->metadata = $this->metadata;
+		
+		return $object;
+	}
 }

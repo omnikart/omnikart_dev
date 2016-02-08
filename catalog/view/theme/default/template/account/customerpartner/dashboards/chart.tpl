@@ -1,21 +1,26 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <div class="pull-right" style="position: relative;"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-calendar"></i> <i class="caret"></i></a>
-      <ul id="range" class="dropdown-menu dropdown-menu-right">
-        <li><a href="day"><?php echo $text_day; ?></a></li>
-        <li><a href="week"><?php echo $text_week; ?></a></li>
-        <li class="active"><a href="month"><?php echo $text_month; ?></a></li>
-        <li><a href="year"><?php echo $text_year; ?></a></li>
-      </ul>
-    </div>
-    <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> <?php echo $heading_title; ?></h3>
-  </div>
-  <div class="panel-body">
-    <div id="chart-sale" style="width: 100%; height: 260px;"></div>
-  </div>
+	<div class="panel-heading">
+		<div class="pull-right" style="position: relative;">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+				class="fa fa-calendar"></i> <i class="caret"></i></a>
+			<ul id="range" class="dropdown-menu dropdown-menu-right">
+				<li><a href="day"><?php echo $text_day; ?></a></li>
+				<li><a href="week"><?php echo $text_week; ?></a></li>
+				<li class="active"><a href="month"><?php echo $text_month; ?></a></li>
+				<li><a href="year"><?php echo $text_year; ?></a></li>
+			</ul>
+		</div>
+		<h3 class="panel-title">
+			<i class="fa fa-bar-chart-o"></i> <?php echo $heading_title; ?></h3>
+	</div>
+	<div class="panel-body">
+		<div id="chart-sale" style="width: 100%; height: 260px;"></div>
+	</div>
 </div>
-<script type="text/javascript" src="admin/view/javascript/jquery/flot/jquery.flot.js"></script> 
-<script type="text/javascript" src="admin/view/javascript/jquery/flot/jquery.flot.resize.min.js"></script>
+<script type="text/javascript"
+	src="admin/view/javascript/jquery/flot/jquery.flot.js"></script>
+<script type="text/javascript"
+	src="admin/view/javascript/jquery/flot/jquery.flot.resize.min.js"></script>
 <script type="text/javascript"><!--
 $('#range a').on('click', function(e) {
 	e.preventDefault();
@@ -31,9 +36,9 @@ $('#range a').on('click', function(e) {
 		success: function(json) {
 			var option = {	
 				shadowSize: 0,
-				colors: ['#9FD5F1', '#1065D2'],
+				colors: ['#0000ff', '#1065D2'],
 				bars: { 
-					show: true,
+					show: false,
 					fill: true,
 					lineWidth: 1
 				},
@@ -41,8 +46,11 @@ $('#range a').on('click', function(e) {
 					backgroundColor: '#FFFFFF',
 					hoverable: true
 				},
+		        lines: { 
+			        show: true
+			    },
 				points: {
-					show: false
+					show: true
 				},
 				xaxis: {
 					show: true,
@@ -78,4 +86,4 @@ $('#range a').on('click', function(e) {
 });
 
 $('#range .active a').trigger('click');
-//--></script> 
+//--></script>

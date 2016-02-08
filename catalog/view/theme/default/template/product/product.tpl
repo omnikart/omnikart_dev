@@ -85,29 +85,28 @@
         <?php $class = 'col-sm-8'; ?>
         <?php } ?>
         <div class="<?php echo $class; ?>">
-						<div class="white">
-							<div class="col-sm-8">
-								<h1 class="nmt"><?php echo $heading_title; ?></h1>
-								<p></p>
-								<div>
-									<span class="label label-primary"
-										style="line-height: 32px; font-size: 14px;"><?php echo $text_stock; ?> <?php echo $stock; ?></span>
-									<div class="btn-group">
-										<button type="button" data-toggle="tooltip"
-											class="btn btn-default"
-											title="<?php echo $button_wishlist; ?>"
-											onclick="wishlist.add('<?php echo $product_id; ?>');">
-											<i class="fa fa-heart"></i>
-										</button>
-										<button type="button" data-toggle="tooltip"
-											class="btn btn-default"
-											title="<?php echo $button_compare; ?>"
-											onclick="compare.add('<?php echo $product_id; ?>');">
-											<i class="fa fa-exchange"></i>
-										</button>
-									</div>
-								</div>
-								<p></p>
+		<div class="white">
+			<div class="col-sm-8">
+				<h1 class="nmt"><?php echo $heading_title; ?></h1>
+				<p></p>
+				<div>
+					<span class="label label-primary"
+						style="line-height: 32px; font-size: 14px;"><?php echo $text_stock; ?> <?php echo $stock; ?></span>
+					<div class="btn-group">
+						<button type="button" data-toggle="tooltip"
+							class="btn btn-default"
+							title="<?php echo $button_wishlist; ?>"
+							onclick="wishlist.add('<?php echo $product_id; ?>');">
+							<i class="fa fa-heart"></i>
+						</button>
+						<button type="button" data-toggle="tooltip"
+							class="btn btn-default"
+							title="<?php echo $button_compare; ?>"
+							onclick="compare.add('<?php echo $product_id; ?>');">
+							<i class="fa fa-exchange"></i>
+						</button>
+					</div>
+				</div>
 	          <?php if ($price && $enabled) { ?>
 	          <ul class="list-unstyled">
 	            <?php if (!$special) { ?>
@@ -173,46 +172,48 @@
 									</div>
             <?php } ?>
             <?php if ($option['type'] == 'radio') { ?>
-            <div
-										class="form-group<?php echo ($option['required'] ? ' required' : ''); ?>">
-										<label class="control-label"><?php echo $option['name']; ?></label>
-										<div
-											id="input-option<?php echo $option['product_option_id']; ?>">
+            <div class="form-group<?php echo ($option['required'] ? ' required' : ''); ?>">
+				<label class="control-label"><?php echo $option['name']; ?></label>
+				<div id="input-option<?php echo $option['product_option_id']; ?>">
                 <?php foreach ($option['product_option_value'] as $option_value) { ?>
-                <div class="radio">
-												<label> <input type="radio"
-													name="option[<?php echo $option['product_option_id']; ?>]"
-													value="<?php echo $option_value['product_option_value_id']; ?>" />
-                    <?php echo $option_value['name']; ?>
-                    <?php if ($option_value['price']) { ?>
-                    (<?php echo $option_value['price_prefix']; ?><?php echo $option_value['price']; ?>)
-                    <?php } ?>
-                  </label>
-											</div>
+	                <div class="radio">
+						<label> 
+						<?php if ($option_value['enabled']) { ?>
+							<input type="radio" name="option[<?php echo $option['product_option_id']; ?>]" value="<?php echo $option_value['product_option_value_id']; ?>" />
+						<?php } else {?>
+							<input type="radio" name="" value="" disabled/>
+						<?php } ?>
+		                    <?php echo $option_value['name']; ?>
+		                    <?php if ($option_value['price']) { ?>
+		                    (<?php echo $option_value['price_prefix']; ?><?php echo $option_value['price']; ?>)
+		                    <?php } ?>
+	                  	</label>
+					</div>
                 <?php } ?>
-              </div>
-									</div>
+              	</div>
+			</div>
             <?php } ?>
             <?php if ($option['type'] == 'checkbox') { ?>
-            <div
-										class="form-group<?php echo ($option['required'] ? ' required' : ''); ?>">
-										<label class="control-label"><?php echo $option['name']; ?></label>
-										<div
-											id="input-option<?php echo $option['product_option_id']; ?>">
+            <div class="form-group<?php echo ($option['required'] ? ' required' : ''); ?>">
+				<label class="control-label"><?php echo $option['name']; ?></label>
+				<div id="input-option<?php echo $option['product_option_id']; ?>">
                 <?php foreach ($option['product_option_value'] as $option_value) { ?>
                 <div class="checkbox">
-												<label> <input type="checkbox"
-													name="option[<?php echo $option['product_option_id']; ?>][]"
-													value="<?php echo $option_value['product_option_value_id']; ?>" />
-                    <?php echo $option_value['name']; ?>
-                    <?php if ($option_value['price']) { ?>
-                    (<?php echo $option_value['price_prefix']; ?><?php echo $option_value['price']; ?>)
-                    <?php } ?>
-                  </label>
-											</div>
+					<label>
+					<?php if ($option_value['enabled']) { ?>
+						<input type="checkbox" name="option[<?php echo $option['product_option_id']; ?>][]" value="<?php echo $option_value['product_option_value_id']; ?>" />
+					<?php } else { ?>
+						<input type="checkbox" name="" value="" disabled/>
+					<?php } ?>
+	                    <?php echo $option_value['name']; ?>
+	                    <?php if ($option_value['price']) { ?>
+	                    (<?php echo $option_value['price_prefix']; ?><?php echo $option_value['price']; ?>)
+	                    <?php } ?>
+	                </label>
+				</div>
                 <?php } ?>
               </div>
-									</div>
+           </div>
             <?php } ?>
             <?php if ($option['type'] == 'image') { ?>
             <div
@@ -395,7 +396,8 @@
 												<button type="button" id="button-quote" data-cart="quote"
 													data-loading-text="<?php echo $text_loading; ?>"
 													class="btn btn-info btn-block">
-													<i class="fa fa-flip-horizontal fa-file-text-o"></i>&nbsp Add to Quotation
+													<i class="fa fa-flip-horizontal fa-file-text-o"></i>&nbsp
+													Add to Quotation
 												</button>
 											</div>
 										</div>
@@ -737,7 +739,7 @@ $('#button-cart').on('click', function() {
 
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 
-				$('#cart_modal .modal-body > ul').load('index.php?route=common/cart/info ul li');
+				$('#cart_modal .modal-body').load('index.php?route=common/cart/info div#cart-content');
 				if (json['redirect']) {
 					window.location = json['redirect']; 
 				}
