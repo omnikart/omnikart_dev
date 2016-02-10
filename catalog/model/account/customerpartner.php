@@ -1549,6 +1549,7 @@ class ModelAccountCustomerpartner extends Model {
 			$enquiry ['email'] = $query2->row ['email'];
 			$enquiry ['telephone'] = $query2->row ['telephone'];
 			$enquiry ['enquiry_id'] = $enquiry_id ['enquiry_id'];
+			$enquiry ['link'] = $this->url->link ( 'account/customerpartner/enquiry/getQuotationSuppliers', 'enquiry_id=' . $enquiry ['enquiry_id'], 'SSL' );
 			
 			$enquiry ['terms'] = array ();
 			

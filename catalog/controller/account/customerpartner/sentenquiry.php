@@ -28,9 +28,9 @@ class ControllerAccountCustomerpartnerSentEnquiry extends Controller {
 		
 		$this->document->addStyle ( 'catalog/view/theme/default/stylesheet/MP/sell.css' );
 		
-		$this->language->load ( 'account/customerpartner/addproduct' );
+		$this->language->load ( 'account/customerpartner/sentenquiry' );
 		
-		$this->document->setTitle ( $this->language->get ( 'heading_title_productlist' ) );
+		$this->document->setTitle ( $this->language->get ( 'heading_title_enquirylist' ) );
 		
 		$this->data ['breadcrumbs'] = array ();
 		
@@ -47,8 +47,8 @@ class ControllerAccountCustomerpartnerSentEnquiry extends Controller {
 		);
 		
 		$this->data ['breadcrumbs'] [] = array (
-				'text' => $this->language->get ( 'heading_title_productlist' ),
-				'href' => $this->url->link ( 'account/customerpartner/productlist', '', 'SSL' ),
+				'text' => $this->language->get ( 'heading_title_enquirylist' ),
+				'href' => $this->url->link ( 'account/customerpartner/sentenquiry', '', 'SSL' ),
 				'separator' => $this->language->get ( 'text_separator' ) 
 		);
 		
@@ -116,24 +116,23 @@ class ControllerAccountCustomerpartnerSentEnquiry extends Controller {
 		
 		$this->data ['isMember'] = true;
 		$this->data ['isSentEnquiry'] = true;
-		$this->data ['heading_title'] = $this->language->get ( 'heading_title_productlist' );
-		$this->data ['text_enabled'] = $this->language->get ( 'text_enabled' );
+		$this->data ['heading_title'] = $this->language->get ( 'heading_title_enquirylist' );
+		/* $this->data ['text_enabled'] = $this->language->get ( 'text_enabled' );
 		$this->data ['text_disabled'] = $this->language->get ( 'text_disabled' );
 		$this->data ['text_no_results'] = $this->language->get ( 'text_no_results' );
 		$this->data ['text_image_manager'] = $this->language->get ( 'text_image_manager' );
 		$this->data ['text_confirm'] = $this->language->get ( 'text_confirm' );
 		$this->data ['text_soldlist_info'] = $this->language->get ( 'text_soldlist_info' );
-		$this->data ['column_image'] = $this->language->get ( 'column_image' );
+		$this->data ['column_image'] = $this->language->get ( 'column_image' ); */
 		$this->data ['column_name'] = "Customer Name";
-		$this->data ['column_enquiry'] = "Enquiry Brief";
+		/* $this->data ['column_enquiry'] = "Enquiry Brief"; */
 		$this->data ['column_date'] = "Date Added";
 		$this->data ['column_status'] = $this->language->get ( 'column_status' );
-		$this->data ['column_action'] = $this->language->get ( 'column_action' );
-		$this->data ['column_sold'] = "Sold";
+		/* $this->data ['column_sold'] = "Sold";
 		$this->data ['button_copy'] = $this->language->get ( 'button_copy' );
 		$this->data ['button_insert'] = $this->language->get ( 'button_insert' );
-		$this->data ['button_delete'] = $this->language->get ( 'button_delete' );
-		$this->data ['button_filter'] = $this->language->get ( 'button_filter' );
+		$this->data ['button_delete'] = $this->language->get ( 'button_delete' ); */
+		$this->data ['button_filter'] = $this->language->get ( 'button_filter' ); 
 		
 		if (isset ( $this->error ['warning'] )) {
 			$this->data ['error_warning'] = $this->error ['warning'];
@@ -197,7 +196,7 @@ class ControllerAccountCustomerpartnerSentEnquiry extends Controller {
 		}
 	}
 	private function validate() {
-		$this->load->language ( 'account/customerpartner/addproduct' );
+		$this->load->language ( 'account/customerpartner/sentenquiry' );
 		
 		if (! $this->customer->getId ()) {
 			$this->error ['warning'] = $this->language->get ( 'error_permission' );
@@ -209,5 +208,6 @@ class ControllerAccountCustomerpartnerSentEnquiry extends Controller {
 			return false;
 		}
 	}
+
 }
 ?>
