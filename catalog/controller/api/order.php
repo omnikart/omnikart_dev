@@ -181,6 +181,7 @@ class ControllerApiOrder extends Controller {
 							'download' => $product ['download'],
 							'quantity' => $product ['quantity'],
 							'vendor_id' => $product ['vendor_id'],
+							'id' => $product ['id'],
 							'subtract' => $product ['subtract'],
 							'price' => $product ['price'],
 							'total' => $product ['total'],

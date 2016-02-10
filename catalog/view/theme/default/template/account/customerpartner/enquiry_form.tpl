@@ -209,7 +209,9 @@ $('#enquiryModal').on('change','select[name=\'enquiry[revisions]\']',function ()
 <script type="text/javascript">
   $('#trigger').on('click',function(){
     $('#save-quotation').trigger('click');
-  })
+    return true;
+  });
+  
   var term_count = <?php echo $term_count++; ?>;
   function addtermrow(){
   	html = '<tr>';
