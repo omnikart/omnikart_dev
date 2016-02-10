@@ -144,7 +144,7 @@ class ModelModuleEnquiry extends Model {
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry e LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . (int)$enquiry_id . "'");
 		$data['customer_id'] = $query->row['customer_id'];
 		$data['enquiry_id'] = $query->row['enquiry_id'];
-		$data['postcode'] = $query->row['postcode'];
+		$data['address_id'] = $query->row['address_id'];
 		$data['status'] = $query->row['status'];
 		$data['date_added'] = $query->row['date_added'];
 		$data['firstname'] = $query->row['firstname'];
@@ -152,7 +152,7 @@ class ModelModuleEnquiry extends Model {
 		$data['email'] = $query->row['email'];
 		$data['telephone'] = $query->row['telephone'];
 
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "quote` SET customer_id='" . (int)$data['customer_id'] . "', enquiry_id='" . (int)$data['enquiry_id'] . "', supplier_id='" . (int)$supplier_id . "', postcode='" . (int)$data['postcode'] . "', date_added=NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "quote` SET customer_id='" . (int)$data['customer_id'] . "', enquiry_id='" . (int)$data['enquiry_id'] . "', supplier_id='" . (int)$supplier_id . "', address_id='" . (int)$data['address_id'] . "', date_added=NOW()");
 		$quote_id = $this->db->getLastId();
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "quote_revision` SET quote_id='" . (int)$quote_id . "', status='" . (int)$data['status'] . "', date_added=NOW()");
 		$quote_revision_id = $this->db->getLastId();
@@ -212,7 +212,7 @@ class ModelModuleEnquiry extends Model {
 		$data = array();
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."quote q LEFT JOIN ".DB_PREFIX."customer c ON (q.customer_id = c.customer_id) LEFT JOIN ".DB_PREFIX."enquiry e ON (q.enquiry_id = e.enquiry_id) WHERE q.quote_id='" . (int)$quote_id . "'");
 		$data['customer_id'] = $query->row['customer_id'];
-		$data['postcode'] = $query->row['postcode'];
+		$data['address_id'] = $query->row['address_id'];
 		$data['date_added'] = $query->row['date_added'];
 		$data['enquiry_id'] = $query->row['enquiry_id'];
 		$data['quote_id'] = $query->row['quote_id'];
@@ -373,7 +373,6 @@ class ModelModuleEnquiry extends Model {
 			$enquiry = array();
 			$query2 = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry e LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . $enquiry_id['enquiry_id'] . "'");
 			$enquiry['customer_id'] = $query2->row['customer_id'];
-			$enquiry['postcode'] = $query2->row['postcode'];
 			$enquiry['status'] = $query2->row['status'];
 			$enquiry['date_added'] = $query2->row['date_added'];
 			$enquiry['firstname'] = $query2->row['firstname'];

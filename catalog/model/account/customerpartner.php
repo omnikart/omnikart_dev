@@ -1541,7 +1541,6 @@ class ModelAccountCustomerpartner extends Model {
 			$enquiry = array ();
 			$query2 = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry e LEFT JOIN " . DB_PREFIX . "customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . $enquiry_id ['enquiry_id'] . "'" );
 			$enquiry ['customer_id'] = $query2->row ['customer_id'];
-			$enquiry ['postcode'] = $query2->row ['postcode'];
 			$enquiry ['status'] = $query2->row ['status'];
 			$enquiry ['date_added'] = $query2->row ['date_added'];
 			$enquiry ['firstname'] = $query2->row ['firstname'];
@@ -1550,15 +1549,29 @@ class ModelAccountCustomerpartner extends Model {
 			$enquiry ['telephone'] = $query2->row ['telephone'];
 			$enquiry ['enquiry_id'] = $enquiry_id ['enquiry_id'];
 			
-			$enquiry ['terms'] = array ();
+			$enquiry ['address_id'] = $query2->row ['address_id'];
+			$data ['address_id']= $enquiry ['address_id'];
+			$query3 = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "address a WHERE a.address_id='" . $enquiry ['address_id'] . "'" );
+			$enquiry['address'] = $query3->rows;
+			$enquiry ['caddress'] = $query3->row['country_id'];
+			$enquiry ['zaddress'] = $query3->row['zone_id'];
+		
+			$country_query = $this->db->query ( "SELECT * FROM `" . DB_PREFIX . "country` WHERE country_id = '" . ( int ) $enquiry ['caddress'] . "'" );
+			$enquiry['count'] = $country_query->row['name'];
+				
+			$zone_query = $this->db->query ( "SELECT * FROM `" . DB_PREFIX . "zone` WHERE zone_id = '" . ( int ) $enquiry ['zaddress'] . "'" );
+			$enquiry['zone'] = $zone_query->row['name'];
 			
+			
+			$enquiry ['terms'] = array ();
 			$query2 = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry_term et WHERE et.enquiry_id='" . $enquiry_id ['enquiry_id'] . "'" );
 			
 			foreach ( $query2->rows as $term ) {
 				if ($term ['term_type'] == 'payment') {
 					$term_query = $query = $this->db->query ( "SELECT name FROM " . DB_PREFIX . "payment_term WHERE payment_term_id='" . ( int ) $term ['term_value'] . "'" );
+					if($term ['term_value']){
 					$term ['term_value'] = $term_query->row ['name'];
-				}
+				}}
 				
 				$enquiry ['terms'] [] = array (
 						'type' => $term ['term_type'],

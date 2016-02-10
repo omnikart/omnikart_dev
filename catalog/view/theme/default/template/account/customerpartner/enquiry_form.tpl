@@ -21,6 +21,8 @@
 </div>
 <input type="hidden" name="enquiry[quote_id]"  value="<?php echo $quote_id; ?>"/>
 <input type="hidden" name="enquiry[quote_revision_id]"  value="<?php echo $quote_revision_id; ?>"/>
+<input type="hidden" name="enquiry[address_id]"  value="<?php echo $address_id; ?>"/>
+
 <div class="panel panel-default">
 <table class="table table-bordered">
 	<tbody>
@@ -35,10 +37,28 @@
 		</tr>
 		<tr>
 			<td >Telephone</td><td>: <?php echo $telephone; ?></td>
-			<td >Address</td><td>: <?php echo $config_address; ?></td>
+			
+			<td>Address</td><td><?php foreach($addresss as $address) { ?>
+			<div class="clearfix quote-address pull-left">
+			 		<input type="radio" name="address_id" id="address<?php echo $address['address_id']; ?>" value="<?php echo $address['address_id']; ?>" class="radio" />
+					<label for="address<?php echo $address['address_id']; ?>">
+						<strong><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?></strong><hr>
+						<?php echo $address['address_1']; ?><br />
+						 <?php echo $address['city']; ?> <?php echo $address['postcode']; ?><br/>
+						<?php echo $address['zone']; ?> <?php echo $address['country']; ?>
+					</label>
+			  </div>
+			<?php } ?>
+			
+			</td>
 		</tr>
 		<tr>
-			<td >Postcode</td><td>: <?php echo $postcode; ?></td>
+			<td >Address</td><td>:
+			<?php echo $address_1;?><br />
+			<?php echo $city;?><br />
+			<?php echo $zone;?><br />
+			<?php echo $country;?>
+			</td>
 			<td >E-Mail</td><td>: <?php echo $config_email; ?></td>	
 		</tr>
 		<tr>
@@ -205,8 +225,3 @@ $('#enquiryModal').on('change','select[name=\'enquiry[revisions]\']',function ()
   	term_count++;
   }
 </script>
-<style>
-input[type="radio"] {
-  margin-top: -1px;
-  vertical-align: middle;}
-</style>

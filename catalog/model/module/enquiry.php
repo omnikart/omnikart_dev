@@ -1,7 +1,7 @@
 <?php
 class ModelModuleEnquiry extends Model {
 	public function addenquiry($data = array()) {
-		$this->db->query ( "INSERT INTO " . DB_PREFIX . "enquiry SET customer_id='" . $this->customer->getId () . "', postcode='" . $data ['postcode'] . "', status='1', date_added=NOW()" );
+		$this->db->query ( "INSERT INTO " . DB_PREFIX . "enquiry SET customer_id='" . $this->customer->getId () . "', address_id='" . (int) $data ['address_id'] . "', status='1', date_added=NOW()" );
 		$enquiry_id = $this->db->getLastId ();
 		$this->db->query ( "INSERT INTO " . DB_PREFIX . "enquiry_term SET enquiry_id='" . $enquiry_id . "', term_type='payment', term_value='" . $data ['payment_terms'] . "'" );
 		
@@ -69,7 +69,6 @@ class ModelModuleEnquiry extends Model {
 		$data = array ();
 		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry e LEFT JOIN " . DB_PREFIX . "customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . $enquiry_id . "'" );
 		$data ['customer_id'] = $query->row ['customer_id'];
-		$data ['postcode'] = $query->row ['postcode'];
 		$data ['status'] = $query->row ['status'];
 		$data ['date_added'] = $query->row ['date_added'];
 		$data ['firstname'] = $query->row ['firstname'];
@@ -179,19 +178,20 @@ class ModelModuleEnquiry extends Model {
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry e LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . (int)$enquiry_id . "'");
 		$data['customer_id'] = $query->row['customer_id'];
 		$data['enquiry_id'] = $query->row['enquiry_id'];
-		$data['postcode'] = $query->row['postcode'];
+		$data['address_id'] = $query->row['address_id'];
 		$data['status'] = $query->row['status'];
 		$data['date_added'] = $query->row['date_added'];
 		$data['firstname'] = $query->row['firstname'];
 		$data['lastname'] = $query->row['lastname'];
 		$data['email'] = $query->row['email'];
 		$data['telephone'] = $query->row['telephone'];
-	
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "quote` SET customer_id='" . (int)$data['customer_id'] . "', enquiry_id='" . (int)$data['enquiry_id'] . "', supplier_id='" . (int)$supplier_id . "', postcode='" . (int)$data['postcode'] . "', date_added=NOW()");
+		
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "quote` SET customer_id='" . (int)$data['customer_id'] . "', enquiry_id='" . (int)$data['enquiry_id'] . "', supplier_id='" . (int)$supplier_id . "', address_id='" . (int)$data['address_id'] . "', date_added=NOW()");
 		$quote_id = $this->db->getLastId();
+		
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "quote_revision` SET quote_id='" . (int)$quote_id . "', status='" . (int)$data['status'] . "', date_added=NOW()");
 		$quote_revision_id = $this->db->getLastId();
-	
+		
 		$data['terms'] = array();
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry_term et WHERE et.enquiry_id='" . (int)$enquiry_id . "'");
 		foreach ($query->rows as $key => $term) {
@@ -247,7 +247,7 @@ class ModelModuleEnquiry extends Model {
 		$data = array();
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."quote q LEFT JOIN ".DB_PREFIX."customer c ON (q.customer_id = c.customer_id) WHERE q.quote_id='" . (int)$quote_id . "'");
 		$data['customer_id'] = $query->row['customer_id'];
-		$data['postcode'] = $query->row['postcode'];
+		$data['address_id'] = $query->row['address_id'];
 		$data['date_added'] = $query->row['date_added'];
 		$data['quote_id'] = $query->row['quote_id'];
 		$data['supplier_id'] = $query->row['supplier_id'];
@@ -255,7 +255,20 @@ class ModelModuleEnquiry extends Model {
 		$data['lastname'] = $query->row['lastname'];
 		$data['email'] = $query->row['email'];
 		$data['telephone'] = $query->row['telephone'];
-	
+		$cquery = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "address a WHERE a.address_id='" . $data['address_id'] . "'" );
+		$data['address_1'] =$cquery->row ['address_1'];
+		$data['city'] = $cquery->row ['city'];
+		
+		$data['country'] =$cquery->row ['country_id'];
+		
+		$country_query = $this->db->query ( "SELECT * FROM `" . DB_PREFIX . "country` WHERE country_id = '" . ( int ) $data['country'] . "'" );
+		$data['country'] = $country_query->row['name'];
+		$data['state'] =$cquery->row ['zone_id'];
+		
+		$zone_query = $this->db->query ( "SELECT * FROM `" . DB_PREFIX . "zone` WHERE zone_id = '" . ( int ) $data['state'] . "'" );
+		$data['zone'] = $zone_query->row['name'];
+			
+		
 		if ($quote_revision_id){
 			$query =$this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_revision` WHERE quote_revision_id='" . (int)$quote_revision_id. "'");
 		} else {
