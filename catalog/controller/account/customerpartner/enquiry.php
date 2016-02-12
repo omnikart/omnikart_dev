@@ -173,7 +173,7 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get ( 'config_product_limit' );
 		$pagination->text = $this->language->get ( 'text_pagination' );
-		$pagination->url = $this->url->link ( 'account/customerpartner/productlist', '' . $url . '&page={page}', 'SSL' );
+		$pagination->url = $this->url->link ( 'account/customerpartner/enquiry', '' . $url . '&page={page}', 'SSL' );
 		
 		$this->data ['pagination'] = $pagination->render ();
 		
@@ -291,7 +291,7 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			$this->load->model('account/address');
 			$data['addresss'] = $this->model_account_address->getAddresses();
 			
-			$data['enquiryupdates'] = $this->url->link('sale/enquiry/quotation', '&enquiry_id='.(int)$this->request->get['enquiry_id'], 'SSL');
+			$data['enquiryupdates'] = $this->url->link('account/customerpartner/enquiry/quotation', '&enquiry_id='.(int)$this->request->get['enquiry_id'], 'SSL');
 
 			
 			$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/enquiry_form.tpl', $data ) );
@@ -317,6 +317,9 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			$data ['payment_term'] = array ();
 			$this->load->model ( 'localisation/payment_term' );
 			$data ['payment_term'] = $this->model_localisation_payment_term->getPaymentTerms ();
+			
+			$this->load->model('account/address');
+			$data['addresss'] = $this->model_account_address->getAddresses();
 			
 			$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/quotation.tpl', $data ) );
 		}

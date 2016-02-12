@@ -17,7 +17,7 @@ table.noborder th, table.noborder td {
 table.noborder th, table.noborder td {
 	padding:0px 10px;
 }
-thead{background:#eee;}
+thead,#customer{background:#eee;}
 tbody tr:hover td{background:#eef;}
 th, td {padding:10px;}
 
@@ -71,20 +71,45 @@ margin-left: 600;
 <div class="panel panel-default">
 <table class="table table-bordered">
 	<tbody>
+		<tr><td colspan="2"><?php foreach($addresss as $address) { ?>
+			<div class="clearfix quote-address pull-left">
+				<label for="address<?php echo $address['address_id']; ?>">
+					<?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?></td>
+					<td colspan="2">
+					<?php echo $address['address_1']; ?>,
+					<?php echo $address['city']; ?> <?php echo $address['postcode']; ?>,
+					<?php echo $address['zone']; ?> <?php echo $address['country']; ?>
+				</label>
+			  </div>
+			  <?php } ?>
+		</td></tr>
+		<tr><td colspan="4" class="pull-left" >Quotation No: 12345</td></tr>
+		<tr id="customer"><td colspan="2"  class="pull-left">Customer Details</td>
+		<td colspan="2">Information</td></tr>
 		<tr>
 			<td style="width:100px">Name</td><td>: <?php echo $firstname.' '.$lastname; ?></td>
+			<td style="width:100px">Date</td><td>:11/10/1993</td>
 		</tr>
 		<tr>
-			<td >Email</td><td>: <?php echo $email; ?></td>
+			<td style="width:100px">Email</td><td>:<?php echo $email; ?></td>
+			<td style="width:100px">Quote Expiration Date</td><td>:11/10/1993</td>
 		</tr>
 		<tr>
-			<td >Telephone</td><td>: <?php echo $telephone; ?></td>
+			<td style="width:100px">Telephone</td><td>: <?php echo $telephone; ?></td>
+			<td style="width:100px">Delivery Lead Time</td><td>:1 week</td>
 		</tr>
 		<tr>
-			<td >Postcode</td><td>: <?php echo $postcode; ?></td>
+			<td rowspan="2" >Address</td><td rowspan="2" > 
+			<?php echo $address_1;?><br />
+			<?php echo $city;?><br />
+			<?php echo $zone;?><br />
+			<?php echo $country;?>
+			</td>
+			<td style="width:100px">Contact Name </td><td>:shailesh</td>
 		</tr>
+		<tr><td style="width:100px">Contact No </td><td>:9004458077</td></tr>
 		<tr>
-			<td colspan="2"></td>
+			<td colspan="4"></td>
 		</tr>
 	</tbody>
 </table>
@@ -100,7 +125,7 @@ margin-left: 600;
 					<td >Description</td>
 					<td class="center" >Unit Price</td>
 					<td class="center" >Tax class</td>
-					<td class="center" >Total Price</td>
+					<td class="center" >Total(INR)</td>
 				</tr>
 			</thead>
 			<tbody>
