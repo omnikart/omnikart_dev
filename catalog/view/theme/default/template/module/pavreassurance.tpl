@@ -7,11 +7,9 @@ if (! empty ( $pavreassurances )) {
                             <?php $i=1?>
                             <?php foreach ($pavreassurances as $reassurance) { ?>
                             	<?php if (!$onlymodal) { ?>
-                                <div
-				class="col-lg-3 col-md-3 col-sm-3 col-xs-12 column">
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 column">
 				<div class="reassurances-left">
-					<span
-						class="icon-name pull-left fa <?php echo $reassurance['select_icon'] ?>"></span>
+					<span class="icon-name pull-left fa <?php echo $reassurance['select_icon'] ?>"></span>
 					<div class="description media-body">
 						<h4><?php echo $reassurance['title']; ?></h4>
                                             <?php echo htmlspecialchars_decode($reassurance['caption']); ?>

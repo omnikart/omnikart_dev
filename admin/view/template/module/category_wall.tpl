@@ -33,27 +33,55 @@
 					<i class="fa fa-pencil"></i> <?php echo $text_edit; ?></h3>
 			</div>
 			<div class="panel-body">
-				<form action="<?php echo $action; ?>" method="post"
-					enctype="multipart/form-data" id="form-category_wall"
-					class="form-horizontal">
+				<form action="<?php echo $action; ?>" method="post"	enctype="multipart/form-data" id="form-category_wall" class="form-horizontal">
 					<div class="form-group">
 						<label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
 						<div class="col-sm-10">
-							<select name="category_wall_status" id="input-status"
-								class="form-control">
-                <?php if ($category_wall_status) { ?>
-                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-								<option value="0"><?php echo $text_disabled; ?></option>
-                <?php } else { ?>
-                <option value="1"><?php echo $text_enabled; ?></option>
-								<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                <?php } ?>
-              </select>
+							<select name="category_wall_status" id="input-status" class="form-control">
+				                <?php if ($category_wall_status) { ?>
+				                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+												<option value="0"><?php echo $text_disabled; ?></option>
+				                <?php } else { ?>
+				                <option value="1"><?php echo $text_enabled; ?></option>
+												<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+				                <?php } ?>
+              				</select>
 						</div>
 					</div>
+					<?php $cat_row=0; foreach ($category_wall_categories as $key => $category_wall_category) { ?>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="input-status">Categories</label>
+							<div class="col-sm-5">
+								<input type="text" name="category_wall_categories[<?php echo $cat_row; ?>][category_id]" id="input-category" class="form-control" value="<?php echo $category_wall_category['category_id']; ?>" />
+							</div>
+							<div class="col-sm-5">
+								<input type="text" name="category_wall_categories[<?php echo $cat_row; ?>][sub_categories]" id="input-category" class="form-control" value="<?php echo $category_wall_category['sub_categories']; ?>" />
+							</div>
+						</div>
+					<?php $cat_row++; } ?>
 				</form>
+				<button class="btn btn-info" onclick="addcategory();">Add Category</button>
 			</div>
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	var cat_row = <?php echo $cat_row; ?>;
+
+	function addcategory(){
+		cat_row++;
+		html='<div class="form-group">';
+		html+='	<label class="col-sm-2 control-label" for="input-status">Categories</label>';
+		html+='	<div class="col-sm-5">';
+		html+='		<input type="text" name="category_wall_categories['+cat_row+'][category_id]" id="input-category" class="form-control" value="" />';
+		html+='	</div>';
+		html+='	<div class="col-sm-5">';
+		html+='		<input type="text" name="category_wall_categories['+cat_row+'][sub_categories]" id="input-category" class="form-control" value="" />';
+		html+='	</div>';
+		html+='</div>';
+		
+		$('#form-category_wall').append(html);
+	}
+
+</script>
 <?php echo $footer; ?>

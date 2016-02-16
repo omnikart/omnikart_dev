@@ -4,23 +4,36 @@
 }
 
 .gp-table .gp-col-image { /*width:1px;*/
-	
+	width:50px;
 }
 
 .gp-table .gp-col-name {
-	
+		min-width:250px;
 }
 
 .gp-table .gp-col-price {
+	width:150px;
 	text-align: right;
+	position:relative;
 }
-
+.gp-table .gp-col-price .no-price{
+font-size:12px;
+line-height:1;
+}
+.gp-table .gp-col-price .discounts{
+position: absolute;
+right: 5px;
+top:0;
+}
+.gp-table.table .thead tr td.agc{
+	border-bottom: none;
+}
 .gp-table .gp-col-option {
-	max-width: 150px;
+	width: 250px;
 }
 
 .gp-table .gp-col-qty {
-	width: 80px;
+	width: 100px;
 	text-align: center;
 }
 
@@ -31,7 +44,7 @@
 }
 
 .gp-table .gp-col-btn {
-	
+	width:120px;
 }
 
 .gp-child-image {
@@ -43,12 +56,13 @@
 }
 
 .gp-child-name {
-	font-weight: bold;
-	font-size: 16px;
+	font-weight: 400;
+	font-size: 14px;
 }
 
 .gp-child-field, .gp-child-attribute {
 	padding: 0 0 0 10px;
+	font-size: 12px;
 }
 
 .gp-child-attribute>div {
@@ -103,4 +117,11 @@ ul.gp-add-child-description li:first-child {
 
 ul.gp-add-child-description li:last-child {
 	padding: 0 0 0 10px;
+}
+.gp-table .checkbox, .gp-table .radio{
+margin-top: 0px;
+margin-bottom: 0px;
+}
+.gp-table .checkbox label,.gp-table .radio label{
+min-height:18px;
 }

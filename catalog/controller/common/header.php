@@ -150,16 +150,17 @@ class ControllerCommonHeader extends Controller {
 							'filter_sub_category' => true,
 							'mfp_disabled' => true 
 					);
-					$total = $this->model_catalog_product->getTotalProducts ( $filter_data );
-					if ($total) {
-						$children_data [] = array (
-								'name' => $cat ['name'],
-								'href' => $this->url->link ( 'product/category', 'path=' . $cat ['category_id'], 'SSL' ) 
-						);
-					}
+					/*$total = $this->model_catalog_product->getTotalProducts ( $filter_data );*/
+					/* if ($total) { */
+					$children_data [] = array (
+							'name' => $cat ['name'],
+							'href' => $this->url->link ( 'product/category', 'path=' . $cat ['category_id'], 'SSL' ) 
+					);
+					/* } */
 				}
 				$data ['categories'] [] = array (
 						'name' => $category ['name'],
+						'top' => $category ['top'],
 						'column' => ($category ['column'] ? $category ['column'] : 1),
 						'children' => array_slice ( $children_data, 0, 12 ),
 						'href' => $this->url->link ( 'product/category', 'path=' . $category ['category_id'], 'SSL' ) 

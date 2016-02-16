@@ -1,26 +1,31 @@
-<div class="row">
+<div class="row" id="category-wall">
 	<div class="col-sm-12">
 		<h3>Featured Categories</h3>
-		<div class="row"
-			style="opacity: 1; display: block; margin-bottom: 0px;" id="cat-wall">
-				<?php foreach ($categories as $category) { ?>
-						<div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
-				<div class="product-thumb transition">
-					<a style="text-decoration: none"
-						href="<?php echo $category['href']; ?>">
-						<div class="image">
-							<a href="<?php echo $category['href']; ?>"><img
-								src="<?php echo $category['image']; ?>"
-								alt="<?php echo $category['name']; ?>"
-								title="<?php echo $category['name']; ?>" class="img-responsive" /></a>
+		<div class="row" style="opacity: 1; display: block; margin-bottom: 0px;" id="cat-wall">
+			<?php foreach ($categories as $category) { ?>
+					<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+						<div class="product-thumb transition">
+							<div class="image">
+								<a href="<?php echo $category['href']; ?>"> <img src="<?php echo $category['image']; ?>" alt="<?php echo $category['name']; ?>"	title="<?php echo $category['name']; ?>"/>	</a>
+							</div>
+							<div class="caption">
+								<a style="text-decoration: none" href="<?php echo $category['href']; ?>">
+									<h4><?php echo $category['name']; ?></h4>
+								</a>
+							</div>
+							<div class="sub-category">
+								<ul class="list-unstyled">
+									<?foreach ($category['children'] as $key => $child) { ?>
+										  <li><a href="<?php echo $child['href'] ?>"><?php echo $child['name'] ?></a></li>	
+									<?php } ?>
+								</ul>
+							</div>
 						</div>
-						<div class="caption" style="min-height: 50px">
-							<h4><?php echo $category['name']; ?></h4>
-						</div>
-					</a>
-				</div>
-			</div>
-				<?php } ?>
+					</div>
+			<?php } ?>
 		</div>
 	</div>
 </div>
+<style>
+
+</style>

@@ -107,7 +107,7 @@
 	</div>
 	<script type="text/javascript"><!--
 <?php foreach ($languages as $language) { ?>
-$('#input-description<?php echo $language['language_id']; ?>').summernote({height: 300});
+CKEDITOR.replace('input-description<?php echo $language['language_id']; ?>', {height:300});
 <?php } ?>
 //--></script>
 	<script type="text/javascript"><!--

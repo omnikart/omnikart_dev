@@ -15,8 +15,8 @@ class ControllerProductProduct extends Controller {
 			$vendor_id = 0;
 		}
 		
-		if (isset($this->request->get['gp_vendor_ids'])) {
-			$gp_vendor_ids = $this->request->get['gp_vendor_ids'];
+		if (isset($this->request->get['gpid'])) {
+			$gp_vendor_ids = $this->request->get['gpid'];
 		} else {
 			$gp_vendor_ids = array();
 		}
@@ -278,8 +278,6 @@ class ControllerProductProduct extends Controller {
 
 
 			$this->load->model('tool/image');
-			
-			$this->load->model ( 'tool/image' );
 			
 			$product_info ['image'] = ($product_info ['image'] ? $product_info ['image'] : 'no_image.png');
 			
@@ -716,6 +714,7 @@ class ControllerProductProduct extends Controller {
 							$curr_vendor = array();
 							$vendors = array();
 							$vlink = '';
+							$supplier_options = array();
 							
 							if ($child_supplier_info) {
 								$enable = true;
@@ -736,14 +735,14 @@ class ControllerProductProduct extends Controller {
 									);
 								}
 								
-								$curr_vendor = $this->model_account_customerpartner->getProfile($child_info['vendor_id']);
-								$vendors = $this->model_account_customerpartner->getProductVendors($child_info['product_id'],$child_info['vendor_id']);
+								$curr_vendor = $this->model_account_customerpartner->getProfile($gp_vendor_id);
+								$vendors = $this->model_account_customerpartner->getProductVendors($child_info['product_id'],$gp_vendor_id);
 								if (!empty($curr_vendor)) {
 									$vlink = $this->url->link('customerpartner/profile','id='.$curr_vendor['customer_id'],'SSL');
 								}
 								$enabled = true;
+								$supplier_options = $this->model_account_customerpartner->getSupplierProductOptions($child_supplier_info['id']);
 							}
-	
 							// Disable button cart
 							if ($this->config->get('gp_grouped_child_nocart') && !$this->config->get('config_stock_checkout') && $child_info['quantity'] <= 0) {
 								$child_child_nocart = true;
@@ -761,36 +760,49 @@ class ControllerProductProduct extends Controller {
 
 							foreach ($this->model_catalog_product->getProductOptions($child['child_id']) as $option) {
 								$gp_child_option_col = true;
-
 								$product_option_value_data = array();
 
 								foreach ($option['product_option_value'] as $option_value) {
-									if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
-										if ($tcg_customer_price && (float)$option_value['price']) {
-											$child_option_price = $this->currency->format($this->tax->calculate($option_value['price'], $child_info['tax_class_id'], $tcg_tax ? 'P' : false));
+									if (!$option_value['subtract'] || (isset($supplier_options[$option_value['product_option_value_id']]) && ($supplier_options[$option_value['product_option_value_id']]['quantity'] > 0))) {
+										if ((($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) && (float)$supplier_options[$option_value['product_option_value_id']]['price']) {
+											$price = $this->currency->format($this->tax->calculate($supplier_options[$option_value['product_option_value_id']]['price'], $child_info['tax_class_id'], $this->config->get('config_tax') ? 'P' : false));
 										} else {
-											$child_option_price = false;
+											$price = false;
 										}
-
 										$product_option_value_data[] = array(
 											'product_option_value_id' => $option_value['product_option_value_id'],
 											'option_value_id'         => $option_value['option_value_id'],
 											'name'                    => $option_value['name'],
 											'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
-											'price'                   => $child_option_price,
-											'price_prefix'            => $option_value['price_prefix']
+											'price'                   => $price,
+											'quantity'                => $supplier_options[$option_value['product_option_value_id']]['quantity'],
+											'price_prefix'            => $option_value['price_prefix'],
+											'enabled'            	  => true,
+										);
+									} else {
+										$product_option_value_data [] = array (
+											'product_option_value_id' => $option_value['product_option_value_id'],
+											'option_value_id'         => $option_value['option_value_id'],
+											'name'                    => $option_value['name'],
+											'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+											'price'                   => 0,
+											'quantity'                => 0,
+											'price_prefix'            => $option_value['price_prefix'],
+											'enabled'            	  => false
 										);
 									}
-									
-									$product_option_value_data [] = array (
-											'product_option_value_id' => $option_value ['product_option_value_id'],
-											'option_value_id' => $option_value ['option_value_id'],
-											'name' => $option_value ['name'],
-											'image' => $this->model_tool_image->resize ( $option_value ['image'], 50, 50 ),
-											'price' => $child_option_price,
-											'price_prefix' => $option_value ['price_prefix'] 
-									);
 								}
+								
+								$child_options[] = array(
+										'product_option_id'    => $option['product_option_id'],
+										'product_option_value' => $product_option_value_data,
+										'option_id'            => $option['option_id'],
+										'name'                 => $option['name'],
+										'type'                 => $option['type'],
+										'value'                => $option['value'],
+										'required'             => $option['required']
+								);
+								
 							}
 
 							$qty_now = '';
@@ -825,7 +837,6 @@ class ControllerProductProduct extends Controller {
 								'vlink'		 => $vlink,
 								'vendors'	 => $vendors 	
 							);
-								/*}*/
 						}
 					}
 				// Column
@@ -1175,6 +1186,169 @@ class ControllerProductProduct extends Controller {
 			return false;
 		}
 		return true;
+	}
+	
+	public function getGProw(){
+		if (isset($this->request->get['child_id'])) {
+			
+			
+		$this->load->model ( 'catalog/product' );
+		$this->load->model('account/customerpartner');
+		$child_id = $this->request->get['child_id'];
+		
+		
+		$child_info = $this->model_catalog_product->getProduct($child_id);
+			if ($child_info) {
+				$this->load->language ( 'product/product' );
+				$this->load->language ( 'product/gp_grouped' );
+				$data['button_add_to_cart'] = $this->language->get('button_add_to_cart');
+				$data['button_add_to_quote'] = $this->language->get('button_add_to_quote');
+				$data['text_loading'] = $this->language->get('text_loading');
+				$data['text_discount'] = $this->language->get('text_discount');
+				
+				$this->load->model('tool/image');
+				$enable = false;
+				if (isset($this->request->get['vendor_id'])) {
+					$gp_vendor_id = $this->request->get['vendor_id'];
+				} else {
+					$gp_vendor_id = $child_info['vendor_id'];;
+				}
+							
+				$child_supplier_info = $this->model_account_customerpartner->getSupplierProduct($child_id,$gp_vendor_id);
+					
+			
+				if ((float)$child_info['special']) {
+					$child_special = $this->currency->format($this->tax->calculate($child_info['special'], $child_info['tax_class_id'], $tcg_tax));
+				} else {
+					$child_special = false;
+				}
+				$child_price = false;
+				$child_tax = false;
+				$child_discounts = array();
+				if ($this->config->get('config_stock_display')) {
+					$child_info['stock'] = $child_supplier_info['quantity'];
+				} else {
+					$child_info['stock'] = $this->language->get('text_instock');
+				}
+				$enabled = false;
+				$curr_vendor = array();
+				$vendors = array();
+				$vlink = '';
+				$supplier_options = array();
+				$gp_child_option_col = false;
+				if (($this->config->get ( 'config_customer_price' ) && $this->customer->isLogged ()) || ! $this->config->get ( 'config_customer_price' )) {
+					$tcg_customer_price = true;
+					$data['column_gp_price'] = true;
+				} else {
+					$tcg_customer_price = false;
+					$data['column_gp_price'] = true;
+				}
+				
+				if ($child_supplier_info) {
+					$enable = true;
+					if ($child_supplier_info['quantity'] <= 0)	$child_info['stock'] = $child_supplier_info['stock_status'];
+			
+					$child_price = $this->currency->format($this->tax->calculate($child_supplier_info['price'], $child_info['tax_class_id'],true));
+					$child_tax = $this->currency->format((float)$child_info['special'] ? $child_supplier_info['special'] : $child_info['price']);
+			
+			
+					foreach ($this->model_catalog_product->getSupplierProductDiscounts($child_supplier_info['id']) as $discount) {
+						$child_discounts[] = array(
+								'quantity' => $discount['quantity'],
+								'price'    => $this->currency->format($this->tax->calculate($discount['price'], $child_info['tax_class_id'], true))
+						);
+					}
+
+					$curr_vendor = $this->model_account_customerpartner->getProfile($gp_vendor_id);
+					$vendors = $this->model_account_customerpartner->getProductVendors($child_info['product_id'],$gp_vendor_id);
+					if (!empty($curr_vendor)) {
+						$vlink = $this->url->link('customerpartner/profile&id='.$curr_vendor['customer_id'],'','SSL');
+					}
+					$enabled = true;
+					$supplier_options = $this->model_account_customerpartner->getSupplierProductOptions($child_supplier_info['id']);
+				}
+				// Disable button cart
+				if ($this->config->get('gp_grouped_child_nocart') && !$this->config->get('config_stock_checkout') && $child_info['quantity'] <= 0) {
+					$child_child_nocart = true;
+				} else {
+					$child_child_nocart = false;
+				}
+			
+				$child_options = array();
+				
+				foreach ($this->model_catalog_product->getProductOptions($child_id) as $option) {
+					$gp_child_option_col = true;
+					$product_option_value_data = array();
+					foreach ($option['product_option_value'] as $option_value) {
+						if (!$option_value['subtract'] || (isset($supplier_options[$option_value['product_option_value_id']]) && ($supplier_options[$option_value['product_option_value_id']]['quantity'] > 0))) {
+							if ((($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) && (float)$supplier_options[$option_value['product_option_value_id']]['price']) {
+								$price = $this->currency->format($this->tax->calculate($supplier_options[$option_value['product_option_value_id']]['price'], $child_info['tax_class_id'], $this->config->get('config_tax') ? 'P' : false));
+							} else {
+								$price = false;
+							}
+							$product_option_value_data[] = array(
+									'product_option_value_id' => $option_value['product_option_value_id'],
+									'option_value_id'         => $option_value['option_value_id'],
+									'name'                    => $option_value['name'],
+									'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+									'price'                   => $price,
+									'quantity'                => $supplier_options[$option_value['product_option_value_id']]['quantity'],
+									'price_prefix'            => $option_value['price_prefix'],
+									'enabled'            	  => true,
+							);
+						} else {
+							$product_option_value_data [] = array (
+									'product_option_value_id' => $option_value['product_option_value_id'],
+									'option_value_id'         => $option_value['option_value_id'],
+									'name'                    => $option_value['name'],
+									'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+									'price'                   => 0,
+									'quantity'                => 0,
+									'price_prefix'            => $option_value['price_prefix'],
+									'enabled'            	  => false
+							);
+						}
+					}
+			
+					$child_options[] = array(
+							'product_option_id'    => $option['product_option_id'],
+							'product_option_value' => $product_option_value_data,
+							'option_id'            => $option['option_id'],
+							'name'                 => $option['name'],
+							'type'                 => $option['type'],
+							'value'                => $option['value'],
+							'required'             => $option['required']
+					);
+					
+				}
+				$data ['column_gp_option'] = $gp_child_option_col ? true : false;
+				
+				$qty_now = '';
+				foreach ( $this->cart->getProducts () as $gp_cart ) {
+					if ($child_id == $gp_cart ['product_id'] && $gp_vendor_id == $gp_cart ['vendor_id'] ) {
+						$qty_now = $gp_cart ['quantity'];
+					}
+				}
+				foreach ($vendors as $key => $vendor) {
+					$vendors[$key]['price'] = $this->currency->format($this->tax->calculate($vendor['price'], $child_info['tax_class_id'], $this->config->get('config_tax')));
+				}
+				$data['child'] = array(
+					'child_id'   => $child_info['product_id'],
+					'price'      => $child_price,
+					'special'    => $child_special,
+					'tax'        => $child_tax,
+					'nocart'     => $child_child_nocart,
+					'options'    => ($child_options?$child_options:false),
+					'discounts'  => ($child_discounts?$child_discounts:false),
+					'qty_now'    => $qty_now,
+					'enabled'	  => $enabled,
+					'curr_vendor'=> $curr_vendor,
+					'vlink'		 => $vlink,
+					'vendors'	 => $vendors 
+				);
+			}			
+			$this->response->setOutput(json_encode($data));
+		}
 	}
 	
 	public function getGpProducts() {

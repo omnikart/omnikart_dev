@@ -48,7 +48,7 @@ class ControllerModuleBlogTabs extends Controller {
 		
 		foreach ( $data ['recent_posts'] as $key => $post ) {
 			if (! empty ( $post ['post_thumb'] ) && is_file ( DIR_IMAGE . $post ['post_thumb'] )) {
-				$data ['recent_posts'] [$key] ['thumb'] = $this->model_tool_image->resize ( $post ['post_thumb'], 150, 150 );
+				$data ['recent_posts'] [$key] ['thumb'] = $this->model_tool_image->resize ( $post ['post_thumb'], $thumb_width_recent, $thumb_height_recent );
 			} else {
 				$data ['recent_posts'] [$key] ['thumb'] = $this->model_tool_image->resize ( 'no_image.png', $thumb_width_recent, $thumb_height_recent );
 			}

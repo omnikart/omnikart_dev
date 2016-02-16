@@ -215,8 +215,8 @@ html[xmlns] .flexslider .slides {
 
 .flex-control-nav {
 	width: 100%;
-	position: absolute;
-	bottom: -48px;
+	/*position: absolute;
+	bottom: -48px;*/
 	text-align: center;
 }
 
@@ -335,13 +335,10 @@ html[xmlns] .flexslider .slides {
 }
 
 .flex-control-nav li {
-	background: #fff;
-	border-bottom: 2px solid #333;
 	color: #000;
 	cursor: pointer;
-	float: left;
 	margin: 0.09em 0 0 0;
-	padding: 1em 1.5em;
+	padding: 1em 1em;
 	vertical-align: middle;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -483,7 +480,9 @@ html[xmlns] .slides {
 
 .flex-control-nav {
 	width: 100%;
-	text-align: center
+	text-align: center;
+	position: absolute;
+	bottom: 0px;
 }
 
 .flex-control-nav li {
@@ -492,8 +491,8 @@ html[xmlns] .slides {
 }
 
 .flex-control-paging li a {
-	width: 11px;
-	height: 11px;
+	width: 12px;
+	height: 12px;
 	display: block;
 	background: #666;
 	background: rgba(0, 0, 0, 0.5);

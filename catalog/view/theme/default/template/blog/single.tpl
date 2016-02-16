@@ -78,11 +78,10 @@
 					</div>
 					<div class="row">
 							<?php foreach ($related_products as $product) { ?>
-								<div
-							class="product-layout product-grid col-xs-12 <?php echo $class;?>">
+								<div class="product-layout product-grid col-xs-12 <?php echo $class;?>">
 							<div class="product-thumb">
-								<?php require(DIR_TEMPLATE.'default/template/common/product/product.tpl'); ?>
-									</div>
+								<?php require(DIR_TEMPLATE.'default/template/common/product/productwdbfeatured.tpl'); ?>
+							</div>
 						</div>
 							<?php } ?>
 						</div>

@@ -62,108 +62,6 @@
 		</div>
 	</div>
 </footer>
-<script type="text/javascript"><!--
-function addmodal(var_id,var_class) {
-		$('#'+var_id).remove();
-		html  = '<div id="'+var_id+'" class="modal tabindex="-1"  '+var_class+'" role="dialog" aria-labelledby="'+var_id+'">';
-		html += '  <div class="modal-dialog">';
-		html += '    <div class="modal-content">';
-		html += '      <div class="modal-header">';
-		html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
-		html += '        <h4 class="modal-title"></h4>';
-		html += '      </div>';
-		html += '      <div class="modal-body"></div>';
-		html += '      <div class="modal-footer"></div>';
-		html += '    </div>';
-		html += '  </div>';
-		html += '</div>';
-		$('body').append(html);
-		return $('#'+var_id);
-}
---></script>
-
-<script type="text/javascript"><!--
-$(document).delegate('#marketinsg-login', 'click', function(e) {
-	e.preventDefault();
-
-	$('#modal-login').remove();
-
-	var element = this;
-
-	$.ajax({
-		url: $(element).attr('href'),
-		type: 'get',
-		dataType: 'html',
-		success: function(data) {
-			html  = '<div id="modal-login" class="modal">';
-			html += '  <div class="modal-dialog">';
-			html += '    <div class="modal-content">';
-			html += '      <div class="modal-header">';
-			html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
-			html += '        <h4 class="modal-title">' + $(element).text() + '</h4>';
-			html += '      </div>';
-			html += '      <div class="modal-body">' + data + '</div>';
-			html += '    </div';
-			html += '  </div>';
-			html += '</div>';
-
-			$('body').append(html);
-
-			$('#modal-login').modal('show');
-		}
-	});
-});
-//--></script>
-<script type="text/javascript">
-	var width_search = document.getElementById("search").offsetWidth;
-	$('.result-search-autocomplete').css({"width":width_search});
-	$('.search-autocomplete').keyup(function(event) {
-		/* Act on the event */
-		$('.result-search-autocomplete  ul').css({"overflow" : "hidden"});
-		var search = $('input[name=search]').val().trim().toLowerCase();
-		$.ajax({
-		  method: "GET",
-		  url: "<?php echo $search_action; ?>",
-		  data: { search : search }
-		}).done(function( result ) {
-			var html = '';
-			if(result && search != '')
-			{
-				var count = 0
-				$.each(JSON.parse(result), function( index, value ) {
-				  	var first = 0
-				  	html += '<li>';
-				  	html += '<div class="row">';
-				  	html += '<div class="col-sm-12">';
-				  	html += '<div class="col-sm-12">';
-				  	html += '<ul>';
-					html += '<li><a href="'+value.href.replace('amp;', '')+'">'+value.name+'</a></li>';
-					$.each(value.categories, function( index2, value2 ) {
-						html += '<li class="search-cat"><a href="'+value2.href.replace('amp;', '')+'">'+value2.name+'</a></li>';
-					});
-					html += '</ul>';
-				  	html += '</div>';
-				  	html += '</div>';
-				  	html += '</div>';
-				  	html += '</li>';
-				  	count++;
-				});
-					$('.result-search-autocomplete').css({"display":"block"});
-				  	if(count > 5)
-					{
-						$('.result-search-autocomplete  ul').css({"overflow" : "scroll"});
-					}else{
-						$('.result-search-autocomplete  ul').css({"overflow" : "hidden"});
-					}
-			}else{
-				html = '';
-				$('.result-search-autocomplete').css({"display":"none"});
-			}
-
-			$('.show-result').html(html);
-		});
-	});
-</script>
 <style type="text/css" media="screen">
 .result-search-autocomplete {
 	display: none;
@@ -285,6 +183,176 @@ $(document).delegate('#marketinsg-login', 'click', function(e) {
 	}
 }
 </style>
+<script type="text/javascript"><!--
+function addmodal(var_id,var_class) {
+		$('#'+var_id).remove();
+		html  = '<div id="'+var_id+'" class="modal tabindex="-1"  '+var_class+'" role="dialog" aria-labelledby="'+var_id+'">';
+		html += '  <div class="modal-dialog">';
+		html += '    <div class="modal-content">';
+		html += '      <div class="modal-header">';
+		html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+		html += '        <h4 class="modal-title"></h4>';
+		html += '      </div>';
+		html += '      <div class="modal-body"></div>';
+		html += '      <div class="modal-footer"></div>';
+		html += '    </div>';
+		html += '  </div>';
+		html += '</div>';
+		$('body').append(html);
+		return $('#'+var_id);
+}
+--></script>
+
+<script type="text/javascript"><!--
+$(document).delegate('#marketinsg-login', 'click', function(e) {
+	e.preventDefault();
+
+	$('#modal-login').remove();
+
+	var element = this;
+
+	$.ajax({
+		url: $(element).attr('href'),
+		type: 'get',
+		dataType: 'html',
+		success: function(data) {
+			html  = '<div id="modal-login" class="modal">';
+			html += '  <div class="modal-dialog">';
+			html += '    <div class="modal-content">';
+			html += '      <div class="modal-header">';
+			html += '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+			html += '        <h4 class="modal-title">' + $(element).text() + '</h4>';
+			html += '      </div>';
+			html += '      <div class="modal-body">' + data + '</div>';
+			html += '    </div';
+			html += '  </div>';
+			html += '</div>';
+
+			$('body').append(html);
+
+			$('#modal-login').modal('show');
+		}
+	});
+});
+//--></script>
+<script type="text/javascript">
+	var width_search = document.getElementById("search").offsetWidth;
+	$('.result-search-autocomplete').css({"width":width_search});
+	$('.search-autocomplete').keyup(function(event) {
+		/* Act on the event */
+		$('.result-search-autocomplete  ul').css({"overflow" : "hidden"});
+		var search = $('input[name=search]').val().trim().toLowerCase();
+		$.ajax({
+		  method: "GET",
+		  url: "<?php echo $search_action; ?>",
+		  data: { search : search }
+		}).done(function( result ) {
+			var html = '';
+			if(result && search != '')
+			{
+				var count = 0
+				$.each(JSON.parse(result), function( index, value ) {
+				  	var first = 0
+				  	html += '<li>';
+				  	html += '<div class="row">';
+				  	html += '<div class="col-sm-12">';
+				  	html += '<div class="col-sm-12">';
+				  	html += '<ul>';
+					html += '<li><a href="'+value.href.replace('amp;', '')+'">'+value.name+'</a></li>';
+					$.each(value.categories, function( index2, value2 ) {
+						html += '<li class="search-cat"><a href="'+value2.href.replace('amp;', '')+'">'+value2.name+'</a></li>';
+					});
+					html += '</ul>';
+				  	html += '</div>';
+				  	html += '</div>';
+				  	html += '</div>';
+				  	html += '</li>';
+				  	count++;
+				});
+					$('.result-search-autocomplete').css({"display":"block"});
+				  	if(count > 5)
+					{
+						$('.result-search-autocomplete  ul').css({"overflow" : "scroll"});
+					}else{
+						$('.result-search-autocomplete  ul').css({"overflow" : "hidden"});
+					}
+			}else{
+				html = '';
+				$('.result-search-autocomplete').css({"display":"none"});
+			}
+
+			$('.show-result').html(html);
+		});
+	});
+
+  $('body').on('click', '#submit-enquiry', function(){
+	buttont = $(this);
+	var postcode = $('#enquiry-products input[name=\'postcode\']').val();
+	var payment = $('#enquiry-products select[name=\'payment_terms\']').val();
+	if ((postcode!='') && (payment!='')){	
+	    $.ajax({
+	        url : 'index.php?route=module/enquiry/submit',
+	        data: $('#enquiry-products select[name=\'payment_terms\'],#enquiry-products input[name=\'c_form\']:checked,#enquiry-products input[name=\'postcode\']'),
+	        type: 'post',
+			dataType: 'json',
+			beforeSend: function() {
+				$(buttont).button('loading');
+			},
+			complete: function() {
+				$(buttont).button('reset');
+			},
+			success: function(json) {
+				
+				if (json['success']){
+					$('#enquiry_form input[type=text], #enquiry_form textarea').val("");
+					$('#enquiry_modal button.btn-decrease').trigger('click');
+					setTimeout(function(){ $('.modal').modal('hide'); }, 1000);
+					$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
+				} else if(!json['logged']) { 
+					$('#modal-login').remove();
+					$.ajax({
+						url: 'index.php?route=module/login',
+						type: 'get',
+						dataType: 'html',
+						success: function(data) {
+							$('.modal').modal('hide');
+							var login_modal = addmodal('modal-login','');
+							login_modal.find('.modal-title').html('Please Login to submit enquiry');
+							login_modal.find('.modal-body').html(data);
+							login_modal.modal('show');
+						}
+					});
+				}
+			}
+			
+      });
+	} 
+	if (postcode=='') {
+		$('#enquiry-products input[name=\'postcode\']').addClass('alert-danger');
+	}
+	if (payment=='0') {
+		$('#enquiry-products select[name=\'payment_terms\']').addClass('alert-danger');
+	}
+  });
+  $('body').on('click','#view-enquiry',function(){
+		$.ajax({
+			url : 'index.php?route=module/enquiry/getEnquiry',
+		    dataType: "html",
+		    success : function (data) {
+			    $('#enquiry-products').modal('show');
+			    $('#enquiry-products').remove();
+				$('body').append(data);
+				$('#enquiry-products').modal('show');
+		    }
+		});
+	});	  
+  $('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
+
+  $('#enquiry_modal').on('show.bs.modal',function (e) {
+  	$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
+  });
+</script>
+
 
 <script type="text/javascript">
 var google_tag_params = {
@@ -310,10 +378,6 @@ var google_remarketing_only = true;
 	</div>
 </noscript>
 
-<?php
-require_once DIR_SYSTEM . 'nitro/core/core.php';
-require_once NITRO_INCLUDE_FOLDER . 'pagecache_widget.php';
-?>
 
 <style type="text/css">
 #ToTop {
@@ -336,46 +400,52 @@ require_once NITRO_INCLUDE_FOLDER . 'pagecache_widget.php';
 	cursor: pointer;
 }
 </style>
-<script type="text/javascript">
-				/* toTop jQuery */
-				jQuery(document).ready(function(){$().UItoTop({easingType:'easeOutQuint'});});
-				(function($){
-					$.fn.UItoTop = function(options) {
-						var defaults = {
-							text: 'To Top',
-							min: 200,
-							inDelay:600,
-							outDelay:400,
-							containerID: 'ToTop',
-							containerHoverID: 'ToTopHover',
-							scrollSpeed: 200,
-							easingType: 'linear'
-						};
-					var settings = $.extend(defaults, options);
-							var containerIDhash = '#' + settings.containerID;
-							var containerHoverIDHash = '#'+settings.containerHoverID;
-							$('body').append('<span id="'+settings.containerID+'">'+settings.text+'</span>');
-							$(containerIDhash).hide().click(function(event){
-								$('html, body').animate({scrollTop: 0}, settings.scrollSpeed);
-								event.preventDefault();
-							})
-							.prepend('<span id="'+settings.containerHoverID+'"></span>')
-									
-							$(window).scroll(function() {
-								var sd = $(window).scrollTop();
-								if(typeof document.body.style.maxHeight === "undefined") {
-									$(containerIDhash).css({
-										'position': 'absolute',
-										'top': $(window).scrollTop() + $(window).height() - 50
-									});
-								}
-								if ( sd > settings.min ) 
-									$(containerIDhash).fadeIn(settings.inDelay);
-								else 
-									$(containerIDhash).fadeOut(settings.Outdelay);
-							});
-					};
-					})(jQuery);
-					</script>
+	<script type="text/javascript">
+	/* toTop jQuery */
+	jQuery(document).ready(function(){$().UItoTop({easingType:'easeOutQuint'});});
+	(function($){
+		$.fn.UItoTop = function(options) {
+			var defaults = {
+				text: 'To Top',
+				min: 200,
+				inDelay:600,
+				outDelay:400,
+				containerID: 'ToTop',
+				containerHoverID: 'ToTopHover',
+				scrollSpeed: 200,
+				easingType: 'linear'
+			};
+		var settings = $.extend(defaults, options);
+				var containerIDhash = '#' + settings.containerID;
+				var containerHoverIDHash = '#'+settings.containerHoverID;
+				$('body').append('<span id="'+settings.containerID+'">'+settings.text+'</span>');
+				$(containerIDhash).hide().click(function(event){
+					$('html, body').animate({scrollTop: 0}, settings.scrollSpeed);
+					event.preventDefault();
+				})
+				.prepend('<span id="'+settings.containerHoverID+'"></span>')
+						
+				$(window).scroll(function() {
+					var sd = $(window).scrollTop();
+					if(typeof document.body.style.maxHeight === "undefined") {
+						$(containerIDhash).css({
+							'position': 'absolute',
+							'top': $(window).scrollTop() + $(window).height() - 50
+						});
+					}
+					if ( sd > settings.min ) 
+						$(containerIDhash).fadeIn(settings.inDelay);
+					else 
+						$(containerIDhash).fadeOut(settings.Outdelay);
+				});
+		};
+		})(jQuery);
+	</script>
+	
+<?php
+	require_once DIR_SYSTEM . 'nitro/core/core.php';
+	require_once NITRO_INCLUDE_FOLDER . 'pagecache_widget.php';
+?>
+	
 </body>
 </html>

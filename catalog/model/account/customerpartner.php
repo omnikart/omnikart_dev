@@ -3,7 +3,6 @@ const MPIMAGEFOLDER = 'catalog/';
 
 class ModelAccountCustomerpartner extends Model {
 
-
 	public function updateSubCustomerGroup($customer_id, $customer_group_id) {
 		$this->db->query("UPDATE ".DB_PREFIX."customer SET customer_group_id = '".$customer_group_id."' WHERE customer_id = '".$customer_id."' ");
 	}

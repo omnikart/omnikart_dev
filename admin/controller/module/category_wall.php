@@ -59,7 +59,11 @@ class ControllerModuleCategoryWall extends Controller {
 		} else {
 			$data ['category_wall_status'] = $this->config->get ( 'category_wall_status' );
 		}
-		
+		if (isset ( $this->request->post ['category_wall_categories'] )) {
+			$data ['category_wall_categories'] = $this->request->post ['category_wall_categories'];
+		} else {
+			$data ['category_wall_categories'] = (is_array($this->config->get ( 'category_wall_categories' ))?$this->config->get ( 'category_wall_categories' ):array());
+		}		
 		$data ['header'] = $this->load->controller ( 'common/header' );
 		$data ['column_left'] = $this->load->controller ( 'common/column_left' );
 		$data ['footer'] = $this->load->controller ( 'common/footer' );
