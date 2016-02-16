@@ -122,6 +122,8 @@ $language = new Language ( $languages [$config->get ( 'config_admin_language' )]
 $language->load ( $languages [$config->get ( 'config_admin_language' )] ['directory'] );
 $registry->set ( 'language', $language );
 
+$registry->set('tax', new Tax($registry));
+
 // Document
 $registry->set ( 'document', new Document () );
 

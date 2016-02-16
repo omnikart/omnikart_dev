@@ -275,7 +275,7 @@ class ControllerAccountCustomerpartnerProductlist extends Controller {
 		$this->data['column_image'] = $this->language->get('column_image');		
 		$this->data['column_name'] = $this->language->get('column_name');		
 		$this->data['column_model'] = $this->language->get('column_model');		
-		$this->data['column_price'] = $this->language->get('column_price');		
+		$this->data['column_price'] = $this->language->get('Net Price');		
 		$this->data['column_quantity'] = $this->language->get('column_quantity');		
 		$this->data['column_status'] = $this->language->get('column_status');		
 		$this->data['column_action'] = $this->language->get('column_action');	

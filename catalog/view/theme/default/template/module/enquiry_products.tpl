@@ -1,10 +1,8 @@
-<div id="enquiry-products" class="modal" tabindex="-1" role="dialog"
-	aria-labelledby="enquiry-products">
+<div id="enquiry-products" class="modal" tabindex="-1" role="dialog" aria-labelledby="enquiry-products">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title">Enquiry List</h4>
 			</div>
 			<div class="modal-body">
@@ -77,17 +75,41 @@
 					<p>Please use quotation form to add to enquiry list.</p>
 				</div>
 		<?php } ?>
-				<div class="clearfix"></div>
+				<div class="clearfix">
+				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" id="submit-enquiry">Submit
-					Enquiry</button>
+			<div class="">
+	      <?php if ($addresses) { ?>
+			  <form>
+			 	<h4 style="padding-right: 783px;">Address Book</h4>
+			 <?php foreach ($addresses as $address) { ?>
+			  <div class="clearfix enquiry-address pull-left">
+			 		<input type="radio" name="address_id" id="address<?php echo $address['address_id']; ?>" value="<?php echo $address['address_id']; ?>" class="radio" />
+					<label for="address<?php echo $address['address_id']; ?>">
+						<strong><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?></strong><hr>
+						<?php echo $address['address_1']; ?><br />
+						 <?php echo $address['city']; ?> <?php echo $address['postcode']; ?><br/>
+						<?php echo $address['zone']; ?> <?php echo $address['country']; ?>
+					</label>
+			  </div>
+				<?php } ?>
+			  </form>  
+	      	<?php } else { ?>
+	      		<p><?php echo "You have no addresses in your account."; ?></p>
+	      	<?php } ?>
+      		</div>
+				<div class="buttons clearfix">
+					<a href='<?php echo $add_address; ?>' target="_blank" class="btn btn-primary">ADD ADDRESS</a>
+					<button type="button" class="btn btn-default" id="submit-enquiry">Submit Enquiry</button>
+				</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
-<script>
+<script type="text/javascript"><!--
 function deleteRow(key) {
 	$.ajax({
 		url : 'index.php?route=module/enquiry/deleteProduct',
@@ -96,6 +118,7 @@ function deleteRow(key) {
 	    dataType: "html",
 	    success : function (data) {
 		    $('.modal').modal('hide');
+		     $('#enquiry_modal').modal('show');
 		    $('#enquiry-products').remove();
 			$('body').append(data);
 			$('#enquiry-products').modal('show');
@@ -104,16 +127,15 @@ function deleteRow(key) {
 }
 </script>
 
-
 <script type="text/javascript"><!--
 $('#submit-enquiry').on('click', function(){
 	buttont = $(this);
-	var postcode = $('#enquiry-products input[name=\'postcode\']').val();
+	var address_id =$('#enquiry-products input[name=\'address_id\']').val();
 	var payment = $('#enquiry-products select[name=\'payment_terms\']').val();
-	if ((postcode!='') && (payment!='')){	
+	if (payment!='' && address_id!='' ){	
 	    $.ajax({
 	        url : 'index.php?route=module/enquiry/submit',
-	        data: $('#enquiry-products select[name=\'payment_terms\'],#enquiry-products input[name=\'c_form\']:checked,#enquiry-products input[name=\'postcode\']'),
+	        data: $('#enquiry-products select[name=\'payment_terms\'],#enquiry-products input[name=\'c_form\']:checked,#enquiry-products input[name=\'address_id\']:checked'),
 	        type: 'post',
 			dataType: 'json',
 			beforeSend: function() {
@@ -123,9 +145,8 @@ $('#submit-enquiry').on('click', function(){
 				$(buttont).button('reset');
 			},
 			success: function(json) {
-				
 				if (json['success']){
-					$('#enquiry_form input[type=text], #enquiry_form textarea').val("");
+					$('#enquiry_form input[type=text],#enquiry_form input[type=radio], #enquiry_form textarea').val("");
 					setTimeout(function(){ $('.modal').modal('hide'); }, 1000);
 					$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
 				} else if(!json['logged']) { 
@@ -147,11 +168,86 @@ $('#submit-enquiry').on('click', function(){
 			
 	      });
 	} 
-	if (postcode=='') {
-		$('#enquiry-products input[name=\'postcode\']').addClass('alert-danger');
-	}
+	
 	if (payment=='0') {
 		$('#enquiry-products select[name=\'payment_terms\']').addClass('alert-danger');
 	}
 });
 //--></script>
+<script type="text/javascript"><!--
+$('select[name=\'country_id\']').on('change', function() {
+	$.ajax({
+		url: 'index.php?route=account/account/country&country_id=' + this.value,
+		dataType: 'json',
+		beforeSend: function() {
+			$('select[name=\'country_id\']').after(' <i class="fa fa-circle-o-notch fa-spin"></i>');
+		},
+		complete: function() {
+			$('.fa-spin').remove();
+		},
+		success: function(json) {
+			if (json['postcode_required'] == '1') {
+				$('input[name=\'postcode\']').parent().parent().addClass('required');
+			} else {
+				$('input[name=\'postcode\']').parent().parent().removeClass('required');
+			}
+
+			html = '<option value=""><?php echo "select" ; ?></option>';
+
+			if (json['zone'] && json['zone'] != '') {
+				for (i = 0; i < json['zone'].length; i++) {
+					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
+
+					if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') {
+						html += ' selected="selected"';
+			  		}
+
+			  		html += '>' + json['zone'][i]['name'] + '</option>';
+				}
+			} else {
+				html += '<option value="0" selected="selected"><?php echo $text_none; ?></option>';
+			}
+
+			$('select[name=\'zone_id\']').html(html);
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+$('select[name=\'country_id\']').trigger('change');
+//--></script>
+
+<style>
+ #enquiry-products .enquiry-address label{width:100%;padding:10px;border:1px solid #ddd;}
+#enquiry-products input.radio:empty {
+					margin-left: -999px;
+}
+ input.radio:empty ~ label {
+	position: relative;
+	float: left;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+input.radio:hover:not(:checked) ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+	color: #333;
+}
+input.radio:hover:not(:checked) ~ label {
+	color: #31708f;
+}
+input.radio:checked ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+	color: #31708f;
+}
+input.radio:checked ~ label {
+	color: #31708f;
+	border:1px solid #31708f;
+}    
+</style>
