@@ -103,12 +103,12 @@
 			<?php foreach ($enquiries as $enquiry) { ?>
 				<div class="panel panel-default">
 								<div class="panel-heading"># <?php echo $enquiry['enquiry_id']; ?> &nbsp; <?php echo $enquiry['firstname'].' '.$enquiry['lastname']; ?>
-						<a href="javascript:void();" onclick="quotation('<?php echo $enquiry['enquiry_id']; ?>');" class="pull-right">View Quotations & comments</a>
+						<a href="<?php echo $enquiry['link']; ?>" class="pull-right">View Quotations & comments</a>
 								</div>
 								<div class="panel-body">
 									<p>	Email: <?php echo $enquiry['email']; ?><br />
 						Telephone: <?php echo $enquiry['telephone']; ?><br />
-						Postcode: <?php echo $enquiry['postcode']; ?><br />
+						Postcode: <br />
 						<?php foreach ($enquiry['terms'] as $term) { ?>
 						<?php echo $term['type']; ?>:<?php echo $term['value']; ?><br />
 						<?php } ?>
@@ -187,9 +187,9 @@
 	</div>
 	
 <script type="text/javascript"><!--
-function quotation(enquiry_id){
+function viewquotationcomments(enquiry_id){
 	$.ajax({
-	url : 'index.php?route=module/enquiry/getQuotationSuppliers&enquiry_id='+enquiry_id, 	
+	url : 'index.php?route=account/customerpartner/enquiry/getQuotationSuppliers&enquiry_id='+enquiry_id, 	
 	dataType:'json',
 	success : function (json) {
 
@@ -210,7 +210,7 @@ function quotation(enquiry_id){
 		html_suppliers += '</div><div class="clearfix"/>';
 		
 		var quotations_comments_modal = addmodal('view-quotations','');
-		quotations_comments_modal.find('.modal-title').html('<h3 class="">Previous Conversations</hr>');
+		quotations_comments_modal.find('.modal-title').html('<h3 class="">Quotation & Comments</hr>');
 		quotations_comments_modal.find('.modal-body').html(html_suppliers);
 		quotations_comments_modal.modal('show');
     	
@@ -221,12 +221,14 @@ function suppliertabclick(quote_id) {
   
   var html_tab_content='';
   $.ajax({
-	  url : 'index.php?route=module/enquiry/getSentEnquiryComment&quote_id='+quote_id,
+	  url : 'index.php?route=account/customerpartner/enquiry/getSentEnquiryComment&quote_id='+quote_id,
 	    dataType: 'json',
 	    success : function (json) {
 	    	$("#commentsandquote").html("");
 
-	    	html_tab_content = '<div id ="previousconversations" style="overflow-y: scroll; height:400px;">';
+	    	/* html_tab_content += '<ul class="nav nav-pills nav-stacked" role="tablist">';
+	    	html_tab_content += '<li role="presentation" onclick="suppliertabclick(\''+val['quote']['quote_id']+'\');"><a>'+val['info']['firstname']+' '+val['info']['lastname']+'</a></li>'; */
+	    	html_tab_content += '<div id ="previousconversations" style="overflow-y: scroll; height:400px;">';
 	    	
 		    if (json.comments) {
 	    	 $.each(json.comments, function(key,val) {
@@ -257,7 +259,7 @@ function suppliertabclick(quote_id) {
 }
   $('body').on('click','#button-comment', function() {
 		$.ajax({
-			url : 'index.php?route=module/enquiry/addSentEnquiryComment',
+			url : 'index.php?route=account/customerpartner/enquiry/addSentEnquiryComment',
 			type: 'post',
 			dataType: 'json',
 			data: $('.quote-comments textarea[name^=\'quote\'] , .quote-comments input[name=\'quote_id\']'),

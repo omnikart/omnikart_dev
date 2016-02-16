@@ -1,11 +1,53 @@
-<div class="modal fade" id="<?php echo $modal_id; ?>" tabindex="-1"
-	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
-				<h4>Product Enquiry Form</h4>
+<div class="modal fade" id="<?php echo $modal_id; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+	  	<div class="modal-header">
+	  		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	  		<h4>Product Enquiry Form</h4>
+	  	</div>
+      <div class="modal-body"><!-- edited latest -->
+      	<form id="enquiry_form">
+	  	   <div class="row">
+	  	   <div class="col-sm-12">
+	  	   	<div class="table-responsive">
+			  	<table class="table" id="productquery">
+			  		<thead>
+			  			<tr style="visible:none;">
+			  				<th class="col-sm-6">Product Name</th>
+			  				<th class="col-sm-5">Quantity</th>
+			  				<th class="col-sm-1"></th>
+			  			</tr>
+			  		</thead>
+			  		<tbody id="product-0">
+			  			<tr>
+					  		<td>
+					          <div class="form-group required">
+					              <input type="text" name="product[0][name]" value=trim("") placeholder="Product Name" id="product-name" class="form-control" />
+					          </div>
+					    	</td>
+							<td>
+					          <div class="form-group required">
+					          	<div class="input-group">
+					              <input type="text" name="product[0][quantity]" value="" placeholder="Quantity Required" id="quantity" class="form-control quantity" />
+					              <span class="input-group-btn">
+	            					<button type="button" id="button-ctrl" data-loading-text="Loading..." class="btn btn-primary btn-increase"><i class="fa fa-plus"></i></button>
+	            					<button type="button" id="button-ctrl" data-loading-text="Loading..." class="btn btn-primary btn-decrease"><i class="fa fa-minus"></i></button>
+	            				  </span>
+	            				 </div>
+					          </div>
+						    </td>
+						    <td><button type="button" id="button-upload" onclick="$('#product-0').remove();" class="btn btn-danger btn-decrease"><i class="fa fa-times"></i></button>
+						    </td>
+						</tr>
+						<tr>
+							<td colspan="3">
+						        <div class="form-group required">
+						            <textarea rows="5" name="product[0][specification]" placeholder="Please specify your requirement and product specifications required" id="specification" class="form-control"></textarea>
+						        </div>
+							</td>
+			  			</tr>
+			  		</tbody>
+			   	</table>
 			</div>
 			<div class="modal-body">
 				<!-- edited latest -->

@@ -232,7 +232,6 @@ class ControllerSaleEnquiry extends Controller {
 			$data['payment_term']=array();
 			$this->load->model('localisation/payment_term');
 			$data['payment_term'] = $this->model_localisation_payment_term->getPaymentTerms();
-				
 			$this->response->setOutput($this->load->view('sale/quotation.tpl',$data));
 		}
 	}
@@ -261,7 +260,7 @@ class ControllerSaleEnquiry extends Controller {
 			$quote_id = $this->request->get['quote_id'];
 			else
 			$quote_id = 0;
-			
+		
 			$this->load->model('module/enquiry');
 			$data = $this->model_module_enquiry->getEnquiry($this->request->get['enquiry_id'],$quote_id,$quote_revision_id);
 			$this->load->model('localisation/tax_class');
@@ -341,6 +340,9 @@ class ControllerSaleEnquiry extends Controller {
 			$data['config_email']=$this->config->get('config_email');
 			$data['config_telephone']=$this->config->get('config_telephone');
 			$data['enquiryupdates'] = $this->url->link('sale/enquiry/quotation&token=' . $this->session->data['token'] , '&enquiry_id='.(int)$this->request->get['enquiry_id'], 'SSL');
+			$data['token'] = $this->session->data['token'];
+			$url="";
+			$data['get_revision_link'] = $this->url->link('sale/enquiry/getEnquiry&token=' . $this->session->data['token'] . $url,'', 'SSL');
 			$this->response->setOutput($this->load->view('sale/enquiry_form.tpl',$data));
 		}
 	}

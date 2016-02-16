@@ -3,12 +3,22 @@
 <!--[if IE 8 ]><html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" class="ie8"><![endif]-->
 <!--[if IE 9 ]><html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" class="ie9"><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!-->
-<html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>">
+<html xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="https://www.facebook.com/2008/fbml" dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>">
 <!--<![endif]-->
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="fb:app_id" content="797536807017110">
 <title><?php echo $title; ?></title>
+<meta property="og:title" content="<?php echo $title; ?>" />
+<meta property="og:type" content="testingomnikart:tool" />
+<meta property="og:url" content="<?php echo $og_url; ?>" />
+<meta property="og:description" content="<?php echo $description; ?>" />
+<meta property="og:image" content="<?php echo $og_image; ?>" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="470" />
+<meta property="og:image:height" content="394" />
 <base href="<?php echo $base; ?>" />
 <?php if ($description) { ?>
 <meta name="description" content="<?php echo $description; ?>" />
@@ -134,6 +144,23 @@ fbq('track', 'Purchase', {value: '0.00', currency: 'USD'});
 
 </head>
 <body class="<?php echo $class; ?>">
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '797536807017110',
+      xfbml      : true,
+      version    : 'v2.5'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 	<!-- nav id="top">
   <div class="container">
     <?php //echo $currency; ?>

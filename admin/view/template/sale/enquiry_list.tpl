@@ -123,7 +123,7 @@
 					<div class="panel-body">
 						<p>	Email: <?php echo $enquiry['email']; ?><br />
 						Telephone: <?php echo $enquiry['telephone']; ?><br />
-						Postcode: <?php echo $enquiry['postcode']; ?><br />
+						Address: <br />
 						<?php foreach ($enquiry['terms'] as $term) { ?>
 						<?php echo $term['type']; ?>:<?php echo $term['value']; ?><br />
 						<?php } ?>

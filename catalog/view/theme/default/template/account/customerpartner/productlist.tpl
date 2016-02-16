@@ -68,26 +68,20 @@
 						<i class="fa fa-list"></i> <?php echo $heading_title; ?></legend>
       <?php if($isMember) { ?>
       <div class="well">
-						<div class="row">
-							<div class="col-sm-4">
-								<div class="form-group">
-									<label class="control-label" for="input-name"><?php echo $column_name; ?></label>
-									<div class='input-group'>
-										<input type="text" name="filter_name"
-											value="<?php echo $filter_name; ?>"
-											placeholder="<?php echo $column_name; ?>" id="input-name"
-											class="form-control" /> <span class="input-group-addon"><span
-											class="fa fa-angle-double-down"></span></span>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label" for="input-price"><?php echo $column_price; ?></label>
-									<input type="text" name="filter_price"
-										value="<?php echo $filter_price; ?>"
-										placeholder="<?php echo $column_price; ?>" id="input-price"
-										class="form-control" />
-								</div>
-							</div>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label class="control-label" for="input-name"><?php echo $column_name; ?></label>
+              <div class='input-group'>                
+                <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $column_name; ?>" id="input-name" class="form-control" />                       
+                <span class="input-group-addon"><span class="fa fa-angle-double-down"></span></span>
+              </div>
+            </div>            
+            <div class="form-group">
+              <label class="control-label" for="input-"><?php echo $column_price; ?></label>
+              <input type="text" name="filter_price" value="<?php echo $filter_price; ?>" placeholder="<?php echo $column_price; ?>" id="input-price" class="form-control" />
+            </div>
+          </div>
 
 							<div class="col-sm-4">
 								<div class="form-group">

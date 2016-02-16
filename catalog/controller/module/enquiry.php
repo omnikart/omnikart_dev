@@ -36,16 +36,13 @@ class ControllerModuleEnquiry extends Controller {
 			if (! isset ( $data ['payment_terms'] ))
 				$json ['payment_terms'] = 'Please select payment terms...!';
 			
-			if (! isset ( $data ['postcode'] ))
-				$json ['postcode'] = 'Please enter postcode...!';
-			
 			if (! isset ( $data ['c_form'] ))
 				$json ['c_form'] = 'Please check whether you can provide C-Form...!';
 			
 			if (! $json && isset ( $this->session->data ['enquiry'] )) {
 				$data ['enquiries'] = array ();
 				$data ['payment_terms'] = $data ['payment_terms'];
-				$data ['postcode'] = $data ['postcode'];
+				$data ['address_id'] = $data ['address_id'];
 				$data ['c_form'] = $data ['c_form'];
 				$enquiries = $this->session->data ['enquiry'];
 				
@@ -61,9 +58,9 @@ class ControllerModuleEnquiry extends Controller {
 							'filenames' => $enq ['filenames'] 
 					);
 				}
-				
 				$this->load->model ( 'module/enquiry' );
 				$this->model_module_enquiry->addenquiry ( $data );
+				$this->model_module_enquiry->getEnquiry();
 				unset ( $this->session->data ['enquiry'] );
 				$json ['success'] = "Successfully send your query to Omnikart. We'll get back to you soon. :)";
 			}
@@ -269,13 +266,16 @@ class ControllerModuleEnquiry extends Controller {
 			}
 		}
 	}
+	
 	public function getEnquiry() {
+		
 		$data = array ();
 		$data ['enquiries'] = array ();
 		if (isset ( $this->session->data ['enquiry'] ))
 			$enquiries = $this->session->data ['enquiry'];
 		else
 			$enquiries = array ();
+		
 		$this->load->model ( 'localisation/unit_class' );
 		$this->load->model ( 'module/enquiry' );
 		$data ['payment_terms'] = $this->model_module_enquiry->getPaymentTerms ();
@@ -291,12 +291,40 @@ class ControllerModuleEnquiry extends Controller {
 					'filenames' => $enq ['filenames'] 
 			);
 		}
+		
+		$data ['addresses'] = array ();
+		$this->load->model ( 'account/address' );
+		$data ['addresses'] = $this->model_account_address->getAddresses ();
+		
+		if (isset ( $this->request->post ['country_id'] )) {
+			$data ['country_id'] = $this->request->post ['country_id'];
+		} elseif (! empty ( $address_info )) {
+			$data ['country_id'] = $address_info ['country_id'];
+		} else {
+			$data ['country_id'] = $this->config->get ( 'config_country_id' );
+		}
+		
+		if (isset ( $this->request->post ['zone_id'] )) {
+			$data ['zone_id'] = $this->request->post ['zone_id'];
+		} elseif (! empty ( $address_info )) {
+			$data ['zone_id'] = $address_info ['zone_id'];
+		} else {
+			$data ['zone_id'] = '';
+		}
+		
+		$this->load->model ( 'localisation/country' );
+		
+		$data['add_address'] = $this->url->link ( 'account/address', '', 'SSL' );
+		$data ['countries'] = $this->model_localisation_country->getCountries ();
 		if (file_exists ( DIR_TEMPLATE . $this->config->get ( 'config_template' ) . '/template/module/enquiry_products.tpl' )) {
 			$this->response->setOutput ( $this->load->view ( $this->config->get ( 'config_template' ) . '/template/module/enquiry_products.tpl', $data ) );
 		} else {
+			
 			$this->response->setOutput ( $this->load->view ( 'default/template/module/enquiry_products.tpl', $data ) );
 		}
 	}
+	
+	
 	public function getEnquiryComment() {
 		if (isset ( $this->request->get ['enquiry_id'] ))
 			$enquiry_id = $this->request->get ['enquiry_id'];
@@ -323,39 +351,7 @@ class ControllerModuleEnquiry extends Controller {
 			}
 		}
 	}
-	public function getQuotationSuppliers() {
-		if (isset ( $this->request->get ['enquiry_id'] ))
-			$enquiry_id = $this->request->get ['enquiry_id'];
-		else
-			$enquiry_id = 0;
-		$json = array ();
-		$this->load->model ( 'module/enquiry' );
-		$json = $this->model_module_enquiry->getQuotationBySuppliers ( $enquiry_id );
-		$this->response->setOutput ( json_encode ( $json ) );
-	}
-	public function getSentEnquiryComment() {
-		if (isset ( $this->request->get ['quote_id'] ))
-			$quote_id = $this->request->get ['quote_id'];
-		else
-			$quote_id = 0;
-		$json = array ();
-		$this->load->model ( 'module/enquiry' );
-		$json = $this->model_module_enquiry->getSentEnquiryComments ( $quote_id );
-		$this->response->setOutput ( json_encode ( $json ) );
-	}
-	public function addSentEnquiryComment() {
-		$this->load->model ( 'account/customerpartner' );
-		$customer_id = $this->model_account_customerpartner->getuserseller ();
-		$json = array ();
-		if ($this->request->server ['REQUEST_METHOD'] == 'POST') {
-			if (isset ( $this->request->post )) {
-				$this->load->model ( 'module/enquiry' );
-				$data = $this->request->post;
-				$json = $this->model_module_enquiry->addSentEnquiryComments ( $data ['quote_id'], $customer_id, $data ['quote'] [$data ['quote_id']] );
-				$this->response->setOutput ( json_encode ( $json ) );
-			}
-		}
-	}
+	
 	
 	public function install(){
 		$this->load->model('module/enquiry');

@@ -28,9 +28,9 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 		
 		$this->document->addStyle ( 'catalog/view/theme/default/stylesheet/MP/sell.css' );
 		
-		$this->language->load ( 'account/customerpartner/addproduct' );
+		$this->language->load ( 'account/customerpartner/enquiry' );
 		
-		$this->document->setTitle ( $this->language->get ( 'heading_title_productlist' ) );
+		$this->document->setTitle ( $this->language->get ( 'heading_title_enquirylist' ) );
 		
 		$this->data ['breadcrumbs'] = array ();
 		
@@ -47,8 +47,8 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 		);
 		
 		$this->data ['breadcrumbs'] [] = array (
-				'text' => $this->language->get ( 'heading_title_productlist' ),
-				'href' => $this->url->link ( 'account/customerpartner/productlist', '', 'SSL' ),
+				'text' => $this->language->get ( 'heading_title_enquirylist' ),
+				'href' => $this->url->link ( 'account/customerpartner/enquiry', '', 'SSL' ),
 				'separator' => $this->language->get ( 'text_separator' ) 
 		);
 		
@@ -117,7 +117,7 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 		
 		$this->data ['isMember'] = true;
 		$this->data ['isSentEnquiry'] = false;
-		$this->data ['heading_title'] = $this->language->get ( 'heading_title_productlist' );
+		$this->data ['heading_title'] = $this->language->get ( 'heading_title_enquirylist' );
 		$this->data ['text_enabled'] = $this->language->get ( 'text_enabled' );
 		$this->data ['text_disabled'] = $this->language->get ( 'text_disabled' );
 		$this->data ['text_no_results'] = $this->language->get ( 'text_no_results' );
@@ -173,7 +173,7 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get ( 'config_product_limit' );
 		$pagination->text = $this->language->get ( 'text_pagination' );
-		$pagination->url = $this->url->link ( 'account/customerpartner/productlist', '' . $url . '&page={page}', 'SSL' );
+		$pagination->url = $this->url->link ( 'account/customerpartner/enquiry', '' . $url . '&page={page}', 'SSL' );
 		
 		$this->data ['pagination'] = $pagination->render ();
 		
@@ -197,24 +197,22 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/enquiry.tpl', $this->data ) );
 		}
 	}
-
-	public function getEnquiry(){
-	
-		if (isset($this->request->get['enquiry_id']) && (int)$this->request->get['enquiry_id']) {
-			if (isset($this->request->get['quote_revision_id']))
-				$quote_revision_id = $this->request->get['quote_revision_id'];
+	public function getEnquiry() {
+		if (isset ( $this->request->get ['enquiry_id'] ) && ( int ) $this->request->get ['enquiry_id']) {
+			if (isset ( $this->request->get ['quote_revision_id'] ))
+				$quote_revision_id = $this->request->get ['quote_revision_id'];
 			else
 				$quote_revision_id = 0;
-					
-			if (isset($this->request->get['quote_id']))
-				$quote_id = $this->request->get['quote_id'];
+			
+			if (isset ( $this->request->get ['quote_id'] ))
+				$quote_id = $this->request->get ['quote_id'];
 			else
 				$quote_id = 0;
-					
 			$this->load->model('module/enquiry');
 			$this->load->model('account/customerpartner');
 			$seller_id = $this->model_account_customerpartner->getuserseller();
 			$data = $this->model_module_enquiry->getEnquiry($this->request->get['enquiry_id'],$seller_id ,$quote_id,$quote_revision_id);
+			
 			$this->load->model('localisation/tax_class');
 			$data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
 			$data['text_none'] = "None";
@@ -222,64 +220,62 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 				$data['tax_class_id'] = $this->request->post['tax_class_id'];
 			} elseif (!empty($product_info)) {
 				$data['tax_class_id'] = $product_info['tax_class_id'];
-			} else {
-				$data['tax_class_id'] = 0;
 			}
-
-			if (isset($this->request->post['weight'])) {
-				$data['weight'] = $this->request->post['weight'];
-			} elseif (!empty($product_info)) {
-				$data['weight'] = $product_info['weight'];
+			
+			if (isset ( $this->request->post ['weight'] )) {
+				$data ['weight'] = $this->request->post ['weight'];
+			} elseif (! empty ( $product_info )) {
+				$data ['weight'] = $product_info ['weight'];
 			} else {
-				$data['weight'] = '';
+				$data ['weight'] = '';
 			}
-
-			$this->load->model('localisation/weight_class');
-
-			$data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses();
-
-			if (isset($this->request->post['weight_class_id'])) {
-				$data['weight_class_id'] = $this->request->post['weight_class_id'];
-			} elseif (!empty($product_info)) {
-				$data['weight_class_id'] = $product_info['weight_class_id'];
+			
+			$this->load->model ( 'localisation/weight_class' );
+			
+			$data ['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses ();
+			
+			if (isset ( $this->request->post ['weight_class_id'] )) {
+				$data ['weight_class_id'] = $this->request->post ['weight_class_id'];
+			} elseif (! empty ( $product_info )) {
+				$data ['weight_class_id'] = $product_info ['weight_class_id'];
 			} else {
-				$data['weight_class_id'] = $this->config->get('config_weight_class_id');
+				$data ['weight_class_id'] = $this->config->get ( 'config_weight_class_id' );
 			}
-
-			if (isset($this->request->post['length'])) {
-				$data['length'] = $this->request->post['length'];
-			} elseif (!empty($product_info)) {
-				$data['length'] = $product_info['length'];
+			
+			if (isset ( $this->request->post ['length'] )) {
+				$data ['length'] = $this->request->post ['length'];
+			} elseif (! empty ( $product_info )) {
+				$data ['length'] = $product_info ['length'];
 			} else {
-				$data['length'] = '';
+				$data ['length'] = '';
 			}
-
-			if (isset($this->request->post['width'])) {
-				$data['width'] = $this->request->post['width'];
-			} elseif (!empty($product_info)) {
-				$data['width'] = $product_info['width'];
+			
+			if (isset ( $this->request->post ['width'] )) {
+				$data ['width'] = $this->request->post ['width'];
+			} elseif (! empty ( $product_info )) {
+				$data ['width'] = $product_info ['width'];
 			} else {
-				$data['width'] = '';
+				$data ['width'] = '';
 			}
-
-			if (isset($this->request->post['height'])) {
-				$data['height'] = $this->request->post['height'];
-			} elseif (!empty($product_info)) {
-				$data['height'] = $product_info['height'];
+			
+			if (isset ( $this->request->post ['height'] )) {
+				$data ['height'] = $this->request->post ['height'];
+			} elseif (! empty ( $product_info )) {
+				$data ['height'] = $product_info ['height'];
 			} else {
-				$data['height'] = '';
+				$data ['height'] = '';
 			}
-
-			$this->load->model('localisation/length_class');
-
-			$data['length_classes'] = $this->model_localisation_length_class->getLengthClasses();
-
-			if (isset($this->request->post['length_class_id'])) {
-				$data['length_class_id'] = $this->request->post['length_class_id'];
-			} elseif (!empty($product_info)) {
-				$data['length_class_id'] = $product_info['length_class_id'];
+			
+			$this->load->model ( 'localisation/length_class' );
+			
+			$data ['length_classes'] = $this->model_localisation_length_class->getLengthClasses ();
+			
+			if (isset ( $this->request->post ['length_class_id'] )) {
+				$data ['length_class_id'] = $this->request->post ['length_class_id'];
+			} elseif (! empty ( $product_info )) {
+				$data ['length_class_id'] = $product_info ['length_class_id'];
 			} else {
-				$data['length_class_id'] = $this->config->get('config_length_class_id');
+				$data ['length_class_id'] = $this->config->get ( 'config_length_class_id' );
 			}
 			$this->load->model('localisation/unit_class');
 			$this->load->model('localisation/payment_term');
@@ -291,49 +287,56 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			$data['config_address']=$this->config->get('config_address');
 			$data['config_email']=$this->config->get('config_email');
 			$data['config_telephone']=$this->config->get('config_telephone');
-			$data['enquiryupdates'] = $this->url->link('account/customerpartner/enquiry/quotation', '&enquiry_id='.(int)$this->request->get['enquiry_id'], 'SSL');
 			
-			$this->response->setOutput($this->load->view('default/template/account/customerpartner/enquiry_form.tpl',$data));
-		}
-	}
+			$this->load->model('account/address');
+			$data['addresss'] = $this->model_account_address->getAddresses();
+			
+			$data['enquiryupdates'] = $this->url->link('account/customerpartner/enquiry/quotation', '&enquiry_id='.(int)$this->request->get['enquiry_id'], 'SSL');
 
-	public function quotation(){
-		if (isset($this->request->get['enquiry_id']) && (int)$this->request->get['enquiry_id']) {
-			$this->load->model('module/enquiry');
-			$this->load->model('account/customerpartner');
-			$seller_id = $this->model_account_customerpartner->getuserseller();
-			$data = $this->model_module_enquiry->getEnquiry($this->request->get['enquiry_id'],$seller_id);
-			$this->load->model('localisation/tax_class');
-				
-			$data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
-			$data['text_none'] = "None";
-			if (isset($this->request->post['tax_class_id'])) {
-				$data['tax_class_id'] = $this->request->post['tax_class_id'];
-			} elseif (!empty($product_info)) {
-				$data['tax_class_id'] = $product_info['tax_class_id'];
+			
+			$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/enquiry_form.tpl', $data ) );
+		}
+	}
+	public function quotation() {
+		if (isset ( $this->request->get ['enquiry_id'] ) && ( int ) $this->request->get ['enquiry_id']) {
+			$this->load->model ( 'module/enquiry' );
+			$this->load->model ( 'account/customerpartner' );
+			$seller_id = $this->model_account_customerpartner->getuserseller ();
+			$data = $this->model_module_enquiry->getEnquiry ( $this->request->get ['enquiry_id'], $seller_id );
+			
+			$data['address'] = $this->model_module_enquiry->getAddress($data ['address_id']);
+			
+			$data['supplier_address'] = $this->model_module_enquiry->getAddress($data ['supplier_address_id']);
+			
+			$this->load->model ( 'localisation/tax_class' );
+			
+			$data ['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses ();
+			
+			$data ['text_none'] = "None";
+			if (isset ( $this->request->post ['tax_class_id'] )) {
+				$data ['tax_class_id'] = $this->request->post ['tax_class_id'];
+			} elseif (! empty ( $product_info )) {
+				$data ['tax_class_id'] = $product_info ['tax_class_id'];
 			} else {
-				$data['tax_class_id'] = 0;
+				$data ['tax_class_id'] = 0;
 			}
-			$data['payment_term']=array();
-			$this->load->model('localisation/payment_term');
-			$data['payment_term'] = $this->model_localisation_payment_term->getPaymentTerms();
-	
-			$this->response->setOutput($this->load->view('default/template/account/customerpartner/quotation.tpl',$data));
+			$data ['payment_term'] = array ();
+			$this->load->model ( 'localisation/payment_term' );
+			$data ['payment_term'] = $this->model_localisation_payment_term->getPaymentTerms ();
+			$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/quotation.tpl', $data ) );
 		}
 	}
-	
-	public function updateQuote(){
-		$data= array();
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['enquiry'])) {
-			$data = $this->request->post['enquiry'];
-			$this->load->model('module/enquiry');
-			foreach ($data['product'] as $key => $product) {
-				$data['product'][$key]['total'] = $this->tax->calculate($product['unit_price'],$product['tax_class_id'],true)*$product['quantity'];
+	public function updateQuote() {
+		$data = array ();
+		if (($this->request->server ['REQUEST_METHOD'] == 'POST') && isset ( $this->request->post ['enquiry'] )) {
+			$data = $this->request->post ['enquiry'];
+			$this->load->model ( 'module/enquiry' );
+			foreach ( $data ['product'] as $key => $product ) {
+				$data ['product'] [$key] ['total'] = $this->tax->calculate ( $product ['unit_price'], $product ['tax_class_id'], true ) * $product ['quantity'];
 			}
-			$this->model_module_enquiry->updateQuote($data);
+			$this->model_module_enquiry->updateQuote ( $data );
 		}
 	}
-	
 	private function validate() {
 		$this->load->language ( 'account/customerpartner/addproduct' );
 		
@@ -347,7 +350,124 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			return false;
 		}
 	}
+	public function getQuotationSuppliers() {
+		if (isset ( $this->request->get ['enquiry_id'] ))
+			$enquiry_id = $this->request->get ['enquiry_id'];
+		else
+			$enquiry_id = 0;
+		
+		$this->load->language( 'account/customerpartner/quotationcomments' );
+		
+		$this->load->model ( 'module/enquiry' );
+		$this->data = $this->model_module_enquiry->getQuotationBySuppliers ( $enquiry_id );
+		
 
-
+		
+		$this->data ['breadcrumbs'] = array ();
+		
+		$this->data ['breadcrumbs'] [] = array (
+				'text' => $this->language->get ( 'text_home' ),
+				'href' => $this->url->link ( 'common/home' ),
+				'separator' => false 
+		);
+		
+		$this->data ['breadcrumbs'] [] = array (
+				'text' => $this->language->get ( 'text_account' ),
+				'href' => $this->url->link ( 'account/account' ),
+				'separator' => $this->language->get ( 'text_separator' ) 
+		);
+		
+		$this->data ['breadcrumbs'] [] = array (
+				'text' => $this->language->get ( 'text_enquiry' ),
+				'href' => $this->url->link ( 'account/customerpartner/sentenquiry', '', 'SSL' ),
+				'separator' => $this->language->get ( 'text_separator' ) 
+		);
+		
+		$this->data ['breadcrumbs'] [] = array (
+				'text' => $this->language->get('heading_title'),
+				'href' => $this->url->link ( 'account/customerpartner/enquiry/getQuotationSuppliers', 'enquiry_id='.$enquiry_id, 'SSL' ),
+				'separator' => $this->language->get ( 'text_separator' ) 
+		);
+		
+		$this->data ['isMember'] = true;
+		$this->data ['isSentEnquiry'] = true;
+		$this->data ['heading_title'] = $this->language->get ( 'heading_title_enquirylist' );
+		$this->data ['column_name'] = "Customer Name";
+		$this->data ['column_date'] = "Date Added";
+		$this->data ['column_status'] = $this->language->get ( 'column_status' );
+		$this->data ['button_filter'] = $this->language->get ( 'button_filter' );
+		if (isset ( $this->error ['warning'] )) {
+			$this->data ['error_warning'] = $this->error ['warning'];
+		} else {
+			$this->data ['error_warning'] = '';
+		}
+		
+		if (isset ( $this->session->data ['warning'] )) {
+			$this->data ['error_warning'] = $this->session->data ['warning'];
+			unset ( $this->session->data ['warning'] );
+		}
+		
+		if (isset ( $this->session->data ['success'] )) {
+			$this->data ['success'] = $this->session->data ['success'];
+			unset ( $this->session->data ['success'] );
+		} else {
+			$this->data ['success'] = '';
+		}
+		
+		$url = '';
+		
+		if (isset ( $this->request->get ['filter_name'] )) {
+			$url .= '&filter_name=' . urlencode ( html_entity_decode ( $this->request->get ['filter_name'], ENT_QUOTES, 'UTF-8' ) );
+		}
+		
+		if (isset ( $this->request->get ['filter_date'] )) {
+			$url .= '&filter_date=' . urlencode ( html_entity_decode ( $this->request->get ['filter_date'], ENT_QUOTES, 'UTF-8' ) );
+		}
+		
+		if (isset ( $this->request->get ['filter_status'] )) {
+			$url .= '&filter_status=' . $this->request->get ['filter_status'];
+		}
+		
+		$pagination = new Pagination ();
+		$pagination->limit = $this->config->get ( 'config_product_limit' );
+		$pagination->text = $this->language->get ( 'text_pagination' );
+		$pagination->url = $this->url->link ( 'account/customerpartner/productlist', '' . $url . '&page={page}', 'SSL' );
+		
+		$this->data ['pagination'] = $pagination->render ();
+		
+		$limit = $this->config->get ( 'config_product_limit' );
+		
+		$this->data ['column_left'] = $this->load->controller ( 'common/column_left' );
+		$this->data ['column_right'] = $this->load->controller ( 'common/column_right' );
+		$this->data ['content_top'] = $this->load->controller ( 'common/content_top' );
+		$this->data ['content_bottom'] = $this->load->controller ( 'common/content_bottom' );
+		$this->data ['footer'] = $this->load->controller ( 'common/footer' );
+		$this->data ['header'] = $this->load->controller ( 'common/header' );
+		
+		$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/viewquotationcomments.tpl', $this->data ) );
+	}
+	public function getSentEnquiryComment() {
+		if (isset ( $this->request->get ['quote_id'] ))
+			$quote_id = $this->request->get ['quote_id'];
+		else
+			$quote_id = 0;
+		$json = array ();
+		$this->load->model ( 'module/enquiry' );
+		$json = $this->model_module_enquiry->getSentEnquiryComments ( $quote_id );
+		$this->response->setOutput ( json_encode ( $json ) );
+	}
+	public function addSentEnquiryComment() {
+		$this->load->model ( 'account/customerpartner' );
+		$customer_id = $this->model_account_customerpartner->getuserseller ();
+		$json = array ();
+		if ($this->request->server ['REQUEST_METHOD'] == 'POST') {
+			if (isset ( $this->request->post )) {
+				$this->load->model ( 'module/enquiry' );
+				$data = $this->request->post;
+				$json = $this->model_module_enquiry->addSentEnquiryComments ( $data ['quote_id'], $customer_id, $data ['quote'] [$data ['quote_id']] );
+				$this->response->setOutput ( json_encode ( $json ) );
+			}
+		}
+	}
 }
 ?>

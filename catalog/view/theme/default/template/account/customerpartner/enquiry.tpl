@@ -110,10 +110,16 @@
 								<div class="panel-body">
 									<p>	Email: <?php echo $enquiry['email']; ?><br />
 						Telephone: <?php echo $enquiry['telephone']; ?><br />
-						Postcode: <?php echo $enquiry['postcode']; ?><br />
 						<?php foreach ($enquiry['terms'] as $term) { ?>
 						<?php echo $term['type']; ?>:<?php echo $term['value']; ?><br />
 						<?php } ?>
+						
+						<?php foreach($enquiry['address'] as $address) { ?>
+						<?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?><br />
+						<?php echo $address['address_1']; ?> <?php echo $address['city']; ?><br />
+						<?php }?>
+						<?php echo $enquiry['zone']; ?>
+						<?php echo $enquiry['count']; ?>
 						</p>
 								</div>
 								<table class="table table-bordered">
@@ -324,4 +330,38 @@ function filter() {
   location = url;
 }
 //--></script>
-</div><?php echo $footer; ?>
+</div>
+<style>
+#quotation-form .quote-address label{width:100%;padding:10px;border:1px solid #ddd;}
+#quotation-form input.radio:empty {
+					margin-left: -999px;
+}
+ input.radio:empty ~ label {
+	position: relative;
+	float: left;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+input.radio:hover:not(:checked) ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+	color: #333;
+}
+input.radio:hover:not(:checked) ~ label {
+	color: #31708f;
+}
+input.radio:checked ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+	color: #31708f;
+}
+input.radio:checked ~ label {
+	color: #31708f;
+	border:1px solid #31708f;
+}    
+</style>
+
+<?php echo $footer; ?>
