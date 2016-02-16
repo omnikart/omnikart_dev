@@ -9,7 +9,7 @@
 class ControllerModulePavreassurance extends Controller {
 	private $data = array ();
 	public function index($setting) {
-		if (file_exists ( 'catalog/view/theme/' . $this->config->get ( 'config_template' ) . '/stylesheet/pavreassurance.css?v=2' )) {
+		if (file_exists ( 'catalog/view/theme/' . $this->config->get ( 'config_template' ) . '/stylesheet/pavreassurance.css' )) {
 			$this->document->addStyle ( 'catalog/view/theme/' . $this->config->get ( 'config_template' ) . '/stylesheet/pavreassurance.css' );
 		}
 		

@@ -58,9 +58,7 @@
 <script src="catalog/view/javascript/comboproducts.js"
 	type="text/javascript"></script>
 <?php foreach ($styles as $style) { ?>
-<link href="<?php echo $style['href']; ?>" type="text/css"
-	rel="<?php echo $style['rel']; ?>"
-	media="<?php echo $style['media']; ?>" />
+<link href="<?php echo $style['href']; ?>?v=8" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
 <script src="catalog/view/javascript/common.js?v=8"
 	type="text/javascript"></script>
