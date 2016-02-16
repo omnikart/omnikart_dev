@@ -222,7 +222,7 @@
 
 													<tr>
 														<td class="col-sm-2"><?php echo $lang_content; ?></td>
-														<td class="col-sm-10"><textarea class="pavo-editor"
+														<td class="col-sm-10"><textarea class="pavo-editor ckeditor"
 																cols="30" rows="5"
 																name="pavreassurance_module[<?php echo $module_row; ?>][pavreassurances][<?php echo $reassurence_row; ?>][caption][<?php echo $language['language_id']; ?>]"
 																id="caption-<?php echo $reassurence_row; ?>-<?php echo $language['language_id']; ?>"><?php echo isset($reassuarance['caption'][$language['language_id']]) ? $reassuarance['caption'][$language['language_id']] : ''; ?></textarea>
@@ -231,7 +231,7 @@
 
 													<tr>
 														<td class="col-sm-2"><?php echo $lang_detail; ?></td>
-														<td class="col-sm-10"><textarea class="pavo-editor"
+														<td class="col-sm-10"><textarea class="pavo-editor ckeditor"
 																cols="60" rows="10"
 																name="pavreassurance_module[<?php echo $module_row; ?>][pavreassurances][<?php echo $reassurence_row; ?>][detail][<?php echo $language['language_id']; ?>]"
 																id="detail-<?php echo $reassurence_row; ?>-<?php echo $language['language_id']; ?>"><?php echo isset($reassuarance['detail'][$language['language_id']]) ? $reassuarance['detail'][$language['language_id']] : ''; ?></textarea>
@@ -256,9 +256,8 @@
 	</div>
 
 	<script type="text/javascript"><!--
-$('.pavo-editor').summernote({
-    height: 300
-  });
+
+	
 //--></script>
 
 	<script type="text/javascript"><!--
