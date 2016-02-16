@@ -13,6 +13,8 @@ class ControllerCommonHeader extends Controller {
 		$data ['keywords'] = $this->document->getKeywords ();
 		$data ['links'] = $this->document->getLinks ();
 		$data ['styles'] = $this->document->getStyles ();
+		$data['og_url'] = $this->document->getOgURL();
+		$data['og_image'] = $this->document->getOgImage();
 		
 		require_once (DIR_SYSTEM . 'nitro/core/core.php');
 		require_once (DIR_SYSTEM . 'nitro/core/cdn.php');

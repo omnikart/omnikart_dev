@@ -5,12 +5,26 @@ class Document {
 	private $keywords;
 	private $links = array ();
 	private $styles = array ();
+	private $og_url;
+	private $og_image;
 	private $scripts = array ();
 	public function setTitle($title) {
 		$this->title = $title;
 	}
 	public function getTitle() {
 		return $this->title;
+	}
+	public function setOgURL($url) {
+		$this->og_url = $url;
+	}
+	public function getOgURL() {
+		return $this->og_url;
+	}
+	public function setOgImage($image) {
+		$this->og_image = str_replace(' ', '%20', $image);
+	}
+	public function getOgImage() {
+		return $this->og_image;
 	}
 	public function setDescription($description) {
 		$this->description = $description;

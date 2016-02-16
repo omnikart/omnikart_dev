@@ -219,6 +219,8 @@ class ControllerProductProduct extends Controller {
 			$this->document->setTitle($product_info['meta_title']);
 			$this->document->setDescription($product_info['meta_description']);
 			$this->document->setKeywords($product_info['meta_keyword']);
+			$this->document->setOgURL($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']));
+
 			$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');
 			$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
 			$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
@@ -282,7 +284,6 @@ class ControllerProductProduct extends Controller {
 			$this->load->model ( 'tool/image' );
 			
 			$product_info ['image'] = ($product_info ['image'] ? $product_info ['image'] : 'no_image.png');
-			
 			if ($product_info ['image']) {
 				$data ['popup'] = $this->model_tool_image->resize ( $product_info ['image'], $this->config->get ( 'config_image_popup_width' ), $this->config->get ( 'config_image_popup_height' ) );
 			} else {
@@ -295,6 +296,8 @@ class ControllerProductProduct extends Controller {
 				$data ['thumb'] = '';
 			}
 			
+			$this->document->setOgImage($this->model_tool_image->resize($product_info['image'], 470, 394));
+
 			$data ['images'] = array ();
 			
 			$results = $this->model_catalog_product->getProductImages ( $this->request->get ['product_id'] );
