@@ -752,17 +752,17 @@ footer #powered div {
 }
 
 .btn-default {
-	color: #ef8d1e;
+	color: #F2B50F;
 	/*text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);*/
 	background-color: #fff;
 	/*background-image: linear-gradient(to bottom, #eeeeee, #dddddd);
 	background-repeat: repeat-x;*/
-	border-color: #ef8d1e;
+	border-color: #F2B50F;
 }
 .btn-default:hover, .btn-default:active, .btn-default.active,
 	.btn-default.disabled, .btn-default[disabled] {
-	background-color: #ef8d1e;
-	border-color: #ef8d1e;
+	background-color: #F2B50F;
+	border-color: #F2B50F;
 	color: #fff;
 }
 .btn-primary {
@@ -986,8 +986,8 @@ footer #powered div {
 
 .product-thumb h4 {
 	display: block;
-	line-height: 20px;
-	font-size: 14px;
+	line-height: 17px;
+	font-size: 13px;
 	margin: 0;
 	height:60px;
 	text-transform: none;
@@ -1005,7 +1005,7 @@ footer #powered div {
 }
 
 .product-thumb .caption a {
-	color: #333333;
+	color: #0C2D4D;
 }
 
 .product-list .product-thumb .caption {
@@ -1015,8 +1015,13 @@ footer #powered div {
 .product-thumb .cart-button {
 	padding: 10px;
 }
-.cart-button input{
-border-color:#ef8d1e;
+.cart-button input, #postcode input,#postcode .input-group-addon{
+border-color:#F2B50F;
+
+}
+#postcode .input-group-addon{
+background: #F2B50F;
+color:#fff;
 }
 @media ( max-width : 1200px) {
 	.product-grid .product-thumb .caption {
@@ -1069,7 +1074,9 @@ h2.price {
 }
 
 .product-thumb .price h4 {
-	color: #ef8d1e;
+	color: #111;
+	font-weight: 800;
+
 }
 
 .product-thumb .price-new {
