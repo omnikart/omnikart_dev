@@ -303,9 +303,15 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			$this->load->model ( 'account/customerpartner' );
 			$seller_id = $this->model_account_customerpartner->getuserseller ();
 			$data = $this->model_module_enquiry->getEnquiry ( $this->request->get ['enquiry_id'], $seller_id );
+			
+			$data['address'] = $this->model_module_enquiry->getAddress($data ['address_id']);
+			
+			$data['supplier_address'] = $this->model_module_enquiry->getAddress($data ['supplier_address_id']);
+			
 			$this->load->model ( 'localisation/tax_class' );
 			
 			$data ['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses ();
+			
 			$data ['text_none'] = "None";
 			if (isset ( $this->request->post ['tax_class_id'] )) {
 				$data ['tax_class_id'] = $this->request->post ['tax_class_id'];
@@ -317,10 +323,6 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			$data ['payment_term'] = array ();
 			$this->load->model ( 'localisation/payment_term' );
 			$data ['payment_term'] = $this->model_localisation_payment_term->getPaymentTerms ();
-			
-			$this->load->model('account/address');
-			$data['addresss'] = $this->model_account_address->getAddresses();
-			
 			$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/quotation.tpl', $data ) );
 		}
 	}

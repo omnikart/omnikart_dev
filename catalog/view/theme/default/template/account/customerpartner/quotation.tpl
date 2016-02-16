@@ -71,17 +71,16 @@ margin-left: 600;
 <div class="panel panel-default">
 <table class="table table-bordered">
 	<tbody>
-		<tr><td colspan="2"><?php foreach($addresss as $address) { ?>
+		<tr><td colspan="2">
 			<div class="clearfix quote-address pull-left">
-				<label for="address<?php echo $address['address_id']; ?>">
-					<?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?></td>
+				<label for="address<?php echo $supplier_address['supplier_address_id']; ?>">
+					<?php echo $supplier_address['firstname']; ?> <?php echo $supplier_address['lastname']; ?></td>
 					<td colspan="2">
-					<?php echo $address['address_1']; ?>,
-					<?php echo $address['city']; ?> <?php echo $address['postcode']; ?>,
-					<?php echo $address['zone']; ?> <?php echo $address['country']; ?>
+					<?php echo $supplier_address['address_1']; ?>,
+					<?php echo $supplier_address['city']; ?> <?php echo $supplier_address['postcode']; ?>,
+					<?php echo $supplier_address['zone']; ?> <?php echo $supplier_address['country']; ?>
 				</label>
 			  </div>
-			  <?php } ?>
 		</td></tr>
 		<tr><td colspan="4" class="pull-left" >Quotation No: 12345</td></tr>
 		<tr id="customer"><td colspan="2"  class="pull-left">Customer Details</td>

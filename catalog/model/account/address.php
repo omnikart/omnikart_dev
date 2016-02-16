@@ -89,6 +89,8 @@ class ModelAccountAddress extends Model {
 			return false;
 		}
 	}
+	
+	
 	public function getAddresses() {
 		$address_data = array ();
 		$customer_id = $this->customer->getId ();

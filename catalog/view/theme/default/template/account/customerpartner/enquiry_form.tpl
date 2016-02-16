@@ -40,7 +40,7 @@
 			
 			<td>Address</td><td><?php foreach($addresss as $address) { ?>
 			<div class="clearfix quote-address pull-left">
-			 		<input type="radio" name="address_id" id="address<?php echo $address['address_id']; ?>" value="<?php echo $address['address_id']; ?>" class="radio" />
+			 		<input type="radio" name="enquiry[supplier_address_id]" id="address<?php echo $address['address_id']; ?>" value="<?php echo $address['address_id']; ?>" class="radio" <?php echo ($supplier_address_id==$address['address_id']?'checked="checked"':''); ?> />
 					<label for="address<?php echo $address['address_id']; ?>">
 						<strong><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?></strong><hr>
 						<?php echo $address['address_1']; ?><br />
