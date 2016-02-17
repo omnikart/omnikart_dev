@@ -46,7 +46,7 @@
 					<ul id="socail">
 					<li><a target="_blank" href="https://www.facebook.com/omnikart/"><i
 							style="background: #3b5998;" class="fa fa-facebook"></i></a></li>
-					<li><a target="_blank" href="https://www.facebook.com/omnikart"><i
+					<li><a target="_blank" href="https://www.linkedin.com/company/omnikart-engineering-private-limited"><i
 							style="background: #007bb6" class="fa fa-linkedin"></i></a></li>
 					<li><a target="_blank" href="https://twitter.com/OMNIKART_COM/"><i
 							style="background: #00aced" class="fa fa-twitter"></i></a></li>
