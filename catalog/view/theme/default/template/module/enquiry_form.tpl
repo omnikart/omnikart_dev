@@ -149,7 +149,6 @@ $('#enquiry_modal').on('click','button.btn-decrease',function(){
     }
 	else input.val(1);
 });
-
 $('#enquiry_modal').on('click','#button-upload',function(){
 	$('#form-upload').remove();
 	
@@ -269,6 +268,7 @@ $('#enquiry_modal').on('click','#button-addproduct',function(){
 $('#enquiry_modal').on('click','.fa-minus-circle',function(){
 	$(this).parent().remove();
 });
+
 $('#enquiry_modal').on('click','#view-enquiry',function(){
 	$.ajax({
 		url : 'index.php?route=module/enquiry/getEnquiry',
@@ -283,17 +283,13 @@ $('#enquiry_modal').on('click','#view-enquiry',function(){
 	});
 });
 $('#enquiry_modal button.btn-decrease').trigger('click');
-$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
-$('#enquiry_modal').on('show.bs.modal',function (e) {
-	$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
-});
 
 $('#button-addproduct').attr('disabled',true);
-   $("#product-name").keyup(function(){
-        if($(this).val().length !=0)
-            $('#button-addproduct').attr('disabled', false);            
-        else
-            $('#button-addproduct').attr('disabled',true);
-  });
+$("#product-name").keyup(function(){
+	if($(this).val().length !=0)
+    	$('#button-addproduct').attr('disabled', false);            
+    else
+        $('#button-addproduct').attr('disabled',true);
+});
 
 </script>

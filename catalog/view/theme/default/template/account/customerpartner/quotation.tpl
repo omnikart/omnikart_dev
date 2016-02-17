@@ -130,7 +130,7 @@ margin-left: 600;
 			<tbody>
 				<?php foreach ($enquiries as $key=>$enquiry) { ?>
 					<tr>
-						<td class="center"><?php echo $key; ?></td>
+						<td class="center"><?php echo $key + 1; ?></td>
 						<?php if (isset($enquiry['link'])) { ?>
 							<td><a href="<?php echo $enquiry['link']; ?>" > <?php echo $enquiry['name']; ?> </a></td>
 						<?php } else { ?>

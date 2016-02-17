@@ -108,10 +108,16 @@
 								<div class="panel-body">
 									<p>	Email: <?php echo $enquiry['email']; ?><br />
 						Telephone: <?php echo $enquiry['telephone']; ?><br />
-						Postcode: <br />
 						<?php foreach ($enquiry['terms'] as $term) { ?>
 						<?php echo $term['type']; ?>:<?php echo $term['value']; ?><br />
 						<?php } ?>
+						
+						<?php foreach($enquiry['address'] as $address) { ?>
+						<?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?><br />
+						<?php echo $address['address_1']; ?> <?php echo $address['city']; ?><br />
+						<?php }?>
+						<?php echo $enquiry['zone']; ?>
+						<?php echo $enquiry['count']; ?>
 						</p>
 								</div>
 								<table class="table table-bordered">
@@ -127,7 +133,7 @@
 									<tbody>
 						<?php foreach ($enquiry['enquiries'] as $key=>$enquiry_product) { ?>
 							<tr>
-											<td class="center"><?php echo $key; ?></td>
+											<td class="center"><?php echo $key + 1; ?></td>
 							<?php if (isset($enquiry_product['link'])) { ?>
 							<td><a href="<?php echo $enquiry_product['link']; ?>"> <?php echo $enquiry_product['name']; ?> </a></td>
 							<?php } else { ?>
@@ -187,7 +193,7 @@
 	</div>
 	
 <script type="text/javascript"><!--
-function viewquotationcomments(enquiry_id){
+/*function viewquotationcomments(enquiry_id){
 	$.ajax({
 	url : 'index.php?route=account/customerpartner/enquiry/getQuotationSuppliers&enquiry_id='+enquiry_id, 	
 	dataType:'json',
@@ -227,7 +233,7 @@ function suppliertabclick(quote_id) {
 	    	$("#commentsandquote").html("");
 
 	    	/* html_tab_content += '<ul class="nav nav-pills nav-stacked" role="tablist">';
-	    	html_tab_content += '<li role="presentation" onclick="suppliertabclick(\''+val['quote']['quote_id']+'\');"><a>'+val['info']['firstname']+' '+val['info']['lastname']+'</a></li>'; */
+	    	html_tab_content += '<li role="presentation" onclick="suppliertabclick(\''+val['quote']['quote_id']+'\');"><a>'+val['info']['firstname']+' '+val['info']['lastname']+'</a></li>';
 	    	html_tab_content += '<div id ="previousconversations" style="overflow-y: scroll; height:400px;">';
 	    	
 		    if (json.comments) {
@@ -267,7 +273,7 @@ function suppliertabclick(quote_id) {
 				suppliertabclick($('.quote-comments input[name=\'quote_id\']').val());
 		    }
 		});
-	});
+	});*/
 //--></script>	
 	
 <script type="text/javascript"><!--

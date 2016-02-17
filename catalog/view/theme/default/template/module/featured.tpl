@@ -1,7 +1,6 @@
 <div class="row">
 	<div class="col-sm-12">
-		<div class="col-sm-12 white">
-			<h3 class="nmt"><?php echo $heading_title; ?></h3>
+			<h3 class=""><?php echo $heading_title; ?></h3>
 			<div class="row">
 				<div class="flexslider featured" id="featured<?php echo $module; ?>">
 					<ul class="slides">
@@ -9,7 +8,7 @@
 	  <li>
 		  <div class="product-layout col-xs-12">
 		    <div class="product-thumb transition">
-				<?php require(DIR_TEMPLATE.'default/template/common/product/productwdb.tpl'); ?>
+				<?php require(DIR_TEMPLATE.'default/template/common/product/productwdbfeatured.tpl'); ?>
 		    </div>
 		  </div>
 		 </li>
@@ -18,7 +17,6 @@
 	</ul>
 				</div>
 			</div>
-		</div>
 	</div>
 </div>
 <script type="text/javascript"><!--

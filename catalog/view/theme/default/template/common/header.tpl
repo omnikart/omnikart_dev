@@ -3,12 +3,22 @@
 <!--[if IE 8 ]><html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" class="ie8"><![endif]-->
 <!--[if IE 9 ]><html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>" class="ie9"><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!-->
-<html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>">
+<html xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="https://www.facebook.com/2008/fbml" dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>">
 <!--<![endif]-->
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="fb:app_id" content="797536807017110">
 <title><?php echo $title; ?></title>
+<meta property="og:title" content="<?php echo $title; ?>" />
+<meta property="og:type" content="testingomnikart:tool" />
+<meta property="og:url" content="<?php echo $og_url; ?>" />
+<meta property="og:description" content="<?php echo $description; ?>" />
+<meta property="og:image" content="<?php echo $og_image; ?>" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="470" />
+<meta property="og:image:height" content="394" />
 <base href="<?php echo $base; ?>" />
 <?php if ($description) { ?>
 <meta name="description" content="<?php echo $description; ?>" />
@@ -28,31 +38,29 @@
                 <script
 	src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
             <?php } else { ?>
-<script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js?v=7"
+<script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js?v=8"
 	type="text/javascript"></script>
 <?php } ?>
-<script src="catalog/view/javascript/mf/jquery-ui.min.js?v=7"
+<script src="catalog/view/javascript/mf/jquery-ui.min.js?v=8"
 	type="text/javascript"></script>
-<link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css?v=7"
+<link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css?v=8"
 	rel="stylesheet" media="screen" />
 <script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js"
 	type="text/javascript"></script>
 <link
-	href="catalog/view/javascript/font-awesome/css/font-awesome.min.css?v=7"
+	href="catalog/view/javascript/font-awesome/css/font-awesome.min.css?v=8"
 	rel="stylesheet" type="text/css" />
 <link
 	href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700"
 	rel="stylesheet" type="text/css" />
-<link href="catalog/view/theme/default/stylesheet/stylesheet.css?v=7"
+<link href="catalog/view/theme/default/stylesheet/stylesheet.css?v=8"
 	rel="stylesheet">
 <script src="catalog/view/javascript/comboproducts.js"
 	type="text/javascript"></script>
 <?php foreach ($styles as $style) { ?>
-<link href="<?php echo $style['href']; ?>" type="text/css"
-	rel="<?php echo $style['rel']; ?>"
-	media="<?php echo $style['media']; ?>" />
+<link href="<?php echo $style['href']; ?>?v=8" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
-<script src="catalog/view/javascript/common.js?v=7"
+<script src="catalog/view/javascript/common.js?v=8"
 	type="text/javascript"></script>
 <?php foreach ($scripts as $script) { ?>
 <script src="<?php echo $script; ?>" type="text/javascript"></script>
@@ -134,6 +142,23 @@ fbq('track', 'Purchase', {value: '0.00', currency: 'USD'});
 
 </head>
 <body class="<?php echo $class; ?>">
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '797536807017110',
+      xfbml      : true,
+      version    : 'v2.5'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 	<!-- nav id="top">
   <div class="container">
     <?php //echo $currency; ?>
@@ -167,44 +192,44 @@ fbq('track', 'Purchase', {value: '0.00', currency: 'USD'});
 							<div class="col-sm-12">
 								<div id="top-links" class="nav pull-right">
 									<ul class="list-inline">
-										<li><a href="<?php echo $contact; ?>"><span class="top-i"><i
-													class="fa fa-phone"></i></span></a><span
-											class="hidden-xs hidden-sm hidden-md top-i"><?php echo $telephone; ?></span></li>
-
-						<?php if ($logged && ($rights || $chkIsPartner)) { ?>
-							<li class="dropdown"><a href="<?php echo $menusell; ?>" title="<?php echo $menusell; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="top-i"><i class="fa fa-th"></i></span><span class="hidden-sm hidden-xs hidden-md top-i">Menu</span><span class="caret"></span></a>
-									<div class="dropdown-menu dropdown-menu-right">
-										<div class="dropdown-inner">
-											<ul class="list-unstyled">
-												<div class="col-sm-12 hb">
-													<li><a class="btn btn-info" href="<?php echo $mp_profile; ?>"><?php echo $text_my_profile; ?></a></li>
-													<li><a class="btn btn-info" href="<?php echo $mp_dashboard; ?>"><?php echo $text_dashboard; ?></a></li>
-													<li><a class="btn btn-info" href="<?php echo $mp_orderhistory; ?>"><?php echo $text_orderhistory; ?></a></li>
-													<li><a class="btn btn-info" href="<?php echo $mp_transaction; ?>"><?php echo $text_transaction; ?></a></li>
-													<li><a class="btn btn-info" href="<?php echo $mp_productlist; ?>"><?php echo $text_productlist; ?></a></li>
-													<li><a class="btn btn-info" href="<?php echo $mp_enquiry; ?>"><?php echo $text_enquiry; ?></a></li>													
-													<li><a class="btn btn-info" href="<?php echo $mp_download; ?>"><?php echo $text_download; ?></a></li>
-													<li><a class="btn btn-info" href="<?php echo $mp_add_shipping_mod; ?>"><?php echo $text_wkshipping; ?></a></li>
+										<li><a href="<?php echo $contact; ?>">
+											<span class="top-i"><i class="hidden-xs hidden-sm hidden-md top-i"></i><?php echo $telephone; ?>
+											</span></a>
+										</li>
+										<?php if ($logged && ($rights || $chkIsPartner)) { ?>
+											<li class="dropdown"><a href="<?php echo $menusell; ?>" title="<?php echo $menusell; ?>" class="dropdown-toggle" data-toggle="dropdown"><span class="top-i"><i class="fa fa-th"></i></span><span class="hidden-sm hidden-xs hidden-md top-i">Menu</span><span class="caret"></span></a>
+													<div class="dropdown-menu dropdown-menu-right">
+														<div class="dropdown-inner">
+															<ul class="list-unstyled">
+																<div class="col-sm-12 hb">
+																	<li><a class="btn btn-info" href="<?php echo $mp_profile; ?>"><?php echo $text_my_profile; ?></a></li>
+																	<li><a class="btn btn-info" href="<?php echo $mp_dashboard; ?>"><?php echo $text_dashboard; ?></a></li>
+																	<li><a class="btn btn-info" href="<?php echo $mp_orderhistory; ?>"><?php echo $text_orderhistory; ?></a></li>
+																	<li><a class="btn btn-info" href="<?php echo $mp_transaction; ?>"><?php echo $text_transaction; ?></a></li>
+																	<li><a class="btn btn-info" href="<?php echo $mp_productlist; ?>"><?php echo $text_productlist; ?></a></li>
+																	<li><a class="btn btn-info" href="<?php echo $mp_enquiry; ?>"><?php echo $text_enquiry; ?></a></li>													
+																	<li><a class="btn btn-info" href="<?php echo $mp_download; ?>"><?php echo $text_download; ?></a></li>
+																	<li><a class="btn btn-info" href="<?php echo $mp_add_shipping_mod; ?>"><?php echo $text_wkshipping; ?></a></li>
+																</div>
+															</ul>
+															<?php if ($rights) { ?>
+															<ul id="dashboard" class="list-unstyled">
+																<div class="col-sm-12 hb">
+																<?php if (in_array('db',$rights)) {?>
+																	<li><a class="btn btn-primary" href="<?php echo $b_db; ?>"><i class="fa fa-line-chart"></i><?php echo $t_db; ?></a></li>
+																	<li><a class="btn btn-primary" href="<?php echo $b_so; ?>"><i class="fa fa-calendar-plus-o"></i><?php echo $t_so; ?></a></li>
+																	<li><a class="btn btn-primary" href="<?php echo $b_se;?>" ><i class="fa fa-file-text-o"></i><?php echo $t_se;?></a></li>
+																<?php } ?>
+																</div>
+															</ul>
+															<?php } ?>
+													</div>
 												</div>
-											</ul>
-											<?php if ($rights) { ?>
-											<ul id="dashboard" class="list-unstyled">
-												<div class="col-sm-12 hb">
-												<?php if (in_array('db',$rights)) {?>
-													<li><a class="btn btn-primary" href="<?php echo $b_db; ?>"><i class="fa fa-line-chart"></i><?php echo $t_db; ?></a></li>
-													<li><a class="btn btn-primary" href="<?php echo $b_so; ?>"><i class="fa fa-calendar-plus-o"></i><?php echo $t_so; ?></a></li>
-													<li><a class="btn btn-primary" href="<?php echo $b_se;?>" ><i class="fa fa-file-text-o"></i><?php echo $t_se;?></a></li>
-												<?php } ?>
-												</div>
-											</ul>
-											<?php } ?>
-									</div>
-								</div>
-							</li>
-						<?php } else { ?>
-							<li class="dropdown"><a href="<?php echo $menusell; ?>"><span
-												class="hidden-sm hidden-xs hidden-md top-i">Sell Online</span></a></li>
-						<?php } ?>
+											</li>
+										<?php } else { ?>
+											<li class="dropdown"><a href="<?php echo $menusell; ?>"><span
+																class="hidden-sm hidden-xs hidden-md top-i">Sell Online</span></a></li>
+										<?php } ?>
 						
 									<li class="dropdown"><a href="<?php echo $account; ?>"
 											title="<?php echo $text_account; ?>" class="dropdown-toggle"
@@ -229,9 +254,14 @@ fbq('track', 'Purchase', {value: '0.00', currency: 'USD'});
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-9"><?php echo $search; ?>
-						</div>
-							<div class="col-sm-3 hidden-xs ns1 pull-right"><?php echo $cart; ?></div>
+							<div class="col-sm-8"><?php echo $search; ?>
+							</div>
+							<div class="col-sm-2 hidden-xs ns1">
+								<button type="button" class="btn btn-primary btn-block" id="view-enquiry">
+									Enquiries <span class="badge">0</span>
+								</button>
+							</div>
+							<div class="col-sm-2 hidden-xs ns1 pull-right"><?php echo $cart; ?></div>
 						</div>
 					</div>
 				</div>
@@ -249,25 +279,43 @@ fbq('track', 'Purchase', {value: '0.00', currency: 'USD'});
 						</button>
 					</div>
 					<div class="collapse navbar-collapse navbar-ex1-collapse">
-						<ul class="nav navbar-nav">
-	        <?php foreach (array_slice($categories,0,8) as $category) { ?>
+			<ul class="nav navbar-nav">
+			<li class="dropdown" id="all-products" style="position:inherit;"><a href="#">All Products <span class="caret"></span></a>
+				<div class="dropdown-menu" style="width:100%;left:0px;">
+					<?php foreach (array_chunk($categories,4) as $categoryl) { ?>
+						<div class="col-sm-12">
+						<?php foreach ($categoryl as $category) { ?>
+							<div class="col-sm-3">
+								<a href="<?php echo $category['href']; ?>" class="see-all"><?php echo $category['name']; ?></a>
+								<div class="dropdown-inner">
+									<ul class="list-unstyled">
+										<?php foreach (array_slice($category['children'],0,3) as $child) { ?>
+										<li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>
+										<?php } ?>
+									</ul>
+			            		</div>
+							</div>
+						<?php } ?>
+						</div><div class="clearfix"></div>
+					<?php } ?>
+				</div>			
+			</li>
+	        <?php foreach (array_slice($categories,0,7) as $category) { ?>
 		        <?php if ($category['children']) { ?>
-		        <li class="dropdown"><a
-								href="<?php echo $category['href']; ?>"
-								class="dropdown-toggle disabled" data-toggle="dropdown"><?php echo $category['name']; ?> <span
-									class="caret"></span></a>
-								<div class="dropdown-menu">
-									<div class="dropdown-inner">
-									<?php foreach (array_chunk($category['children'], ceil(count($category['children']) / $category['column'])) as $children) { ?>
+		        	<li class="dropdown"><a href="<?php echo $category['href']; ?>" class="dropdown-toggle disabled" data-toggle="dropdown"><?php echo $category['name']; ?> <span class="caret"></span></a>
+						<div class="dropdown-menu">
+							<div class="dropdown-inner">
+								<?php foreach (array_chunk($category['children'], ceil(count($category['children']) / $category['column'])) as $children) { ?>
 									<ul class="list-unstyled">
 										<?php foreach ($children as $child) { ?>
 										<li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>
 										<?php } ?>
 									</ul>
-									<?php } ?>
-		            </div>
-									<a href="<?php echo $category['href']; ?>" class="see-all"><?php echo $text_all; ?> <?php echo $category['name']; ?></a>
-								</div></li>
+								<?php } ?>
+		            		</div>
+							<a href="<?php echo $category['href']; ?>" class="see-all"><?php echo $text_all; ?> <?php echo $category['name']; ?></a>
+						</div>
+					</li>
 		        <?php } else { ?>
 		        <li><a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></li>
 		        <?php } ?>
@@ -279,3 +327,8 @@ fbq('track', 'Purchase', {value: '0.00', currency: 'USD'});
 		</div>
 	<?php } ?>	
 </header>
+<script type="text/javascript">
+$('#enquiry_modal').on('show.bs.modal',function (e) {
+	$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
+});
+</script>

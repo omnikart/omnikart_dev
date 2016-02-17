@@ -46,8 +46,8 @@
 			</div>
 		<?php } else { ?>
 		<tr>
-							<td class="text-center" colspan="10"><?php echo $text_no_results; ?></td>
-						</tr>
+			<td class="text-center" colspan="10"><?php echo $text_no_results; ?></td>
+		</tr>
 		<?php } ?>
       </form>
       <?php } else { ?>

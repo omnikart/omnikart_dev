@@ -786,25 +786,12 @@ $('#button-quote').on('click', function() {
 				$('.text-danger').parent().addClass('has-error');
 			}
 			if (json['success']) {
-				$('.breadcrumb').after('<div class="alert alert-success">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#view-enquiry').trigger('click');
+				$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
 			}
 		}
 	});
 });
-
-$('#columns').on('click','#view-enquiry',function(){
-	$.ajax({
-		url : 'index.php?route=module/enquiry/getEnquiry',
-	    dataType: "html",
-	    success : function (data) {
-		    $('#enquiry-products').modal('show');
-		    $('#enquiry-products').remove();
-			$('body').append(data);
-			$('#enquiry-products').modal('show');
-	    }
-	});
-});
-
 //--></script>
 	<script type="text/javascript"><!--
 $('.date').datetimepicker({
@@ -920,7 +907,6 @@ $('#button-review').on('click', function() {
 		}
 	});
 });
-
 $(document).ready(function() {
 	$('.thumbnails').magnificPopup({
 		type:'image',

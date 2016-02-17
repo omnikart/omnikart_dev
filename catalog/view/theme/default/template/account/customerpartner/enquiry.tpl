@@ -135,7 +135,7 @@
 									<tbody>
 						<?php foreach ($enquiry['enquiries'] as $key=>$enquiry_product) { ?>
 							<tr>
-											<td class="center"><?php echo $key; ?></td>
+											<td class="center"><?php echo $key + 1; ?></td>
 							<?php if (isset($enquiry_product['link'])) { ?>
 							<td><a href="<?php echo $enquiry_product['link']; ?>"> <?php echo $enquiry_product['name']; ?> </a></td>
 							<?php } else { ?>

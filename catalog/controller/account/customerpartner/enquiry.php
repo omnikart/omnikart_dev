@@ -396,6 +396,7 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 		$this->data ['column_date'] = "Date Added";
 		$this->data ['column_status'] = $this->language->get ( 'column_status' );
 		$this->data ['button_filter'] = $this->language->get ( 'button_filter' );
+		$this->data ['text_no_results'] = $this->language->get ('text_no_results');
 		if (isset ( $this->error ['warning'] )) {
 			$this->data ['error_warning'] = $this->error ['warning'];
 		} else {

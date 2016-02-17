@@ -31,27 +31,28 @@ class ControllerModuleCategoryWall extends Controller {
 		
 		$data ['categories'] = array ();
 		
-		$categories = $this->model_catalog_category->getCategories ( 0 );
-		
+		$categories = $this->config->get('category_wall_categories');
 		$this->load->model ( 'tool/image' );
-		
-		foreach ( $categories as $category ) {
-			if ($category ['top']) {
-				
-				$filter_data = array (
-						'filter_category_id' => $category ['category_id'],
-						'filter_sub_category' => true 
-				);
-				
-				$product_total = $this->model_catalog_product->getTotalProducts ( $filter_data );
-				if ($product_total != 0) {
-					$data ['categories'] [] = array (
-							'name' => $category ['name'],
-							'image' => $this->model_tool_image->resize ( $category ['image'], 150, 150 ),
-							'href' => $this->url->link ( 'product/category', 'path=' . $category ['category_id'] ) 
-					);
-				}
+	
+		foreach ( $categories as $categoryl ) {
+			$category = $this->model_catalog_category->getCategory($categoryl['category_id']);
+			$sub_categories = explode(',',$categoryl['sub_categories'] );
+			$children = array();
+			foreach ( $sub_categories as $sub_category ) {
+				$child = $this->model_catalog_category->getCategory($sub_category);
+				$children[] = array (
+					'name' => $child ['name'],
+					'href' => $this->url->link ( 'product/category', 'path=' . $category ['category_id'].'_'.$child ['category_id'] ) ,
+				);	
 			}
+
+			$data ['categories'] [] = array (
+					'name' => $category ['name'],
+					'image' => $this->model_tool_image->resize ( $category ['image'], 100, 100 ),
+					'href' => $this->url->link ( 'product/category', 'path=' . $category ['category_id'] ) ,
+					'children'=>$children
+			);
+
 		}
 		
 		if (file_exists ( DIR_TEMPLATE . $this->config->get ( 'config_template' ) . '/template/module/category_wall.tpl' )) {
