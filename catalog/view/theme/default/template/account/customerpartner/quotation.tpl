@@ -71,42 +71,45 @@ margin-left: 600;
 <div class="panel panel-default">
 <table class="table table-bordered">
 	<tbody>
-		<tr><td colspan="2">
-			<div class="clearfix quote-address pull-left">
-				<label for="address<?php echo $supplier_address['supplier_address_id']; ?>">
-					<?php echo $supplier_address['firstname']; ?> <?php echo $supplier_address['lastname']; ?></td>
-					<td colspan="2">
-					<?php echo $supplier_address['address_1']; ?>,
-					<?php echo $supplier_address['city']; ?> <?php echo $supplier_address['postcode']; ?>,
-					<?php echo $supplier_address['zone']; ?> <?php echo $supplier_address['country']; ?>
-				</label>
-			  </div>
-		</td></tr>
-		<tr><td colspan="4" class="pull-left" >Quotation No: 12345</td></tr>
+		<tr>
+			<td colspan="2">
+				<div class="clearfix quote-address pull-left">
+					<label for="address<?php echo $supplier_address['supplier_address_id']; ?>">
+						<?php echo $supplier_address['firstname']; ?> <?php echo $supplier_address['lastname']; ?>
+						<td colspan="2">
+							<?php echo $supplier_address['address_1']; ?>,
+							<?php echo $supplier_address['city']; ?> <?php echo $supplier_address['postcode']; ?>,
+							<?php echo $supplier_address['zone']; ?> <?php echo $supplier_address['country']; ?>
+						</td>
+					</label>
+			 	</div>
+			</td>
+		</tr>
+		<tr><td colspan="4" class="pull-left" >Quotation No: 246685</td></tr>
 		<tr id="customer"><td colspan="2"  class="pull-left">Customer Details</td>
 		<td colspan="2">Information</td></tr>
 		<tr>
-			<td style="width:100px">Name</td><td>: <?php echo $firstname.' '.$lastname; ?></td>
-			<td style="width:100px">Date</td><td>:11/10/1993</td>
+			<td style="width:100px">Name: </td><td><?php echo $firstname.' '.$lastname; ?></td>
+			<td style="width:100px">Date: </td><td>11/10/1993</td>
 		</tr>
 		<tr>
-			<td style="width:100px">Email</td><td>:<?php echo $email; ?></td>
-			<td style="width:100px">Quote Expiration Date</td><td>:11/10/1993</td>
+			<td style="width:100px">Email: </td><td><?php echo $email; ?></td>
+			<td style="width:100px">Quote Expiration Date: </td><td>11/10/1993</td>
 		</tr>
 		<tr>
-			<td style="width:100px">Telephone</td><td>: <?php echo $telephone; ?></td>
-			<td style="width:100px">Delivery Lead Time</td><td>:1 week</td>
+			<td style="width:100px">Telephone: </td><td><?php echo $telephone; ?></td>
+			<td style="width:100px">Delivery Lead Time: </td><td>1 week</td>
 		</tr>
 		<tr>
-			<td rowspan="2" >Address</td><td rowspan="2" > 
+			<td rowspan="2" >To Address</td><td rowspan="2" > 
 			<?php echo $address_1;?><br />
 			<?php echo $city;?><br />
 			<?php echo $zone;?><br />
 			<?php echo $country;?>
 			</td>
-			<td style="width:100px">Contact Name </td><td>:shailesh</td>
+			<td style="width:100px">Contact Name: </td><td>shailesh</td>
 		</tr>
-		<tr><td style="width:100px">Contact No </td><td>:9004458077</td></tr>
+		<tr><td style="width:100px">Contact No:	 </td><td>9004458077</td></tr>
 		<tr>
 			<td colspan="4"></td>
 		</tr>
