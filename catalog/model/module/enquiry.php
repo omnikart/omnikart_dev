@@ -139,7 +139,7 @@ class ModelModuleEnquiry extends Model {
 	}
 	public function getQuotationBySuppliers($enquiry_id) {
 		$query = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "enquiry_to_supplier e2s LEFT JOIN " . DB_PREFIX . "quote q ON (e2s.enquiry_id = q.enquiry_id) WHERE e2s.enquiry_id='" . $enquiry_id . "'" );
-		$data = array ();
+		$data['quotes'] = array ();
 		foreach ( $query->rows as $enquirytoSupplier ) {
 			$this->load->model ( 'account/customer' );
 			$data ['quotes'] [$enquirytoSupplier ['supplier_id']] ['info'] = $this->model_account_customer->getCustomer ( $enquirytoSupplier ['supplier_id'] );

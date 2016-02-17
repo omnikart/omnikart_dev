@@ -9,4 +9,4 @@ $_ ['text_enquiry'] = 'Enquiry List';
 $_ ['text_quotationcommmentslist'] = 'Quotation and comments';
 $_ ['text_quotationcomments_details'] = 'Quotation and comments Details';
 $_ ['text_select'] = 'Select';
-?>
+$_ ['text_no_results'] = 'No Result Found !!'?>
