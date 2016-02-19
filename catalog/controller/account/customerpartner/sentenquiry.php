@@ -171,7 +171,7 @@ class ControllerAccountCustomerpartnerSentEnquiry extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get ( 'config_product_limit' );
 		$pagination->text = $this->language->get ( 'text_pagination' );
-		$pagination->url = $this->url->link ( 'account/customerpartner/productlist', '' . $url . '&page={page}', 'SSL' );
+		$pagination->url = $this->url->link ( 'account/customerpartner/sentenquiry', '' . $url . '&page={page}', 'SSL' );
 		
 		$this->data ['pagination'] = $pagination->render ();
 		

@@ -36,8 +36,10 @@
 			<div class="col-sm-3">
 				<ul class="nav nav-pills nav-stacked" role="tablist">
 				<?php foreach ($quotes as $quote) { ?>
-						<li role="presentation" onclick="suppliertabclick(<?php echo $quote['quote']['quote_id']; ?>);">
+						<li role="presentation" onclick="suppliertabclick(<?php echo $quote['quote']['quote_id']; ?>,<?php echo $quote['quote']['enquiry_id']; ?>);">
+							<?php if(isset($quote['info']['firstname'])) { ?>
 							<a><?php  echo $quote['info']['firstname'] . ' ' . $quote['info']['lastname']; ?></a>
+							<?php } ?>
 						</li>
 				<?php } ?>
 				</ul>
@@ -80,11 +82,11 @@
 	
 <script type="text/javascript"><!--
 
-function suppliertabclick(quote_id) {
+function suppliertabclick(quote_id,enquiry_id) {
   
   var html_tab_content='';
   $.ajax({
-	  url : 'index.php?route=account/customerpartner/enquiry/getSentEnquiryComment&quote_id='+quote_id,
+	  url : 'index.php?route=account/customerpartner/enquiry/getSentEnquiryComment&quote_id='+quote_id+'&enquiry_id='+enquiry_id,
 	    dataType: 'json',
 	    success : function (json) {
 	    	$("#commentsandquote").html("");
@@ -92,8 +94,112 @@ function suppliertabclick(quote_id) {
 	    	html_tab_content += '<div id ="previousconversations" style="overflow-y: scroll; height:400px;">';
 	    	
 		    if (json.comments) {
+	    	 	 html_tab_content +=       '<div class="container">'
+	    	 	 html_tab_content +=     	 '<ul class="list-inline">'
+	    	 	 html_tab_content +=    		'<li class="active"><a data-toggle="tab" href="#chat">Chat</a></li>'
+	    	 	 html_tab_content +=    		' <li><a data-toggle="tab" href="#quotation">Quotation</a></li>'
+	    	 	 html_tab_content +=      	 '</ul>'
+	    	 	 html_tab_content +=       '<div class="tab-content">'
+	    	 	 html_tab_content +=       '<div id="quotation" class="tab-pane fade">'
+	    	 	 
+		    	html_tab_content += 	 '<div class="panel panel-default">'
+				html_tab_content +=	'<table class="table table-bordered">'
+				html_tab_content +='<tbody>'
+				html_tab_content +=	'<tr><td colspan="2">'
+				html_tab_content +=	'<div class="clearfix quote-address pull-left">'
+				html_tab_content +=				'<label for="address<?php echo $supplier_address['supplier_address_id']; ?>">'
+				html_tab_content +='<?php echo $supplier_address['firstname']; ?> <?php echo $supplier_address['lastname']; ?></td>'
+				html_tab_content +=			'<td colspan="2">'
+				html_tab_content +=			'<?php echo $supplier_address['address_1']; ?>'
+				html_tab_content +=	'<?php echo $supplier_address['city']; ?> <?php echo $supplier_address['postcode']; ?>'
+				html_tab_content +=		'<?php echo $supplier_address['zone']; ?> <?php echo $supplier_address['country']; ?>'
+				html_tab_content +=	'</label>'
+				html_tab_content +=  '</div>'
+				html_tab_content +=	'</td></tr>'
+				html_tab_content +=	'<tr><td colspan="4" class="pull-left" >Quotation No: 12345</td></tr>'
+				html_tab_content +=	'<tr id="customer"><td colspan="2"  class="pull-left">Customer Details</td>'
+				html_tab_content +=	'<td colspan="2">Information</td></tr>'
+				html_tab_content +=	'<tr>'
+				html_tab_content +=	'<td style="width:100px">Name</td><td>: <?php echo $firstname.' '.$lastname; ?></td>'
+				html_tab_content +=		'<td style="width:100px">Date</td><td>:11/10/1993</td>'
+				html_tab_content +=		'</tr>'
+				html_tab_content +=	'<tr>'
+				html_tab_content +=		'<td style="width:100px">Email</td><td>:<?php echo $email; ?></td>'
+				html_tab_content +=		'<td style="width:100px">Quote Expiration Date</td><td>:11/10/1993</td>'
+				html_tab_content +=	'</tr>'
+				html_tab_content +=		'<tr>'
+				html_tab_content +=	'<td style="width:100px">Telephone</td><td>: <?php echo $telephone; ?></td>'
+				html_tab_content +=	'<td style="width:100px">Delivery Lead Time</td><td>:1 week</td>'
+				html_tab_content +=	'</tr>'
+				html_tab_content +=	'<tr>'
+				html_tab_content +=	'<td rowspan="2" >Address</td><td rowspan="2" >' 
+				html_tab_content +=	'<?php echo $address_1;?><br />'
+				html_tab_content +=	'<?php echo $city;?><br />'
+				html_tab_content +=	'<?php echo $zone;?><br />'
+				html_tab_content +=	'<?php echo $country;?>'
+				html_tab_content +=	'</td>'
+				html_tab_content +=	'<td style="width:100px">Contact Name </td><td>:shailesh</td>'
+				html_tab_content +='</tr>'
+				html_tab_content +='<tr><td style="width:100px">Contact No </td><td>:9004458077</td></tr>'
+				html_tab_content +='<tr>'
+				html_tab_content +=	'<td colspan="4"></td>'
+				html_tab_content +='</tr>'
+				html_tab_content +='</tbody>'
+				html_tab_content +='</table>'
+				html_tab_content +='</div>'
+				html_tab_content +='<div class="panel panel-default">'
+		  		html_tab_content +='<div class="panel-body">'
+				html_tab_content +='<table  class="table table-bordered table-hover"  border="1px solid black";>'
+				html_tab_content +='<thead>'
+				html_tab_content +=	'<tr>'
+				html_tab_content +=	'<td class="center" >Sr No.</td>'
+				html_tab_content +=	'<td>Name</td>'
+				html_tab_content +=		'<td class="center" >Quantity</td>'
+				html_tab_content +=		'<td >Description</td>'
+				html_tab_content +=		'<td class="center" >Unit Price</td>'
+				html_tab_content +=		'<td class="center" >Tax class</td>'
+				html_tab_content +=		'<td class="center" >Total(INR)</td>'
+				html_tab_content +=		'</tr>'
+				html_tab_content +=	'</thead>'
+				html_tab_content +=	'<tbody>'
+				html_tab_content +=	'<?php foreach ($enquiries as $key=>$enquiry) { ?>'
+				html_tab_content +=		'<tr>'
+				html_tab_content +=		'<td class="center"><?php echo $key + 1; ?></td>'
+				html_tab_content +=		'<?php if (isset($enquiry['link'])) { ?>'
+				html_tab_content +=			'<td><a href="<?php echo $enquiry['link']; ?>" > <?php echo $enquiry['name']; ?> </a></td>'
+				html_tab_content +=		'<?php } else { ?>'
+				html_tab_content +=			'<td><?php echo $enquiry['name']; ?></td>'
+				html_tab_content +=			'<?php } ?>'
+				html_tab_content +=		'<td class="center"><?php echo $enquiry['quantity']; ?></td>'
+				html_tab_content +=			'<td>'
+				html_tab_content +=		'<?php echo round($enquiry['weight'],4); ?> <?php echo $enquiry['weight_class']; ?><hr>'
+				html_tab_content +=	'<?php echo round($enquiry['length'],4); ?> x <?php echo round($enquiry['width'],4); ?> x <?php echo round($enquiry['height'],4); ?> <?php echo $enquiry['length_class']; ?></td>
+				html_tab_content +=		'<td class="center"><?php echo $enquiry['price']; ?> <?php echo $enquiry['unit']; ?> </td>'
+				html_tab_content +=		'<td class="center"><?php echo $enquiry['tax_class']; ?></td>'
+		        html_tab_content +=		'<td class="center"><?php echo $enquiry['total']; ?></td>'
+				html_tab_content +=		'</tr>'
+				html_tab_content +=		'<?php } ?>'
+				html_tab_content +=	'</tbody>'
+				html_tab_content +=		'<?php foreach ($terms as $term) { ?>'
+				html_tab_content +=		'<tr>'
+				html_tab_content +=			'<td colspan="4"></td>'
+				html_tab_content +=		'<td colspan="1" class="right"><?php echo $term['type']; ?></td>'
+				html_tab_content +=		'<td colspan="2">'
+				html_tab_content +=		'<?php echo $term['value']; ?>'
+				html_tab_content +=			'</td>'
+				html_tab_content +=	'</tr>'
+				html_tab_content +=	'<?php } ?>'
+				html_tab_content +=	'</tbody>'
+				html_tab_content +=	'</table>'
+				html_tab_content += '</div>'
+				html_tab_content +='</div>'
+			    	 	 
+	    	 	 
+	    	 	 html_tab_content +=       '</div>'
+	    		
 	    	 $.each(json.comments, function(key,val) {
-	    		 html_tab_content += 		'<div class="panel panel-default">';
+	    	     html_tab_content +=       '<div id="chat" class="tab-pane fade in active">' 
+	    	     html_tab_content += 		'<div class="panel panel-default">';
 		    	 html_tab_content += 			'<div class="panel-heading">';
 	    		 html_tab_content +=     			'<h4 class="panel-title">'+val['authorname']+'</h4>';
 	    		 html_tab_content +=			'</div>';
@@ -111,6 +217,7 @@ function suppliertabclick(quote_id) {
 	    	html_tab_content += 			'</div>';
 	    	html_tab_content += 			'<button type="button" id="button-comment" data-loading-text="text loading" class="btn btn-primary">Submit Comment</button>';
 	    	html_tab_content +=    		'</div>';
+	    	html_tab_content +=    	'</div>';
 	    	html_tab_content +=    	'</div>';
 	    	
 	    	$("#commentsandquote").html(html_tab_content);

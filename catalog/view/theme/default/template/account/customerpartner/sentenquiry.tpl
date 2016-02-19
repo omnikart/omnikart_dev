@@ -265,7 +265,6 @@ function suppliertabclick(quote_id) {
 }
   $('body').on('click','#button-comment', function() {
 		$.ajax({
-			url : 'index.php?route=account/customerpartner/enquiry/addSentEnquiryComment',
 			type: 'post',
 			dataType: 'json',
 			data: $('.quote-comments textarea[name^=\'quote\'] , .quote-comments input[name=\'quote_id\']'),

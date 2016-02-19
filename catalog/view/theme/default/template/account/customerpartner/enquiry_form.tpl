@@ -26,44 +26,44 @@
 <div class="panel panel-default">
 <table class="table table-bordered">
 	<tbody>
+			<td>Store Name: <?php echo $config_name; ?></td>
+			<td style="width:100px">Name: <?php echo $firstname.' '.$lastname; ?></td>
 		<tr>
-			<td style="width:100px">Name</td><td>: <?php echo $firstname.' '.$lastname; ?></td>
-			<td>Store Name</td>
-			<td>: <?php echo $config_name; ?></td>
+			<td >Store Owner: <?php echo $config_owner; ?></td>
+			<td >Email: <?php echo $email; ?></td>
 		</tr>
 		<tr>
-			<td >Email</td><td>: <?php echo $email; ?></td>
-			<td >Store Owner</td><td>: <?php echo $config_owner; ?></td>
-		</tr>
-		<tr>
-			<td >Telephone</td><td>: <?php echo $telephone; ?></td>
-			
-			<td>Address</td><td><?php foreach($addresss as $address) { ?>
+			<td style="width: 245px;">Address:  <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#getAddress">Add Address</button>
+			<div id="getAddress" class="collapse">
+			<?php foreach($addresss as $address) { ?>
 			<div class="clearfix quote-address pull-left">
-			 		<input type="radio" name="enquiry[supplier_address_id]" id="address<?php echo $address['address_id']; ?>" value="<?php echo $address['address_id']; ?>" class="radio" <?php echo ($supplier_address_id==$address['address_id']?'checked="checked"':''); ?> />
-					<label for="address<?php echo $address['address_id']; ?>">
-						<strong><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?></strong><hr>
-						<?php echo $address['address_1']; ?><br />
-						 <?php echo $address['city']; ?> <?php echo $address['postcode']; ?><br/>
-						<?php echo $address['zone']; ?> <?php echo $address['country']; ?>
-					</label>
+			 	<input type="radio" name="enquiry[supplier_address_id]" id="address<?php echo $address['address_id']; ?>" value="<?php echo $address['address_id']; ?>" class="radio" <?php echo ($supplier_address_id==$address['address_id']?'checked="checked"':''); ?> />
+				<label for="address<?php echo $address['address_id']; ?>">
+				<strong><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?></strong><hr>
+				<?php echo $address['address_1']; ?><br />
+				<?php echo $address['city']; ?> <?php echo $address['postcode']; ?><br/>
+				<?php echo $address['zone']; ?> <?php echo $address['country']; ?>
+				</label>
 			  </div>
 			<?php } ?>
+			</div>
 			
 			</td>
-		</tr>
-		<tr>
-			<td >Address</td><td>:
+			<td style="text-align: left;">Address:
 			<?php echo $address_1;?><br />
 			<?php echo $city;?><br />
 			<?php echo $zone;?><br />
 			<?php echo $country;?>
-			</td>
-			<td >E-Mail</td><td>: <?php echo $config_email; ?></td>	
+			</td>			
 		</tr>
 		<tr>
+			<td >E-Mail: <?php echo $config_email; ?></td>
+			<td >Telephone: <?php echo $telephone; ?></td>
+			
+		</tr>
+		<tr>
+			<td>Telephone: <?php echo $config_telephone; ?></td>
 			<td colspan="2"></td>
-			<td>Telephone</td><td>: <?php echo $config_telephone; ?></td>
 		</tr>
 	</tbody>
 </table>

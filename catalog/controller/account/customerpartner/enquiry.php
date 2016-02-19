@@ -448,10 +448,13 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 		$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/viewquotationcomments.tpl', $this->data ) );
 	}
 	public function getSentEnquiryComment() {
-		if (isset ( $this->request->get ['quote_id'] ))
+		if (isset ( $this->request->get ['quote_id'] ) && isset ( $this->request->get ['enquiry_id'] ) ){
 			$quote_id = $this->request->get ['quote_id'];
+			$enquiry_id = $this->request->get ['enquiry_id'];
+		}
 		else
 			$quote_id = 0;
+		
 		$json = array ();
 		$this->load->model ( 'module/enquiry' );
 		$json = $this->model_module_enquiry->getSentEnquiryComments ( $quote_id );
