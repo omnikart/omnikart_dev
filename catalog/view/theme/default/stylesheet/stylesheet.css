@@ -22,8 +22,8 @@
 }
 
 body {
-	font-family: "Noto Serif", sans-serif;
-	font-weight: 400;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: 500;
 	color: #666;
 	font-size: 14px;
 	line-height: 20px;
@@ -216,7 +216,6 @@ header.navbar-fixed-top {
 }
 
 #search .input-lg, #search select {
-	height: 34px;
 	line-height: 20px;
 	padding: 0 10px;
 }
@@ -239,23 +238,21 @@ header.navbar-fixed-top {
 	border-color: #ccc;
 	box-shadow: none;
 	font-size: 15px;
-	line-height: 34px;
 	background:#f8f8f8;
 }
 
 #search .btn-lg {
-	line-height: 22px;
-	padding: 5px 15px;
+	padding: 6px 15px;
 	text-shadow: 0 1px 0 #FFF;
 	border-width: 1px 1px 1px 0;
 	color: #0C2D4D;
 }
 #search .btn-lg .fa {
-font-size:20px;
+font-size:19px;
 }
 .top-i {
 	padding: 0 5px;
-	line-height: 20px;
+	
 	display: inline-block;
 	vertical-align: middle;
 	font-size: 14px;
@@ -348,19 +345,19 @@ font-size:20px;
 	background-image: linear-gradient(to bottom, #f28826, #f17b0e);
 	background-repeat: repeat-x;
 	border-color: #f17b0e #f17b0e #d96f0d;*/
-	min-height: 40px;
+	min-height: 20px;
 	margin-bottom: 0px;
 	border: none;
 }
 
 #menu .nav>li>a {
-	color: #0C2D4D;
+	color: #154d84;
 	text-shadow: none;;
-	padding: 7px 15px;
+	padding: 0px 15px;
 	min-height: 15px;
 	background-color: transparent;
 	font-size: 14px;
-	font-weight: 400;
+	font-weight: 600;
 	border-top: 3px solid #fff;
 	border-bottom: 3px solid #fff;
 }
@@ -415,13 +412,11 @@ font-size:20px;
 	border-radius: 0 0 3px 3px;
 	font-size: 12px;
 }
-#all-products{
+/*#all-products{
 	background:#0C2D4D;
-}
+}*/
 #menu .nav>li#all-products>a{
-	color:#fff;
-	border-top: 3px solid #0C2D4D;
-	border-bottom: 3px solid #0C2D4D;
+	color:#0C2D4D;
 }
 #all-products .see-all {
 	display: block;
@@ -2033,6 +2028,9 @@ input.btn {
     height: 115px; /* This is the height on hover 
 }
 */
+#category-wall .product-thumb {
+margin-bottom: 80px;
+}
 #category-wall .product-thumb .image{
 	padding:0px;
 	float:left;
@@ -2071,4 +2069,23 @@ display:none;
 #category-wall .sub-category li:hover > a {
 	background: #F2B50F;
 	color: #fff;
+}
+#category-wall .product-thumb h4 {
+	font-size: 14px;
+	color: #0C2D4D;
+}
+#category-wall .product-thumb:hover h4 {
+}
+#category-wall .product-thumb .more {
+	position: absolute;
+	right: 0;
+	top:0;
+	display: none;
+	color:#fff;
+	float: right;
+	background: #F2B50F;
+	padding: 5px 7px;
+}
+#category-wall .product-thumb:hover .more {
+	display: inline-block;
 }

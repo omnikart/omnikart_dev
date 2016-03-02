@@ -23,12 +23,7 @@
         //--></script>
 <div class="row ">
 <div class="col-sm-12">
-<?php foreach ($vendors as $vendor_id => $vendor) { ?>  
-<div class="panel panel-default">
-	<div class="panel-heading">
-  	<?php echo "Sold By: ".$vendor['details']['companyname']; ?>
-	</div>
-  <div class="panel-body">
+
 	    
         <div class="table-responsive">
 				<table class="table table-striped table-bordered" style="border-bottom: 3px solid #dff0d8;">
@@ -50,7 +45,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($vendor['products'] as $product) { ?>  
+                <?php foreach ($products as $product) { ?>  
                     <?php if ($product['recurring']): ?>
                         <tr>
 					<td colspan="6" style="border: none;"><image
@@ -117,7 +112,7 @@
                 </tbody>
 							</table>
 							<table>
-                <?php foreach ($vendor['vouchers'] as $voucher) { ?>
+                <?php foreach ($vouchers as $voucher) { ?>
                     <tr>
 					<td class="name" colspan="3"><?php echo $voucher['description']; ?></td>
 
@@ -136,37 +131,20 @@
 
 					</td>
 				</tr>
-                <?php } ?>
-               </table>
-        				<table class="pull-right">
-									<?php $i = 0; ?>
-									<?php foreach ($vendor['totals'] as $total) { ?>
-											<tr class="" style="border: none;">
-													<td colspan="<?php echo ($mmos_checkout['enable_pmodel'] == 1) ? '5' : '4'; ?>" class="price text-right "><b><?php echo $total['title']; ?>:</b></td>
-													<td class="total" colspan="2"><?php echo $total['text']; ?></td>
-											</tr>
-											<?php $i++; ?>
-									<?php } ?>
-               </table>
+					<?php } ?>
+				 </table>
+					<table class="pull-right">
+						<?php $i = 0; ?>
+						<?php foreach ($totals as $total) { ?>
+								<tr class="" style="border: none;">
+										<td colspan="<?php echo ($mmos_checkout['enable_pmodel'] == 1) ? '5' : '4'; ?>" class="price text-right "><b><?php echo $total['title']; ?>:</b></td>
+										<td class="total" colspan="2"><?php echo $total['text']; ?></td>
+								</tr>
+								<?php $i++; ?>
+						<?php } ?>
+				 </table>
  
     </div>
-	</div>
-</div>
-
-					<?php } ?>
-   					
-					<div class="clearfix"></div><br /><hr />
-					<table class="pull-right">
-            <tbody>
-							<?php foreach ($totals as $total) { ?>
-									<tr class="" style="border: none;">
-											<td colspan="<?php echo ($mmos_checkout['enable_pmodel'] == 1) ? '5' : '4'; ?>" class="price text-right "><b><?php echo $total['title']; ?>:</b></td>
-											<td class="total" colspan="2"><?php echo $total['text']; ?></td>
-									</tr>
-									<?php $i++; ?>
-							<?php } ?>
-            </tbody>
-		</table>
 	</div>
 </div>    
 

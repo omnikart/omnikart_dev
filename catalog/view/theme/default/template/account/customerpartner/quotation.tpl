@@ -83,9 +83,9 @@ float:right;
 		<tr>
 			<td colspan="2"  style=" border-style:hidden;"><h1>Omnikart Price Quote</h1></td>
 			<td style=" text-align: right; border-style:hidden;">
-			Date: 11/11/1111</br>
-			Quotation No: 12345</br>	
-			Expiration Date: 12458		
+			<?php echo $date;?></br>
+			Quotation No: <?php echo $quote_number;?></br>	
+			Expiration Date: <?php echo $expiration_date; ?>		
 			</td>
 		</tr>
 		</tbody>
@@ -106,25 +106,24 @@ float:right;
 
 		<td  style="border-style:hidden; text-align: right;">
 			To,</br>
-			<?php echo $firstname; ?> <?php echo $lastname; ?><br />
-			<?php echo $address_1;?><br />
-			<?php echo $city;?><br />
-			<?php echo $zone;?> <?php echo $country;?>
+			<?php echo $address['firstname']; ?> <?php echo $lastname; ?><br />
+			<?php echo $address['address_1'];?><br />
+			<?php echo $address['city'];?><br />
+			<?php echo $address['zone'];?> <?php echo $address['country'];?>
 			
 		</td>
 		</tr>
 	</tbody>
 </table>
 <hr>
-		<table  class="table table-bordered table-hover" >
+		<table  class="table table-bordered table-hover">
 			<thead>
 				<tr>
 					<td class="center" >Sr No.</td>
 					<td style="text-align: center;">Name</td>
-					<td class="center" >Quantity</td>
-					<td >Description</td>
-					<td class="center">Unit Price</td>
-					<td class="center" >Discount</td>
+					<td class="center" style="width:100px;">Qty.</td>
+					<td class="center" style="width:100px;">Unit Price</td>
+					<td class="center"  style="width:100px;">Discount</td>
 					<td  style="width: 90px;text-align: center;">Tax class</td>
 					<td class="center" >Total(INR)</td>
 				</tr>
@@ -134,96 +133,46 @@ float:right;
 					<tr>
 						<td style="text-align: center;"><?php echo $key + 1; ?></td>
 						<?php if (isset($enquiry['link'])) { ?>
-							<td><a href="<?php echo $enquiry['link']; ?>" > <?php echo $enquiry['name']; ?> </a></td>
+							<td><a href="<?php echo $enquiry['link']; ?>" > <?php echo $enquiry['name']; ?> </a>
+							<br />
+							<?php echo $enquiry['description']; ?>
+							</td>
 						<?php } else { ?>
-							<td><?php echo $enquiry['name']; ?></td>
+							<td><?php echo $enquiry['name']; ?><br />
+							<?php echo $enquiry['description']; ?>
+							</td>
 						<?php } ?>
-						<td style="text-align: center;"><?php echo $enquiry['quantity']; ?></td>
-						<td>
-						<?php echo round($enquiry['weight'],4); ?> <?php echo $enquiry['weight_class']; ?><hr>
-						<?php echo round($enquiry['length'],4); ?> x <?php echo round($enquiry['width'],4); ?> x <?php echo round($enquiry['height'],4); ?> <?php echo $enquiry['length_class']; ?></td>
-						<td style="text-align: center;"><?php echo $enquiry['price']; ?> <?php echo $enquiry['unit']; ?> </td>
-						<td style="text-align: center;"></td>
+						<td style="text-align: center;"><?php echo $enquiry['quantity']; ?> <?php echo $enquiry['unit']; ?></td>
+						<td style="text-align: center;"><?php echo $enquiry['text_price']; ?> </td>
+						<td style="text-align: center;"><?php echo $enquiry['discount']; ?></td>
 						<td style="text-align: center;"><?php echo $enquiry['tax_class']; ?>
 						</td>
                    		<td style="text-align: center;"><?php echo $enquiry['total']; ?></td>
 					</tr>
 				<?php } ?>
 			</tbody>
-			<tbody >
-				<tr >
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id">Total discount</td>
-					<td>0.00</td>
-					
-				</tr>
-					<tr>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id">Tax Total</td>
-					<td>0.00</td>
-				</tr>
-			
-				<tr>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id">Freight Total</td>
-					<td>0.00</td>
-				</tr>
-			
-				<tr >
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id">Sub Total</td>
-					<td>0.00</td>
-					
-				</tr>
-				<tr>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id"></td>
-					<td id="id">Total</td>
-					<td>0.00</td>
-				</tr>
-			
-			</tbody>
+			<?php if ($totals) { ?>
+				<tbody >
+					<?php foreach ($totals as $total) { if (0!=$total['value']) { ?>
+						<tr >
+							<td colspan="5" id="id"></td>
+							<td><?php echo $total['title']?></td>
+							<td><?php echo $total['text']?></td>
+						</tr>
+					<?php } } ?>
+				</tbody>
+			<?php } ?>
 		</table>
 		
 	<div class="container">
 		Term & Condition</br>
 			This is a quotation on the goods named, subject to the conditions noted below:</br> 
-			Payment Terms :</br>
-				<?php foreach ($terms as $term) { ?>
-				<?php echo $term['type']; ?> <?php echo $term['value']; ?></br>
-				<?php }?>
-			
-				<div class="form-group">&nbsp;</div>			
-			
-			Omnikart Bank Details</br>
-			Bank Name & Branch : HDFC Bank, Powai</br>
-			Acoount Name : Omnikart Engineering Pvt Ltd</br>
-			Account Number : 50200008446091</br>
-			IFSC Code : HDFC0000239
+			<?php foreach ($terms as $term) { ?>
+			<?php echo $term['type']; ?> : <?php echo $term['value']; ?></br>
+			<?php }?>
+			</br>
+			Omnikart Bank Details : </br>
+			<?php echo $profile['otherpayment']; ?>
 	 </div>	
 	<button id="send" type="button" class="btn btn-default btn-lg">Send</button>
 

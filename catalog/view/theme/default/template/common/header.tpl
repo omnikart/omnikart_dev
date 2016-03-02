@@ -300,7 +300,7 @@ fbq('track', 'Purchase', {value: '0.00', currency: 'USD'});
 					<?php } ?>
 				</div>			
 			</li>
-	        <?php foreach (array_slice($categories,0,7) as $category) { ?>
+	        <?php foreach (array_slice($categories,0,6) as $category) { ?>
 		        <?php if ($category['children']) { ?>
 		        	<li class="dropdown"><a href="<?php echo $category['href']; ?>" class="dropdown-toggle disabled" data-toggle="dropdown"><?php echo $category['name']; ?> <span class="caret"></span></a>
 						<div class="dropdown-menu">

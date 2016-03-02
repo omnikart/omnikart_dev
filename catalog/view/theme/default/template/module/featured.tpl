@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-sm-12">
-			<h3 class=""><?php echo $heading_title; ?></h3>
+			<h2><?php echo $heading_title; ?></h2>
 			<div class="row">
 				<div class="flexslider featured" id="featured<?php echo $module; ?>">
 					<ul class="slides">

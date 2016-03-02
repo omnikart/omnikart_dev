@@ -166,13 +166,18 @@ class ControllerAccountCd extends Controller {
 		$data ['category'] = $this->model_account_cd->getCategory ( $this->request->post ['category_id'] );
 		if (! $products) {
 			$this->load->model ( 'account/cd' );
+			$this->load->model ( 'catalog/product' );
 			$results = $this->model_account_cd->getProducts ( $filter );
+			
 			foreach ( $results as $result ) {
-				$this->add ( $result ['product_id'], $result ['quantity'], array () );
+				$product_info = $this->model_catalog_product->getProduct($result ['product_id']);
+				$this->add ( $result ['product_id'], $result ['quantity'], array (), $product_info['vendor_id']);
 			}
 		} else {
+			$this->load->model ( 'catalog/product' );
 			foreach ( $products as $product ) {
-				$this->add ( $product ['product_id'], $product ['quantity'], array () );
+				$product_info = $this->model_catalog_product->getProduct($result ['product_id']);
+				$this->add ( $product ['product_id'], $product ['quantity'], array (), $product_info['vendor_id'] );
 			}
 		}
 		unset ( $this->session->data ['shipping_method'] );
@@ -315,7 +320,7 @@ class ControllerAccountCd extends Controller {
 		$this->response->addHeader ( 'Content-Type: application/json' );
 		$this->response->setOutput ( json_encode ( $json ) );
 	}
-	private function add($product_id, $quantity, $option) {
+	private function add($product_id, $quantity, $option, $vendor_id=0) {
 		$this->load->language ( 'checkout/cart' );
 		
 		$json = array ();

@@ -57,10 +57,6 @@
 					<?php } ?>
 					</select>
 						</div>
-						<label class="col-sm-2 control-label">Postcode :</label>
-						<div class="col-sm-2">
-							<input type="text" class="form-control" name="postcode" />
-						</div>
 						<label class="col-sm-2 control-label">C-Form available :</label>
 						<div class="col-sm-2">
 							<label class="radio-inline"><input type="radio" name="c_form"
@@ -127,53 +123,6 @@ function deleteRow(key) {
 }
 </script>
 
-<script type="text/javascript"><!--
-$('#submit-enquiry').on('click', function(){
-	buttont = $(this);
-	var address_id =$('#enquiry-products input[name=\'address_id\']').val();
-	var payment = $('#enquiry-products select[name=\'payment_terms\']').val();
-	if (payment!='' && address_id!='' ){	
-	    $.ajax({
-	        url : 'index.php?route=module/enquiry/submit',
-	        data: $('#enquiry-products select[name=\'payment_terms\'],#enquiry-products input[name=\'c_form\']:checked,#enquiry-products input[name=\'address_id\']:checked'),
-	        type: 'post',
-			dataType: 'json',
-			beforeSend: function() {
-				$(buttont).button('loading');
-			},
-			complete: function() {
-				$(buttont).button('reset');
-			},
-			success: function(json) {
-				if (json['success']){
-					$('#enquiry_form input[type=text],#enquiry_form input[type=radio], #enquiry_form textarea').val("");
-					setTimeout(function(){ $('.modal').modal('hide'); }, 1000);
-					$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
-				} else if(!json['logged']) { 
-					$('#modal-login').remove();
-					$.ajax({
-						url: 'index.php?route=module/login',
-						type: 'get',
-						dataType: 'html',
-						success: function(data) {
-							$('.modal').modal('hide');
-							var login_modal = addmodal('modal-login','');
-							login_modal.find('.modal-title').html('Please Login to submit enquiry');
-							login_modal.find('.modal-body').html(data);
-							login_modal.modal('show');
-						}
-					});
-				}
-			}
-			
-	      });
-	} 
-	
-	if (payment=='0') {
-		$('#enquiry-products select[name=\'payment_terms\']').addClass('alert-danger');
-	}
-});
-//--></script>
 <script type="text/javascript"><!--
 $('select[name=\'country_id\']').on('change', function() {
 	$.ajax({

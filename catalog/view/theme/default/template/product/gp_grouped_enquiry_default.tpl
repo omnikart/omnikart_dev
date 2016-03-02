@@ -272,7 +272,7 @@
 <div class="clearfix"></div>
 <script type="text/javascript">
 function addGpProduct(product_id,name) {
-	$('#enquiry-product-details input[name=\'product\']').val(name);
+	$('#enquiry-product-details input[name=\'name\']').val(name);
 	$('#enquiry-product-details input[name=\'product_id\']').val(product_id);
 	$.ajax({
 		url : 'index.php?route=product/product/getdescription&product_id='+product_id,

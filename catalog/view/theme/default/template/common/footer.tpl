@@ -286,54 +286,50 @@ $(document).delegate('#marketinsg-login', 'click', function(e) {
 	});
 
   $('body').on('click', '#submit-enquiry', function(){
-	buttont = $(this);
-	var postcode = $('#enquiry-products input[name=\'postcode\']').val();
-	var payment = $('#enquiry-products select[name=\'payment_terms\']').val();
-	if ((postcode!='') && (payment!='')){	
-	    $.ajax({
-	        url : 'index.php?route=module/enquiry/submit',
-	        data: $('#enquiry-products select[name=\'payment_terms\'],#enquiry-products input[name=\'c_form\']:checked,#enquiry-products input[name=\'postcode\']'),
-	        type: 'post',
-			dataType: 'json',
-			beforeSend: function() {
-				$(buttont).button('loading');
-			},
-			complete: function() {
-				$(buttont).button('reset');
-			},
-			success: function(json) {
-				
-				if (json['success']){
-					$('#enquiry_form input[type=text], #enquiry_form textarea').val("");
-					$('#enquiry_modal button.btn-decrease').trigger('click');
-					setTimeout(function(){ $('.modal').modal('hide'); }, 1000);
-					$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
-				} else if(!json['logged']) { 
-					$('#modal-login').remove();
-					$.ajax({
-						url: 'index.php?route=module/login',
-						type: 'get',
-						dataType: 'html',
-						success: function(data) {
-							$('.modal').modal('hide');
-							var login_modal = addmodal('modal-login','');
-							login_modal.find('.modal-title').html('Please Login to submit enquiry');
-							login_modal.find('.modal-body').html(data);
-							login_modal.modal('show');
-						}
-					});
+		buttont = $(this);
+		var address_id =$('#enquiry-products input[name=\'address_id\']').val();
+		var payment = $('#enquiry-products select[name=\'payment_terms\']').val();
+		if (payment!='' && address_id!='' ){	
+		    $.ajax({
+		        url : 'index.php?route=module/enquiry/submit',
+		        data: $('#enquiry-products select[name=\'payment_terms\'],#enquiry-products input[name=\'c_form\']:checked,#enquiry-products input[name=\'address_id\']:checked'),
+		        type: 'post',
+				dataType: 'json',
+				beforeSend: function() {
+					$(buttont).button('loading');
+				},
+				complete: function() {
+					$(buttont).button('reset');
+				},
+				success: function(json) {
+					if (json['success']){
+						$('#enquiry_form input[type=text],#enquiry_form input[type=radio], #enquiry_form textarea').val("");
+						setTimeout(function(){ $('.modal').modal('hide'); }, 1000);
+						$('#view-enquiry .badge').load('index.php?route=module/enquiry/addProduct');
+					} else if(!json['logged']) { 
+						$('#modal-login').remove();
+						$.ajax({
+							url: 'index.php?route=module/login',
+							type: 'get',
+							dataType: 'html',
+							success: function(data) {
+								$('.modal').modal('hide');
+								var login_modal = addmodal('modal-login','');
+								login_modal.find('.modal-title').html('Please Login to submit enquiry');
+								login_modal.find('.modal-body').html(data);
+								login_modal.modal('show');
+							}
+						});
+					}
 				}
-			}
-			
-      });
-	} 
-	if (postcode=='') {
-		$('#enquiry-products input[name=\'postcode\']').addClass('alert-danger');
-	}
-	if (payment=='0') {
-		$('#enquiry-products select[name=\'payment_terms\']').addClass('alert-danger');
-	}
-  });
+				
+		      });
+		} 
+		
+		if (payment=='0') {
+			$('#enquiry-products select[name=\'payment_terms\']').addClass('alert-danger');
+		}
+	});
   $('body').on('click','#view-enquiry',function(){
 		$.ajax({
 			url : 'index.php?route=module/enquiry/getEnquiry',

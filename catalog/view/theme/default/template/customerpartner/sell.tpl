@@ -125,13 +125,9 @@
 			<div id="content" class="<?php echo $class; ?>">
 				<div class="text-center">
 					<h1 class="text-info"><?php echo $sell_header; ?></h1>
-					<button type="button" class="btn btn-primary btn-lg"
-						data-toggle="collapse" data-target="#supplier_form">
-          <?php echo $sell_title; ?>&nbsp;<i class="fa fa-chevron-down"></i>
+					<button type="button" class="btn btn-primary btn-lg" data-toggle="collapse" data-target="#supplier_form"><?php echo $sell_title; ?>&nbsp;<i class="fa fa-chevron-down"></i>
 					</button>
-					<h4>If you are interested to sell on Omnikart then leave your
-						details here & our business development executive will revert back
-						to you soon.</h4>
+					<h4>If you are interested to sell on Omnikart then leave your details here & our business development executive will revert back to you soon.</h4>
 				</div>
 				<br />
 

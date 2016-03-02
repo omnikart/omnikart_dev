@@ -481,16 +481,10 @@ class ControllerCheckoutConfirmOnepage extends Controller {
         $this->load->model('checkout/checkout_onepage');
         $view_data['text_button_checkout_confirm'] = $this->model_checkout_checkout_onepage->rebuid_content_text($this->language->get('text_checkout_confirm'));
 
-
-
         $this->load->model('tool/upload');
-        $view_data['vendors'] = array();
         $view_data['products'] = array();
         $view_data['totals'] = array();
-        foreach ($this->cart->getVendors() as $vendor_id => $vendor) {
-					$view_data['vendors'][$vendor_id] = array();
-					$view_data['vendors'][$vendor_id]['details']=$this->model_account_customerpartner->getProfile($vendor_id);
-					foreach ($vendor['products'] as $product) {
+        foreach ($this->cart->getProducts() as $product) {
 							$option_data = array();
 							foreach ($product['option'] as $option) {
 									if ($option['type'] != 'file') {
@@ -544,9 +538,9 @@ class ControllerCheckoutConfirmOnepage extends Controller {
 									$image_popup = '';
 							}
 
-							$view_data['vendors'][$vendor_id]['config_image_popup_width'] = $this->config->get('config_image_thumb_width');
-							$view_data['vendors'][$vendor_id]['config_image_popup_height'] = $this->config->get('config_image_thumb_height');
-							$view_data['vendors'][$vendor_id]['products'][] = array(
+							$view_data['config_image_popup_width'] = $this->config->get('config_image_thumb_width');
+							$view_data['config_image_popup_height'] = $this->config->get('config_image_thumb_height');
+							$view_data['products'][] = array(
 									'key' => $product['key'],
 									'thumb' => $image,
 									'image_popup' => $image_popup,
@@ -566,11 +560,11 @@ class ControllerCheckoutConfirmOnepage extends Controller {
 							);
 					}
 					        // Gift Voucher
-					$view_data['vendors'][$vendor_id]['vouchers'] = array();
+					$view_data['vouchers'] = array();
 
 					if (!empty($this->session->data['vouchers'])) {
 							foreach ($this->session->data['vouchers'] as $key => $voucher) {
-									$view_data['vendors'][$vendor_id]['vouchers'][] = array(
+									$view_data['vouchers'][] = array(
 											'key' => $key,
 											'description' => $voucher['description'],
 											'amount' => $this->currency->format($voucher['amount'])
@@ -578,33 +572,6 @@ class ControllerCheckoutConfirmOnepage extends Controller {
 							}
 					}
 
-          $totals = array();
-          $total = 0;
-					$total_vendor = $this->get_total($totals,$total,$vendor_id);
-					$view_data['vendors'][$vendor_id]['totals'] = array();
-					foreach ($total_vendor as $key => $total) {
-							$view_data['vendors'][$vendor_id]['totals'][$key] = array(
-									'title' => $total['title'],
-									'value' => $total['value'],
-									'text' => $this->currency->format($total['value']),
-							);
-							/*
-							if (!isset($view_data['totals'][$key]))  { 
-								$view_data['totals'][$key] = array(
-										'title' => $total['title'],
-										'value' => $total['value'],
-								);
-							} else {
-								$view_data['totals'][$key]['value'] += $total['value'];
-							}*/
-							
-					}
-        }
-				
-				foreach ($view_data['totals'] as $key => $total){
-					$view_data['totals'][$key]['text'] =  $this->currency->format($total['value']);
-				}
-				
 
         //term conditions
         if ($this->config->get('config_checkout_id')) {

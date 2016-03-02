@@ -1,106 +1,125 @@
 <form id="quotation-form">
 <div class="row">
 	<div class="col-sm-12 form-inline">
+		<div class="form-group">
+			<label class="control-label" for="pick-date">Quote Effective Date</label>
+			<div class="input-group date">
+				<input type="text" name="enquiry[effective_date]" value="" data-toggle="tooltip"
+					title="Click right button to pick date!"
+					data-date-format="YYYY-MM-DD" id="pick-date"
+					class="form-control " value="<?php echo $effective_date; ?>"/> <span class="input-group-btn">
+					<button data-toggle="tooltip"
+						title="Click here to pick date!" type="button"
+						class="btn btn-default datebutton">
+						<i class="fa fa-calendar"></i>
+					</button>
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="pick-date">Quote Expiration Date</label>
+			<div class="input-group date">
+				<input type="text" name="enquiry[expiration_date]" value="" data-toggle="tooltip"
+					title="Click right button to pick date!"
+					data-date-format="YYYY-MM-DD" id="pick-date"
+					class="form-control" value="<?php echo $expiration_date; ?>"/> <span class="input-group-btn">
+					<button data-toggle="tooltip"
+						title="Click here to pick date!" type="button"
+						class="btn btn-default datebutton">
+						<i class="fa fa-calendar"></i>
+					</button>
+				</span>
+			</div>
+		</div>	
 		<div class="form-group pull-right">
 	    	<label for="exampleInputName2">Quotation Versions</label>	
 			<select name="enquiry[revisions]" class="form-control input-sm" >
 				<?php foreach ($revisions as $revision) { ?>
 			    	<option value="<?php echo $revision['quote_revision_id']; ?>" ><?php echo $revision['quote_revision_id']; ?> (<?php echo $revision['date_added']; ?>)</option>
 				<?php } ?>
-				<option value="0" ><?php echo "New"; ?></option>
 			</select>
 		</div>	
-		<div class="form-group pull-right">
-	    	<label for="exampleInputName2">New Quotation or Revision</label>
-	    	<select name="enquiry[new]"  class="form-control input-sm" >
-		    	<option value="1" ><?php echo "New"; ?></option>
-		    	<option value="0"><?php echo "Revision"; ?></option>
-			</select>
-	  	</div>
 	</div><div class="clearfix"></div>
 </div>
 <input type="hidden" name="enquiry[quote_id]"  value="<?php echo $quote_id; ?>"/>
-<input type="hidden" name="enquiry[quote_revision_id]"  value="<?php echo $quote_revision_id; ?>"/>
 <input type="hidden" name="enquiry[address_id]"  value="<?php echo $address_id; ?>"/>
 
 <div class="panel panel-default">
-<table class="table table-bordered">
+<table class="table table-bordered" style="table-layout: fixed;width:100%;">
 	<tbody>
-			<td>Store Name: <?php echo $config_name; ?></td>
-			<td style="width:100px">Name: <?php echo $firstname.' '.$lastname; ?></td>
 		<tr>
-			<td >Store Owner: <?php echo $config_owner; ?></td>
-			<td >Email: <?php echo $email; ?></td>
-		</tr>
-		<tr>
-			<td style="width: 245px;">Address:  <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#getAddress">Add Address</button>
-			<div id="getAddress" class="collapse">
-			<?php foreach($addresss as $address) { ?>
-			<div class="clearfix quote-address pull-left">
-			 	<input type="radio" name="enquiry[supplier_address_id]" id="address<?php echo $address['address_id']; ?>" value="<?php echo $address['address_id']; ?>" class="radio" <?php echo ($supplier_address_id==$address['address_id']?'checked="checked"':''); ?> />
-				<label for="address<?php echo $address['address_id']; ?>">
-				<strong><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?></strong><hr>
-				<?php echo $address['address_1']; ?><br />
-				<?php echo $address['city']; ?> <?php echo $address['postcode']; ?><br/>
-				<?php echo $address['zone']; ?> <?php echo $address['country']; ?>
-				</label>
-			  </div>
-			<?php } ?>
-			</div>
-			
+			<td style="width:50%;">
+				<?php echo $profile['companyname']; ?>
+				<?php foreach ($addresss as $address) { ?>
+				  <div class="clearfix quote-address">
+				 		<input type="radio" name="enquiry[supplier_address_id]" id="address<?php echo $address['address_id']; ?>" value="<?php echo $address['address_id']; ?>" class="radio" <?php echo (($address['address_id'] == $address_id)?'checked':''); ?> />
+						<label for="address<?php echo $address['address_id']; ?>">
+							<?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?><br />
+							<?php echo $address['address_1']; ?> <?php echo $address['city']; ?><br />
+							<?php echo $address['zone']; ?> <?php echo $address['country']; ?>
+						</label>
+				  </div>
+				<?php } ?>
+				<button type="button" class="btn btn-xs btn-info more-address">More</button>
 			</td>
-			<td style="text-align: left;">Address:
-			<?php echo $address_1;?><br />
-			<?php echo $city;?><br />
-			<?php echo $zone;?><br />
-			<?php echo $country;?>
-			</td>			
-		</tr>
-		<tr>
-			<td >E-Mail: <?php echo $config_email; ?></td>
-			<td >Telephone: <?php echo $telephone; ?></td>
-			
-		</tr>
-		<tr>
-			<td>Telephone: <?php echo $config_telephone; ?></td>
-			<td colspan="2"></td>
+			<td style="width:50%;">
+				Customer Details: <br />
+				<?php echo $firstname.' '.$lastname; ?><br />
+				<?php echo $data['address']['address_1'];?><br />
+				<?php echo $data['address']['city'];?><br />
+				<?php echo $data['address']['zone'];?><br />
+				<?php echo $data['address']['country'];?><br />
+				<?php echo $data['customer']['telephone'];?>
+				<?php echo $data['customer']['email'];?>
+			</td>
 		</tr>
 	</tbody>
 </table>
 </div>
 <div class="panel panel-default">
-  <div class="panel-body">
-	<table  class="table table-bordered table-hover"   border="1px solid black";>
+  <div class="panel-body">  
+  <div class="table-responsive" style="overflow-x: auto;width: 100%;">
+  
+	<table  class="table"  style="">
 			<thead>
 				<tr>
-					<td class="center" style="width:50px;">Sr No.</td>
 					<td style="width:200px;">Name</td>
-					<td class="center" style="width:100px;">Quantity</td>
-					<td class="center" style="width:100px;">Units</td>
+					<td class="center" style="width:300px;">Description</td>
+					<td class="center" style="width:150px;">Quantity</td>
 					<td class="center" style="width:100px;">Unit Price</td>
+					<td class="center" style="width:100px;">Discount</td>
 					<td class="center" style="width:100px;">Tax class</td>
-					<td class="center" style="">Description</td>
+					<td class="center" style="width:100px;">Total</td>
+
 				</tr>
 			</thead>
-			<tbody>
+			<tbody class="quote-products">
+			<?php if ($enquiries) { ?>
 				<?php foreach ($enquiries as $key=>$enquiry) { ?>
 					<tr>
-						<td class="center" rowspan="2"><?php echo $key; ?></td>
 						<?php if (isset($enquiry['link'])) { ?>
-							<td rowspan="2"><a href="<?php echo $enquiry['link']; ?>" > <?php echo $enquiry['name']; ?></a></td>
+							<td>
+								<a href="<?php echo $enquiry['link']; ?>" > <?php echo $enquiry['name']; ?></a>
+							</td>
 						<?php } else { ?>
 							<td><?php echo $enquiry['name']; ?></td>
 						<?php } ?>
-						<td class="center">
-							<input name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][quantity]" type="text" value="<?php echo $enquiry['quantity']; ?>" class="form-control input-sm"/>
+						<td><textarea rows="1" name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][description]" class="form-control input-sm"> <?php echo $enquiry['description']; ?> </textarea>
 						</td>
-						<td class="center"><select name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][unit_class_id]" class="form-control input-sm">
+						<td class="center">
+							<div style="width:50%;float:left;">
+							<input name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][quantity]" type="text" value="<?php echo $enquiry['quantity']; ?>" class="form-control input-sm"/>
+							</div>
+							<div style="width:50%;float:right;">
+							<select name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][unit_class_id]" class="form-control input-sm">
 						 	   <?php foreach ($unit_classes as $unit_class) { ?>
 						       <option value="<?php echo $unit_class['unit_class_id']; ?>"><?php echo $unit_class['title']; ?></option>
 						       <?php } ?>
 						   </select>
+						   </div>
 						</td>
 						<td class="center"><input name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][unit_price]" class="form-control input-sm" type="number" value="<?php echo $enquiry['price']; ?>" /></td>
+              			<td class="center"><input name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][discount]" class="form-control input-sm" type="number" value="<?php echo $enquiry['discount']; ?>" /></td>						
 						<td	class="center">
                    		<select name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][tax_class_id]" id="input-tax-class" class="form-control input-sm" >
                     		<option value="0"><?php echo $text_none; ?></option>
@@ -113,79 +132,57 @@
                     		<?php } ?>
               			</select>
               			</td>
-              			<td class="center" colspan="2">
-					<textarea rows="1" name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][description]" class="form-control input-sm"> <?php echo $enquiry['description']; ?> </textarea></td>
+              			<td class="center"><input name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][total]" class="form-control input-sm" type="number" value="<?php echo $enquiry['total']; ?>" disabled /></td>
 					</tr>
-					<tr>
-					<td colspan="3">
-					<div class="input-group">
-						<input type="text" name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][weight]" value="<?php echo $enquiry['weight'];?>" placeholder="<?php echo "weight"; ?>" class="form-control input-sm" />
-						<span class="input-group-addon">.</span>
-						<select name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][weight_class_id]" id="input-weight-class" value="<?php echo $enquiry['weight_class_id']; ?>" class="form-control input-sm">
-		                    <?php foreach ($weight_classes as $weight_class) { ?>
-		                    <?php if ($weight_class['weight_class_id'] == $enquiry['weight_class_id']) { ?>
-		                    <option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
-		                    <?php } else { ?>
-		                    <option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
-		                    <?php } ?>
-		                    <?php } ?>
-	                  	</select>
-	                </div>
-					</td>
-					<td colspan="2">
-						<div class="input-group">
-							<input type="text" name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][length]" value="<?php echo $enquiry['length']; ?>" placeholder="<?php echo "length"; ?>" class="form-control input-sm" />
-							<span class="input-group-addon">X</span>
-							<input type="text" name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][height]" value="<?php echo $enquiry['height']; ?>" placeholder="<?php echo "height"; ?>" class="form-control input-sm" />
-							<span class="input-group-addon">X</span>
-							<input type="text" name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][width]" value="<?php echo $enquiry['width']; ?>" placeholder="<?php echo "width"; ?>" class="form-control input-sm" />
-							<span class="input-group-addon">.</span>
-							<select name="enquiry[product][<?php echo $enquiry['quote_product_id']; ?>][length_class_id]" value="<?php echo $enquiry['length_class_id']; ?>" id="input-length-class" class="form-control input-sm">
-			                    <?php foreach ($length_classes as $length_class) { ?>
-			                    <?php if ($length_class['length_class_id'] == $enquiry['length_class_id']) { ?>
-			                    <option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
-			                    <?php } else { ?>
-			                    <option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
-			                    <?php } ?>
-			                    <?php } ?>	
-		                  	</select>
-	                  </div>
-	                </td>
-					</tr>
+
 				<?php } ?>
+				<tr>
+					<td colspan="4" class="nb"></td>
+					<td colspan="2" class="btn-cell text-right">Shipping Charges: </td>
+					<td><input type="text" name="enquiry[shipping_charge]" value="<?php echo isset($shipping_charge)?$shipping_charge:'0'; ?>" class="form-control input-sm" /></td>
+				</tr>
+			<?php } ?>
 			</tbody>
+		</table>
+		<table class="table table-bordered" style="table-layout: fixed;width:auto;">
 			<tbody id="quote-term">  
 				<?php $term_count = 0; foreach ($terms as $key => $term) { ?>
 					<?php if ('payment'==$term['type']) { ?>
 						<tr>
-							<td colspan="3" class="right"><?php echo $term['type']; ?>
+							<td style="width:200px;" class="fixed-term right"><?php echo $term['type']; ?>
 								<input type="hidden" name="enquiry[oldterm][<?php echo $key; ?>][term_type]" class="form-control input-sm" value="<?php echo $term['type']; ?>"/>
 							</td>
-							<td colspan="2">
+							<td  style="width:300px;">
 							<select class="form-control input-sm" name="enquiry[oldterm][<?php echo $key; ?>][term_value]">
 								<?php foreach($payment_term as $pterm) { ?>
 								<option value="<?php echo $pterm['payment_term_id']; ?>" <?php echo ($pterm['payment_term_id']==$term['value']?'selected="selected"':''); ?>  ><?php echo $pterm['name']; ?></option>
 								<?php } ?>
 							</select>
 							</td>
-							<td colspan="1">
-							<button type="button" class="btn btn-default" onclick="addtermrow();"> add payment term</button>
-							</td>
 				  		</tr>
 				  	<?php } else { ?>
 						<tr>
-							<td colspan="3" class="right">
-							<label style="width: 100px;" >comment</label>
+							<td  class="right">
 							<input type="text" name="enquiry[oldterm][<?php echo $key; ?>][term_type]" class="form-control input-sm" value="<?php echo $term['type']; ?>"/>
 							</td>
-							<td colspan="2">
+							<td >
 							<textarea name="enquiry[oldterm][<?php echo $key; ?>][term_value]" class="form-control input-sm"><?php echo $term['value']; ?></textarea>
 							</td>
 						</tr>  		
 				<?php } ?>
 				<?php $term_count++;}  ?>
 			</tbody>
+			<tfoot>
+				<tr>
+					<td class="text-left">
+						<button type="button" class="btn btn-default btn-xs btn-block" onclick="addtermrow();"> add payment term</button>
+					</td>
+				</tr>
+			</tfoot>
 		</table>
+		
+		
+		</div>
 		  <a href="<?php echo $enquiryupdates ;?>" data-enquiryId="<?php echo $enquiry['enquiry_id']; ?>" id="trigger" style="margin-left:660px;" target="_blank">Generate Quotation</a>
 		  <a href="javascript:void();" id="save-quotation" class="pull-right">Save Draft</a>
   	</div>
@@ -207,6 +204,18 @@ $('#enquiryModal').on('change','select[name=\'enquiry[revisions]\']',function ()
 </script>
 
 <script type="text/javascript">
+$('.date').datetimepicker({
+	pickTime: false
+});
+
+$('.datetime').datetimepicker({
+	pickDate: true,
+	pickTime: true
+});
+
+$('.time').datetimepicker({
+	pickDate: false
+});
   $('#trigger').on('click',function(){
     $('#save-quotation').trigger('click');
     return true;
@@ -215,10 +224,10 @@ $('#enquiryModal').on('change','select[name=\'enquiry[revisions]\']',function ()
   var term_count = <?php echo $term_count++; ?>;
   function addtermrow(){
   	html = '<tr>';
-	html += '<td colspan="3" class="right">';
+	html += '<td class="right">';
 	html += '<input type="text" name="enquiry[term]['+term_count+'][term_type]" placeholder="Enter Term Name" class="form-control input-sm" value=""/>';
 	html += '</td>';
-	html += '<td colspan="2">';
+	html += '<td >';
 	html += '<textarea name="enquiry[term]['+term_count+'][term_value]" class="form-control input-sm" row="1" placeholder="Enter Term Value" value=""></textarea>';
 	html += '</td>';
   	html += '</tr>';
@@ -226,4 +235,5 @@ $('#enquiryModal').on('change','select[name=\'enquiry[revisions]\']',function ()
   	$('#quote-term').show(html);
   	term_count++;
   }
+$('.quote-address > input.radio:not(:checked) ~ label').parent().css('display','none');
 </script>

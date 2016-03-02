@@ -294,7 +294,13 @@ $('#enquiryModal').on('click','#save-quotation',function(){
 		}
 	});
 });
-
+$('body').on('click','.more-address',function(){
+	$('.quote-address > input.radio:empty ~ label').parent().css('display','block');
+});
+$('body').on('click','.quote-address > input.radio',function(){
+	$('.quote-address > input.radio:not(:checked) ~ label').parent().css('display','none');
+	$('.quote-address > input.radio:checked ~ label').parent().css('display','block');
+});
 //--></script>	
 	
 <script type="text/javascript"><!--
@@ -361,7 +367,38 @@ input.radio:checked ~ label:before {
 input.radio:checked ~ label {
 	color: #31708f;
 	border:1px solid #31708f;
-}    
-</style>
+}
 
+input.radio:checked ~ label {
+	color: #31708f;
+	border:1px solid #31708f;
+}
+
+
+
+.table .quote-products {font-size:12px;}
+.quote-products textarea{
+	border-color:transparent;
+	box-shadow:none;
+}
+.quote-products textarea,#quote-term textarea, .quote-products input,.quote-products select,#quote-term input,#quote-term select{border:none;padding:5px 5px;}
+.quote-products tr:hover textarea{
+	border-color:#ddd;
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+
+.table>tbody.quote-products>tr>td{padding:0px;border:1px solid #ddd;}
+.table>tbody.quote-products>tr>td:first-child, .table>tbody#quote-term >tr>td.fixed-term, .table>tbody>tr>td.btn-cell, .table>tbody#quote-term >tr>td.btn-cell{padding:5px;}
+.table>tbody.quote-products>tr>td:first-child a{overflow:overlay;height:20px;display:block;}
+
+.table #quote-term{font-size:12px;}
+.table>tbody#quote-term >tr>td{padding:0px;}
+
+.table>tbody>tr>td.nb{border:0;}
+
+</style>
+<script type="text/javascript">
+
+	
+</script>
 <?php echo $footer; ?>

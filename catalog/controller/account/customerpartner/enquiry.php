@@ -179,6 +179,11 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 		
 		$limit = $this->config->get ( 'config_product_limit' );
 		$this->data ['results'] = sprintf ( $this->language->get ( 'text_pagination' ), ($enquiries_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($enquiries_total - $limit)) ? $enquiries_total : ((($page - 1) * $limit) + $limit), $enquiries_total, ceil ( $enquiries_total / $limit ) );
+
+		$this->document->addScript ( 'catalog/view/javascript/jquery/datetimepicker/moment.js' );
+		$this->document->addScript ( 'catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js' );
+		$this->document->addStyle ( 'catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css' );
+		
 		
 		$this->data ['filter_name'] = $filter_name;
 		$this->data ['filter_date'] = $filter_date;
@@ -209,9 +214,16 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			else
 				$quote_id = 0;
 			$this->load->model('module/enquiry');
+			$this->load->model('account/customer');
+
+			
 			$this->load->model('account/customerpartner');
 			$seller_id = $this->model_account_customerpartner->getuserseller();
 			$data = $this->model_module_enquiry->getEnquiry($this->request->get['enquiry_id'],$seller_id ,$quote_id,$quote_revision_id);
+			
+			$data['address'] = $this->model_module_enquiry->getAddress($data['address_id']);
+			$data['profile'] =  $this->model_account_customerpartner->getProfile ($seller_id);
+			$data['customer'] = $this->model_account_customer->getCustomer($data['customer_id']);	
 			
 			$this->load->model('localisation/tax_class');
 			$data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
@@ -298,16 +310,35 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 		}
 	}
 	public function quotation() {
-		if (isset ( $this->request->get ['enquiry_id'] ) && ( int ) $this->request->get ['enquiry_id']) {
+		if (isset($this->request->get ['quote_revision_id']) && ( int ) $this->request->get ['quote_revision_id']) {
 			$this->load->model ( 'module/enquiry' );
 			$this->load->model ( 'account/customerpartner' );
 			$seller_id = $this->model_account_customerpartner->getuserseller ();
+			$data = $this->model_module_enquiry->getQuoteRevision ( $this->request->get ['quote_revision_id'], $seller_id );
+			$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/quotation.tpl', unserialize($data)));
+		} elseif (isset ( $this->request->get ['enquiry_id'] ) && ( int ) $this->request->get ['enquiry_id']) {
+			$this->load->model ( 'module/enquiry' );
+			$this->load->model ( 'account/customerpartner' );
+			$this->load->model('account/customer');
+				
+			$seller_id = $this->model_account_customerpartner->getuserseller ();
+
 			$data = $this->model_module_enquiry->getEnquiry ( $this->request->get ['enquiry_id'], $seller_id );
 			
 			$data['address'] = $this->model_module_enquiry->getAddress($data ['address_id']);
-			
 			$data['supplier_address'] = $this->model_module_enquiry->getAddress($data ['supplier_address_id']);
-			
+			$indiatimezone = new DateTimeZone("Asia/Kolkata" );
+			$date = new DateTime();
+			$date->setTimezone($indiatimezone);
+			$data['date'] = $date->format( 'D, M jS, Y' ); 
+			if (!empty($data['revisions'])) {
+				$data['quote_number'] = $date->format( 'Y-M' ).'-'.$data['quote_id'].'-'.end($data['revisions'])['quote_revision_id'];
+			} else {
+				$data['quote_number'] = $data['quote_id'].'-'.'0-1';
+			}
+			$data['profile'] =  $this->model_account_customerpartner->getProfile ($seller_id);
+			$data['customer'] = $this->model_account_customer->getCustomer($data['customer_id']);
+				
 			$this->load->model ( 'localisation/tax_class' );
 			
 			$data ['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses ();
@@ -326,15 +357,160 @@ class ControllerAccountCustomerpartnerEnquiry extends Controller {
 			$this->response->setOutput ( $this->load->view ( 'default/template/account/customerpartner/quotation.tpl', $data ) );
 		}
 	}
+	public function sendQuotation() {
+		if (isset($this->request->get ['quote_revision_id']) && ( int ) $this->request->get ['quote_revision_id']) {
+			$this->load->model ( 'module/enquiry' );
+			$this->load->model ( 'account/customerpartner' );
+			$seller_id = $this->model_account_customerpartner->getuserseller ();
+			$data1 = $this->model_module_enquiry->getQuoteRevision ( $this->request->get ['quote_revision_id'], $seller_id );
+			$data = unserialize($data1);
+			$html = $this->load->view ( 'default/template/account/customerpartner/quotation.tpl', $data );
+				
+			$mail = new Mail ();
+			$mail->protocol = $this->config->get ( 'config_mail_protocol' );
+			$mail->parameter = $this->config->get ( 'config_mail_parameter' );
+			$mail->smtp_hostname = $this->config->get ( 'config_mail_smtp_hostname' );
+			$mail->smtp_username = $this->config->get ( 'config_mail_smtp_username' );
+			$mail->smtp_password = html_entity_decode ( $this->config->get ( 'config_mail_smtp_password' ), ENT_QUOTES, 'UTF-8' );
+			$mail->smtp_port = $this->config->get ( 'config_mail_smtp_port' );
+			$mail->smtp_timeout = $this->config->get ( 'config_mail_smtp_timeout' );
+			
+			$mail->setTo ( $data['customer']['email'] );
+			$mail->setFrom ( $data['supplier_email'] );
+			$mail->setSender ( html_entity_decode ( $data['profile']['companyname'], ENT_QUOTES, 'UTF-8' ) );
+			$mail->setSubject ( html_entity_decode ( 'Quotation form your enquiry - '.$data['enquiry_id'] , ENT_QUOTES, 'UTF-8' ) );
+			$mail->setHtml ( $html );
+			$mail->send ();
+		
+		} elseif (isset ( $this->request->get ['enquiry_id'] ) && ( int ) $this->request->get ['enquiry_id']) {
+			$this->load->model ( 'module/enquiry' );
+			$this->load->model ( 'account/customerpartner' );
+			$this->load->model('account/customer');
+				
+			$seller_id = $this->model_account_customerpartner->getuserseller ();
+		
+			$data = $this->model_module_enquiry->getEnquiry ( $this->request->get ['enquiry_id'], $seller_id );
+				
+			$data['address'] = $this->model_module_enquiry->getAddress($data ['address_id']);
+			$data['supplier_address'] = $this->model_module_enquiry->getAddress($data ['supplier_address_id']);
+			$indiatimezone = new DateTimeZone("Asia/Kolkata" );
+			$date = new DateTime();
+			$date->setTimezone($indiatimezone);
+			$data['date'] = $date->format( 'D, M jS, Y' ); 
+			if (!empty($data['revisions'])) {
+				$data['quote_number'] = $date->format( 'Y-M' ).'-'.$data['quote_id'].'-'.end($data['revisions'])['quote_revision_id'];
+			} else {
+				$data['quote_number'] = $data['quote_id'].'-'.'0-1';
+			}
+			$data['profile'] =  $this->model_account_customerpartner->getProfile ($seller_id);
+			$data['customer'] = $this->model_account_customer->getCustomer($data['customer_id']);
+			$supplier = $this->model_account_customer->getCustomer($data['supplier_id']);
+			$data['supplier_email'] = $supplier['email'];
+			$this->load->model ( 'localisation/tax_class' );
+				
+			$data ['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses ();
+				
+			$data ['text_none'] = "None";
+			if (isset ( $this->request->post ['tax_class_id'] )) {
+				$data ['tax_class_id'] = $this->request->post ['tax_class_id'];
+			} elseif (! empty ( $product_info )) {
+				$data ['tax_class_id'] = $product_info ['tax_class_id'];
+			} else {
+				$data ['tax_class_id'] = 0;
+			}
+			$data ['payment_term'] = array ();
+			$this->load->model ( 'localisation/payment_term' );
+			$data ['payment_term'] = $this->model_localisation_payment_term->getPaymentTerms ();
+		
+			$html = $this->load->view ( 'default/template/account/customerpartner/quotation.tpl', $data );
+				
+			$revision_data = $this->model_module_enquiry->getQuoteRevision (end($data['revisions'])['quote_revision_id'], $seller_id );
+			
+			var_dump(unserialize($revision_data)) ;
+				
+			//$this->model_module_enquiry->addQuoteRevision ( $data );
+			
+			$mail = new Mail ();
+			$mail->protocol = $this->config->get ( 'config_mail_protocol' );
+			$mail->parameter = $this->config->get ( 'config_mail_parameter' );
+			$mail->smtp_hostname = $this->config->get ( 'config_mail_smtp_hostname' );
+			$mail->smtp_username = $this->config->get ( 'config_mail_smtp_username' );
+			$mail->smtp_password = html_entity_decode ( $this->config->get ( 'config_mail_smtp_password' ), ENT_QUOTES, 'UTF-8' );
+			$mail->smtp_port = $this->config->get ( 'config_mail_smtp_port' );
+			$mail->smtp_timeout = $this->config->get ( 'config_mail_smtp_timeout' );			
+			$mail->setTo ( $data['customer']['email'] );
+			$mail->setFrom ( $data['supplier_email'] );
+			$mail->setSender ( html_entity_decode ( $data['profile']['companyname'], ENT_QUOTES, 'UTF-8' ) );
+			$mail->setSubject ( html_entity_decode ( 'Quotation form your enquiry - ' , ENT_QUOTES, 'UTF-8' ) );
+			$mail->setHtml ( $html );
+			$mail->send ();
+		
+		}
+	}
+	
 	public function updateQuote() {
 		$data = array ();
 		if (($this->request->server ['REQUEST_METHOD'] == 'POST') && isset ( $this->request->post ['enquiry'] )) {
 			$data = $this->request->post ['enquiry'];
 			$this->load->model ( 'module/enquiry' );
+			$totals = array();
+			$total = 0;
+			$sub_total = 0;
+			$tax_data = array();
+				
 			foreach ( $data ['product'] as $key => $product ) {
-				$data ['product'] [$key] ['total'] = $this->tax->calculate ( $product ['unit_price'], $product ['tax_class_id'], true ) * $product ['quantity'];
+				
+				$data ['product'] [$key] ['total'] = $this->tax->calculate ( ($product ['unit_price']-$product['discount']), $product ['tax_class_id'], true ) * $product ['quantity'];
+				$tax_rates = $this->tax->getRates((($product ['unit_price']-$product['discount'])*$product ['quantity']), $product['tax_class_id']);
+				
+				foreach ($tax_rates as $tax_rate) {
+					if (!isset($tax_data[$tax_rate['tax_rate_id']])) {
+						$tax_data[$tax_rate['tax_rate_id']] = ($tax_rate['amount'] * $product['quantity']);
+					} else {
+						$tax_data[$tax_rate['tax_rate_id']] += ($tax_rate['amount'] * $product['quantity']);
+					}
+				}
+				
+				$sub_total += ($product['unit_price']-$product['discount'])*$product ['quantity'];
 			}
+			
+			
+			$data['totals'][] = array(
+				'code'=>'sub_total',
+				'title'=>'Sub Total',
+				'value'=>$sub_total,
+				'sort_order'=>'1'
+			);
+			$total = $sub_total;
+			
+			$data['totals'][] = array(
+					'code'=>'shipping',
+					'title'=>'Shipping Charges',
+					'value'=>$data['shipping_charge'],
+					'sort_order'=>'2'
+			);
+			$total +=$data['shipping_charge'];
+			
+			foreach ($tax_data as $key => $value) {
+				$data['totals'] [] = array (
+					'code' => 'tax',
+					'title' => $this->tax->getRateName ( $key ),
+					'value' => $value,
+					'sort_order' => $this->config->get ( 'tax_sort_order' )
+				);
+				$total +=$value;
+			}
+			
+			$data['totals'][] = array(
+					'code'=>'total',
+					'title'=>'Total',
+					'value'=>$total,
+					'sort_order'=>'3'
+			);
+			
 			$this->model_module_enquiry->updateQuote ( $data );
+			
+			$this->response->setOutput(json_encode($data['totals']));
 		}
 	}
 	private function validate() {

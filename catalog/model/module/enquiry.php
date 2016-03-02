@@ -168,15 +168,18 @@ class ModelModuleEnquiry extends Model {
 		if (!$quote_id && !$quote_revision_id){
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "quote` WHERE enquiry_id='" . (int)$enquiry_id . "' AND supplier_id='" . (int)$supplier_id . "'");
 			if ($query->num_rows) {
-				return $this->getQuote($query->row['quote_id']);
+				return $this->getQuote($query->row['quote_id'],$supplier_id);
 			}
 		} elseif (!$quote_id && $quote_revision_id) {
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_revision` qr LEFT JOIN `" . DB_PREFIX . "quote` q ON (qr.quote_id=q.quote_id) WHERE qr.quote_revision_id='" . (int)$quote_revision_id . "' AND q.supplier_id='" . (int)$supplier_id . "'");
-			if ($query->num_rows) {
-				return $this->getQuote($query->row['quote_id'],$quote_revision_id);
+			if ($query->num_rows && $quote_revision_id) {
+				$query =$this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_revision` WHERE quote_revision_id='" . (int)$quote_revision_id. "'");
+				return $query->row;
 			}
+			return false;
 		}
 		$data = array();
+		
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry e LEFT JOIN ".DB_PREFIX."customer c ON (e.customer_id = c.customer_id) WHERE e.enquiry_id='" . (int)$enquiry_id . "'");
 		$data['customer_id'] = $query->row['customer_id'];
 		$data['enquiry_id'] = $query->row['enquiry_id'];
@@ -188,68 +191,58 @@ class ModelModuleEnquiry extends Model {
 		$data['email'] = $query->row['email'];
 		$data['telephone'] = $query->row['telephone'];
 		
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "quote` SET customer_id='" . (int)$data['customer_id'] . "', enquiry_id='" . (int)$data['enquiry_id'] . "', supplier_id='" . (int)$supplier_id . "', address_id='" . (int)$data['address_id'] . "', date_added=NOW()");
+
+		$sql = "INSERT INTO `" . DB_PREFIX . "quote` SET";
+		$sql .= " customer_id='" . (int)$data['customer_id'] . "',";
+		$sql .= " enquiry_id='" . (int)$data['enquiry_id'] . "',";
+		$sql .= " supplier_id='" . (int)$supplier_id . "',";
+		$sql .= " address_id='" . (int)$data['address_id'] . "',";
+		$sql .= " date_added=NOW()";
+		
+		$this->db->query($sql);
 		$quote_id = $this->db->getLastId();
-		
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "quote_revision` SET quote_id='" . (int)$quote_id . "', status='" . (int)$data['status'] . "', date_added=NOW()");
-		$quote_revision_id = $this->db->getLastId();
-		
+
 		$data['terms'] = array();
 		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."enquiry_term et WHERE et.enquiry_id='" . (int)$enquiry_id . "'");
 		foreach ($query->rows as $key => $term) {
-			$data['terms'][] = array(
-					'type' => $term['term_type'],
-					'value' => $term['term_value']
-			);
+			$query = $this->db->query("INSERT INTO ".DB_PREFIX."quote_term SET quote_id='" . (int)$quote_id. "',term_type='" . $term['term_type'] . "',term_value='" . $term['term_value'] . "',sort_order='" . (int)$key . "'");
 		}
 	
 		$data['enquiries'] = array();
 		$query = $this->db->query("SELECT ep.*,epd.name AS name, epd.description AS description, epd.files AS files, ucd.title AS unit_title, uc.value AS unit_value FROM ".DB_PREFIX."enquiry_product ep LEFT JOIN ".DB_PREFIX."enquiry_product_description epd ON (epd.enquiry_product_id=ep.enquiry_product_id) LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = ep.unit_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) WHERE ep.enquiry_id='" . $enquiry_id . "'");
 		if ($query->num_rows) {
 			foreach ($query->rows as $key=>$enquiry) {
-				if ($enquiry['product_id'])
-					$data['enquiries'][$key]['link'] = $this->url->link('product/product','product_id='.(int)$enquiry['product_id'],'SSL');
-					if ($enquiry['category_id'])
-						$data['enquiries'][$key]['link'] = $this->url->link('product/category','category_id='.(int)$enquiry['product_id'],'SSL');
-						$data['enquiries'][$key]['name'] = $enquiry['name'];
-						$data['enquiries'][$key]['description'] = $enquiry['description'];
-						$data['enquiries'][$key]['quantity'] = $enquiry['quantity'];
-						$data['enquiries'][$key]['unit_title'] = $enquiry['unit_title'];
-						$data['enquiries'][$key]['unit_id'] = $enquiry['unit_id'];
-						$data['enquiries'][$key]['product_id'] = $enquiry['product_id'];
-						$data['enquiries'][$key]['filenames'] = unserialize($enquiry['files']);
+				$tax_class_id = 0;
+				if ($enquiry['product_id']){
+					$product = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product` WHERE product_id='" . (int)$enquiry['product_id'] . "'")->row;
+					$tax_class_id = $product['tax_class_id'];
+				}
+				$sql = "INSERT INTO `" . DB_PREFIX . "quote_product` SET ";
+				$sql .= " quote_id='" . (int)$quote_id . "',";
+				$sql .= " product_id='" . (int)$enquiry['product_id'] . "',";
+				$sql .= " category_id='" . (int)$enquiry['category_id'] . "',";
+				$sql .= " name='" . $enquiry['name'] . "',";
+				$sql .= " tax_class_id='" . $tax_class_id . "',";
+				$sql .= " quantity='" . (int)$enquiry['quantity'] . "',";
+				$sql .= " unit_id='" . (int)$enquiry['unit_id'] . "'";
+				$this->db->query($sql);
 			}
 		}
 	
-		foreach ($data['terms'] as $key => $term) {
-			$query = $this->db->query("INSERT INTO ".DB_PREFIX."quote_term SET quote_revision_id='" . (int)$quote_revision_id. "', quote_id='" . (int)$quote_id. "',term_type='" . $term['type'] . "',term_value='" . $term['value'] . "',sort_order='" . (int)$key . "'");
-		}
-	
-		foreach ($data['enquiries'] as $enquiry) {
-			$tax_class_id = 0;
-			if ($enquiry['product_id']){
-				$product = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product` WHERE product_id='" . (int)$enquiry['product_id'] . "'")->row;
-				$tax_class_id = $product['tax_class_id'];
-			}
-			$sql = "INSERT INTO `" . DB_PREFIX . "quote_product` SET ";
-			$sql .= " quote_revision_id='" . (int)$quote_revision_id . "',";
-			$sql .= " product_id='" . (int)$enquiry['product_id'] . "',";
-			$sql .= " name='" . $enquiry['name'] . "',";
-			$sql .= " tax_class_id='" . $tax_class_id . "',";
-			$sql .= " quantity='" . (int)$enquiry['quantity'] . "',";
-			$sql .= " unit_id='" . (int)$enquiry['unit_id'] . "'";
-	
-			$this->db->query($sql);
-		}
-	
-		return $this->getQuote($quote_id);
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "quote_revision` SET quote_id='" . (int)$quote_id . "', date_added=NOW()");
+		$quote_revision_id = $this->db->getLastId();
+		
+		return $this->getQuote($quote_id,$supplier_id);
 	}
 
-	public function getQuote($quote_id, $quote_revision_id=0) {
+	public function getQuote($quote_id, $supplier_id, $quote_revision_id=0) {
 		$data = array();
-		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."quote q LEFT JOIN ".DB_PREFIX."customer c ON (q.customer_id = c.customer_id) WHERE q.quote_id='" . (int)$quote_id . "'");
+		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."quote q LEFT JOIN ".DB_PREFIX."customer c ON (q.customer_id = c.customer_id) WHERE q.quote_id='" . (int)$quote_id . "' AND q.supplier_id='".(int)$supplier_id."'");
+		
 		$data['customer_id'] = $query->row['customer_id'];
 		$data['address_id'] = $query->row['address_id'];
+		$data['effective_date'] = $query->row['effective_date'];
+		$data['expiration_date'] = $query->row['expiration_date'];
 		$data['supplier_address_id'] = $query->row['supplier_address_id'];
 		$data['date_added'] = $query->row['date_added'];
 		$data['quote_id'] = $query->row['quote_id'];
@@ -258,55 +251,71 @@ class ModelModuleEnquiry extends Model {
 		$data['lastname'] = $query->row['lastname'];
 		$data['email'] = $query->row['email'];
 		$data['telephone'] = $query->row['telephone'];
-		$cquery = $this->db->query ( "SELECT * FROM " . DB_PREFIX . "address a WHERE a.address_id='" . $data['address_id'] . "'" );
-		$data['address_1'] =$cquery->row ['address_1'];
-		$data['city'] = $cquery->row ['city'];
-		
-		$data['country'] =$cquery->row ['country_id'];
-		
-		$country_query = $this->db->query ( "SELECT * FROM `" . DB_PREFIX . "country` WHERE country_id = '" . ( int ) $data['country'] . "'" );
-		$data['country'] = $country_query->row['name'];
-		$data['state'] =$cquery->row ['zone_id'];
-		
-		$zone_query = $this->db->query ( "SELECT * FROM `" . DB_PREFIX . "zone` WHERE zone_id = '" . ( int ) $data['state'] . "'" );
-		$data['zone'] = $zone_query->row['name'];
-			
-		
-		if ($quote_revision_id){
-			$query =$this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_revision` WHERE quote_revision_id='" . (int)$quote_revision_id. "'");
-		} else {
-			$query =$this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_revision` WHERE quote_id='" . $quote_id . "' ORDER BY quote_revision_id DESC LIMIT 1 ");
-			$quote_revision_id = $query->row['quote_revision_id'];
-			$query =$this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_revision` WHERE quote_id='" . $quote_id . "' ORDER BY quote_revision_id DESC");
-			$data['revisions'] = $query->rows;
-		}
-		$data['quote_revision_id'] = $quote_revision_id;
+		$data['supplier_address_id'] =$query->row ['supplier_address_id'];
 		$data['status'] = $query->row['status'];
+
+		$query =$this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_revision` WHERE quote_id='" . $quote_id . "' ORDER BY quote_revision_id DESC");
+		$data['revisions'] = $query->rows;
 		$data['terms'] = array();
-		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."quote_term qt WHERE qt.quote_id='" . (int)$quote_id . "' AND qt.quote_revision_id='" . (int)$quote_revision_id . "'");
+		$query = $this->db->query("SELECT * FROM ".DB_PREFIX."quote_term qt WHERE qt.quote_id='" . (int)$quote_id . "'");
 		foreach ($query->rows as $term) {
-			$data['terms'][$term['quote_term_id']] = array(
-					'quote_term_id' => $term['quote_term_id'],
-					'type' => $term['term_type'],
-					'value' => $term['term_value']
-			);
+			if ($term['term_type']=='payment') {
+				$query2 = $this->db->query("SELECT * FROM ".DB_PREFIX."payment_term WHERE payment_term_id='".$term['term_value']."'");
+				$term['term_value'] = $query2->row['name']; 
+				
+				$data['terms'][$term['quote_term_id']] = array(
+						'quote_term_id' => $term['quote_term_id'],
+						'type' => 'Payment',
+						'value' => $term['term_value']
+				);
+			} else {
+				$data['terms'][$term['quote_term_id']] = array(
+						'quote_term_id' => $term['quote_term_id'],
+						'type' => $term['term_type'],
+						'value' => $term['term_value']
+				);
+			}
 		}
 	
 		$data['enquiries'] = array();
-		$query = $this->db->query("SELECT qp.*,ucd.unit AS unit, ucd.title AS unit_title,tc.title AS tax_class,wcd.unit AS weight_class,lcd.unit AS length_class FROM `".DB_PREFIX."quote_product` qp LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = qp.unit_id) LEFT JOIN " . DB_PREFIX . "weight_class_description wcd ON (wcd.weight_class_id = qp.weight_class_id) LEFT JOIN " . DB_PREFIX . "length_class_description lcd ON (lcd.length_class_id = qp.length_class_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) LEFT JOIN " . DB_PREFIX . "tax_class tc ON (tc.tax_class_id = qp.tax_class_id) WHERE qp.quote_revision_id='" . $quote_revision_id . "'");
+		$query = $this->db->query("SELECT qp.*,ucd.unit AS unit, ucd.title AS unit_title,tc.title AS tax_class,wcd.unit AS weight_class,lcd.unit AS length_class FROM `".DB_PREFIX."quote_product` qp LEFT JOIN " . DB_PREFIX . "unit_class uc ON (uc.unit_class_id = qp.unit_id) LEFT JOIN " . DB_PREFIX . "weight_class_description wcd ON (wcd.weight_class_id = qp.weight_class_id) LEFT JOIN " . DB_PREFIX . "length_class_description lcd ON (lcd.length_class_id = qp.length_class_id) LEFT JOIN " . DB_PREFIX . "unit_class_description ucd ON (uc.unit_class_id = ucd.unit_class_id) LEFT JOIN " . DB_PREFIX . "tax_class tc ON (tc.tax_class_id = qp.tax_class_id) WHERE qp.quote_id='" . $quote_id . "'");
 		if ($query->num_rows) {
 			foreach ($query->rows as $key=>$enquiry) {
 				$data['enquiries'][$key] = $enquiry;
 				if ($enquiry['product_id'])
 					$data['enquiries'][$key]['link'] = $this->url->link('product/product','product_id='.(int)$enquiry['product_id'],'SSL');
-					if ($enquiry['category_id'])
-						$data['enquiries'][$key]['link'] = $this->url->link('product/category','category_id='.(int)$enquiry['product_id'],'SSL');
-						$data['enquiries'][$key]['description'] = '';
+				if ($enquiry['category_id'])
+					$data['enquiries'][$key]['link'] = $this->url->link('product/category','category_id='.(int)$enquiry['product_id'],'SSL');
+				$data['enquiries'][$key]['text_price'] = $this->currency->format($data['enquiries'][$key]['price']);
 			}
 		}
+		
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_total` WHERE quote_id='" . (int)$data['quote_id'] . "'");
+		
+		foreach ($query->rows as $total) {
+			$data['totals'][] = array(
+				'code' => $total['code'],
+				'title' => $total['title'],
+				'text'  => $this->currency->format($total['value']),
+				'value' => $total['value']
+			);
+		}
+		
 		return $data;
 	}
-	
+	public function addQuoteRevision($data = array()){
+		if (isset($data['quote_id'])){
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "quote_revision` VALUES ('','" . (int)$data['quote_id']. "','" . serialize($data). "',NOW())");
+		}
+	}
+
+	public function getQuoteRevision($quote_revision_id = 0){
+		if ($quote_revision_id){
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "quote_revision` WHERE quote_revision_id='" . (int)$quote_revision_id . "'");
+			return $query->row['quote'];
+		}
+		return false;
+	}
 	
 	public function getAddress($address_id) {
 	$address_query = $this->db->query ( "SELECT DISTINCT * FROM " . DB_PREFIX . "address WHERE address_id = '" . ( int ) $address_id . "'" );
@@ -364,51 +373,39 @@ class ModelModuleEnquiry extends Model {
 	
 	public function updateQuote($data  = array()){
 	
-		if (!$data['revisions']){
-			$data['status'] = '0';
-			$quote_id = $data['quote_id'];
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "quote_revision` SET quote_id='" . (int)$quote_id . "', status='" . (int)$data['status'] . "', date_added=NOW()");
-			$quote_revision_id = $this->db->getLastId();
-			$data['quote_revision_id'] = $quote_revision_id;
-			foreach($data['product'] as $quote_product_id => $product){
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "quote_product` SET quote_revision_id='" . (int)$quote_revision_id . "', price='" .$product['unit_price']. "',tax_class_id='" .(int)$product['tax_class_id'] . "',quantity='" .$product['quantity'] . "',weight='" .$product['weight']. "',weight_class_id='" .(int)$product['weight_class_id']. "',length='" .$product['length']. "',width='" .$product['width']. "',height='" .$product['height']. "',length_class_id='" .(int)$product['length_class_id']. "',total='" . (int)$product['total']. "'");
-			}
-			if (isset($data['term'])) {
-				foreach($data['oldterm'] as $key => $dterm){
-					if ($dterm['term_type'] && $dterm['term_value']) {
-						$this->db->query ("INSERT INTO `" . DB_PREFIX . "quote_term` VALUES ('','" .$data['quote_revision_id']. "','" .$data['quote_id']. "','" . $dterm ['term_type'] . "','" . $dterm ['term_value'] . "','')" );
-					}
+		$this->db->query("UPDATE `" . DB_PREFIX . "quote` SET supplier_address_id='" . (int)$data['supplier_address_id'] . "', quotation_number='" . $this->db->escape($data['supplier_address_id']) . "', expiration_date='" . $this->db->escape($data['expiration_date']) . "', effective_date='" . $this->db->escape($data['effective_date']) . "' WHERE quote_id='" . (int)$data['quote_id'] . "'");
+		
+		foreach($data['product'] as $quote_product_id => $product) {
+			$sql = "UPDATE `" . DB_PREFIX . "quote_product` SET ";
+			$sql .= " price='" .(float)$product['unit_price']. "',";
+			$sql .= " description='" .$this->db->escape($product['description']). "',";
+			$sql .= " discount='" .(float)$product['discount']. "',";
+			$sql .= " tax_class_id='" .(int)$product['tax_class_id'] . "',";
+			$sql .= " quantity='" .$product['quantity'] . "',";
+			$sql .= " total='" . (float)$product['total']. "'";
+			$sql .= " WHERE  quote_product_id = '" . (int)$quote_product_id . "'";
+			$this->db->query($sql);
+		}
+		$keys = array();
+		if (isset($data['oldterm'])) {
+			foreach($data['oldterm'] as $key => $dterm){
+				if ($dterm['term_type'] && $dterm['term_value']) {
+					$this->db->query ("UPDATE `" . DB_PREFIX . "quote_term` SET term_type='" . $dterm ['term_type'] . "', term_value='" . $dterm ['term_value'] . "' WHERE quote_term_id='" . (int)$key  . "'");
+				} else {
+					$keys[] = $key;
 				}
 			}
-			if (isset($data['term'])) {
-				foreach($data['term'] as $key => $dterm){
-					$this->db->query ("INSERT INTO `" . DB_PREFIX . "quote_term` VALUES ('','" .$data['quote_revision_id']. "','" .$data['quote_id']. "','" . $dterm ['term_type'] . "','" . $dterm ['term_value'] . "','')" );
-				}
+			$this->db->query ("DELETE FROM `" . DB_PREFIX . "quote_term` WHERE quote_term_id IN ('" . implode(',',$keys)  . "')");
+		}
+		if (isset($data['term'])) {
+			foreach($data['term'] as $key => $dterm){
+				$this->db->query ("INSERT INTO `" . DB_PREFIX . "quote_term` VALUES ('','" .$data['quote_id']. "','" . $dterm ['term_type'] . "','" . $dterm ['term_value'] . "','')" );
 			}
-		} else {
-			$data['quote_revision_id'] = $data['revisions'];
-			foreach($data['product'] as $quote_product_id => $product){
-				$this->db->query("UPDATE `" . DB_PREFIX . "quote_product` SET price='" .$product['unit_price']. "',tax_class_id='" .(int)$product['tax_class_id'] . "',quantity='" .$product['quantity'] . "',weight='" .$product['weight']. "',weight_class_id='" .(int)$product['weight_class_id']. "',length='" .$product['length']. "',width='" .$product['width']. "',height='" .$product['height']. "',length_class_id='" .(int)$product['length_class_id']. "',total='" . (int)$product['total']. "' WHERE  quote_product_id = '" . (int)$quote_product_id . "'  ");
-			}
-			
-			$this->db->query("UPDATE `" . DB_PREFIX . "quote` SET supplier_address_id='" . (int)$data['supplier_address_id'] . "' WHERE quote_id='" . (int)$data['quote_id'] . "'");
-				
-			$keys = array();
-			if (isset($data['term'])) {
-				foreach($data['oldterm'] as $key => $dterm){
-					if ($dterm['term_type'] && $dterm['term_value']) {
-						$this->db->query ("UPDATE `" . DB_PREFIX . "quote_term` SET term_type='" . $dterm ['term_type'] . "', term_value='" . $dterm ['term_value'] . "' WHERE quote_term_id='" . (int)$key  . "'");
-					} else {
-						$keys[] = $key;
-					}
-				}
-				var_dump($keys);
-				$this->db->query ("DELETE FROM `" . DB_PREFIX . "quote_term` WHERE quote_term_id IN ('" . implode(',',$keys)  . "')");
-			}
-			if (isset($data['term'])) {
-				foreach($data['term'] as $key => $dterm){
-					$this->db->query ("INSERT INTO `" . DB_PREFIX . "quote_term` VALUES ('','" .$data['quote_revision_id']. "','" .$data['quote_id']. "','" . $dterm ['term_type'] . "','" . $dterm ['term_value'] . "','')" );
-				}
+		}
+		if (isset($data['totals'])) {
+			$this->db->query ("DELETE FROM `" . DB_PREFIX . "quote_total` WHERE quote_id='" . (int)$data['quote_id'] . "'");
+			foreach ($data['totals'] as $total) {
+				$this->db->query ("INSERT INTO `" . DB_PREFIX . "quote_total` VALUES ('','" . (int)$data['quote_id'] . "','" . $this->db->escape($total['code']) . "','" . $this->db->escape($total['title']) . "','" . (float)$total['value'] . "','" . (int)$total['sort_order'] . "')");
 			}
 		}
 	}

@@ -103,7 +103,7 @@
 						<td class="gp-col-name">
 							<div class="gp-child-name"><?php echo $child['name']; ?>
 								<?php if ($child['enabled']) { ?> 
-									<?php if ($child['curr_vendor']) { ?>
+									<?php if ($child['curr_vendor'] && 0) { ?>
 										<div style="display:inline-block;position:relative;">
 											<a class="dropdown-toggle" href="#" id="suppliers<?php echo $child['child_id']; ?>" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span><i class="fa fa-users"></i></span>
 											</a>

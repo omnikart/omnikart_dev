@@ -1362,6 +1362,7 @@ class ControllerProductProduct extends Controller {
 		$this->load->language ( 'total/combo_products' );
 		$this->load->model ( 'catalog/category' );
 		$this->load->model ( 'catalog/product' );
+		$this->load->model('tool/image');
 		
 		if (isset ( $this->request->get ['product_id'] )) {
 			$product_id = ( int ) $this->request->get ['product_id'];
@@ -1397,14 +1398,6 @@ class ControllerProductProduct extends Controller {
 		
 
 			if ($child_info) {
-				if ($child_info ['quantity'] <= 0) {
-					$child_info ['stock'] = $child_info ['stock_status'];
-				} elseif ($this->config->get ( 'config_stock_display' )) {
-					$child_info ['stock'] = $child_info ['quantity'];
-				} else {
-					$child_info ['stock'] = $this->language->get ( 'text_instock' );
-				}
-				
 				if ($tcg_customer_price) {
 					$child_price = $this->currency->format ( $this->tax->calculate ( $child_info ['price'], $child_info ['tax_class_id'], $tcg_tax ) );
 				} else {

@@ -1425,7 +1425,7 @@ class ModelAccountCustomerpartner extends Model {
 			$impolde[] = 'companydescription = "'.$this->db->escape($data['companyDescription']).'"';
 
 		if(isset($data['otherpayment']))
-			$impolde[] = 'otherpayment = "'.$this->db->escape($data['otherpayment']).'"';
+			$impolde[] = 'otherpayment = "'.$this->db->escape(nl2br($data['otherpayment'])).'"';
 
 		if(isset($data['country']))
 			$impolde[] = 'country = "'.$this->db->escape($data['country']).'"';

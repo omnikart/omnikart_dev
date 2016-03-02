@@ -60,7 +60,6 @@ class ControllerModuleEnquiry extends Controller {
 				}
 				$this->load->model ( 'module/enquiry' );
 				$this->model_module_enquiry->addenquiry ( $data );
-				$this->model_module_enquiry->getEnquiry();
 				unset ( $this->session->data ['enquiry'] );
 				$json ['success'] = "Successfully send your query to Omnikart. We'll get back to you soon. :)";
 			}

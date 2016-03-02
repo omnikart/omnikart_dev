@@ -6,13 +6,8 @@
     	<div class="modal-content">
         	<div class="modal-body"><!-- edited latest -->
         	<div id="cart-content">
-				<?php if ($vendors) { ?>
-					<?php foreach($vendors as $vendor_id => $vendor) { ?>
-					<div class="panel panel-default">
-  						<div class="panel-heading">
-  							<?php echo $vendor['details']['companyname']; ?>
-  						</div>
-  						<div class="panel-body">	
+				<?php if ($products) { ?>
+
 							<table class="table table-striped">
 									<tr>
 										<th class="text-center" style="width:90px;">Image</th>
@@ -23,7 +18,7 @@
 										<th class="text-right" style="width:150px;">Price Incl. Tax</th>
 										<th class="text-center" style="width:50px;"></tr>
 									</tr>
-									<?php foreach ($vendor['products'] as $product) { ?>
+									<?php foreach ($products as $product) { ?>
 									<tr>
 										<td class="text-center"><?php if ($product['thumb']) { ?>
 											<a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-thumbnail" /></a>
@@ -58,17 +53,16 @@
 								</table>
 								<div>
 									<table class="pull-right">
-										<?php foreach ($vendor['totals'] as $total) { ?>
+										<?php foreach ($totals as $total) { ?>
 										<tr>
 											<td class="text-right"><strong><?php echo $total['title']; ?></strong></td>
 											<td class="text-right"><?php echo $total['text']; ?></td>
 										</tr>
 										<?php } ?>
 									</table>
+									<div class="clearfix"></div>
 								</div>
-					  		</div>
-						</div>			
-					<?php } ?>
+
 					<p class="text-right"><a href="<?php echo $cart; ?>"><strong><i class="fa fa-shopping-cart"></i> <?php echo $text_cart; ?></strong></a>&nbsp;&nbsp;&nbsp;<a href="<?php echo $checkout; ?>"><strong><i class="fa fa-share"></i> <?php echo $text_checkout; ?></strong></a></p>
 				<?php } ?>
 			</div>

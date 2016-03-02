@@ -440,7 +440,6 @@ class Cart {
 	public function getTaxes($vendor_id = 0) {
 		$tax_data = array();
 
-
 		if ($vendor_id) {
 			foreach ($this->getProducts() as $product) {
 				if ($product['vendor_id']==$vendor_id) {

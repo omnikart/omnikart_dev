@@ -431,7 +431,7 @@
 	            <?php } ?>
 	          </ul>
   			  
-			  <?php if ($curr_vendor) {  ?>
+			  <?php if ($curr_vendor && 0) {  ?>
 	    		<div class="vendor">
 										<h4>
 											<i class="fa fa-user"></i> Sold by: <a
@@ -441,12 +441,14 @@
 											value="<?php echo $curr_vendor['customer_id']; ?>">
 									</div>      	
 	          <?php } ?>
-	          <?php if ($vendors) {  ?>
+	          <?php if ($vendors && 0) {  ?>
 				<button type="button" id="view-vendors"
 										data-loading-text="<?php echo $text_loading; ?>"
 										class="btn btn-default btn-block" data-toggle="modal"
 										data-target="#supplier-list">View other suppliers</button>
 	          <?php } ?>
+	          
+	      
   			</div>
 							</div>
 							<div class="clearfix"></div>

@@ -16,20 +16,13 @@
 }
 </style>
 <div class="row">
-<div class="col-sm-12">
-<?php foreach ($vendors as $vendor_id => $vendor) { ?>  
-<div class="panel panel-default">
-	<div class="panel-heading">
-  	<?php echo "Sold By: ".$vendor['details']['companyname']; ?>
-	</div>
-  <div class="panel-body">
-				<div class="row">
-				<div class="col-sm-9">
-        <div class="table-responsive">
+	<div class="col-sm-12">
+     <div class="table-responsive">
 				<table class="table table-striped table-bordered" style="border-bottom: 3px solid #dff0d8;">
             <thead>
                 <tr class="">
                     <th colspan="2" class="name"><?php echo $column_name; ?></th>
+
                     
                      <?php if($mmos_checkout['enable_pmodel'] == 1) { ?>
                    
@@ -44,14 +37,16 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($vendor['products'] as $product) { ?>  
+                <?php foreach ($products as $product) { ?>  
                     <?php if ($product['recurring']): ?>
                         <tr>
-                            <td colspan="6" style="border:none;"><image src="catalog/view/theme/default/image/reorder.png" alt="" title="" style="float:left;" /><span style="float:left;line-height:18px; margin-left:10px;"> 
-                                    <strong><?php echo $text_recurring_item ?></strong>
-                                    <?php echo $product['profile_description'] ?>
+					<td colspan="6" style="border: none;"><image
+							src="catalog/view/theme/default/image/reorder.png" alt=""
+							title="" style="float:left;" /><span
+						style="float: left; line-height: 18px; margin-left: 10px;"> <strong><?php echo $text_recurring_item ?></strong>
+                                    <?php echo $product['profile_description']?>
                             </td>
-                        </tr>
+				</tr>
                     <?php endif; ?>
                     <tr>
                         <td class="name" style="width:80px;">
@@ -67,12 +62,10 @@
                             </a>
 
                             <?php foreach ($product['option'] as $option) { ?>
-                                <br />
-                                &nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
+                                <br /> &nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
                             <?php } ?>
                             <?php if ($product['recurring']): ?>
-                                <br />
-                                &nbsp;<small><?php echo $text_payment_profile ?>: <?php echo $product['profile_name'] ?></small>
+                                <br /> &nbsp;<small><?php echo $text_payment_profile ?>: <?php echo $product['profile_name'] ?></small>
                             <?php endif; ?>
                         </td>
                         
@@ -80,52 +73,61 @@
                         <td class="model"><?php echo $product['model']; ?></td>
                         
                         <?php } ?>
-                        <td class="quantity text-center"><?php echo $product['quantity']; ?>
-												</td>
-                        <td class="price"><?php echo $product['price']; ?></td>
-                        <td class="total"><?php echo $product['total']; ?></td>
-                        <td class="total"><?php echo $product['tax']; ?></td>
-                        <td class="text-right">
-                           
-                                <button type="button"  alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" class="btn-remove btn btn-danger btn-xs" >
-                                  <span class="glyphicon glyphicon-remove"></span>
-                                    <input type="hidden" value="<?php echo $product['key']; ?>"/>
-                                </button>
-                          
+                        <td class="quantity text-center">
+							<div class="input-group input-group-sm">
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-decrease"><i class="fa fa-minus"></i></button>														
+								</span>
+								<input type="hidden" class="original-quantity form-control" value="<?php echo $product['quantity']; ?>"/>
+								<input type="text" class="product-quantity form-control text-center " name="quantity[<?php echo $product['key']; ?>]" value="<?php echo $product['quantity']; ?>" size="3" onkeypress="validate_quantity_keypress(event)" />														
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-<?php echo ($css['checkout_theme'] == 'standar') ?  'warning' : $css['checkout_theme'];  ?> btn-increase"><i class="fa fa-plus"></i></span></button>
+								</span>
+							</div>
+						</td>
+					<td class="price"><?php echo $product['price']; ?></td>
+					<td class="total"><?php echo $product['total']; ?></td>
+					<td class="total"><?php echo $product['tax']; ?></td>
+					<td class="text-right">
 
-                        </td>
-                    </tr>
+						<button type="button" alt="<?php echo $button_remove; ?>"
+							title="<?php echo $button_remove; ?>"
+							class="btn-remove btn btn-danger btn-xs">
+							<span class="glyphicon glyphicon-remove"></span> <input
+								type="hidden" value="<?php echo $product['key']; ?>" />
+						</button>
+
+
+					</td>
+				</tr>
                 <?php } ?>
                 </tbody>
 							</table>
-				</div>
-				</div>
-				<div class="col-sm-3">
-				<div class="table-responsive">
-				<table>
-					<?php foreach ($vendor['vouchers'] as $voucher) { ?>
-							<tr>
-									<td class="name" colspan="3"><?php echo $voucher['description']; ?></td>
-									 
-									<td class="quantity">
-											<input type="text" value="1" class="form-control text-center" readonly="readonly"/>
-									</td>
-									<td class="price"><?php echo $voucher['amount']; ?></td>
-									<td class="total"><?php echo $voucher['amount']; ?></td>
-									<td>
-										 
-													<button type="button"  alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" class="btn-remove btn btn-danger btn-xs" >
-															<span class="glyphicon glyphicon-remove"></span>
-															<input type="hidden" value="<?php echo $voucher['key']; ?>"/>
-													</button>
-											
-									</td>
-							</tr>
+							<table>
+                <?php foreach ($vouchers as $voucher) { ?>
+                    <tr>
+					<td class="name" colspan="3"><?php echo $voucher['description']; ?></td>
+
+					<td class="quantity"><input type="text" value="1"
+						class="form-control text-center" readonly="readonly" /></td>
+					<td class="price"><?php echo $voucher['amount']; ?></td>
+					<td class="total"><?php echo $voucher['amount']; ?></td>
+					<td>
+
+						<button type="button" alt="<?php echo $button_remove; ?>"
+							title="<?php echo $button_remove; ?>"
+							class="btn-remove btn btn-danger btn-xs">
+							<span class="glyphicon glyphicon-remove"></span> <input
+								type="hidden" value="<?php echo $voucher['key']; ?>" />
+						</button>
+
+					</td>
+				</tr>
 					<?php } ?>
 				 </table>
 					<table class="pull-right">
 						<?php $i = 0; ?>
-						<?php foreach ($vendor['totals'] as $total) { ?>
+						<?php foreach ($totals as $total) { ?>
 								<tr class="" style="border: none;">
 										<td colspan="<?php echo ($mmos_checkout['enable_pmodel'] == 1) ? '5' : '4'; ?>" class="price text-right "><b><?php echo $total['title']; ?>:</b></td>
 										<td class="total" colspan="2"><?php echo $total['text']; ?></td>
@@ -133,38 +135,15 @@
 								<?php $i++; ?>
 						<?php } ?>
 				 </table>
-			</div>
+ 
     </div>
-	</div>
-</div>
-</div>
-<?php } ?>
-		<div class="table-responsive">
-				<div class="clearfix"></div>
-					<table class="pull-right">
-						<tbody>
-							<?php foreach ($totals as $total) { ?>
-									<tr class="" style="border: none;">
-											<td colspan="<?php echo ($mmos_checkout['enable_pmodel'] == 1) ? '5' : '4'; ?>" class="price text-right "><b><?php echo $total['title']; ?>:</b></td>
-											<td class="total" colspan="2"><?php echo $total['text']; ?></td>
-									</tr>
-									<?php $i++; ?>
-							<?php } ?>
-						</tbody>
-					</table>
-				</div>
-    </div> 
-</div>
 
 <?php if (!empty($comment)) { ?>
 <div>
 
 	<span class="glyphicon glyphicon-comment"></span> <?php echo $text_comment; ?>
-            <div class="form-group">
-		<p class="text-info"><?php echo $comment; ?>
-		
-		
-		<p>
+		<div class="form-group">
+		<p class="text-info"><?php echo $comment; ?></p>
 	
 	</div>
 
@@ -233,6 +212,7 @@
 		<i class="fa fa-pencil"></i>&nbsp;<span><?php echo $edit_order_button; ?></span>
 	</button>
 </div>
+	</div>
 
 <script type="text/javascript"><!--
         $('#cart_order_title').html('<i class="fa fa-list" style="font-size: 1.5em;"></i>&nbsp;<strong><?php echo $text_order_detail; ?></strong>');

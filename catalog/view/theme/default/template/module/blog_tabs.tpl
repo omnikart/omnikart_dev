@@ -1,11 +1,10 @@
 <?php //print_r($popular_posts); ?>
 <div class="row">
 	<div class="col-sm-12">
-	<h3>Recent Blogs</h3>
+	<h2>Recent Blogs</h2>
 	</div>
 
 	<?php if( count ($recent_posts) > 0 ) { ?>
-		<div class="col-sm-10 col-sm-offset-1">
 		<?php	$inc = 0;	foreach ( $recent_posts as $post ) {?>
 		  <div class="col-sm-6 col-md-4">
 	    	<div class="thumbnail">
@@ -23,7 +22,6 @@
 		    </div>
 		  </div>
 		<?php $inc++;	} ?>
-		</div>
 	<?php } else {  ?>
 	<div class="alert alert-warning"><?php echo $not_found_recent; ?></div>
 	<?php } ?>

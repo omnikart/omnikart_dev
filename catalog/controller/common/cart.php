@@ -52,14 +52,9 @@ class ControllerCommonCart extends Controller {
 		$this->load->model('account/customerpartner');
 
 		$data['vendors'] = array();
-
-		foreach ($this->cart->getVendors() as $vendor_id => $vendor) {
-			if (!isset($data['vendors'][$vendor_id])) {
-				$data['vendors'][$vendor_id] = array();
-			}
-			$data['vendors'][$vendor_id]['details']=$this->model_account_customerpartner->getProfile($vendor_id);
-			
-			foreach ($vendor['products'] as $key => $product) {
+		$data['products'] = array();
+		
+		foreach ($this->cart->getProducts() as $key => $product) {
 				if ($product['image']) {
 					$image = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
 				} else {
@@ -102,7 +97,7 @@ class ControllerCommonCart extends Controller {
 					$total = false;
 				}
 	
-				$data['vendors'][$vendor_id]['products'][] = array(
+				$data['products'][] = array(
 					'key'       => $product['key'],
 					'thumb'     => $image,
 					'name'      => $product['name'],
@@ -120,13 +115,13 @@ class ControllerCommonCart extends Controller {
 		
 			$total_data = array();
 			$total = 0;
-			$taxes = $this->cart->getTaxes($vendor_id);
+			$taxes = $this->cart->getTaxes();
 
 			foreach ($results as $result) {
 				if ($this->config->get($result['code'] . '_status')) {
 					$this->load->model('total/' . $result['code']);
 			
-					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes, $vendor_id);
+					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
 				}
 			}
 			
@@ -138,15 +133,15 @@ class ControllerCommonCart extends Controller {
 			
 			array_multisort($sort_order, SORT_ASC, $total_data);
 			
-			$data['vendors'][$vendor_id]['totals'] = array();
+			$data['totals'] = array();
 			
 			foreach ($total_data as $result) {
-				$data['vendors'][$vendor_id]['totals'][] = array(
+				$data['totals'][] = array(
 						'title' => $result['title'],
 						'text'  => $this->currency->format($result['value']),
 				);
 			}
-		}
+		
 		
 		// Gift Voucher
 		$data ['vouchers'] = array ();
