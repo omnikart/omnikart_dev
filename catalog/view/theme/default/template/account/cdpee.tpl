@@ -42,7 +42,7 @@
 								data-toggle="tooltip" title="Delete">
 								<i class="fa fa-trash-o"></i>&nbsp;Delete
 							</button>
-							<button type="button" class="btn btn-default"
+							<button type="button" class="btn btn-default updatecategory"
 								data-toggle="tooltip" title="Update">
 								<i class="fa fa-trash-o"></i>&nbsp;Update Category
 							</button>
