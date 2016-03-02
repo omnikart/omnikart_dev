@@ -35,12 +35,13 @@
 					}
 				</style>
     <?php if ($products) { ?>
-				<h2>Products</h2>
+			<br />
 				<div class="table-responsive">
-					<table id="gp-table" class="gp-table table table-bordered">
+					<table id="gp-table" class="gp-table table">
 						<thead>
 							<tr>
 								<td >Image</td>
+								<td id="gp-toggle-info">Brand</td>
 								<td id="gp-toggle-info">Product Name</td>
 								<td class="text-right">Price</td>
 								<?php if ($column_gp_option) { ?>
@@ -48,20 +49,26 @@
 								<?php } ?>
 								<td><?php echo $column_gp_qty; ?></td>
 								<td class="text-center"></td>
-								<td class="text-center">Stock Status</td>
-								<td class="text-center">Quantity Bought/Quantity Remaining</td>
+								<td class=""><span data-toggle="tooltip" title="" data-original-title="Standard delivery time for perticular product.">Stock Status</span>
+								</td>
+								<td class="text-center">
+									<span data-toggle="tooltip" title="" data-original-title="Green bar shows the quantity purchased and yellow bar shows the quantity yet to be purchased.">Purchase Status</span>
+								</td>
 							</tr>
 						</thead>
 						<tbody class="products-list">
 							<?php foreach ($products as $child) { $child_id = $child['product_id']; ?>
 									<tr data-gp-child-row="<?php echo $child_id; ?>" class="product-thumb">
 										<td class="gp-col-image">
-											<a class="gp-child-image" href="<?php echo $child['image']['popup']; ?>" title="<?php echo $child['name']; ?>">
+											<a class="gp-child-image" href="<?php echo $child['href']; ?>" title="<?php echo $child['name']; ?>">
 												<img src="<?php echo $child['thumb'] ?>" alt="<?php echo $child['name'] ?>" />
 											</a>
 										</td>
+										<td>
+											<?php echo $child['info']['manufacturer'];  ?>
+										</td>										
 										<td class="gp-col-name">
-											<div class="gp-child-name"><?php echo $child['name']; ?>
+											<div class="gp-child-name"><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a>
 												<?php if ($child['enabled']) { ?> 
 													<?php if ($child['curr_vendor'] && 0) { ?>
 														<div style="display:inline-block;position:relative;">
@@ -93,6 +100,7 @@
 											</div>
 											<?php } ?>
 										</td>
+
 										<td class="gp-col-price">
 											<?php if ($child['enabled']) { ?>
 												<?php if (!$child['special']) { ?>
@@ -298,7 +306,7 @@
 											<div class="progress-bar progress-bar-success" style="width: <?php echo $complete;?>%">
 												<?php echo $child['purchase']['quantity'];?>
 											</div>
-											<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: <?php echo (100-$complete);?>%">
+											<div class="progress-bar progress-bar-warning" style="width: <?php echo (100-$complete);?>%">
 												<?php echo ($child['contract_quantity']-$child['purchase']['quantity']);?>
 											</div>
 										</div>
@@ -306,7 +314,7 @@
 										<div class="progress">
 											<div class="progress-bar progress-bar-success" style="width:0%">	
 											</div>
-											<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: <?php echo 100;?>%">
+											<div class="progress-bar progress-bar-warning " style="width: <?php echo 100;?>%">
 												<?php echo ($child['contract_quantity']?$child['contract_quantity']:0);?>
 											</div>
 										</div>
@@ -498,7 +506,14 @@
 <style>
 .gp-table .gp-col-btn{width: 60px;}
 .gp-table .gp-col-image{width:90px;padding:10px;}
-.gp-table .gp-col-stock{width:100px;}
+.gp-table .gp-col-stock{width:120px;}
 .gp-table .gp-col-contract{width:150px;}
+.product-thumb{border:none;}
+.table thead td span[data-toggle="tooltip"]:after, label.control-label span:after {
+font-family: FontAwesome;
+color: #1E91CF;
+content: "\f059";
+margin-left: 4px;
+}
 </style>
 </div><?php echo $footer; ?>
