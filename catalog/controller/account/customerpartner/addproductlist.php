@@ -202,7 +202,7 @@ class ControllerAccountCustomerpartnerAddproductlist extends Controller {
 		$this->data ['products'] = array ();
 		$this->data ['categories'] = array ();
 		
-		if (! empty ( $filter_name )) {
+		if (! empty ( $filter_name ) || ! empty ( $filter_model )) {
 			$this->load->model ( 'tool/image' );
 			$results = $this->model_account_customerpartner->getProductsAddSeller ( $data );
 			$product_total = $this->model_account_customerpartner->getTotalAddProductsSeller ( $data );

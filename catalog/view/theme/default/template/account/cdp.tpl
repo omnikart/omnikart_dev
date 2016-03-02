@@ -106,7 +106,7 @@
 								<td><?php echo $column_gp_qty; ?></td>
 								<td class="text-center"></td>
 								<td class="text-center">Stock Status</td>
-								<td class="text-center">Stock Status/Quantity Baught</td>
+								<td class="text-center">Quantity Baught/Quantity Remaining</td>
 							</tr>
 						</thead>
 						<tbody class="products-list">
@@ -364,6 +364,7 @@
 												<?php echo $child['purchase']['quantity'];?>
 											</div>
 											<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: <?php echo (100-$complete);?>%">
+												<?php echo ($child['contract_quantity']-$child['purchase']['quantity']);?>
 											</div>
 										</div>
 								</td>
