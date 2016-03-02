@@ -18,7 +18,7 @@
     <?php $class = 'col-sm-12'; ?>
     <?php } ?>
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
-      <h2>Customer Dashboard</h2>
+      <h2>VMI Dashboard</h2>
     <?php if ($categories) { ?>
       <div class="row">
      	<?php foreach ($categories as $category) { ?>
@@ -93,4 +93,9 @@
   
   
   </script>
+  <style>
+		.product-thumb .caption{text-align:center;font-size:14px;}
+		.product-thumb .button-group{display:none;}
+		.product-thumb .image{padding:10px;}
+  </style>
 </div><?php echo $footer; ?>

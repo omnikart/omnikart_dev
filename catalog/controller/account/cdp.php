@@ -258,10 +258,13 @@ class ControllerAccountCdp extends Controller {
 				'text' => $this->language->get ( 'text_home' ),
 				'href' => $this->url->link ( 'common/home' ) 
 		);
-		
+		$data ['breadcrumbs'] [] = array (
+				'text' => "VMI DashBoard",
+				'href' => $this->url->link ( 'account/cd', '', 'SSL' ) 
+		);
 		$data ['breadcrumbs'] [] = array (
 				'text' => $data ['category'] ['name'],
-				'href' => $this->url->link ( 'account/cd', '', 'SSL' ) 
+				'href' => ''
 		);
 		
 		$this->document->setTitle ( $data ['category'] ['name'] );
