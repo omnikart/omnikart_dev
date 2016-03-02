@@ -133,7 +133,7 @@ class ControllerAccountCd extends Controller {
 		$json = '';
 		
 		if ($cats) {
-			foreach ( array_chunk ( $cats, count ( $cats ) / 2 ) as $catl ) {
+			foreach ( array_chunk ( $cats, ceil(count ( $cats ) / 2 ) ) as $catl ) {
 				$json .= '<div class="col-sm-6">';
 				foreach ( $catl as $cat ) {
 					$json .= '<div  class="radio"><label><input type="radio" name="category_id" value="' . $cat ['category_id'] . '" />' . $cat ['name'] . '</label></div>';
