@@ -106,7 +106,7 @@
 								<td><?php echo $column_gp_qty; ?></td>
 								<td class="text-center"></td>
 								<td class="text-center">Stock Status</td>
-								<td class="text-center">Quantity Baught/Quantity Remaining</td>
+								<td class="text-center">Quantity Bought/Quantity Remaining</td>
 							</tr>
 						</thead>
 						<tbody class="products-list">
