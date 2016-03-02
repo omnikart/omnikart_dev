@@ -35,11 +35,47 @@
 					}
 				</style>
     <?php if ($products) { ?>
+				<div class="row">
+					<div class="col-md-6 pull-right">
+						<div class="btn-group hidden-xs pull-right">
+							<button type="button" id="delete" class="btn btn-default"
+								data-toggle="tooltip" title="Delete">
+								<i class="fa fa-trash-o"></i>&nbsp;Delete
+							</button>
+							<button type="button" class="btn btn-default"
+								data-toggle="tooltip" title="Update">
+								<i class="fa fa-trash-o"></i>&nbsp;Update Category
+							</button>
+							<!--button type="button" id="quickaddcart" class="btn btn-default"
+								data-toggle="tooltip" title="Quick Add Products">
+								<i class="fa fa-shopping-cart"></i>&nbsp;Quick Cart
+							</button-->
+						</div>
+					</div>
+				</div>
+				<br />
+				<div class="row" id="category-d" style="display: none;">
+					<form id="category-form">
+						<input type="hidden" name="avatarremove" value="0" /> <input
+							type="hidden" name="category_image"
+							value="<?php echo $category['image']; ?>" /> <input type="hidden"
+							name="category_id"
+							value="<?php echo $category['category_id']; ?>" />
+					</form>
+				</div>
 				<h2>Products</h2>
+
 				<div class="table-responsive">
 					<table id="gp-table" class="gp-table table table-bordered">
 						<thead>
 							<tr>
+								<?php if ($dbe) { ?>
+									<td rowspan="2" class="gp-col-checkbox">
+										<input type="checkbox" name="products[]" id="pcd-00" value="<?php echo $child['child_id']; ?>" onclick="$('input[name*=\'products\']').prop('checked', this.checked);" />
+										<label for="pcd-00"></label>
+									</td>
+								<?php } ?>
+								
 								<td >Image</td>
 								<td id="gp-toggle-info">Product Name</td>
 								<td class="text-right">Price</td>
@@ -55,6 +91,14 @@
 						<tbody class="products-list">
 							<?php foreach ($products as $child) { $child_id = $child['product_id']; ?>
 									<tr data-gp-child-row="<?php echo $child_id; ?>" class="product-thumb">
+										<?php if ($dbe) { ?>
+											<td class="gp-col-checkbox hover-content"><input class="removeproduct" type="checkbox"
+														id="pcd-<?php echo $child['product_id']; ?>"
+														name="products[<?php echo $child['product_id']; ?>][product_id]"
+														value="<?php echo $child['product_id']; ?>" />
+														<label for="pcd-<?php echo $child['product_id']; ?>"></label>
+											</td>
+										<?php } ?>
 										<td class="gp-col-image">
 											<a class="gp-child-image" href="<?php echo $child['image']['popup']; ?>" title="<?php echo $child['name']; ?>">
 												<img src="<?php echo $child['thumb'] ?>" alt="<?php echo $child['name'] ?>" />
@@ -497,7 +541,7 @@
 </script>
 <style>
 .gp-table .gp-col-btn{width: 60px;}
-.gp-table .gp-col-image{width:90px;padding:10px;}
+.gp-table .gp-col-image{width:70px;padding:0;}
 .gp-table .gp-col-stock{width:100px;}
 .gp-table .gp-col-contract{width:150px;}
 </style>
