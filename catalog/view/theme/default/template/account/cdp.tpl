@@ -49,7 +49,7 @@
 								<?php } ?>
 								<td><?php echo $column_gp_qty; ?></td>
 								<td class="text-center"></td>
-								<td class=""><span data-toggle="tooltip" title="" data-original-title="Standard delivery time for perticular product.">Stock Status</span>
+								<td class=""><span data-toggle="tooltip" title="" data-original-title="Standard delivery time for perticular product.">Delivery Status</span>
 								</td>
 								<td class="text-center">
 									<span data-toggle="tooltip" title="" data-original-title="Green bar shows the quantity purchased and yellow bar shows the quantity yet to be purchased.">Purchase Status</span>
@@ -506,7 +506,7 @@
 <style>
 .gp-table .gp-col-btn{width: 60px;}
 .gp-table .gp-col-image{width:90px;padding:10px;}
-.gp-table .gp-col-stock{width:120px;}
+.gp-table .gp-col-stock{width:140px;}
 .gp-table .gp-col-contract{width:150px;}
 .product-thumb{border:none;}
 .table thead td span[data-toggle="tooltip"]:after, label.control-label span:after {
