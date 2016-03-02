@@ -98,7 +98,8 @@ class ControllerAccountCdp extends Controller {
 				$tax = false;
 				$curr_vendor = false;
 				$vlink = false;
-				
+				$original_price = false;
+				$vendors = array();
 				if ($product_vendor) {				
 					if (($this->config->get ( 'config_customer_price' ) && $this->customer->isLogged ()) || ! $this->config->get ( 'config_customer_price' )) {
 						$price = $this->currency->format ( $this->tax->calculate ( $product_vendor ['price'], $product_info ['tax_class_id'], $this->config->get ( 'config_tax' ) ) );
