@@ -221,7 +221,7 @@ class ControllerAccountCdp extends Controller {
 						'discount' => $discount,
 						'special' => $special,
 						'attributes' => $child_attributes,
-						'quantity' => $result ['quantity'],
+						'quantity' => (($result ['quantity']>$minimum)?$result ['quantity']:$minimum),
 						'tax' => $tax,
 						'nocart' => $child_child_nocart,
 						'options'=>$child_options,

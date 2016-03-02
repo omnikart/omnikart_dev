@@ -60,9 +60,9 @@ class ControllerAccountCd extends Controller {
 		foreach ( $results as $result ) {
 			
 			if ($result ['image']) {
-				$image = $this->model_tool_image->resize ( $result ['image'], $this->config->get ( 'config_image_category_width' ), $this->config->get ( 'config_image_category_height' ) );
+				$image = $this->model_tool_image->resize ( $result ['image'], 150,150);
 			} else {
-				$image = $this->model_tool_image->resize ( 'placeholder.png', $this->config->get ( 'config_image_category_width' ), $this->config->get ( 'config_image_category_height' ) );
+				$image = $this->model_tool_image->resize ( 'placeholder.png', 150,150);
 			}
 			
 			$data ['categories'] [] = array (
