@@ -610,7 +610,7 @@ class ModelModuleExcelportproduct extends ModelModuleExcelport {
 	public function editProduct($id, $data, &$languages, $light = false) {
 		$extra_select = '';
 		
-		$generals = array('sku','price','quantity','stock_status_id','shipping','date_available','length','width','height','length_class_id','weight','weight_class_id','unit_class_id','status','sort_order');
+		$generals = array('sku','price','quantity','minimum','stock_status_id','shipping','date_available','length','width','height','length_class_id','weight','weight_class_id','unit_class_id','status','sort_order');
 		
 		$implode = array ();
 		
