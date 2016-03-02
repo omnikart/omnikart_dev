@@ -232,7 +232,7 @@ class ControllerAccountCdp extends Controller {
 						'stock' => $product_vendor['stock_status'],
 						'vendors'	 => $vendors,
 						'contract_quantity'=>$result['contract_quantity'],
-						'purchase' => $this->model_account_cd->getproductsale($sellerId,$product_info ['product_id'])
+						'purchase' => ($this->model_account_cd->getproductsale($sellerId,$product_info ['product_id']?$this->model_account_cd->getproductsale($sellerId,$product_info ['product_id']:false);
 				);
 			}
 		}

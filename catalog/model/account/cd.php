@@ -102,6 +102,9 @@ class ModelAccountCd extends Model {
 
 	public function getproductsale($customer_id,$product_id){
 		$sql = $this->db->query("SELECT SUM(op.quantity) AS quantity, SUM(op.total) AS total FROM ".DB_PREFIX ."order_product op LEFT JOIN ".DB_PREFIX ."order o ON (o.order_id = op.order_id) WHERE o.customer_id='" . (int)$customer_id . "' AND op.product_id='" . (int)$product_id . "' GROUP BY op.product_id");
-		return($sql->row);
+		if ($sql->num_rows)
+			return($sql->row);
+		else
+			return false;
 	}
 }

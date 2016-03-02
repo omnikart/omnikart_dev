@@ -358,7 +358,8 @@
 									<?php echo $child['stock']; ?>
 								</td>
 								<td  class="gp-col-contract">
-									<?php $complete = ((float)$child['purchase']['quantity']*100/$child['contract_quantity']); ?>									
+									
+									<?php if ($child['purchase']) { $complete = ((float)$child['purchase']['quantity']*100/$child['contract_quantity']); ?>									
 										<div class="progress">
 											<div class="progress-bar progress-bar-success" style="width: <?php echo $complete;?>%">
 												<?php echo $child['purchase']['quantity'];?>
@@ -367,6 +368,15 @@
 												<?php echo ($child['contract_quantity']-$child['purchase']['quantity']);?>
 											</div>
 										</div>
+									<?php } else { ?>
+										<div class="progress">
+											<div class="progress-bar progress-bar-success" style="width:0%">	
+											</div>
+											<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: <?php echo 100;?>%">
+												<?php echo $child['contract_quantity'];?>
+											</div>
+										</div>
+										<?php }?>
 								</td>
 							</tr>
 							<?php } ?>
