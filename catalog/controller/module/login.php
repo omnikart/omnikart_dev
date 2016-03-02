@@ -24,8 +24,14 @@ class ControllerModuleLogin extends Controller {
 		
 		if (($this->request->server ['REQUEST_METHOD'] == 'POST') && $this->validate ()) {
 			unset ( $this->session->data ['guest'] );
-			
 			$json ['success'] = $this->url->link ( 'account/account', '', 'SSL' );
+
+			$customerRights = $this->customer->getRights ();
+			if (! (isset ( $customerRights ['rights'] ) && in_array ( 'db', $customerRights ['rights'] ))) {				
+						$json ['success'] = $this->url->link ( 'account/cd', '', 'SSL' );
+			}
+			
+			
 		} else {
 			$json ['error'] = $this->error ['warning'];
 		}

@@ -447,8 +447,6 @@
 										class="btn btn-default btn-block" data-toggle="modal"
 										data-target="#supplier-list">View other suppliers</button>
 	          <?php } ?>
-	          
-	      
   			</div>
 							</div>
 							<div class="clearfix"></div>

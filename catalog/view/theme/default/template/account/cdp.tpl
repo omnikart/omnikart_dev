@@ -36,33 +36,20 @@
 				</style>
     <?php if ($products) { ?>
 				<div class="row">
-					<div class="col-md-4">
-						<div class="btn-group hidden-xs">
-							<button type="button" id="list-view" class="btn btn-default"
-								data-toggle="tooltip" title="<?php echo $button_list; ?>">
-								<i class="fa fa-th-list"></i>
-							</button>
-							<button type="button" id="grid-view" class="btn btn-default"
-								data-toggle="tooltip" title="<?php echo $button_grid; ?>">
-								<i class="fa fa-th"></i>
-							</button>
-						</div>
-					</div>
 					<div class="col-md-6 pull-right">
 						<div class="btn-group hidden-xs pull-right">
-							<button class="updatecategory btn btn-default" type="button"
-								value="<?php echo $category['category_id']; ?>">
-								<i class="fa fa-check"></i> <span
-									class="hidden-xs hidden-sm hidden-md">Update Category</span>
-							</button>
 							<button type="button" id="delete" class="btn btn-default"
 								data-toggle="tooltip" title="Delete">
 								<i class="fa fa-trash-o"></i>&nbsp;Delete
 							</button>
-							<button type="button" id="quickaddcart" class="btn btn-default"
+							<button type="button" class="btn btn-default"
+								data-toggle="tooltip" title="Update">
+								<i class="fa fa-trash-o"></i>&nbsp;Update Category
+							</button>
+							<!--button type="button" id="quickaddcart" class="btn btn-default"
 								data-toggle="tooltip" title="Quick Add Products">
 								<i class="fa fa-shopping-cart"></i>&nbsp;Quick Cart
-							</button>
+							</button-->
 						</div>
 					</div>
 				</div>
@@ -77,15 +64,7 @@
 					</form>
 				</div>
 				<h2>Products</h2>
-				<div class="row">
-					<?php foreach ($products as $product) { ?>
-						<div class="product-layout product-list col-xs-12">
-							<div class="product-thumb">
-								<?php //require(DIR_TEMPLATE.'default/template/common/product/product_cdp.tpl'); ?>
-							</div>
-						</div>
-					<?php } ?>
-				</div>
+
 				<div class="table-responsive">
 					<table id="gp-table" class="gp-table table table-bordered">
 						<thead>
@@ -342,7 +321,7 @@
 									<?php if ($child['nocart']) { ?>
 									<input name="" type="text" value="" class="form-control" disabled="disabled" title="<?php echo $text_gp_no_stock; ?>" />
 									<?php } else { ?>
-									<input name="products[<?php echo $child['product_id']; ?>][quantity]" id="quantity<?php echo $child_id; ?>" type="text" value="<?php echo $child['quantity']; ?>" class="form-control" />
+									<input name="quantity" id="quantity<?php echo $child_id; ?>" type="text" value="<?php echo $child['quantity']; ?>" class="form-control" />
 									<?php } ?>
 								</td>
 								<td class="gp-col-btn">
@@ -358,8 +337,7 @@
 									<?php echo $child['stock']; ?>
 								</td>
 								<td  class="gp-col-contract">
-									
-									<?php if ($child['purchase']) { $complete = ((float)$child['purchase']['quantity']*100/$child['contract_quantity']); ?>									
+									<?php if ($child['purchase']) { $complete = (($child['contract_quantity'])?((float)$child['purchase']['quantity']*100/$child['contract_quantity']):0); ?>									
 										<div class="progress">
 											<div class="progress-bar progress-bar-success" style="width: <?php echo $complete;?>%">
 												<?php echo $child['purchase']['quantity'];?>
@@ -373,7 +351,7 @@
 											<div class="progress-bar progress-bar-success" style="width:0%">	
 											</div>
 											<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: <?php echo 100;?>%">
-												<?php echo $child['contract_quantity'];?>
+												<?php echo ($child['contract_quantity']?$child['contract_quantity']:0);?>
 											</div>
 										</div>
 										<?php }?>
@@ -382,10 +360,7 @@
 							<?php } ?>
 						</tbody>
 					</table>				
-				</div>
-				
-				
-				
+				</div>				
     <?php } ?>
     <?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>
@@ -555,8 +530,11 @@
 				
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 				
-				$('#cart > ul').load('index.php?route=common/cart/info ul li');
-			}
+				$('#cart_modal .modal-body').load('index.php?route=common/cart/info div#cart-content');
+				if (json['redirect']) {
+					window.location = json['redirect']; 
+				}
+				}
 		}
 	});
 }

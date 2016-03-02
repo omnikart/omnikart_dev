@@ -205,9 +205,10 @@
 					html += '      <div class="modal-header">Hello';
 					html += '      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div>';
 					html += '      <div class="modal-body">';
-					html += '		<div class="row">'+json+'<br /><br />';
-					html += '			<div class="col-sm-4"><div class="radio"><label><input type="radio" name="category_id" value="0"/>New Category</label></div></div>';
-					html += '      		<div class="col-sm-8"><input class="form-control" id="newcat" name="category-name" type="text" placeholder="Input Name in case of new category" value=""></input></div><br /><br />';
+					html += '			<div class="row">'+json+'';
+					html += '				<div class="col-sm-6">';
+					html += '				<div class="radio"><label><input type="radio" name="category_id" value="0"/>New Category</label></div>	<input class="form-control" id="newcat" name="category-name" type="text" placeholder="Input Name in case of new category" value=""></input>';
+					html += '      	</div><br /><br />';
 					html += '	   		<div class="col-sm-12"><button id="button-update" onclick="updatedb();" class="btn btn-primary btn-lg">Update to DashBoard</button></div></div>';
 					html += '    	</div>';
 					html += '    </div>';

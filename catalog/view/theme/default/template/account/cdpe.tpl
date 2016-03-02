@@ -98,17 +98,7 @@
 															</ul>		
 														</div>
 													<?php } ?>							
-												<?php } ?>
-												
-												<?php $complete = ((float)$child['purchase']['quantity']*100/$child['contract_quantity']); ?>
-												<div class="progress">
-														<div class="progress-bar progress-bar-success" style="width: <?php echo $complete;?>%">
-															<?php echo $child['purchase']['quantity'];?>
-														</div>
-														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: <?php echo (100-$complete);?>%">
-														</div>
-													</div>
-											
+												<?php } ?>											
 											</div>
 											<?php foreach ($gp_child_info as $field_name => $field_text) if($child['info'][$field_name]) { ?>
 											<div class="gp-toggle-info gp-child-field"><?php echo $field_text; ?>: <?php echo $child['info'][$field_name]; ?></div>

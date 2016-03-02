@@ -2,7 +2,7 @@
 class ControllerAccountCd extends Controller {
 	private $error = array ();
 	public function index() {
-		$this->load->model ( "account/customerpartner" );
+		$this->load->model ( 'account/customerpartner' );
 		$this->load->language ( 'account/cd' );
 		
 		$this->checkuser ();
@@ -128,18 +128,14 @@ class ControllerAccountCd extends Controller {
 		$this->load->model ( "account/customerpartner" );
 		$this->checkuser ();
 		$this->load->model ( 'account/cd' );
-		$cats = $this->model_account_cd->getCategories ();
-		
+		$cats = $this->model_account_cd->getCategories ();	
 		$json = '';
-		
 		if ($cats) {
-			foreach ( array_chunk ( $cats, ceil(count ( $cats ) / 2 ) ) as $catl ) {
-				$json .= '<div class="col-sm-6">';
-				foreach ( $catl as $cat ) {
+			$json .= '<div class="col-sm-6">';
+				foreach ( $cats as $cat ) {
 					$json .= '<div  class="radio"><label><input type="radio" name="category_id" value="' . $cat ['category_id'] . '" />' . $cat ['name'] . '</label></div>';
-				}
-				$json .= '</div>';
 			}
+			$json .= '</div>';
 		}
 		$this->response->setOutput ( json_encode ( $json ) );
 	}
