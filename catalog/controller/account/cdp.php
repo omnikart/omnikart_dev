@@ -93,7 +93,12 @@ class ControllerAccountCdp extends Controller {
 				$enabled = false;
 				$minimum = 0;
 				$child_discounts = array();
-		
+				$price = 0;
+				$discount = 0;
+				$tax = false;
+				$curr_vendor = false;
+				$vlink = false;
+				
 				if ($product_vendor) {				
 					if (($this->config->get ( 'config_customer_price' ) && $this->customer->isLogged ()) || ! $this->config->get ( 'config_customer_price' )) {
 						$price = $this->currency->format ( $this->tax->calculate ( $product_vendor ['price'], $product_info ['tax_class_id'], $this->config->get ( 'config_tax' ) ) );
