@@ -41,8 +41,9 @@
 						<thead>
 							<tr>
 								<td >Image</td>
-								<td id="gp-toggle-info">Brand</td>
+								<td id="gp-toggle-info">Model No.</td>
 								<td id="gp-toggle-info">Product Name</td>
+								<td id="gp-toggle-info">Brand</td>								
 								<td class="text-right">Price</td>
 								<?php if ($column_gp_option) { ?>
 								<td><?php echo $column_gp_option; ?></td>
@@ -65,7 +66,7 @@
 											</a>
 										</td>
 										<td>
-											<?php echo $child['info']['manufacturer'];  ?>
+											<?php echo $child['info']['model'];  ?>
 										</td>										
 										<td class="gp-col-name">
 											<div class="gp-child-name"><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a>
@@ -100,7 +101,9 @@
 											</div>
 											<?php } ?>
 										</td>
-
+										<td>
+											<?php echo $child['info']['manufacturer'];  ?>
+										</td>
 										<td class="gp-col-price">
 											<?php if ($child['enabled']) { ?>
 												<?php if (!$child['special']) { ?>
