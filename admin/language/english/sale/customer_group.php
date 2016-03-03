@@ -12,8 +12,7 @@ $_ ['text_edit'] = 'Edit Customer Group';
 $_ ['column_name'] = 'Customer Group Name';
 $_ ['column_sort_order'] = 'Sort Order';
 $_ ['column_action'] = 'Action';
-$_['entry_payment_methods'] = 'Payment Methods:';
-$_['entry_shipping_methods'] = 'Shipping Methods:';
+
 // Entry
 $_ ['entry_name'] = 'Customer Group Name';
 $_ ['entry_description'] = 'Description';

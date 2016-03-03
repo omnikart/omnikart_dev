@@ -5,16 +5,12 @@ class ModelSaleCustomerGroup extends Model {
 		
 		$customer_group_id = $this->db->getLastId ();
 		
-		$this->db->query("UPDATE " . DB_PREFIX . "customer_group SET payment_methods = '" . (isset($data['payment_methods']) ? serialize($data['payment_methods']) : '') . "', shipping_methods = '" . (isset($data['shipping_methods']) ? serialize($data['shipping_methods']) : '') . "' WHERE customer_group_id = '" . (int)$customer_group_id . "'");
-		
 		foreach ( $data ['customer_group_description'] as $language_id => $value ) {
 			$this->db->query ( "INSERT INTO " . DB_PREFIX . "customer_group_description SET customer_group_id = '" . ( int ) $customer_group_id . "', language_id = '" . ( int ) $language_id . "', name = '" . $this->db->escape ( $value ['name'] ) . "', description = '" . $this->db->escape ( $value ['description'] ) . "'" );
 		}
 	}
 	public function editCustomerGroup($customer_group_id, $data) {
 		$this->db->query ( "UPDATE " . DB_PREFIX . "customer_group SET approval = '" . ( int ) $data ['approval'] . "', sort_order = '" . ( int ) $data ['sort_order'] . "' WHERE customer_group_id = '" . ( int ) $customer_group_id . "'" );
-		
-		$this->db->query("UPDATE " . DB_PREFIX . "customer_group SET payment_methods = '" . (isset($data['payment_methods']) ? serialize($data['payment_methods']) : '') . "', shipping_methods = '" . (isset($data['shipping_methods']) ? serialize($data['shipping_methods']) : '') . "' WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 		
 		$this->db->query ( "DELETE FROM " . DB_PREFIX . "customer_group_description WHERE customer_group_id = '" . ( int ) $customer_group_id . "'" );
 		
@@ -30,14 +26,6 @@ class ModelSaleCustomerGroup extends Model {
 		$this->db->query ( "DELETE FROM " . DB_PREFIX . "product_reward WHERE customer_group_id = '" . ( int ) $customer_group_id . "'" );
 	}
 	public function getCustomerGroup($customer_group_id) {
-		$installed_query = $this->db->query("SHOW COLUMNS FROM " . DB_PREFIX . "customer_group LIKE 'payment_methods'");
-
-			$installed = $installed_query->num_rows ? true : false;
-
-			if (!$installed) {
-				$this->db->query("ALTER TABLE " . DB_PREFIX . "customer_group ADD `payment_methods` LONGTEXT NULL AFTER `approval` , ADD `shipping_methods` LONGTEXT NULL AFTER `payment_methods` ");
-			}
-		
 		$query = $this->db->query ( "SELECT DISTINCT * FROM " . DB_PREFIX . "customer_group cg LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (cg.customer_group_id = cgd.customer_group_id) WHERE cg.customer_group_id = '" . ( int ) $customer_group_id . "' AND cgd.language_id = '" . ( int ) $this->config->get ( 'config_language_id' ) . "'" );
 		
 		return $query->row;

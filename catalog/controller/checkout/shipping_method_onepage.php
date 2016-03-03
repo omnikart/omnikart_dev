@@ -56,6 +56,23 @@ class ControllerCheckoutShippingMethodOnepage extends Controller {
                     }
                 }
                 
+								foreach ($this->cart->getVendors() as $vendor_id => $vendor) {
+									foreach ($results as $result) {
+										if ($this->config->get($result['code'] . '_status')) {
+											$this->load->model('shipping/' . $result['code']);
+
+											$quote = $this->{'model_shipping_' . $result['code']}->getQuote($this->session->data['shipping_address'],$vendor_id);
+											
+											if ($quote) {
+												if (isset($method_data[$result['code']])) {
+													foreach ($method_data[$result['code']]['quote'] as $code => $costs) {
+															$method_data[$result['code']]['quote'][$code]['cost'][$vendor_id] = $quote['quote'][$code]['cost'][$vendor_id];
+													}
+												}
+											}
+										}
+									}
+								}
                 $sort_order = array();
 
                 foreach ($method_data as $key => $value) {
