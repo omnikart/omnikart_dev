@@ -261,6 +261,11 @@ class ControllerSaleCustomerGroup extends Controller {
 		$data ['text_no'] = $this->language->get ( 'text_no' );
 		
 		$data ['entry_name'] = $this->language->get ( 'entry_name' );
+		$data['entry_payment_methods'] = $this->language->get('entry_payment_methods');
+		$data['entry_shipping_methods'] = $this->language->get('entry_shipping_methods');
+    $data['text_select_all'] = $this->language->get('text_select_all');
+		$data['text_unselect_all'] = $this->language->get('text_unselect_all');
+		
 		$data ['entry_description'] = $this->language->get ( 'entry_description' );
 		$data ['entry_approval'] = $this->language->get ( 'entry_approval' );
 		$data ['entry_sort_order'] = $this->language->get ( 'entry_sort_order' );
@@ -340,6 +345,53 @@ class ControllerSaleCustomerGroup extends Controller {
 			$data ['approval'] = '';
 		}
 		
+		$this->load->model('extension/extension');
+
+		$results = $this->model_extension_extension->getInstalled('payment');
+
+		$payment_methods = array();
+
+		foreach ($results as $result) {
+			$extension = basename($result, '.php');
+			$this->load->language('payment/' . $extension);
+			$payment_methods[] = array(
+				'code' => $result,
+				'name' => $this->language->get('heading_title'),
+			);
+		}
+
+		$data['payment_methods'] = $payment_methods;
+
+		if (isset($this->request->post['payment_methods'])) {
+			$data['selected_payment_methods'] = $this->request->post['payment_methods'];
+		} elseif (isset($customer_group_info['payment_methods']) && ($customer_group_info['payment_methods'] != '')) {
+			$data['selected_payment_methods'] = unserialize($customer_group_info['payment_methods']);
+		} else {
+			$data['selected_payment_methods'] = array();
+		}
+
+		$results = $this->model_extension_extension->getInstalled('shipping');
+
+		$shipping_methods = array();
+
+		foreach ($results as $result) {
+			$extension = basename($result, '.php');
+			$this->load->language('shipping/' . $extension);
+			$shipping_methods[] = array(
+				'code' => $result,
+				'name' => $this->language->get('heading_title'),
+			);
+		}
+
+		$data['shipping_methods'] = $shipping_methods;
+
+		if (isset($this->request->post['shipping_methods'])) {
+			$data['selected_shipping_methods'] = $this->request->post['shipping_methods'];
+		} elseif (isset($customer_group_info['shipping_methods']) && ($customer_group_info['shipping_methods'] != '')) {
+			$data['selected_shipping_methods'] = unserialize($customer_group_info['shipping_methods']);
+		} else {
+			$data['selected_shipping_methods'] = array();
+		}	
 		if (isset ( $this->request->post ['sort_order'] )) {
 			$data ['sort_order'] = $this->request->post ['sort_order'];
 		} elseif (! empty ( $customer_group_info )) {

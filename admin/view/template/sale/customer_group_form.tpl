@@ -107,6 +107,47 @@
 								id="input-sort-order" class="form-control" />
 						</div>
 					</div>
+					<div class="form-group">
+            <label class="col-sm-2 control-label"><?php echo $entry_shipping_methods; ?></label>
+            <div class="col-sm-10">
+              <div class="well well-sm" style="height: 150px; overflow: auto;">
+                <?php foreach ($shipping_methods as $shipping_method) { ?>
+                <div class="checkbox">
+                  <label>
+                    <?php if (in_array($shipping_method['code'],$selected_shipping_methods)) { ?>
+                    <input type="checkbox" name="shipping_methods[]" value="<?php echo $shipping_method['code']; ?>" checked="checked" />
+                    <?php echo $shipping_method['name']; ?>
+                    <?php } else { ?>
+                    <input type="checkbox" name="shipping_methods[]" value="<?php echo $shipping_method['code']; ?>" />
+                    <?php echo $shipping_method['name']; ?>
+                    <?php } ?>
+                  </label>
+                </div>
+                <?php } ?>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label"><?php echo $entry_payment_methods; ?></label>
+            <div class="col-sm-10">
+              <div class="well well-sm" style="height: 150px; overflow: auto;">
+                <?php foreach ($payment_methods as $payment_method) { ?>
+                <div class="checkbox">
+                  <label>
+                    <?php if (in_array($payment_method['code'],$selected_payment_methods)) { ?>
+                    <input type="checkbox" name="payment_methods[]" value="<?php echo $payment_method['code']; ?>" checked="checked" />
+                    <?php echo $payment_method['name']; ?>
+                    <?php } else { ?>
+                    <input type="checkbox" name="payment_methods[]" value="<?php echo $payment_method['code']; ?>" />
+                    <?php echo $payment_method['name']; ?>
+                    <?php } ?>
+                  </label>
+                </div>
+                <?php } ?>
+              </div>
+            </div>
+          </div>
+					
 				</form>
 			</div>
 		</div>
